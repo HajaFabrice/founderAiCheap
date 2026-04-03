@@ -1,6 +1,7 @@
 use anyhow::{Context, Result};
 use serde::Deserialize;
 use std::collections::{BTreeMap, BTreeSet};
+use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -294,6 +295,21 @@ fn normalize_windows_path(path: PathBuf) -> PathBuf {
     }
 }
 
+fn env_override_string(name: &str, current: String) -> String {
+    env::var(name)
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or(current)
+}
+
+fn env_override_u64(name: &str, current: u64) -> u64 {
+    env::var(name)
+        .ok()
+        .and_then(|value| value.trim().parse::<u64>().ok())
+        .unwrap_or(current)
+}
+
 pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
     let path = config_path.as_ref().to_path_buf();
     let absolute_path = if path.is_absolute() {
@@ -357,6 +373,14 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
         })
         .collect();
 
+    let mut worker = raw.worker;
+    worker.provider = env_override_string("FOUNDERAI_PROVIDER", worker.provider);
+    worker.base_url = env_override_string("FOUNDERAI_BASE_URL", worker.base_url);
+    worker.model = env_override_string("FOUNDERAI_MODEL", worker.model);
+    worker.system_prompt = env_override_string("FOUNDERAI_SYSTEM_PROMPT", worker.system_prompt);
+    worker.api_key_env = env_override_string("FOUNDERAI_API_KEY_ENV", worker.api_key_env);
+    worker.timeout_seconds = env_override_u64("FOUNDERAI_TIMEOUT_SECONDS", worker.timeout_seconds);
+
     Ok(AppConfig {
         config_path: absolute_path.clone(),
         workspace_root: resolve_path(&base_dir, &raw.workspace_root),
@@ -366,7 +390,7 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
         outbox_dir: resolve_path(&base_dir, &raw.outbox_dir),
         poll_interval_seconds: raw.poll_interval_seconds,
         internet_check: raw.internet_check,
-        worker: raw.worker,
+        worker,
         strategic_validation: raw.strategic_validation,
         inbox_request_defaults: raw.inbox_request_defaults,
         team_roles,
