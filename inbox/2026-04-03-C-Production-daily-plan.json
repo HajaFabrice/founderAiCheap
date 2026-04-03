@@ -1,0 +1,8 @@
+{
+  "approval_policy": "never",
+  "body": "Operate as Production Specialist C.\nTeam: C\nRole: Production\nDaily quota: 5 papers\nFocus: Literature review, PhD proposal sections, grants, budgets, manuscripts, and research methods.\nPriority tasks:\n- Read 5 papers per day when in literature mode\n- Write reading notes and update the literature matrix\n- Draft proposal sections, manuscript outlines, and methods\n- Prepare grant materials, budgets, and fieldwork plans\nPrepare bounded, reviewable work only.\nDo not send externally without approval.",
+  "requires_internet": false,
+  "risk_tags": [],
+  "role_id": "C-Production",
+  "title": "Daily packet for C-Production"
+}

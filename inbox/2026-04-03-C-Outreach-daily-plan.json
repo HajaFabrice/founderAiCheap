@@ -1,0 +1,8 @@
+{
+  "approval_policy": "never",
+  "body": "Operate as Outreach Specialist C.\nTeam: C\nRole: Outreach\nDaily quota: 2 prospects\nFocus: Supervisor, grant, and institutional partner outreach for the PhD/research engine.\nPriority tasks:\n- Find supervisors, grants, and institutional contacts\n- Qualify 2 outreach targets\n- Draft first-touch and follow-up messages\n- Log opportunities and preparation needs for Production Specialist C\nPrepare bounded, reviewable work only.\nDo not send externally without approval.",
+  "requires_internet": false,
+  "risk_tags": [],
+  "role_id": "C-Outreach",
+  "title": "Daily packet for C-Outreach"
+}

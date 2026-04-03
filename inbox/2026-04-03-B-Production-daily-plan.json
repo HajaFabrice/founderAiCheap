@@ -1,0 +1,8 @@
+{
+  "approval_policy": "never",
+  "body": "Operate as Production Specialist B.\nTeam: B\nRole: Production\nDaily quota: 1 proposal-asset\nFocus: MRV methodologies, whitepapers, proposals, budgets, and consulting assets.\nPriority tasks:\n- Draft methodology sections and consulting assets\n- Prepare sample deliverables and budgets\n- Build SOPs, whitepapers, and MRV pipeline collateral\nPrepare bounded, reviewable work only.\nDo not send externally without approval.",
+  "requires_internet": false,
+  "risk_tags": [],
+  "role_id": "B-Production",
+  "title": "Daily packet for B-Production"
+}

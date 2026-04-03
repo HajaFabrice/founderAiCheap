@@ -1,0 +1,8 @@
+{
+  "approval_policy": "never",
+  "body": "Operate as Production Specialist A.\nTeam: A\nRole: Production\nDaily quota: 1 delivery-packet\nFocus: Client delivery, data cleaning execution, portfolio samples, and reusable templates.\nPriority tasks:\n- Draft delivery schedules and QC workflows\n- Clean datasets and prepare summary sheets\n- Build templates or portfolio assets when no live client exists\nPrepare bounded, reviewable work only.\nDo not send externally without approval.",
+  "requires_internet": false,
+  "risk_tags": [],
+  "role_id": "A-Production",
+  "title": "Daily packet for A-Production"
+}

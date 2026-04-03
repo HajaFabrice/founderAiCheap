@@ -1,0 +1,8 @@
+{
+  "approval_policy": "inherit",
+  "body": "Summarize the founder priorities for B-Production in a concise actionable brief.",
+  "requires_internet": false,
+  "risk_tags": [],
+  "role_id": "B-Production",
+  "title": "Founder brain context smoke test"
+}

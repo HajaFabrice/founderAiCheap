@@ -1,0 +1,4 @@
+interface:
+  display_name: "Founder Brain"
+  short_description: "Franciscan founder AI operating system"
+  default_prompt: "Use $founder-brain to produce workflows, outreach, offers, content, and decisions in the founder's exact Franciscan MRV voice."

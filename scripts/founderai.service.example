@@ -1,0 +1,15 @@
+[Unit]
+Description=FounderAI autonomy daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/founderai
+ExecStart=/opt/founderai/target/release/founderai-ollama-rust daemon --config /opt/founderai/config/founderai.json
+Restart=always
+RestartSec=10
+Environment=OPENAI_API_KEY=replace-me-if-using-openai
+
+[Install]
+WantedBy=multi-user.target
