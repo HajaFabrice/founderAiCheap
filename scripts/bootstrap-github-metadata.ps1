@@ -21,12 +21,22 @@ function Resolve-Repository {
     throw "Unsupported GitHub remote URL: $remote"
 }
 
-if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+$ghCommand = Get-Command gh -ErrorAction SilentlyContinue
+if (-not $ghCommand) {
+    $fallbackGh = "C:\Program Files\GitHub CLI\gh.exe"
+    if (Test-Path $fallbackGh) {
+        $ghCommand = @{ Source = $fallbackGh }
+    }
+}
+
+if (-not $ghCommand) {
     throw "GitHub CLI is not installed. Install it first, then run this script."
 }
 
+$ghPath = $ghCommand.Source
+
 $resolvedRepo = Resolve-Repository -Value $Repo
-$null = gh auth status
+$null = & $ghPath auth status
 if ($LASTEXITCODE -ne 0) {
     throw "GitHub CLI is installed but not authenticated."
 }
@@ -47,16 +57,16 @@ $labels = @(
 
 foreach ($label in $labels) {
     $encoded = [uri]::EscapeDataString($label.name)
-    gh api "repos/$resolvedRepo/labels/$encoded" --silent *> $null
+    & $ghPath api "repos/$resolvedRepo/labels/$encoded" --silent *> $null
     if ($LASTEXITCODE -eq 0) {
-        gh api --method PATCH "repos/$resolvedRepo/labels/$encoded" -f new_name=$label.name -f color=$label.color -f description=$label.description *> $null
+        & $ghPath api --method PATCH "repos/$resolvedRepo/labels/$encoded" -f new_name=$label.name -f color=$label.color -f description=$label.description *> $null
     } else {
-        gh api --method POST "repos/$resolvedRepo/labels" -f name=$label.name -f color=$label.color -f description=$label.description *> $null
+        & $ghPath api --method POST "repos/$resolvedRepo/labels" -f name=$label.name -f color=$label.color -f description=$label.description *> $null
     }
 }
 
 $existingTitles = @{}
-$existingIssues = gh issue list --repo $resolvedRepo --state all --limit 200 --json title | ConvertFrom-Json
+$existingIssues = & $ghPath issue list --repo $resolvedRepo --state all --limit 200 --json title | ConvertFrom-Json
 foreach ($issue in $existingIssues) {
     $existingTitles[$issue.title] = $true
 }
@@ -160,7 +170,7 @@ foreach ($issue in $issues) {
         foreach ($label in $issue.labels) {
             $args += @("--label", $label)
         }
-        gh @args *> $null
+        & $ghPath @args *> $null
     }
 }
 

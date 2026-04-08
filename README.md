@@ -103,6 +103,7 @@ Non-goals:
 
 ## Project Docs
 
+- Live docs: [hajafabrice.github.io/founderAiCheap](https://hajafabrice.github.io/founderAiCheap/)
 - [Project charter](docs/project-charter.md)
 - [Roadmap](docs/roadmap.md)
 - [Risk register](docs/risk-register.md)
