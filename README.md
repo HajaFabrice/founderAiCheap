@@ -1,12 +1,45 @@
 # FounderAI-Ollama-Rust
 
-FounderAI-Ollama-Rust is a Rust rebuild of the existing FounderAI autonomy layer. It preserves the founder-brain identity, approvals, inbox/outbox workflow, team routing, audit-friendly artifacts, and background daemon model while making the AI backend switchable between Ollama and OpenAI and the runtime portable across Windows and Linux.
+FounderAI-Ollama-Rust is a practical Rust rebuild of the FounderAI autonomy
+layer. It keeps the founder-brain identity, approvals, inbox and outbox
+workflow, team routing, audit-friendly artifacts, and background daemon model
+while making the provider switchable between Ollama and OpenAI and the runtime
+portable across Windows and Linux.
+
+## Mission
+
+Build a durable, low-cost FounderAI that:
+
+- preserves the founder-brain identity and Franciscan charter
+- preserves approvals for protected actions
+- preserves file-based runs, outputs, logs, and approvals
+- runs on Windows or Linux
+- can use Ollama now and OpenAI later without changing the product shape
+
+## Scope And Non-Goals
+
+Scope:
+
+- Rust daemon and CLI
+- file-based runtime structure
+- 3 teams and 6 role lanes
+- provider switching between Ollama and OpenAI
+- Windows scripts, Linux scripts, Docker, and CI
+- contributor-ready docs and governance
+
+Non-goals:
+
+- redesigning FounderAI into a generic agent platform
+- replacing audit files with hidden infrastructure
+- removing approvals for convenience
+- building a full SaaS control plane
+- adding speculative frameworks before reliability work is done
 
 ## What Stays The Same
 
 - `founder-brain/` remains the source of truth for founder identity, knowledge, workflows, output patterns, and team structure.
 - `inbox/`, `outbox/`, and `runtime/` stay as plain inspectable folders.
-- The 3-team / 6-role operating model stays intact:
+- The 3-team and 6-role operating model stays intact:
   - `A-Outreach`
   - `A-Production`
   - `B-Outreach`
@@ -30,32 +63,57 @@ FounderAI-Ollama-Rust is a Rust rebuild of the existing FounderAI autonomy layer
 
 ## What Changed
 
-- The app logic now lives in Rust under `src/`.
+- The autonomy engine now lives in Rust under `src/`.
 - The worker backend is provider-driven:
   - `ollama` over `http://localhost:11434`
   - `openai` over `https://api.openai.com/v1`
 - The default Ollama model is `qwen2.5:7b-instruct`.
 - Provider settings can be overridden by environment variables for cloud deployment.
 - Linux launch scripts, Docker assets, and GitHub Actions build verification are included.
-- Failures are written into run artifacts instead of crashing the whole daemon.
+- Failures are written into run artifacts instead of crashing the daemon.
+
+## No-Budget Delivery Stack
+
+- GitHub for source, issues, pull requests, Actions, and Pages
+- Markdown docs in `docs/` for zero-cost hosting
+- Docker compose files for low-cost Linux deployment
+- Ollama for self-hosted local inference when compute is available
+- OpenAI for simpler hosted inference when local models are impractical
 
 ## Folder Layout
 
 - `founder-brain/`: preserved founder context copied from the Python reference workspace
 - `config/founderai.json`: live runtime config
 - `config/founderai.example.json`: starter copy
+- `docs/`: public project charter, roadmap, risks, and volunteer onboarding
 - `src/`: Rust autonomy engine
-- `scripts/start-founderai.ps1`: hidden/background launcher for Windows
+- `scripts/start-founderai.ps1`: hidden or background launcher for Windows
 - `scripts/stop-founderai.ps1`: Windows stop helper
-- `scripts/start-founderai.sh`: Linux/macOS launcher
-- `scripts/stop-founderai.sh`: Linux/macOS stop helper
+- `scripts/bootstrap-ollama-model.ps1`: Windows helper to pull the default Ollama model
+- `scripts/start-founderai.sh`: Linux launcher
+- `scripts/stop-founderai.sh`: Linux stop helper
+- `scripts/bootstrap-ollama-model.sh`: Linux helper to pull the default Ollama model
 - `scripts/founderai.service.example`: systemd example for Linux deployment
-- `.github/workflows/build.yml`: Windows/Linux release build verification
+- `.github/workflows/build.yml`: Windows and Linux build verification
 - `docker-compose.openai.yml`: Docker deployment using OpenAI
 - `docker-compose.ollama.yml`: Docker deployment using Ollama
 - `inbox/`: drop `.json`, `.md`, or `.txt` requests here
 - `outbox/`: FounderAI run copies
 - `runtime/`: logs, state, runs, approvals, and team outputs
+
+## Project Docs
+
+- [Project charter](docs/project-charter.md)
+- [Roadmap](docs/roadmap.md)
+- [Risk register](docs/risk-register.md)
+- [Volunteer playbook](docs/volunteer-playbook.md)
+- [Contributor backlog](docs/contributor-backlog.md)
+- [GitHub admin checklist](docs/github-admin-checklist.md)
+- [Provider troubleshooting](docs/provider-troubleshooting.md)
+- [Contributing guide](CONTRIBUTING.md)
+- [Governance](GOVERNANCE.md)
+- [Security policy](SECURITY.md)
+- [Code of conduct](CODE_OF_CONDUCT.md)
 
 ## Provider Config
 
@@ -66,7 +124,7 @@ Ollama mode in `config/founderai.json`:
   "provider": "ollama",
   "base_url": "http://localhost:11434",
   "model": "qwen2.5:7b-instruct",
-  "timeout_seconds": 300,
+  "timeout_seconds": 900,
   "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
   "api_key_env": "OPENAI_API_KEY"
 }
@@ -79,13 +137,11 @@ OpenAI mode:
   "provider": "openai",
   "base_url": "https://api.openai.com/v1",
   "model": "gpt-5-mini",
-  "timeout_seconds": 300,
+  "timeout_seconds": 900,
   "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
   "api_key_env": "OPENAI_API_KEY"
 }
 ```
-
-When `provider` is `openai`, keep the API key in the environment rather than the config file.
 
 Supported environment overrides:
 
@@ -96,60 +152,23 @@ Supported environment overrides:
 - `FOUNDERAI_SYSTEM_PROMPT`
 - `FOUNDERAI_API_KEY_ENV`
 
-OpenAI key examples:
+Use `.env.example` as a starting point for local overrides. Keep real API keys out of committed files.
+
+## Build
 
 Windows:
 
 ```powershell
-$env:OPENAI_API_KEY="your-key"
+cargo build --release
 ```
 
 Linux:
 
 ```bash
-export OPENAI_API_KEY="your-key"
-```
-
-Provider switch without editing JSON:
-
-```powershell
-$env:FOUNDERAI_PROVIDER="openai"
-$env:FOUNDERAI_BASE_URL="https://api.openai.com/v1"
-$env:FOUNDERAI_MODEL="gpt-5-mini"
-$env:OPENAI_API_KEY="your-key"
-.\target\release\founderai-ollama-rust.exe status --config .\config\founderai.json
-```
-
-## Build On Windows
-
-1. Install the Rust toolchain if `cargo` is not available yet.
-2. Make sure Ollama is installed and running locally if you want the Ollama backend.
-3. Pull the Ollama model if needed:
-
-```powershell
-ollama pull qwen2.5:7b-instruct
-```
-
-4. Build:
-
-```powershell
 cargo build --release
 ```
 
-## Build On Linux
-
-1. Install Rust.
-2. Clone the repo.
-3. Choose a provider:
-   - local Ollama on the Linux host
-   - OpenAI via `OPENAI_API_KEY`
-4. Build:
-
-```bash
-cargo build --release
-```
-
-## Run Commands
+## Run
 
 Windows status:
 
@@ -183,18 +202,6 @@ Linux daemon:
 ./scripts/start-founderai.sh ./config/founderai.json
 ```
 
-Windows stop:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\stop-founderai.ps1
-```
-
-Linux stop:
-
-```bash
-./scripts/stop-founderai.sh
-```
-
 Review approvals:
 
 ```powershell
@@ -213,6 +220,70 @@ Create an inbox request:
   --risk-tag external-send
 ```
 
+## Provider Bootstrap
+
+Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap-ollama-model.ps1
+```
+
+Linux:
+
+```bash
+./scripts/bootstrap-ollama-model.sh
+```
+
+Windows isolated smoke run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\run-smoke-test.ps1
+```
+
+Linux isolated smoke run:
+
+```bash
+./scripts/run-smoke-test.sh
+```
+
+If you want the OpenAI path instead, set:
+
+Windows:
+
+```powershell
+$env:FOUNDERAI_PROVIDER="openai"
+$env:FOUNDERAI_BASE_URL="https://api.openai.com/v1"
+$env:FOUNDERAI_MODEL="gpt-5-mini"
+$env:OPENAI_API_KEY="your-key"
+```
+
+Linux:
+
+```bash
+export FOUNDERAI_PROVIDER="openai"
+export FOUNDERAI_BASE_URL="https://api.openai.com/v1"
+export FOUNDERAI_MODEL="gpt-5-mini"
+export OPENAI_API_KEY="your-key"
+```
+
+## Isolated Smoke Workspace
+
+Use `config/founderai.smoke.json` when you want a bounded smoke test that does
+not touch the main `inbox/`, `outbox/`, or `runtime/` folders. The smoke config
+uses its own `inbox-smoke/`, `outbox-smoke/`, and `runtime-smoke/` directories
+and disables periodic jobs so one test request stays isolated.
+
+The smoke wrapper scripts:
+
+- create one bounded request
+- run one isolated `tick`
+- print the latest run folder
+- print the paths to `prompt.md`, `output.md`, `stdout.txt`, and `stderr.txt`
+
+If Ollama remains too slow during acceptance, keep the committed config on
+`ollama` and run the same smoke script with environment overrides for
+`FOUNDERAI_PROVIDER=openai`.
+
 ## Docker Deployment
 
 OpenAI-backed container:
@@ -230,16 +301,6 @@ docker exec -it founderai-ollama ollama pull qwen2.5:7b-instruct
 ```
 
 The compose files keep `inbox/`, `outbox/`, and `runtime/` mounted as host directories so FounderAI remains file-auditable in the cloud.
-
-## Cloud-Ready Direction
-
-- Keep the repo on GitHub.
-- Use GitHub Actions to prove the Rust binary builds on both Windows and Linux.
-- Run the daemon on a Linux VM, VPS, or other non-work machine using either:
-  - Ollama on that host
-  - OpenAI via `OPENAI_API_KEY`
-- Keep `founder-brain/`, `inbox/`, `outbox/`, and `runtime/` as plain files so the system stays migratable and auditable.
-- Use the same binary and config shape across operating systems; only provider settings and launcher style change.
 
 ## Suggested Smoke Test
 
@@ -270,11 +331,29 @@ The compose files keep `inbox/`, `outbox/`, and `runtime/` mounted as host direc
 
 ## Architecture Mapping To The Python Reference
 
-- `src/config.rs`: mirrors the Python config loader and preserves the job / role schema, with cloud-friendly provider overrides.
+- `src/config.rs`: mirrors the Python config loader and preserves the job and role schema, with cloud-friendly provider overrides.
 - `src/app.rs`: mirrors the daemon loop, job scheduling, inbox ingestion, approvals, state updates, and status output.
-- `src/worker.rs`: mirrors prompt-packet assembly and run artifact creation, with a config-driven provider switch between Ollama and OpenAI.
+- `src/worker.rs`: mirrors prompt-packet assembly and run artifact creation, with a provider switch between Ollama and OpenAI.
 - `src/approvals.rs`: preserves file-based approval payloads and summaries, and emits platform-appropriate helper scripts.
 - `src/state.rs`: preserves `runtime/state.json`.
 - `src/team_logging.rs`: preserves CSV and JSONL team activity logs.
 - `src/singleton.rs`: preserves the single-daemon lock behavior across Windows and Linux.
 - `scripts/*.ps1` and `scripts/*.sh`: preserve the launcher pattern while making deployment transferable.
+
+## Community Direction
+
+This repo is now structured for a no-budget, open collaboration model:
+
+- MIT-licensed source
+- CC BY 4.0 documentation
+- contributor docs and governance
+- issue templates and PR checklist
+- GitHub Actions CI
+- Markdown docs ready for GitHub Pages
+- provider choice so infrastructure can scale with budget
+
+## Licensing
+
+- Code, scripts, and repo automation are licensed under the MIT License. See [LICENSE](LICENSE).
+- Public-facing repository documentation is licensed under CC BY 4.0. See [LICENSE-docs.md](LICENSE-docs.md).
+- `founder-brain/` content remains separately governed unless a file is explicitly marked for public reuse.

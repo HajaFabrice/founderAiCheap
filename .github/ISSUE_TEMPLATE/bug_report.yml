@@ -1,0 +1,66 @@
+name: Bug Report
+description: Report a bug, regression, or broken workflow.
+title: "[Bug]: "
+labels:
+  - bug
+  - help wanted
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Short description
+      description: Summarize the bug in one or two sentences.
+      placeholder: FounderAI status reports the wrong provider reachability state.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - approvals
+        - founder-brain
+        - inbox-outbox
+        - provider worker
+        - Windows launcher
+        - Linux deployment
+        - docs
+        - CI
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the exact steps so someone else can reproduce the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Relevant artifacts
+      description: Paste log lines, error messages, or runtime artifact paths if available.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, provider, model, and version details if known.
+      placeholder: Windows 11, ollama, qwen2.5:7b-instruct, release build

@@ -24,3 +24,6 @@ jobs:
 
       - name: Build release binary
         run: cargo build --release
+
+      - name: Run tests
+        run: cargo test --release

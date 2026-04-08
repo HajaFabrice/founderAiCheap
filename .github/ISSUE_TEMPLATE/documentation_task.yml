@@ -1,0 +1,27 @@
+name: Documentation Task
+description: Suggest a docs improvement, onboarding fix, or public-facing clarification.
+title: "[Docs]: "
+labels:
+  - documentation
+  - good first issue
+body:
+  - type: textarea
+    id: gap
+    attributes:
+      label: What is unclear or missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: audience
+    attributes:
+      label: Who is blocked by this?
+      description: New contributor, maintainer, founder, deployer, or another audience.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Suggested fix
+      description: Link the file or doc section if you know where it should live.

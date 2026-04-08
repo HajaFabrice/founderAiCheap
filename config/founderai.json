@@ -23,7 +23,7 @@
     "provider": "ollama",
     "base_url": "http://localhost:11434",
     "model": "qwen2.5:7b-instruct",
-    "timeout_seconds": 300,
+    "timeout_seconds": 900,
     "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
     "api_key_env": "OPENAI_API_KEY"
   },

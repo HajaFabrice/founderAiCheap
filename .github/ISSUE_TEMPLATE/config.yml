@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Project Charter
+    url: https://github.com/HajaFabrice/founderAiCheap/blob/main/docs/project-charter.md
+    about: Read the current scope, non-goals, and operating principles before proposing large changes.
+  - name: Volunteer Playbook
+    url: https://github.com/HajaFabrice/founderAiCheap/blob/main/docs/volunteer-playbook.md
+    about: Start here if you want a low-risk way to help.
+  - name: Contributor Backlog
+    url: https://github.com/HajaFabrice/founderAiCheap/blob/main/docs/contributor-backlog.md
+    about: Review the current beginner-friendly and maintainer-owned backlog.
+  - name: Discussions
+    url: https://github.com/HajaFabrice/founderAiCheap/discussions
+    about: Use Discussions for open-ended questions, onboarding, and roadmap conversation when enabled.

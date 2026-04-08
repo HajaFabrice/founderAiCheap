@@ -1,2 +1,12 @@
 runtime/
 target/
+runtime-smoke/
+inbox-smoke/
+outbox-smoke/
+inbox/*
+!inbox/.gitkeep
+outbox/*
+!outbox/.gitkeep
+.env
+.env.*
+!.env.example

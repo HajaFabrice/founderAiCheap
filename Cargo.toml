@@ -2,6 +2,10 @@
 name = "founderai-ollama-rust"
 version = "0.1.0"
 edition = "2021"
+description = "Rust rebuild of FounderAI with file-auditable orchestration and switchable Ollama/OpenAI providers."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/HajaFabrice/founderAiCheap"
 
 [dependencies]
 anyhow = "1.0"

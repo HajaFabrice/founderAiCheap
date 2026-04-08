@@ -1,0 +1,52 @@
+name: Feature Request
+description: Propose a bounded improvement that stays inside the FounderAI product shape.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What pain point or limitation are you seeing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the smallest change that would solve the problem.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: guardrails
+    attributes:
+      label: Guardrails
+      options:
+        - label: This request preserves founder voice fidelity.
+        - label: This request preserves approval gating for protected actions.
+        - label: This request preserves file-based auditability.
+        - label: This request avoids unnecessary new infrastructure.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Mention any simpler or lower-cost alternatives.
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Main impact area
+      options:
+        - reliability
+        - developer experience
+        - docs and onboarding
+        - Windows portability
+        - Linux portability
+        - provider flexibility
+        - deployment cost
+    validations:
+      required: true

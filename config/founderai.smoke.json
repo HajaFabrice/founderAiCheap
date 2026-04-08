@@ -1,9 +1,9 @@
 {
   "workspace_root": "..",
   "founder_brain_path": "../founder-brain",
-  "runtime_dir": "../runtime",
-  "inbox_dir": "../inbox",
-  "outbox_dir": "../outbox",
+  "runtime_dir": "../runtime-smoke",
+  "inbox_dir": "../inbox-smoke",
+  "outbox_dir": "../outbox-smoke",
   "poll_interval_seconds": 60,
   "internet_check": {
     "enabled": true,
@@ -23,7 +23,7 @@
     "provider": "ollama",
     "base_url": "http://localhost:11434",
     "model": "qwen2.5:7b-instruct",
-    "timeout_seconds": 900,
+    "timeout_seconds": 1800,
     "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
     "api_key_env": "OPENAI_API_KEY"
   },
@@ -150,129 +150,5 @@
       "default_approval_policy": "inherit"
     }
   ],
-  "jobs": [
-    {
-      "id": "startup-focus-brief",
-      "description": "Build the first focus brief after FounderAI wakes up.",
-      "enabled": true,
-      "triggers": [
-        "startup"
-      ],
-      "cooldown_seconds": 21600,
-      "requires_internet": false,
-      "approval_policy": "never",
-      "risk_tags": [],
-      "mode": "single",
-      "task_label": "Startup Focus Brief",
-      "prompt": "Review the FounderAI workspace, team folders, inbox, pending approvals, and survival-engine priorities. Produce a concise founder brief with the top three actions, what can be delegated safely, and what must wait for validation."
-    },
-    {
-      "id": "daily-team-orchestration",
-      "description": "Generate the daily work packets for all 6 team roles.",
-      "enabled": true,
-      "triggers": [
-        "periodic"
-      ],
-      "requires_internet": false,
-      "approval_policy": "never",
-      "risk_tags": [],
-      "mode": "daily_orchestration",
-      "run_at_local": "06:00",
-      "task_label": "Daily Team Orchestration",
-      "prompt": "Generate the daily task list for all 6 roles and create role-specific inbox requests."
-    },
-    {
-      "id": "outreach-batch",
-      "description": "Run the 3 outreach lanes in parallel draft mode.",
-      "enabled": true,
-      "triggers": [
-        "periodic"
-      ],
-      "interval_seconds": 14400,
-      "requires_internet": false,
-      "approval_policy": "inherit",
-      "risk_tags": [],
-      "mode": "per_role",
-      "team_roles": [
-        "A-Outreach",
-        "B-Outreach",
-        "C-Outreach"
-      ],
-      "task_label": "Outreach Batch",
-      "prompt": "Research the next qualified leads for this lane, draft founder-voice emails and two follow-ups, and prepare CRM-ready notes. Draft only. Do not send externally."
-    },
-    {
-      "id": "production-batch",
-      "description": "Run the 3 production lanes in parallel.",
-      "enabled": true,
-      "triggers": [
-        "periodic"
-      ],
-      "interval_seconds": 14400,
-      "requires_internet": false,
-      "approval_policy": "inherit",
-      "risk_tags": [],
-      "mode": "per_role",
-      "team_roles": [
-        "A-Production",
-        "B-Production",
-        "C-Production"
-      ],
-      "task_label": "Production Batch",
-      "metric_value": 1,
-      "prompt": "Produce one bounded, useful output for this role: delivery plan, proposal asset, methodology draft, template, literature note, or research section. Keep work reviewable and draft-only."
-    },
-    {
-      "id": "phd-literature-engine",
-      "description": "Run the PhD literature engine for Production Specialist C.",
-      "enabled": true,
-      "triggers": [
-        "periodic"
-      ],
-      "requires_internet": false,
-      "approval_policy": "never",
-      "risk_tags": [],
-      "mode": "per_role",
-      "team_roles": [
-        "C-Production"
-      ],
-      "run_at_local": "07:30",
-      "task_label": "Literature Review",
-      "metric_value": 5,
-      "prompt": "Read or review 5 papers, write concise reading notes, propose the best literature review type for the current question, and update the literature matrix or paper logic in draft form."
-    },
-    {
-      "id": "weekly-strategy-review",
-      "description": "Review KPIs and compare them to the 5-year roadmap.",
-      "enabled": true,
-      "triggers": [
-        "periodic"
-      ],
-      "requires_internet": false,
-      "approval_policy": "never",
-      "risk_tags": [],
-      "mode": "single",
-      "run_at_local": "08:30",
-      "weekdays": [
-        "Monday"
-      ],
-      "task_label": "Weekly Strategy Review",
-      "prompt": "Summarize KPIs across the 3 teams, compare progress against the 5-year SMART roadmap, and propose the next bounded strategic adjustments."
-    },
-    {
-      "id": "internet-recovery-review",
-      "description": "Resume network-dependent work after internet returns.",
-      "enabled": true,
-      "triggers": [
-        "internet_up"
-      ],
-      "cooldown_seconds": 900,
-      "requires_internet": true,
-      "approval_policy": "never",
-      "risk_tags": [],
-      "mode": "single",
-      "task_label": "Internet Recovery Review",
-      "prompt": "Internet is available again. Review queued work that was waiting on connectivity and draft the next safe network-required action plan. Never send, publish, or commit externally without approval."
-    }
-  ]
+  "jobs": []
 }
