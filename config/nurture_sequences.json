@@ -1,0 +1,75 @@
+{
+  "default_template_id": "warm-lead-default",
+  "templates": [
+    {
+      "template_id": "warm-lead-default",
+      "description": "A seven-day nurture sequence for warm conservation or research leads.",
+      "steps": [
+        {
+          "step_id": "d1-email",
+          "delay_days": 1,
+          "channel": "email",
+          "task_type": "draft",
+          "approval_policy": "after_run",
+          "risk_tags": [
+            "external-send"
+          ],
+          "prompt": "Draft the first follow-up email. Build on the original conversation, add one specific useful observation, and keep the call to action low-friction."
+        },
+        {
+          "step_id": "d3-email",
+          "delay_days": 3,
+          "channel": "email",
+          "task_type": "draft",
+          "approval_policy": "after_run",
+          "risk_tags": [
+            "external-send"
+          ],
+          "prompt": "Draft the next email follow-up. Keep it brief, respectful, and grounded in real value. Avoid pressure."
+        },
+        {
+          "step_id": "d4-linkedin",
+          "delay_days": 4,
+          "channel": "linkedin",
+          "task_type": "draft",
+          "approval_policy": "after_run",
+          "risk_tags": [
+            "external-send"
+          ],
+          "prompt": "Draft a short LinkedIn touchpoint that feels human, transparent, and specific to the lead's work."
+        },
+        {
+          "step_id": "d5-email",
+          "delay_days": 5,
+          "channel": "email",
+          "task_type": "draft",
+          "approval_policy": "after_run",
+          "risk_tags": [
+            "external-send"
+          ],
+          "prompt": "Draft a practical day-5 follow-up that reinforces the value offer without sounding needy."
+        },
+        {
+          "step_id": "d6-phone-flag",
+          "delay_days": 6,
+          "channel": "phone_flag",
+          "task_type": "briefing",
+          "approval_policy": "never",
+          "risk_tags": [],
+          "prompt": "Flag that a human phone call may now be appropriate if the lead remains promising and the phone number is available."
+        },
+        {
+          "step_id": "d7-email",
+          "delay_days": 7,
+          "channel": "email",
+          "task_type": "draft",
+          "approval_policy": "after_run",
+          "risk_tags": [
+            "external-send"
+          ],
+          "prompt": "Draft the final email touchpoint for this sequence. Keep it warm, transparent, and easy to decline or re-open later."
+        }
+      ]
+    }
+  ]
+}

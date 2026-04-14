@@ -1,3 +1,8 @@
+use crate::agents::perpetua::{
+    active_sequence_count, collect_due_actions, complete_action as complete_sequence_action, ensure_nurture_files,
+    register_sequence_from_lead, SequenceAction, SequenceActionOutcome,
+};
+use crate::agents::zacchaeus::{build_zacchaeus_job, collect_inbound_lead_requests};
 use crate::approvals::{
     approval_decision, create_approval_request, ensure_approval_dirs, list_pending_approvals, ApprovalDecision,
 };
@@ -137,6 +142,7 @@ impl AutonomyApp {
             .context("failed to create daily plans dir")?;
         ensure_approval_dirs(&self.config.runtime_dir)?;
         ensure_offline_queue_dirs(&self.config)?;
+        ensure_nurture_files(&self.config)?;
         ensure_log_files(&self.config.runtime_dir)?;
         Ok(())
     }
@@ -622,6 +628,148 @@ impl AutonomyApp {
         Ok(found)
     }
 
+    fn create_manual_inbox_note(
+        &self,
+        state: &mut AppState,
+        prefix: &str,
+        title: &str,
+        body: &str,
+        status: &str,
+    ) -> Result<PathBuf> {
+        let file_name = format!(
+            "{}-{}-{}.md",
+            prefix,
+            utc_now().format("%Y%m%dT%H%M%SZ"),
+            slugify(title)
+        );
+        let path = self.config.inbox_dir.join(file_name);
+        fs::write(&path, body)
+            .with_context(|| format!("failed to write {}", path.display()))?;
+        self.mark_request_processed(state, &path, status);
+        Ok(path)
+    }
+
+    fn process_zacchaeus_inbound_requests(
+        &self,
+        state: &mut AppState,
+        current_internet: bool,
+        now_local: DateTime<Local>,
+    ) -> Result<()> {
+        let leads = collect_inbound_lead_requests(&self.config.inbox_dir, state)?;
+        for (request_path, lead) in leads {
+            self.log(&format!(
+                "Zacchaeus picked up inbound lead request {}.",
+                request_path.display()
+            ));
+            let job = build_zacchaeus_job(&lead, &request_path);
+            self.run_single_job(
+                state,
+                &job,
+                "inbox_request",
+                current_internet,
+                now_local,
+                Some(&request_path),
+                None,
+            )?;
+
+            if let Some(sequence_id) = register_sequence_from_lead(&self.config, &lead, &request_path)? {
+                self.log(&format!(
+                    "Perpetua registered nurture sequence {} from {}.",
+                    sequence_id,
+                    request_path.display()
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    fn process_perpetua_sequences(
+        &self,
+        state: &mut AppState,
+        current_internet: bool,
+        now_local: DateTime<Local>,
+    ) -> Result<()> {
+        let actions = collect_due_actions(&self.config, utc_now())?;
+        for action in actions {
+            match action {
+                SequenceAction::Draft {
+                    sequence_id,
+                    step_id,
+                    channel,
+                    job,
+                } => {
+                    let previous_run_id = state
+                        .jobs
+                        .get(&job.job_id)
+                        .and_then(|job_state| job_state.last_run_id.clone());
+                    self.log(&format!(
+                        "Perpetua is drafting nurture step {} for sequence {}.",
+                        step_id, sequence_id
+                    ));
+                    self.run_single_job(
+                        state,
+                        &job,
+                        "periodic",
+                        current_internet,
+                        now_local,
+                        None,
+                        None,
+                    )?;
+                    let latest_run_id = state
+                        .jobs
+                        .get(&job.job_id)
+                        .and_then(|job_state| job_state.last_run_id.clone());
+                    if latest_run_id != previous_run_id {
+                        complete_sequence_action(
+                            &self.config,
+                            &sequence_id,
+                            &step_id,
+                            SequenceActionOutcome::Drafted {
+                                run_id: latest_run_id.clone(),
+                                note: Some(format!("Drafted for {} channel.", channel)),
+                            },
+                        )?;
+                    }
+                }
+                SequenceAction::PhoneFlag {
+                    sequence_id,
+                    step_id,
+                    title,
+                    body,
+                } => {
+                    self.log(&format!(
+                        "Perpetua raised phone follow-up flag {} for sequence {}.",
+                        step_id, sequence_id
+                    ));
+                    let note_path = self.create_manual_inbox_note(
+                        state,
+                        "perpetua-phone-flag",
+                        &title,
+                        &body,
+                        "manual_phone_flag",
+                    )?;
+                    complete_sequence_action(
+                        &self.config,
+                        &sequence_id,
+                        &step_id,
+                        SequenceActionOutcome::Flagged {
+                            note: Some(format!("Phone follow-up flagged at {}", note_path.display())),
+                        },
+                    )?;
+                    self.notify_best_effort(
+                        "FounderAI phone follow-up flag",
+                        &format!(
+                            "Perpetua created a phone follow-up flag for sequence {} at {}.",
+                            sequence_id,
+                            note_path.display()
+                        ),
+                    );
+                }
+            }
+        }
+        Ok(())
+    }
+
     fn role_specific_job(&self, job: &JobConfig, role: &TeamRoleConfig) -> JobConfig {
         let mut role_job = job.clone();
         role_job.job_id = format!("{}--{}", job.job_id, role.role_id);
@@ -1083,6 +1231,14 @@ impl AutonomyApp {
             }
         }
 
+        if let Err(err) = self.process_zacchaeus_inbound_requests(&mut state, current_internet, now_local) {
+            self.log(&format!("Zacchaeus lead processing failed: {err:#}"));
+        }
+
+        if let Err(err) = self.process_perpetua_sequences(&mut state, current_internet, now_local) {
+            self.log(&format!("Perpetua sequence processing failed: {err:#}"));
+        }
+
         for request_file in self.iter_new_inbox_requests(&state)? {
             match self.build_inbox_job(&request_file) {
                 Ok((inbox_job, role)) => {
@@ -1156,6 +1312,7 @@ impl AutonomyApp {
             format!("Internet status: {}", if current_internet { "available" } else { "unavailable" }),
             format!("Pending approvals: {}", pending.len()),
             format!("Offline queue pending: {}", count_pending_entries(&self.config)?),
+            format!("Active nurture sequences: {}", active_sequence_count(&self.config)?),
             format!("Model router enabled: {}", self.config.model_router.enabled),
             format!("Model router routes: {}", self.config.model_router.routes.len()),
             format!("Notifier enabled: {}", self.config.notifier.enabled),
