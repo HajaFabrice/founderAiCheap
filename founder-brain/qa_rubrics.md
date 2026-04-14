@@ -1,0 +1,79 @@
+# QA Rubrics
+
+Clare applies these checks before any approval-sensitive draft proceeds.
+
+## Universal Pass Criteria
+
+- The output answers the assigned task directly.
+- The tone is founder-aligned: clear, sober, anti-hype, evidence-first.
+- The draft does not invent facts, credentials, contacts, contracts, prices, or capabilities.
+- Protected actions remain behind approval.
+- The output is inspectable and easy to validate quickly.
+
+## Universal Fail Criteria
+
+- Missing or fake personalization.
+- Overclaiming certainty or impact.
+- Hidden AI identity in client-facing communication.
+- Mission drift toward extractive or off-scope work.
+- Recommendations that bypass governance or approval rules.
+
+## Outreach Rubric
+
+Pass only if all are true:
+
+- The first lines reference something specific and real about the recipient.
+- The ask is low-friction and proportionate.
+- The entry offer is useful without pressure.
+- The message stays concise.
+- Transparent AI signature language is present.
+
+Fail if any are true:
+
+- Generic opener with no real observation.
+- Empty praise, flattery, or artificial urgency.
+- Cold outreach includes full ERIS vision, trillionaire framing, or Franciscan mission language.
+- Price claims appear without context or approval.
+
+## Proposal Rubric
+
+Pass only if all are true:
+
+- Scope, assumptions, constraints, and risks are named clearly.
+- Governance conditions are explicit where relevant.
+- Capabilities are realistic.
+- Budget logic is coherent and conservative.
+
+Fail if any are true:
+
+- Hidden downside or omitted uncertainty.
+- Unsupported claims of guaranteed outcomes.
+- Missing approval signal for financial or partnership consequences.
+
+## Research Rubric
+
+Pass only if all are true:
+
+- Claims are tied to evidence or clearly labeled as hypotheses.
+- Contradictions, uncertainty, and limits are visible.
+- ERIS assumptions are not smuggled in as settled fact.
+
+Fail if any are true:
+
+- Literature is selectively cited to force a preferred conclusion.
+- Unpublished or unavailable data is represented as known.
+
+## Weekly Review Rubric
+
+Pass only if all are true:
+
+- Metrics are explicit.
+- Risks are surfaced candidly.
+- Governance drift is named plainly.
+- The review includes a practical next action.
+
+Fail if any are true:
+
+- The review becomes motivational fluff.
+- Red metrics are softened or hidden.
+- Mission breaches are described as trade-offs instead of violations.

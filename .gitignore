@@ -10,3 +10,11 @@ outbox/*
 .env
 .env.*
 !.env.example
+documents/**
+!documents/
+!documents/01_Strategy_And_Systems/
+!documents/01_Strategy_And_Systems/ERIS/
+!documents/01_Strategy_And_Systems/ERIS/ERIS Agent System - Repo Synced.md
+!documents/01_Strategy_And_Systems/Claude_Document_Pack/
+!documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFilesV3/
+!documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFilesV3/ERIS Master Plan - Repo Synced.md

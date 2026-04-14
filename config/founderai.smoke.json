@@ -4,6 +4,7 @@
   "runtime_dir": "../runtime-smoke",
   "inbox_dir": "../inbox-smoke",
   "outbox_dir": "../outbox-smoke",
+  "agents_path": "agents.json",
   "poll_interval_seconds": 60,
   "internet_check": {
     "enabled": true,
@@ -42,20 +43,61 @@
     "requires_internet": false,
     "risk_tags": []
   },
+  "model_router": {
+    "task_types": {
+      "draft": {
+        "prefer": "offline",
+        "fallback": "online"
+      },
+      "qa_check": {
+        "prefer": "offline",
+        "fallback": "offline"
+      },
+      "briefing": {
+        "prefer": "offline",
+        "fallback": "offline"
+      },
+      "final_review": {
+        "prefer": "online",
+        "fallback": "offline"
+      },
+      "proposal": {
+        "prefer": "online",
+        "fallback": "offline"
+      },
+      "phd_analysis": {
+        "prefer": "online",
+        "fallback": "offline"
+      }
+    },
+    "connectivity_check_url": "https://1.1.1.1",
+    "connectivity_timeout_seconds": 5
+  },
+  "offline_queue": {
+    "enabled": true,
+    "path": "runtime/offline_queue/",
+    "replay_on_job": "internet-recovery-review"
+  },
+  "notifier": {
+    "enabled": false,
+    "slack_webhook_env": "FOUNDERAI_SLACK_WEBHOOK_URL"
+  },
   "team_roles": [
     {
       "id": "A-Outreach",
       "team": "A",
       "role": "Outreach",
       "display_name": "Outreach Specialist A",
+      "saint_name": "Anthony",
+      "agent_id": "anthony",
       "daily_quota": 5,
       "metric_unit": "prospects",
       "focus": "Cash-flow outreach for biodiversity data cleaning and validation support.",
       "responsibilities": [
         "Research NGOs and field programs needing data cleaning support",
-        "Qualify 5 prospects and log their core characteristics",
-        "Draft a first-touch email plus two follow-ups in founder voice",
-        "Queue drafts and alert production when a reply appears"
+        "Qualify prospects and log core context",
+        "Draft first-touch outreach and follow-up assets",
+        "Queue anything external for approval"
       ],
       "default_risk_tags": [
         "external-send"
@@ -67,13 +109,15 @@
       "team": "A",
       "role": "Production",
       "display_name": "Production Specialist A",
+      "saint_name": "Juniper",
+      "agent_id": "juniper",
       "daily_quota": 1,
       "metric_unit": "delivery-packet",
       "focus": "Client delivery, data cleaning execution, portfolio samples, and reusable templates.",
       "responsibilities": [
         "Draft delivery schedules and QC workflows",
         "Clean datasets and prepare summary sheets",
-        "Build templates or portfolio assets when no live client exists"
+        "Build reusable templates when no live client exists"
       ],
       "default_risk_tags": [],
       "default_approval_policy": "inherit"
@@ -83,12 +127,14 @@
       "team": "B",
       "role": "Outreach",
       "display_name": "Outreach Specialist B",
+      "saint_name": "Bonaventure",
+      "agent_id": "bonaventure",
       "daily_quota": 3,
       "metric_unit": "prospects",
       "focus": "Growth-engine outreach for MRV, biodiversity consulting, and institutional partnerships.",
       "responsibilities": [
         "Identify REDD+, donor, NGO, and institutional leads",
-        "Qualify 3 prospects and log context",
+        "Qualify prospects and log context",
         "Draft partnership-style outreach and follow-ups",
         "Hand opportunities to Production Specialist B"
       ],
@@ -102,9 +148,11 @@
       "team": "B",
       "role": "Production",
       "display_name": "Production Specialist B",
+      "saint_name": "Bernardine",
+      "agent_id": "bernardine",
       "daily_quota": 1,
       "metric_unit": "proposal-asset",
-      "focus": "MRV methodologies, whitepapers, proposals, budgets, and consulting assets.",
+      "focus": "MRV methodologies, proposals, budgets, and consulting assets.",
       "responsibilities": [
         "Draft methodology sections and consulting assets",
         "Prepare sample deliverables and budgets",
@@ -118,14 +166,16 @@
       "team": "C",
       "role": "Outreach",
       "display_name": "Outreach Specialist C",
+      "saint_name": "Jacinta",
+      "agent_id": "jacinta",
       "daily_quota": 2,
       "metric_unit": "prospects",
-      "focus": "Supervisor, grant, and institutional partner outreach for the PhD/research engine.",
+      "focus": "Supervisor, grant, and institutional partner outreach for the PhD and research engine.",
       "responsibilities": [
         "Find supervisors, grants, and institutional contacts",
-        "Qualify 2 outreach targets",
+        "Qualify outreach targets",
         "Draft first-touch and follow-up messages",
-        "Log opportunities and preparation needs for Production Specialist C"
+        "Log opportunities for Production Specialist C"
       ],
       "default_risk_tags": [
         "external-send"
@@ -137,12 +187,13 @@
       "team": "C",
       "role": "Production",
       "display_name": "Production Specialist C",
+      "saint_name": "Duns Scotus",
+      "agent_id": "duns-scotus",
       "daily_quota": 5,
       "metric_unit": "papers",
       "focus": "Literature review, PhD proposal sections, grants, budgets, manuscripts, and research methods.",
       "responsibilities": [
-        "Read 5 papers per day when in literature mode",
-        "Write reading notes and update the literature matrix",
+        "Read papers and update literature notes",
         "Draft proposal sections, manuscript outlines, and methods",
         "Prepare grant materials, budgets, and fieldwork plans"
       ],

@@ -4,6 +4,7 @@
   "runtime_dir": "../runtime",
   "inbox_dir": "../inbox",
   "outbox_dir": "../outbox",
+  "agents_path": "agents.json",
   "poll_interval_seconds": 60,
   "internet_check": {
     "enabled": true,
@@ -27,6 +28,112 @@
     "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
     "api_key_env": "OPENAI_API_KEY"
   },
+  "model_router": {
+    "enabled": true,
+    "connectivity_check_url": "https://1.1.1.1",
+    "connectivity_timeout_seconds": 5,
+    "task_types": {
+      "draft": {
+        "prefer": "offline",
+        "fallback": "online",
+        "offline": {
+          "provider": "ollama",
+          "base_url": "http://localhost:11434",
+          "model": "qwen2.5:7b-instruct",
+          "timeout_seconds": 900
+        },
+        "online": {
+          "provider": "openai",
+          "base_url": "https://api.openai.com/v1",
+          "model": "gpt-5-mini",
+          "api_key_env": "OPENAI_API_KEY"
+        }
+      },
+      "qa_check": {
+        "prefer": "offline",
+        "fallback": "offline",
+        "offline": {
+          "provider": "ollama",
+          "base_url": "http://localhost:11434",
+          "model": "qwen2.5:7b-instruct",
+          "timeout_seconds": 900
+        }
+      },
+      "briefing": {
+        "prefer": "offline",
+        "fallback": "online",
+        "offline": {
+          "provider": "ollama",
+          "base_url": "http://localhost:11434",
+          "model": "qwen2.5:7b-instruct",
+          "timeout_seconds": 900
+        },
+        "online": {
+          "provider": "openai",
+          "base_url": "https://api.openai.com/v1",
+          "model": "gpt-5-mini",
+          "api_key_env": "OPENAI_API_KEY"
+        }
+      },
+      "final_review": {
+        "prefer": "online",
+        "fallback": "offline",
+        "offline": {
+          "provider": "ollama",
+          "base_url": "http://localhost:11434",
+          "model": "qwen2.5:7b-instruct",
+          "timeout_seconds": 900
+        },
+        "online": {
+          "provider": "openai",
+          "base_url": "https://api.openai.com/v1",
+          "model": "gpt-5-mini",
+          "api_key_env": "OPENAI_API_KEY"
+        }
+      },
+      "proposal": {
+        "prefer": "online",
+        "fallback": "offline",
+        "offline": {
+          "provider": "ollama",
+          "base_url": "http://localhost:11434",
+          "model": "qwen2.5:7b-instruct",
+          "timeout_seconds": 900
+        },
+        "online": {
+          "provider": "openai",
+          "base_url": "https://api.openai.com/v1",
+          "model": "gpt-5-mini",
+          "api_key_env": "OPENAI_API_KEY"
+        }
+      },
+      "phd_analysis": {
+        "prefer": "online",
+        "fallback": "offline",
+        "offline": {
+          "provider": "ollama",
+          "base_url": "http://localhost:11434",
+          "model": "qwen2.5:7b-instruct",
+          "timeout_seconds": 900
+        },
+        "online": {
+          "provider": "openai",
+          "base_url": "https://api.openai.com/v1",
+          "model": "gpt-5-mini",
+          "api_key_env": "OPENAI_API_KEY"
+        }
+      }
+    }
+  },
+  "offline_queue": {
+    "enabled": true,
+    "path": "runtime/offline_queue/",
+    "replay_on_job": "internet_up"
+  },
+  "notifier": {
+    "enabled": false,
+    "slack_webhook_env": "FOUNDERAI_SLACK_WEBHOOK_URL"
+  },
   "strategic_validation": {
     "always_require_tags": [
       "external-send",
@@ -48,6 +155,8 @@
       "team": "A",
       "role": "Outreach",
       "display_name": "Outreach Specialist A",
+      "saint_name": "Anthony",
+      "agent_id": "anthony",
       "daily_quota": 5,
       "metric_unit": "prospects",
       "focus": "Cash-flow outreach for biodiversity data cleaning and validation support.",
@@ -67,6 +176,8 @@
       "team": "A",
       "role": "Production",
       "display_name": "Production Specialist A",
+      "saint_name": "Juniper",
+      "agent_id": "juniper",
       "daily_quota": 1,
       "metric_unit": "delivery-packet",
       "focus": "Client delivery, data cleaning execution, portfolio samples, and reusable templates.",
@@ -83,6 +194,8 @@
       "team": "B",
       "role": "Outreach",
       "display_name": "Outreach Specialist B",
+      "saint_name": "Bonaventure",
+      "agent_id": "bonaventure",
       "daily_quota": 3,
       "metric_unit": "prospects",
       "focus": "Growth-engine outreach for MRV, biodiversity consulting, and institutional partnerships.",
@@ -102,6 +215,8 @@
       "team": "B",
       "role": "Production",
       "display_name": "Production Specialist B",
+      "saint_name": "Bernardine",
+      "agent_id": "bernardine",
       "daily_quota": 1,
       "metric_unit": "proposal-asset",
       "focus": "MRV methodologies, whitepapers, proposals, budgets, and consulting assets.",
@@ -118,6 +233,8 @@
       "team": "C",
       "role": "Outreach",
       "display_name": "Outreach Specialist C",
+      "saint_name": "Jacinta",
+      "agent_id": "jacinta",
       "daily_quota": 2,
       "metric_unit": "prospects",
       "focus": "Supervisor, grant, and institutional partner outreach for the PhD/research engine.",
@@ -137,6 +254,8 @@
       "team": "C",
       "role": "Production",
       "display_name": "Production Specialist C",
+      "saint_name": "Duns Scotus",
+      "agent_id": "duns-scotus",
       "daily_quota": 5,
       "metric_unit": "papers",
       "focus": "Literature review, PhD proposal sections, grants, budgets, manuscripts, and research methods.",
@@ -164,7 +283,9 @@
       "risk_tags": [],
       "mode": "single",
       "task_label": "Startup Focus Brief",
-      "prompt": "Review the FounderAI workspace, team folders, inbox, pending approvals, and survival-engine priorities. Produce a concise founder brief with the top three actions, what can be delegated safely, and what must wait for validation."
+      "task_type": "briefing",
+      "agent_id": "hildegard",
+      "prompt": "Review the FounderAI workspace, team folders, inbox, pending approvals, survival-engine priorities, and ERIS mission constraints. Produce a concise founder brief with the top three actions, what can be delegated safely, and what must wait for validation."
     },
     {
       "id": "daily-team-orchestration",
@@ -179,7 +300,9 @@
       "mode": "daily_orchestration",
       "run_at_local": "06:00",
       "task_label": "Daily Team Orchestration",
-      "prompt": "Generate the daily task list for all 6 roles and create role-specific inbox requests."
+      "task_type": "briefing",
+      "agent_id": "hildegard",
+      "prompt": "Generate the daily task list for all 6 saint-mapped roles and create role-specific inbox requests that stay bounded, auditable, and approval-safe."
     },
     {
       "id": "outreach-batch",
@@ -199,7 +322,8 @@
         "C-Outreach"
       ],
       "task_label": "Outreach Batch",
-      "prompt": "Research the next qualified leads for this lane, draft founder-voice emails and two follow-ups, and prepare CRM-ready notes. Draft only. Do not send externally."
+      "task_type": "draft",
+      "prompt": "Research the next qualified leads for this lane, draft founder-voice emails and two follow-ups, include a personalization sentence, and prepare CRM-ready notes. Draft only. Do not send externally."
     },
     {
       "id": "production-batch",
@@ -220,7 +344,8 @@
       ],
       "task_label": "Production Batch",
       "metric_value": 1,
-      "prompt": "Produce one bounded, useful output for this role: delivery plan, proposal asset, methodology draft, template, literature note, or research section. Keep work reviewable and draft-only."
+      "task_type": "proposal",
+      "prompt": "Produce one bounded, useful output for this role: delivery plan, proposal asset, methodology draft, template, literature note, or research section. Keep work reviewable, anti-hype, and draft-only."
     },
     {
       "id": "phd-literature-engine",
@@ -239,6 +364,7 @@
       "run_at_local": "07:30",
       "task_label": "Literature Review",
       "metric_value": 5,
+      "task_type": "phd_analysis",
       "prompt": "Read or review 5 papers, write concise reading notes, propose the best literature review type for the current question, and update the literature matrix or paper logic in draft form."
     },
     {
@@ -257,7 +383,9 @@
         "Monday"
       ],
       "task_label": "Weekly Strategy Review",
-      "prompt": "Summarize KPIs across the 3 teams, compare progress against the 5-year SMART roadmap, and propose the next bounded strategic adjustments."
+      "task_type": "final_review",
+      "agent_id": "francis",
+      "prompt": "Summarize KPIs across the 3 teams, compare progress against the 5-year SMART roadmap, flag red thresholds, and propose the next bounded strategic adjustments with a mentor-style paragraph."
     },
     {
       "id": "internet-recovery-review",
@@ -272,7 +400,9 @@
       "risk_tags": [],
       "mode": "single",
       "task_label": "Internet Recovery Review",
-      "prompt": "Internet is available again. Review queued work that was waiting on connectivity and draft the next safe network-required action plan. Never send, publish, or commit externally without approval."
+      "task_type": "briefing",
+      "agent_id": "columban",
+      "prompt": "Internet is available again. Review queued work that was waiting on connectivity, replay safe network-required actions, and draft the next action plan. Never send, publish, or commit externally without approval."
     }
   ]
 }

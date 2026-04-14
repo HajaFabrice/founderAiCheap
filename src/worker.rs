@@ -1,4 +1,5 @@
-use crate::config::{AppConfig, JobConfig, TeamRoleConfig, WorkerConfig};
+use crate::config::{AgentProfile, AppConfig, JobConfig, TeamRoleConfig, WorkerConfig};
+use crate::model_router::resolve_worker;
 use anyhow::{Context, Result};
 use chrono::Utc;
 use reqwest::blocking::Client;
@@ -42,6 +43,113 @@ fn team_output_dir(runtime_dir: &Path, role: Option<&TeamRoleConfig>) -> Option<
     Some(path)
 }
 
+fn selected_agent_profile<'a>(
+    config: &'a AppConfig,
+    job: &JobConfig,
+    role: Option<&TeamRoleConfig>,
+) -> Option<&'a AgentProfile> {
+    if let Some(role) = role {
+        if let Some(profile) = config.agent_profiles.get(&role.agent_id) {
+            return Some(profile);
+        }
+    }
+
+    job.agent_id
+        .as_deref()
+        .and_then(|agent_id| config.agent_profiles.get(agent_id))
+}
+
+fn render_agent_roster(config: &AppConfig) -> String {
+    if config.agent_profiles.is_empty() {
+        return "No agent roster loaded.".to_string();
+    }
+
+    config
+        .agent_profiles
+        .values()
+        .map(|agent| {
+            let role_text = agent
+                .canonical_role_id
+                .as_deref()
+                .map(|value| format!(" mapped to {value}"))
+                .unwrap_or_default();
+            format!(
+                "- {} ({}){} | kind={} | primary_model={} | escalation={}",
+                agent.saint_name,
+                agent.id,
+                role_text,
+                if agent.kind.is_empty() { "unspecified" } else { &agent.kind },
+                if agent.primary_model.is_empty() {
+                    "unspecified"
+                } else {
+                    &agent.primary_model
+                },
+                if agent.escalation_rule.is_empty() {
+                    "Founder approval when uncertain."
+                } else {
+                    &agent.escalation_rule
+                }
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn render_selected_agent_context(
+    config: &AppConfig,
+    job: &JobConfig,
+    role: Option<&TeamRoleConfig>,
+) -> String {
+    let Some(agent) = selected_agent_profile(config, job, role) else {
+        return "No explicit ERIS agent profile resolved for this run.".to_string();
+    };
+
+    let prompt_text = agent
+        .prompt_file
+        .as_deref()
+        .map(|relative| read_founder_file(&config.founder_brain_path.join(relative)))
+        .unwrap_or_else(|| "No dedicated agent prompt file configured.".to_string());
+
+    format!(
+        "Resolved agent profile:\n- Agent ID: {}\n- Saint name: {}\n- Kind: {}\n- Canonical role: {}\n- Primary model: {}\n- Fallback model: {}\n- Client facing: {}\n- Mentor role: {}\n- Transparency note: {}\n- Escalation rule: {}\n- Job scope: {}\n\nAgent prompt:\n{}\n",
+        agent.id,
+        agent.saint_name,
+        if agent.kind.is_empty() { "unspecified" } else { &agent.kind },
+        agent
+            .canonical_role_id
+            .clone()
+            .unwrap_or_else(|| "n/a".to_string()),
+        if agent.primary_model.is_empty() {
+            "unspecified"
+        } else {
+            &agent.primary_model
+        },
+        if agent.fallback_model.is_empty() {
+            "unspecified"
+        } else {
+            &agent.fallback_model
+        },
+        agent.external_facing,
+        agent.mentor_role,
+        if agent.transparency_note.is_empty() {
+            "Founder review required before external use."
+        } else {
+            &agent.transparency_note
+        },
+        if agent.escalation_rule.is_empty() {
+            "Escalate to Founder when uncertain."
+        } else {
+            &agent.escalation_rule
+        },
+        if agent.job_scope.is_empty() {
+            "No explicit scope provided."
+        } else {
+            &agent.job_scope
+        },
+        prompt_text
+    )
+}
+
 pub fn build_prompt(
     config: &AppConfig,
     job: &JobConfig,
@@ -58,6 +166,14 @@ pub fn build_prompt(
     let team_structure = read_founder_file(&founder_brain.join("references").join("team-structure.md"));
     let workflows = read_founder_file(&founder_brain.join("references").join("workflows.md"));
     let patterns = read_founder_file(&founder_brain.join("references").join("output-patterns.md"));
+    let eris_knowledge = read_founder_file(&founder_brain.join("eris_knowledge.md"));
+    let hormozi_protocols = read_founder_file(&founder_brain.join("hormozi_protocols.md"));
+    let qa_rubrics = read_founder_file(&founder_brain.join("qa_rubrics.md"));
+    let risk_register = read_founder_file(&founder_brain.join("risk_register.md"));
+    let kpi_thresholds = read_founder_file(&founder_brain.join("kpi_thresholds.md"));
+    let forbidden_patterns = read_founder_file(&founder_brain.join("forbidden_patterns.txt"));
+    let governance_constraints = read_founder_file(&founder_brain.join("governance_constraints.json"));
+    let strategic_roadmap = read_founder_file(&founder_brain.join("strategic_roadmap.md"));
 
     let request_note = request_source
         .map(|source| format!("\nSource request file: {}\n", source.display()))
@@ -74,11 +190,13 @@ pub fn build_prompt(
                 .join("\n")
         };
         format!(
-            "Role packet:\n- Role ID: {}\n- Team: {}\n- Role: {}\n- Display name: {}\n- Daily quota: {} {}\n- Focus: {}\n- Responsibilities:\n{}\n",
+            "Role packet:\n- Role ID: {}\n- Team: {}\n- Role: {}\n- Display name: {}\n- Saint name: {}\n- Agent ID: {}\n- Daily quota: {} {}\n- Focus: {}\n- Responsibilities:\n{}\n",
             role.role_id,
             role.team,
             role.role,
             role.display_name,
+            role.saint_name,
+            role.agent_id,
             role.daily_quota,
             role.metric_unit,
             role.focus,
@@ -89,7 +207,7 @@ pub fn build_prompt(
     };
 
     format!(
-        "# FounderAI Autonomous Run Packet\n\nYou are running a bounded FounderAI background cycle.\n\nNon-negotiables:\n- Stay in the founder's exact voice.\n- Protect survival-first priorities.\n- Never send, publish, spend, delete, or commit externally without explicit approval.\n- If the task touches protected categories, draft the work and stop for validation.\n\nRun metadata:\n- Trigger: {trigger}\n- Job ID: {job_id}\n- Job description: {job_description}\n- Workspace root: {workspace_root}\n- Runtime directory: {runtime_dir}\n- Outbox directory: {outbox_dir}\n- Output target for this run: {output_target}{request_note}\n\n## Founder Identity\n\n{identity}\n\n## Founder Knowledge Pack\n\n{knowledge}\n\n## Team Structure\n\n{team_structure}\n\n## Founder Workflows\n\n{workflows}\n\n## Founder Output Patterns\n\n{patterns}\n\n## Team Role Context\n\n{role_note}\n\n## Requested Work\n\n{requested_work}\n\n## Strategic Validation\n\n- Protected tags for this run: {risk_tags}\n- Resolved approval policy: {approval_policy}\n- If an action would create outside consequences, stop and prepare a validation-ready draft.\n\n## Delivery Requirements\n\n- Write the primary output to the designated output file.\n- Keep the output concise, useful, and immediately reviewable.\n- Prefer a draft, brief, checklist, or structured note that the founder can validate quickly.\n",
+        "# FounderAI Autonomous Run Packet\n\nYou are running a bounded FounderAI background cycle.\n\nNon-negotiables:\n- Stay in the founder's exact voice.\n- Protect survival-first priorities.\n- Never send, publish, spend, delete, or commit externally without explicit approval.\n- If the task touches protected categories, draft the work and stop for validation.\n- Keep the founder's Franciscan mission and anti-hype discipline intact.\n\nRun metadata:\n- Trigger: {trigger}\n- Job ID: {job_id}\n- Job description: {job_description}\n- Workspace root: {workspace_root}\n- Runtime directory: {runtime_dir}\n- Outbox directory: {outbox_dir}\n- Output target for this run: {output_target}{request_note}\n\n## Founder Identity\n\n{identity}\n\n## Founder Knowledge Pack\n\n{knowledge}\n\n## ERIS Knowledge\n\n{eris_knowledge}\n\n## Hormozi Protocols\n\n{hormozi_protocols}\n\n## Team Structure\n\n{team_structure}\n\n## Founder Workflows\n\n{workflows}\n\n## Founder Output Patterns\n\n{patterns}\n\n## Strategic Roadmap\n\n{strategic_roadmap}\n\n## Risk Register\n\n{risk_register}\n\n## KPI Thresholds\n\n{kpi_thresholds}\n\n## QA Rubrics\n\n{qa_rubrics}\n\n## Forbidden Patterns\n\n{forbidden_patterns}\n\n## Governance Constraints\n\n{governance_constraints}\n\n## Agent Roster\n\n{agent_roster}\n\n## Selected Agent Context\n\n{selected_agent_context}\n\n## Team Role Context\n\n{role_note}\n\n## Requested Work\n\n{requested_work}\n\n## Strategic Validation\n\n- Protected tags for this run: {risk_tags}\n- Resolved approval policy: {approval_policy}\n- If an action would create outside consequences, stop and prepare a validation-ready draft.\n- Transparent AI signatures are mandatory for any client-facing draft.\n\n## Delivery Requirements\n\n- Write the primary output to the designated output file.\n- Keep the output concise, useful, and immediately reviewable.\n- Prefer a draft, brief, checklist, or structured note that the founder can validate quickly.\n- If this run fails QA or governance constraints, explain why clearly instead of pretending success.\n",
         trigger = trigger,
         job_id = job.job_id,
         job_description = if job.description.is_empty() {
@@ -104,9 +222,19 @@ pub fn build_prompt(
         request_note = request_note,
         identity = identity,
         knowledge = knowledge,
+        eris_knowledge = eris_knowledge,
+        hormozi_protocols = hormozi_protocols,
         team_structure = team_structure,
         workflows = workflows,
         patterns = patterns,
+        strategic_roadmap = strategic_roadmap,
+        risk_register = risk_register,
+        kpi_thresholds = kpi_thresholds,
+        qa_rubrics = qa_rubrics,
+        forbidden_patterns = forbidden_patterns,
+        governance_constraints = governance_constraints,
+        agent_roster = render_agent_roster(config),
+        selected_agent_context = render_selected_agent_context(config, job, role),
         role_note = role_note,
         requested_work = job.prompt,
         risk_tags = if effective_risk_tags.is_empty() {
@@ -381,6 +509,7 @@ pub fn run_worker(
     role: Option<&TeamRoleConfig>,
     effective_risk_tags: &[String],
     resolved_approval_policy: &str,
+    current_internet: bool,
 ) -> WorkerRunResult {
     let timestamp = Utc::now();
     let mut run_id_parts = vec![timestamp.format("%Y%m%dT%H%M%SZ").to_string(), job.job_id.clone()];
@@ -409,36 +538,72 @@ pub fn run_worker(
     );
     fs::write(&prompt_file, &prompt_text).ok();
 
+    let routed_worker = resolve_worker(config, job, role, current_internet);
     let team_output_file = team_output_dir(runtime_dir, role).map(|dir| dir.join(format!("{run_id}.md")));
 
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
+    let mut active_worker = routed_worker.primary.clone();
     let mut stdout_text = format!(
-        "Provider: {}\nBase URL: {}\nModel: {}\nPrompt file: {}\nOutput file: {}\n",
-        config.worker.provider,
-        config.worker.base_url,
-        config.worker.model,
+        "Task type: {}\nRoute summary: {}\nPrimary provider: {}\nPrimary base URL: {}\nPrimary model: {}\nPrompt file: {}\nOutput file: {}\n",
+        routed_worker.task_type,
+        routed_worker.route_summary,
+        routed_worker.primary.provider,
+        routed_worker.primary.base_url,
+        routed_worker.primary.model,
         prompt_file.display(),
         output_file.display()
     );
+    if let Some(fallback) = &routed_worker.fallback {
+        stdout_text.push_str(&format!(
+            "Fallback provider: {}\nFallback base URL: {}\nFallback model: {}\n",
+            fallback.provider, fallback.base_url, fallback.model
+        ));
+    }
     let mut stderr_text = String::new();
 
-    match call_provider(&prompt_text, &config.worker) {
+    let provider_result = match call_provider(&prompt_text, &routed_worker.primary) {
+        Ok(output_text) => Ok(output_text),
+        Err(primary_err) => {
+            stderr_text.push_str(&format!("Primary worker failed: {primary_err:#}\n"));
+            if let Some(fallback_worker) = &routed_worker.fallback {
+                stdout_text.push_str("Attempting fallback worker.\n");
+                match call_provider(&prompt_text, fallback_worker) {
+                    Ok(output_text) => {
+                        stdout_text.push_str("Fallback worker succeeded.\n");
+                        active_worker = fallback_worker.clone();
+                        Ok(output_text)
+                    }
+                    Err(fallback_err) => {
+                        stderr_text.push_str(&format!("Fallback worker failed: {fallback_err:#}\n"));
+                        Err(fallback_err)
+                    }
+                }
+            } else {
+                Err(primary_err)
+            }
+        }
+    };
+
+    match provider_result {
         Ok(output_text) => {
             stdout_text.push_str(&format!("Generated {} characters.\n", output_text.chars().count()));
             if fs::write(&output_file, output_text).is_err() {
                 exit_code = 1;
-                stderr_text.push_str("Failed to write Ollama output file.\n");
+                stderr_text.push_str("Failed to write provider output file.\n");
                 let _ = fs::write(
                     &output_file,
-                    failure_output(&config.worker, "Ollama responded, but the output file could not be written."),
+                    failure_output(
+                        &active_worker,
+                        "Provider responded, but the output file could not be written.",
+                    ),
                 );
             }
         }
         Err(err) => {
             exit_code = 1;
             stderr_text.push_str(&format!("{err:#}\n"));
-            let _ = fs::write(&output_file, failure_output(&config.worker, &err.to_string()));
+            let _ = fs::write(&output_file, failure_output(&active_worker, &err.to_string()));
         }
     }
 
@@ -464,10 +629,15 @@ pub fn run_worker(
         "started_at": started_at,
         "finished_at": finished_at,
         "exit_code": exit_code,
-        "provider": config.worker.provider,
-        "model": config.worker.model,
+        "provider": active_worker.provider,
+        "model": active_worker.model,
+        "task_type": routed_worker.task_type,
+        "route_summary": routed_worker.route_summary,
         "request_source": request_source.map(|path| path.display().to_string()),
         "role_id": role.map(|item| item.role_id.clone()),
+        "agent_id": role
+            .map(|item| item.agent_id.clone())
+            .or_else(|| job.agent_id.clone()),
         "team_output_file": team_output_file.as_ref().map(|path| path.display().to_string()),
     });
     if let Ok(metadata_text) = serde_json::to_string_pretty(&metadata) {

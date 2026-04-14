@@ -1,11 +1,11 @@
 use anyhow::{Context, Result};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct HostProbe {
     pub host: String,
     pub port: u16,
@@ -15,11 +15,15 @@ fn default_true() -> bool {
     true
 }
 
+fn default_false() -> bool {
+    false
+}
+
 fn default_timeout_seconds() -> f64 {
     2.0
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct InternetCheckConfig {
     #[serde(default = "default_true")]
     pub enabled: bool,
@@ -63,7 +67,7 @@ fn default_worker_api_key_env() -> String {
     "OPENAI_API_KEY".to_string()
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct WorkerConfig {
     #[serde(default = "default_worker_provider")]
     pub provider: String,
@@ -92,11 +96,40 @@ impl Default for WorkerConfig {
     }
 }
 
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+pub struct WorkerOverride {
+    pub provider: Option<String>,
+    pub base_url: Option<String>,
+    pub model: Option<String>,
+    pub timeout_seconds: Option<u64>,
+    pub system_prompt: Option<String>,
+    pub api_key_env: Option<String>,
+}
+
+impl WorkerOverride {
+    pub fn apply_to(&self, base: &WorkerConfig) -> WorkerConfig {
+        WorkerConfig {
+            provider: self.provider.clone().unwrap_or_else(|| base.provider.clone()),
+            base_url: self.base_url.clone().unwrap_or_else(|| base.base_url.clone()),
+            model: self.model.clone().unwrap_or_else(|| base.model.clone()),
+            timeout_seconds: self.timeout_seconds.unwrap_or(base.timeout_seconds),
+            system_prompt: self
+                .system_prompt
+                .clone()
+                .unwrap_or_else(|| base.system_prompt.clone()),
+            api_key_env: self
+                .api_key_env
+                .clone()
+                .unwrap_or_else(|| base.api_key_env.clone()),
+        }
+    }
+}
+
 fn default_validation_policy() -> String {
     "after_run".to_string()
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct StrategicValidationConfig {
     #[serde(default)]
     pub always_require_tags: BTreeSet<String>,
@@ -117,7 +150,7 @@ fn default_approval_policy() -> String {
     "inherit".to_string()
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct InboxDefaults {
     #[serde(default = "default_approval_policy")]
     pub approval_policy: String,
@@ -137,12 +170,167 @@ impl Default for InboxDefaults {
     }
 }
 
-#[derive(Debug, Clone)]
+fn default_agents_path() -> String {
+    "agents.json".to_string()
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct AgentProfile {
+    pub id: String,
+    pub saint_name: String,
+    #[serde(default)]
+    pub canonical_role_id: Option<String>,
+    #[serde(default)]
+    pub prompt_file: Option<String>,
+    #[serde(default)]
+    pub kind: String,
+    #[serde(default)]
+    pub job_scope: String,
+    #[serde(default)]
+    pub primary_model: String,
+    #[serde(default)]
+    pub fallback_model: String,
+    #[serde(default)]
+    pub escalation_rule: String,
+    #[serde(default)]
+    pub external_facing: bool,
+    #[serde(default)]
+    pub transparency_note: String,
+    #[serde(default)]
+    pub mentor_role: bool,
+}
+
+fn default_router_connectivity_check_url() -> String {
+    "https://1.1.1.1".to_string()
+}
+
+fn default_model_router_timeout() -> u64 {
+    5
+}
+
+fn default_preferred_mode() -> String {
+    "offline".to_string()
+}
+
+fn default_fallback_mode() -> String {
+    "online".to_string()
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TaskTypeRouteConfig {
+    #[serde(default = "default_preferred_mode")]
+    pub prefer: String,
+    #[serde(default = "default_fallback_mode")]
+    pub fallback: String,
+    #[serde(default)]
+    pub online: Option<WorkerOverride>,
+    #[serde(default)]
+    pub offline: Option<WorkerOverride>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ModelRouteConfig {
+    #[serde(default)]
+    pub task_types: Vec<String>,
+    #[serde(default)]
+    pub job_ids: Vec<String>,
+    #[serde(default)]
+    pub role_ids: Vec<String>,
+    #[serde(default = "default_preferred_mode")]
+    pub preferred_mode: String,
+    #[serde(default = "default_fallback_mode")]
+    pub fallback_mode: String,
+    #[serde(default)]
+    pub online: Option<WorkerOverride>,
+    #[serde(default)]
+    pub offline: Option<WorkerOverride>,
+    #[serde(default)]
+    pub notes: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ModelRouterConfig {
+    #[serde(default = "default_true")]
+    pub enabled: bool,
+    #[serde(default = "default_router_connectivity_check_url")]
+    pub connectivity_check_url: String,
+    #[serde(default = "default_model_router_timeout", alias = "connectivity_timeout_seconds")]
+    pub timeout_seconds: u64,
+    #[serde(default)]
+    pub task_types: BTreeMap<String, TaskTypeRouteConfig>,
+    #[serde(default)]
+    pub routes: Vec<ModelRouteConfig>,
+}
+
+impl Default for ModelRouterConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            connectivity_check_url: default_router_connectivity_check_url(),
+            timeout_seconds: default_model_router_timeout(),
+            task_types: BTreeMap::new(),
+            routes: Vec::new(),
+        }
+    }
+}
+
+fn default_offline_queue_path() -> String {
+    "offline_queue".to_string()
+}
+
+fn default_replay_trigger() -> String {
+    "internet_up".to_string()
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct OfflineQueueConfig {
+    #[serde(default = "default_true")]
+    pub enabled: bool,
+    #[serde(default = "default_offline_queue_path", alias = "path")]
+    pub relative_path: String,
+    #[serde(default = "default_replay_trigger", alias = "replay_on_job")]
+    pub replay_trigger: String,
+}
+
+impl Default for OfflineQueueConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            relative_path: default_offline_queue_path(),
+            replay_trigger: default_replay_trigger(),
+        }
+    }
+}
+
+fn default_slack_webhook_env() -> String {
+    "FOUNDERAI_SLACK_WEBHOOK_URL".to_string()
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct NotifierConfig {
+    #[serde(default = "default_false")]
+    pub enabled: bool,
+    #[serde(default = "default_slack_webhook_env")]
+    pub slack_webhook_env: String,
+}
+
+impl Default for NotifierConfig {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            slack_webhook_env: default_slack_webhook_env(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TeamRoleConfig {
     pub role_id: String,
     pub team: String,
     pub role: String,
     pub display_name: String,
+    pub saint_name: String,
+    pub agent_id: String,
     pub daily_quota: i64,
     pub metric_unit: String,
     pub focus: String,
@@ -151,7 +339,7 @@ pub struct TeamRoleConfig {
     pub default_approval_policy: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JobConfig {
     pub job_id: String,
     pub description: String,
@@ -169,6 +357,8 @@ pub struct JobConfig {
     pub weekdays: Vec<String>,
     pub task_label: String,
     pub metric_value: Option<i64>,
+    pub task_type: Option<String>,
+    pub agent_id: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -179,12 +369,17 @@ pub struct AppConfig {
     pub runtime_dir: PathBuf,
     pub inbox_dir: PathBuf,
     pub outbox_dir: PathBuf,
+    pub agent_roster_path: PathBuf,
     pub poll_interval_seconds: u64,
     pub internet_check: InternetCheckConfig,
     pub worker: WorkerConfig,
     pub strategic_validation: StrategicValidationConfig,
     pub inbox_request_defaults: InboxDefaults,
     pub team_roles: BTreeMap<String, TeamRoleConfig>,
+    pub agent_profiles: BTreeMap<String, AgentProfile>,
+    pub model_router: ModelRouterConfig,
+    pub offline_queue: OfflineQueueConfig,
+    pub notifier: NotifierConfig,
     pub jobs: Vec<JobConfig>,
 }
 
@@ -199,6 +394,8 @@ struct RawAppConfig {
     runtime_dir: String,
     inbox_dir: String,
     outbox_dir: String,
+    #[serde(default = "default_agents_path")]
+    agents_path: String,
     #[serde(default = "default_poll_interval")]
     poll_interval_seconds: u64,
     #[serde(default)]
@@ -209,6 +406,12 @@ struct RawAppConfig {
     strategic_validation: StrategicValidationConfig,
     #[serde(default)]
     inbox_request_defaults: InboxDefaults,
+    #[serde(default)]
+    model_router: ModelRouterConfig,
+    #[serde(default)]
+    offline_queue: OfflineQueueConfig,
+    #[serde(default)]
+    notifier: NotifierConfig,
     #[serde(default)]
     team_roles: Vec<RawTeamRoleConfig>,
     #[serde(default)]
@@ -221,6 +424,8 @@ struct RawTeamRoleConfig {
     team: String,
     role: String,
     display_name: Option<String>,
+    saint_name: Option<String>,
+    agent_id: Option<String>,
     #[serde(default)]
     daily_quota: i64,
     metric_unit: Option<String>,
@@ -262,6 +467,8 @@ struct RawJobConfig {
     weekdays: Vec<String>,
     task_label: Option<String>,
     metric_value: Option<i64>,
+    task_type: Option<String>,
+    agent_id: Option<String>,
 }
 
 fn default_single_mode() -> String {
@@ -310,6 +517,124 @@ fn env_override_u64(name: &str, current: u64) -> u64 {
         .unwrap_or(current)
 }
 
+fn default_openai_override() -> WorkerOverride {
+    WorkerOverride {
+        provider: Some("openai".to_string()),
+        base_url: Some("https://api.openai.com/v1".to_string()),
+        model: Some("gpt-5-mini".to_string()),
+        timeout_seconds: Some(300),
+        system_prompt: None,
+        api_key_env: Some("OPENAI_API_KEY".to_string()),
+    }
+}
+
+fn default_ollama_override() -> WorkerOverride {
+    WorkerOverride {
+        provider: Some("ollama".to_string()),
+        base_url: Some("http://localhost:11434".to_string()),
+        model: Some("qwen2.5:7b-instruct".to_string()),
+        timeout_seconds: Some(900),
+        system_prompt: None,
+        api_key_env: None,
+    }
+}
+
+fn inject_default_routes(router: &mut ModelRouterConfig) {
+    if !router.routes.is_empty() || !router.task_types.is_empty() {
+        return;
+    }
+
+    router.task_types.insert(
+        "draft".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "offline".to_string(),
+            fallback: "online".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+    router.task_types.insert(
+        "qa_check".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "offline".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+    router.task_types.insert(
+        "briefing".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "offline".to_string(),
+            fallback: "online".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+    router.task_types.insert(
+        "final_review".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "online".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+    router.task_types.insert(
+        "proposal".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "online".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+    router.task_types.insert(
+        "phd_analysis".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "online".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+}
+
+fn expand_task_type_routes(router: &mut ModelRouterConfig) {
+    if !router.routes.is_empty() {
+        return;
+    }
+
+    for (task_type, route) in &router.task_types {
+        router.routes.push(ModelRouteConfig {
+            task_types: vec![task_type.clone()],
+            job_ids: Vec::new(),
+            role_ids: Vec::new(),
+            preferred_mode: route.prefer.clone(),
+            fallback_mode: route.fallback.clone(),
+            online: route.online.clone(),
+            offline: route.offline.clone(),
+            notes: format!("Task-type route for {task_type}"),
+        });
+    }
+}
+
+fn load_agent_profiles(path: &Path) -> Result<BTreeMap<String, AgentProfile>> {
+    if !path.exists() {
+        return Ok(BTreeMap::new());
+    }
+
+    let raw = fs::read_to_string(path)
+        .with_context(|| format!("failed to read agent roster {}", path.display()))?;
+    let profiles: Vec<AgentProfile> = serde_json::from_str(&raw)
+        .with_context(|| format!("failed to parse agent roster {}", path.display()))?;
+    let mut by_id = BTreeMap::new();
+    for profile in profiles {
+        by_id.insert(profile.id.clone(), profile);
+    }
+    Ok(by_id)
+}
+
 pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
     let path = config_path.as_ref().to_path_buf();
     let absolute_path = if path.is_absolute() {
@@ -333,13 +658,24 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
     let raw: RawAppConfig = serde_json::from_str(&raw_text)
         .with_context(|| format!("failed to parse config {}", absolute_path.display()))?;
 
+    let agent_roster_path = resolve_path(&base_dir, &raw.agents_path);
+    let agent_profiles = load_agent_profiles(&agent_roster_path)?;
+
     let mut team_roles = BTreeMap::new();
     for item in raw.team_roles {
+        let saint_name = item
+            .saint_name
+            .unwrap_or_else(|| item.display_name.clone().unwrap_or_else(|| item.id.clone()));
+        let agent_id = item
+            .agent_id
+            .unwrap_or_else(|| saint_name.to_ascii_lowercase().replace(' ', "-"));
         let role = TeamRoleConfig {
             role_id: item.id.clone(),
             team: item.team,
             role: item.role,
             display_name: item.display_name.unwrap_or_else(|| item.id.clone()),
+            saint_name,
+            agent_id,
             daily_quota: item.daily_quota,
             metric_unit: item.metric_unit.unwrap_or_else(|| "tasks".to_string()),
             focus: item.focus.unwrap_or_default(),
@@ -370,6 +706,8 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
             weekdays: item.weekdays,
             task_label: item.task_label.unwrap_or(item.id),
             metric_value: item.metric_value,
+            task_type: item.task_type,
+            agent_id: item.agent_id,
         })
         .collect();
 
@@ -381,6 +719,10 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
     worker.api_key_env = env_override_string("FOUNDERAI_API_KEY_ENV", worker.api_key_env);
     worker.timeout_seconds = env_override_u64("FOUNDERAI_TIMEOUT_SECONDS", worker.timeout_seconds);
 
+    let mut model_router = raw.model_router;
+    inject_default_routes(&mut model_router);
+    expand_task_type_routes(&mut model_router);
+
     Ok(AppConfig {
         config_path: absolute_path.clone(),
         workspace_root: resolve_path(&base_dir, &raw.workspace_root),
@@ -388,12 +730,105 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
         runtime_dir: resolve_path(&base_dir, &raw.runtime_dir),
         inbox_dir: resolve_path(&base_dir, &raw.inbox_dir),
         outbox_dir: resolve_path(&base_dir, &raw.outbox_dir),
+        agent_roster_path,
         poll_interval_seconds: raw.poll_interval_seconds,
         internet_check: raw.internet_check,
         worker,
         strategic_validation: raw.strategic_validation,
         inbox_request_defaults: raw.inbox_request_defaults,
         team_roles,
+        agent_profiles,
+        model_router,
+        offline_queue: raw.offline_queue,
+        notifier: raw.notifier,
         jobs,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn unique_test_dir() -> PathBuf {
+        let mut dir = std::env::temp_dir();
+        let stamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        dir.push(format!("founderai-config-test-{stamp}"));
+        dir
+    }
+
+    #[test]
+    fn load_config_reads_agent_roster_and_defaults() {
+        let root = unique_test_dir();
+        fs::create_dir_all(root.join("config")).unwrap();
+        fs::create_dir_all(root.join("founder-brain")).unwrap();
+        fs::create_dir_all(root.join("runtime")).unwrap();
+        fs::create_dir_all(root.join("inbox")).unwrap();
+        fs::create_dir_all(root.join("outbox")).unwrap();
+
+        let agents = r#"
+[
+  {
+    "id": "anthony",
+    "saint_name": "Anthony",
+    "canonical_role_id": "A-Outreach",
+    "kind": "team-role",
+    "job_scope": "Draft outreach safely."
+  }
+]
+"#;
+        fs::write(root.join("config").join("agents.json"), agents).unwrap();
+
+        let config_text = r#"
+{
+  "workspace_root": "..",
+  "founder_brain_path": "../founder-brain",
+  "runtime_dir": "../runtime",
+  "inbox_dir": "../inbox",
+  "outbox_dir": "../outbox",
+  "team_roles": [
+    {
+      "id": "A-Outreach",
+      "team": "A",
+      "role": "Outreach",
+      "display_name": "Outreach Specialist A",
+      "saint_name": "Anthony",
+      "agent_id": "anthony",
+      "daily_quota": 3,
+      "metric_unit": "prospects",
+      "focus": "Cash flow",
+      "responsibilities": ["Draft outreach"],
+      "default_approval_policy": "inherit"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "startup-focus-brief",
+      "prompt": "Build the first brief",
+      "task_type": "briefing",
+      "agent_id": "hildegard"
+    }
+  ]
+}
+"#;
+        let config_path = root.join("config").join("founderai.json");
+        fs::write(&config_path, config_text).unwrap();
+
+        let config = load_config(&config_path).unwrap();
+        assert_eq!(config.agent_profiles.len(), 1);
+        assert!(config.model_router.enabled);
+        assert!(config.model_router.task_types.contains_key("draft"));
+        assert_eq!(config.offline_queue.relative_path, "offline_queue");
+        assert_eq!(config.jobs[0].task_type.as_deref(), Some("briefing"));
+        assert_eq!(config.jobs[0].agent_id.as_deref(), Some("hildegard"));
+        assert_eq!(
+            config.team_roles.get("A-Outreach").unwrap().saint_name,
+            "Anthony"
+        );
+
+        let _ = fs::remove_dir_all(root);
+    }
 }

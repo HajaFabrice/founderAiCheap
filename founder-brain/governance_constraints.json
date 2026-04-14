@@ -1,0 +1,42 @@
+{
+  "mission": "Build measurement and governance infrastructure that redirects economic incentives toward ecological stewardship.",
+  "salary_cap_usd": 150000,
+  "max_founder_voting_equity_pct": 5,
+  "steward_conversion_target_year": 5,
+  "formation_time_local": "06:00",
+  "approval_required_categories": [
+    "external-send",
+    "publish",
+    "financial",
+    "destructive-write",
+    "calendar-commitment"
+  ],
+  "hard_rules": [
+    "No autonomous external sends.",
+    "Do not impersonate a human in client-facing communication.",
+    "Do not accept work that advances extractive land use.",
+    "Do not promise capabilities that are not already operational.",
+    "Do not remove or bypass approval gates.",
+    "Do not pursue generic IT or data work outside conservation and ecological stewardship."
+  ],
+  "transparent_signature_required_agents": [
+    "anthony",
+    "bonaventure",
+    "jacinta",
+    "zacchaeus",
+    "perpetua"
+  ],
+  "immutable_files": [
+    "founder-brain/governance_constraints.json",
+    "src/approvals.rs"
+  ],
+  "capital_constraints": {
+    "max_single_investor_voting_equity_pct": 5,
+    "allow_exclusivity_agreements": false,
+    "require_governance_clause_in_financial_proposals": true
+  },
+  "data_constraints": {
+    "protect_sensitive_species_location_data": true,
+    "require_human_review_for_high_risk_data_release": true
+  }
+}

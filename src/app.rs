@@ -3,6 +3,10 @@ use crate::approvals::{
 };
 use crate::config::{AppConfig, JobConfig, TeamRoleConfig};
 use crate::network::internet_is_available;
+use crate::notifier::send_notification;
+use crate::offline::{
+    count_pending_entries, enqueue_offline_job, ensure_offline_queue_dirs, replay_pending_entries,
+};
 use crate::singleton::DaemonLock;
 use crate::state::{load_state, save_state, AppState, ProcessedInboxRequest};
 use crate::team_logging::{append_team_activity, ensure_log_files};
@@ -82,6 +86,8 @@ struct InboxRequestPayload {
     approval_policy: Option<String>,
     requires_internet: Option<bool>,
     role_id: Option<String>,
+    task_type: Option<String>,
+    agent_id: Option<String>,
 }
 
 pub struct AutonomyApp {
@@ -109,6 +115,8 @@ impl AutonomyApp {
             self.config.runtime_dir.join("logs"),
             self.config.runtime_dir.join("runs"),
             self.config.runtime_dir.join("teams"),
+            self.config.runtime_dir.join("briefings"),
+            self.config.runtime_dir.join("nurture"),
             self.config.inbox_dir.clone(),
             self.config.outbox_dir.clone(),
         ] {
@@ -128,6 +136,7 @@ impl AutonomyApp {
         fs::create_dir_all(self.config.runtime_dir.join("teams").join("daily-plans"))
             .context("failed to create daily plans dir")?;
         ensure_approval_dirs(&self.config.runtime_dir)?;
+        ensure_offline_queue_dirs(&self.config)?;
         ensure_log_files(&self.config.runtime_dir)?;
         Ok(())
     }
@@ -141,6 +150,12 @@ impl AutonomyApp {
         let mut next = existing;
         next.push_str(&line);
         fs::write(&self.log_path, next).ok();
+    }
+
+    fn notify_best_effort(&self, title: &str, body: &str) {
+        if let Err(err) = send_notification(&self.config.notifier, title, body) {
+            self.log(&format!("Notifier failed for '{title}': {err:#}"));
+        }
     }
 
     fn load_state_or_default(&self) -> AppState {
@@ -279,6 +294,13 @@ impl AutonomyApp {
         if let Some(role) = role {
             state.ensure_role_state(&role.role_id).pending_approval_id = Some(approval_id.clone());
         }
+        self.notify_best_effort(
+            "FounderAI approval required",
+            &format!(
+                "Approval {approval_id} is waiting on '{}' ({phase}).",
+                job.job_id
+            ),
+        );
         Ok(approval_id)
     }
 
@@ -372,17 +394,13 @@ impl AutonomyApp {
         &self,
         job: &JobConfig,
         job_state: &crate::state::JobState,
-        current_internet: bool,
+        _current_internet: bool,
         trigger: &str,
         now_local: DateTime<Local>,
     ) -> (bool, Option<String>) {
         if !job.enabled {
             return (false, None);
         }
-        if job.requires_internet && !current_internet {
-            return (false, None);
-        }
-
         if trigger != "periodic" {
             return (job.triggers.iter().any(|item| item == trigger), None);
         }
@@ -473,7 +491,19 @@ impl AutonomyApp {
         }
     }
 
-    fn load_inbox_request(&self, file_path: &Path) -> Result<(String, String, Vec<String>, String, bool, Option<String>)> {
+    fn load_inbox_request(
+        &self,
+        file_path: &Path,
+    ) -> Result<(
+        String,
+        String,
+        Vec<String>,
+        String,
+        bool,
+        Option<String>,
+        Option<String>,
+        Option<String>,
+    )> {
         if file_path
             .extension()
             .and_then(|value| value.to_str())
@@ -495,6 +525,8 @@ impl AutonomyApp {
                     .requires_internet
                     .unwrap_or(self.config.inbox_request_defaults.requires_internet),
                 payload.role_id,
+                payload.task_type,
+                payload.agent_id,
             ));
         }
 
@@ -511,11 +543,13 @@ impl AutonomyApp {
             self.config.inbox_request_defaults.approval_policy.clone(),
             self.config.inbox_request_defaults.requires_internet,
             None,
+            None,
+            None,
         ))
     }
 
     fn build_inbox_job(&self, file_path: &Path) -> Result<(JobConfig, Option<TeamRoleConfig>)> {
-        let (title, body, risk_tags, approval_policy, requires_internet, role_id) =
+        let (title, body, risk_tags, approval_policy, requires_internet, role_id, task_type, agent_id) =
             self.load_inbox_request(file_path)?;
         let role = role_id
             .as_deref()
@@ -543,6 +577,8 @@ impl AutonomyApp {
             weekdays: Vec::new(),
             task_label: title,
             metric_value: Some(metric_value),
+            task_type,
+            agent_id,
         };
         Ok((job, role))
     }
@@ -590,8 +626,15 @@ impl AutonomyApp {
         let mut role_job = job.clone();
         role_job.job_id = format!("{}--{}", job.job_id, role.role_id);
         role_job.prompt = format!(
-            "Role assignment: {} ({}).\nFocus: {}\nDaily quota: {} {}.\n\n{}",
-            role.display_name, role.role_id, role.focus, role.daily_quota, role.metric_unit, job.prompt
+            "Role assignment: {} / {} ({} / {}).\nFocus: {}\nDaily quota: {} {}.\n\n{}",
+            role.display_name,
+            role.saint_name,
+            role.role_id,
+            role.agent_id,
+            role.focus,
+            role.daily_quota,
+            role.metric_unit,
+            job.prompt
         );
         role_job.approval_policy = self.resolved_approval_policy(job, Some(role));
         role_job.risk_tags = self.effective_risk_tags(job, Some(role));
@@ -602,6 +645,9 @@ impl AutonomyApp {
         };
         if role_job.metric_value.is_none() {
             role_job.metric_value = Some(role.daily_quota);
+        }
+        if role_job.agent_id.is_none() {
+            role_job.agent_id = Some(role.agent_id.clone());
         }
         role_job
     }
@@ -623,10 +669,12 @@ impl AutonomyApp {
             let payload = serde_json::json!({
                 "title": format!("Daily packet for {}", role.role_id),
                 "body": format!(
-                    "Operate as {}.\nTeam: {}\nRole: {}\nDaily quota: {} {}\nFocus: {}\nPriority tasks:\n{}\nPrepare bounded, reviewable work only.\nDo not send externally without approval.",
+                    "Operate as {} / {}.\nTeam: {}\nRole: {}\nAgent ID: {}\nDaily quota: {} {}\nFocus: {}\nPriority tasks:\n{}\nPrepare bounded, reviewable work only.\nDo not send externally without approval.",
                     role.display_name,
+                    role.saint_name,
                     role.team,
                     role.role,
+                    role.agent_id,
                     role.daily_quota,
                     role.metric_unit,
                     role.focus,
@@ -641,6 +689,8 @@ impl AutonomyApp {
                 "risk_tags": Vec::<String>::new(),
                 "requires_internet": false,
                 "role_id": role.role_id,
+                "task_type": if role.role.eq_ignore_ascii_case("Outreach") { "draft" } else { "proposal" },
+                "agent_id": role.agent_id,
             });
             let payload_text = serde_json::to_string_pretty(&payload).context("failed to serialize daily request")?;
             fs::write(&request_path, &payload_text)
@@ -726,6 +776,29 @@ impl AutonomyApp {
             return Ok(());
         }
 
+        if job.requires_internet && !current_internet {
+            let queue_key = enqueue_offline_job(
+                &self.config,
+                job,
+                trigger,
+                role,
+                request_source,
+                "Connectivity unavailable for internet-required work.",
+            )?;
+            self.log(&format!(
+                "Queued {} into offline queue with key {}.",
+                job.job_id, queue_key
+            ));
+            self.notify_best_effort(
+                "FounderAI queued offline work",
+                &format!("{} was queued because internet was unavailable.", job.job_id),
+            );
+            if let Some(request_source) = request_source {
+                self.mark_request_processed(state, request_source, "queued_offline");
+            }
+            return Ok(());
+        }
+
         let approval_phase = self.consume_pending_approval(state, job, role);
         let resolved_policy = self.resolved_approval_policy(job, role);
         if approval_phase.as_deref() == Some("pending") {
@@ -768,6 +841,7 @@ impl AutonomyApp {
             role,
             &self.effective_risk_tags(job, role),
             &resolved_policy,
+            current_internet,
         );
 
         let metric_value = job
@@ -810,6 +884,18 @@ impl AutonomyApp {
             self.log(&format!("Created after-run approval {} for {}.", approval_id, job.job_id));
         }
 
+        if result.exit_code != 0 {
+            self.notify_best_effort(
+                "FounderAI run failed",
+                &format!(
+                    "{} failed during '{}' and wrote artifacts to {}.",
+                    job.job_id,
+                    trigger,
+                    result.output_file.display()
+                ),
+            );
+        }
+
         Ok(())
     }
 
@@ -823,6 +909,23 @@ impl AutonomyApp {
         request_source: Option<&Path>,
         role: Option<&TeamRoleConfig>,
     ) -> Result<()> {
+        if role.is_none()
+            && current_internet
+            && self.config.offline_queue.enabled
+            && !self
+                .config
+                .offline_queue
+                .replay_trigger
+                .eq_ignore_ascii_case("internet_up")
+            && self
+                .config
+                .offline_queue
+                .replay_trigger
+                .eq_ignore_ascii_case(&job.job_id)
+        {
+            self.replay_offline_queue(state, current_internet, now_local)?;
+        }
+
         if role.is_some() {
             return self.run_single_job(state, job, trigger, current_internet, now_local, request_source, role);
         }
@@ -898,6 +1001,41 @@ impl AutonomyApp {
         self.run_single_job(state, job, trigger, current_internet, now_local, request_source, None)
     }
 
+    fn replay_offline_queue(
+        &self,
+        state: &mut AppState,
+        current_internet: bool,
+        now_local: DateTime<Local>,
+    ) -> Result<()> {
+        let replayed = replay_pending_entries(&self.config, |entry| {
+            let role = entry
+                .role_id
+                .as_deref()
+                .and_then(|role_id| self.config.team_roles.get(role_id))
+                .cloned();
+            let request_source = entry.request_source.as_deref().map(Path::new);
+            self.dispatch_job(
+                state,
+                &entry.job,
+                &entry.trigger,
+                current_internet,
+                now_local,
+                request_source,
+                role.as_ref(),
+            )
+        })?;
+
+        if replayed > 0 {
+            self.log(&format!("Replayed {replayed} offline queue item(s)."));
+            self.notify_best_effort(
+                "FounderAI replayed queued work",
+                &format!("{replayed} offline queue item(s) were replayed after connectivity returned."),
+            );
+        }
+
+        Ok(())
+    }
+
     pub fn tick(&self, include_startup: bool, manual_trigger: Option<&str>) -> Result<()> {
         self.ensure_runtime()?;
         let mut state = self.load_state_or_default();
@@ -931,6 +1069,11 @@ impl AutonomyApp {
         }
 
         if previous_internet == Some(false) && current_internet {
+            if self.config.offline_queue.replay_trigger.eq_ignore_ascii_case("internet_up") {
+                if let Err(err) = self.replay_offline_queue(&mut state, current_internet, now_local) {
+                    self.log(&format!("Offline queue replay failed: {err:#}"));
+                }
+            }
             for job in &self.config.jobs {
                 if let Err(err) =
                     self.dispatch_job(&mut state, job, "internet_up", current_internet, now_local, None, None)
@@ -1008,8 +1151,14 @@ impl AutonomyApp {
             format!("Runtime: {}", self.config.runtime_dir.display()),
             format!("Inbox: {}", self.config.inbox_dir.display()),
             format!("Outbox: {}", self.config.outbox_dir.display()),
+            format!("Agent roster: {}", self.config.agent_roster_path.display()),
+            format!("Configured agents: {}", self.config.agent_profiles.len()),
             format!("Internet status: {}", if current_internet { "available" } else { "unavailable" }),
             format!("Pending approvals: {}", pending.len()),
+            format!("Offline queue pending: {}", count_pending_entries(&self.config)?),
+            format!("Model router enabled: {}", self.config.model_router.enabled),
+            format!("Model router routes: {}", self.config.model_router.routes.len()),
+            format!("Notifier enabled: {}", self.config.notifier.enabled),
             format!("Active provider: {}", self.config.worker.provider),
             format!("Active model: {}", self.config.worker.model),
             format!("Provider reachable: {}", provider_status.reachable),
