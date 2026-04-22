@@ -5,6 +5,7 @@
   "inbox_dir": "../inbox-smoke",
   "outbox_dir": "../outbox-smoke",
   "agents_path": "agents.json",
+  "deadlines_path": "pio_deadlines.json",
   "poll_interval_seconds": 60,
   "internet_check": {
     "enabled": true,
@@ -67,6 +68,14 @@
       },
       "phd_analysis": {
         "prefer": "online",
+        "fallback": "offline"
+      },
+      "grant": {
+        "prefer": "online",
+        "fallback": "offline"
+      },
+      "scheduler": {
+        "prefer": "offline",
         "fallback": "offline"
       }
     },

@@ -1,52 +1,36 @@
 # ERIS Knowledge
 
-ERIS is the long-arc effort to build measurement and governance infrastructure that redirects economic incentives toward ecological stewardship.
+ERIS is the long-arc effort to build measurement and governance infrastructure that redirects incentives toward ecological stewardship in Madagascar and similar contexts.
 
 ## Mission Frame
 
-- Use transparent, evidence-based workflows to support biodiversity and MRV work.
-- Build credibility through useful services now, while compounding toward a larger governance standard later.
-- Preserve Franciscan constraints: no mission drift for short-term gain, no founder accumulation beyond the stated cap, and no autonomous external action.
+- Build legitimacy through useful conservation, drone, and MRV work now.
+- Convert field evidence, grant outputs, and repeatable workflows into a long-term governance moat.
+- Keep the method open, auditable, and scientifically honest.
 
-## Phase Logic
+## 2026 Strategic Translation
 
-### Phase 1: Foundation
+- Techni-Drones is not a side note. It is the current leverage platform.
+- The first conservation drone client matters because it changes Fabrice's role from employee toward partner.
+- Grants are not vanity fundraising. They are the path to the M350 RTK stack and a defensible conservation vertical.
+- ERIS remains the long arc, but every present action must strengthen that future.
 
-- Survive financially.
-- Build trust through freelance data cleaning, biodiversity support, and careful outreach.
-- Accumulate patterns, notes, and evidence in the founder brain.
+## Core Output Logic
 
-### Phase 2: MRV Startup
+- Proof of concept first: IPS Congress thermal lemur survey, publications, field record.
+- Replicable protocol second: a method another conservation team can audit and reuse.
+- Pilot ERIS score third: one bounded forest or site with transparent logic.
 
-- Productize repeatable ecological data workflows.
-- Strengthen decision-grade methodologies.
-- Prepare for institutional contracts and research credibility.
+## Boundaries
 
-### Phase 3: ERIS
-
-- Formalize a rule-layer ecological governance standard.
-- Use open methodology, explicit uncertainty, and auditable data handling.
-- Move toward steward ownership rather than founder extraction.
-
-## Operating Doctrines
-
-- Lead with what was observed, measured, or verified.
-- Tag uncertainty instead of overstating confidence.
-- Keep founder-brain knowledge local and cumulative.
-- Prefer inspectable artifacts over hidden automation.
-- Use service delivery as a legitimacy engine for future system-building.
-
-## Strategic Boundaries
-
-- Do not accept work that helps justify extractive land use.
-- Do not sell generic IT services unrelated to conservation or ecological stewardship.
-- Do not promise capabilities the system or Founder cannot actually deliver yet.
-- Do not confuse present consulting work with later ERIS institutional scope.
+- No extractive-industry support
+- No overclaiming institutional adoption
+- No pretending ERIS is already a deployed standard
+- No grant draft that inflates equipment needs beyond the M350 pathway
 
 ## Agent Implications
 
-- Anthony, Bonaventure, and Jacinta open doors without overselling.
-- Juniper and Bernardine convert work into repeatable delivery and proposal assets.
-- Duns Scotus grounds research output in evidence, not aspiration.
-- Clare and Francis protect integrity and governance.
-- Columban can improve the system, but never by removing safety rails.
+- Anthony opens doors to drone-service and conservation partnerships.
+- Bartholomew turns grant windows into concrete draft artifacts.
+- Pio protects deadlines from being forgotten.
+- Clare and Francis keep the system honest when urgency rises.

@@ -1,44 +1,45 @@
 # Roadmap
 
-This roadmap follows the current no-budget strategy: keep the product practical,
-portable, and recruitable before adding new complexity.
+This roadmap reflects the April 2026 V4 documents: keep the Rust runtime stable, sync it to the Techni-Drones and grant context, then extend toward Gmail and cloud portability without changing the FounderAI shape.
 
 ## Timeline
 
 ```mermaid
 gantt
-    title FounderAI-Ollama-Rust No-Budget Roadmap
+    title FounderAI ERIS V4 Roadmap
     dateFormat  YYYY-MM-DD
     axisFormat  %b %d
 
-    section Foundation
-    Rust runtime parity             :done, foundation1, 2026-03-28, 2026-04-06
-    Repo governance and docs        :active, foundation2, 2026-04-07, 2026-04-14
+    section Sync
+    V4 founder-brain sync             :done, sync1, 2026-04-20, 2026-04-22
+    Pio and grant runtime sync        :active, sync2, 2026-04-22, 2026-04-25
 
-    section Deployment
-    Cloud deployment hardening      :deploy1, 2026-04-10, 2026-04-24
-    First real provider smoke test  :crit, deploy2, 2026-04-12, 2026-04-20
+    section Phase 2
+    Zacchaeus and Perpetua proof      :phase2a, 2026-04-23, 2026-04-28
+    Runtime test hardening            :phase2b, 2026-04-24, 2026-05-02
 
-    section Community
-    Volunteer onboarding flow       :community1, 2026-04-14, 2026-04-28
-    Issue triage and labels         :community2, 2026-04-14, 2026-04-21
+    section Phase 3
+    Hildegard briefing outputs        :phase3a, 2026-04-29, 2026-05-05
+    Clare and Francis upgrade         :phase3b, 2026-05-01, 2026-05-10
 
-    section Product
-    Reliability fixes and tests     :product1, 2026-04-15, 2026-05-15
-    Founder-brain content expansion :product2, 2026-04-20, 2026-05-20
+    section Phase 4
+    Columban bounded improvements     :phase4a, 2026-05-06, 2026-05-14
+    Model router refinement           :phase4b, 2026-05-08, 2026-05-14
 
-    section Sustainability
-    Linux host deployment playbook  :sustain1, 2026-04-18, 2026-04-30
-    Quarterly health review         :sustain2, 2026-07-01, 2026-07-07
+    section Cloud
+    Gmail API integration             :cloud1, 2026-05-12, 2026-05-20
+    Docker and low-cost deploy path   :cloud2, 2026-05-15, 2026-05-25
 ```
 
 ## Near-Term Milestones
 
-- `v0.1`: working Rust runtime with provider switching and safe artifacts
-- `v0.2`: deployment hardening, smoke-test proof, and onboarding docs
-- `v0.3`: contributor-friendly issue flow, more tests, and stable cloud operation
+- `v0.2`: V4 strategy sync, Pio deadline routing, and Bartholomew grant artifacts
+- `v0.3`: Phase 2 proof for Zacchaeus and Perpetua
+- `v0.4`: Hildegard, Clare, and Francis strengthened around daily briefings and weekly review
+- `v0.5`: Gmail-connected local-first cloud bridge
 
-## Maintainer Notes
+## Guardrails
 
-- Prefer issues tagged `good first issue` and `documentation` for new contributors.
-- Keep roadmap changes tied to the project charter so scope does not drift.
+- No phase is allowed to weaken approvals.
+- No cloud work should delete file-auditable behavior before an inspectable replacement exists.
+- New agents should extend the six-lane structure, not replace it.

@@ -36,11 +36,106 @@ fn read_founder_file(path: &Path) -> String {
     fs::read_to_string(path).unwrap_or_else(|_| format!("[Missing context file: {}]", path.display()))
 }
 
+fn render_document_section(title: &str, path: &Path) -> String {
+    format!(
+        "### {title}\nSource file: {}\n\n{}",
+        path.display(),
+        read_founder_file(path)
+    )
+}
+
+fn render_agent_ready_documents(
+    config: &AppConfig,
+    job: &JobConfig,
+    role: Option<&TeamRoleConfig>,
+) -> String {
+    let root = config
+        .workspace_root
+        .join("documents")
+        .join("99_Agent_Ready");
+
+    let selected_agent_id = selected_agent_profile(config, job, role)
+        .map(|agent| agent.id.as_str())
+        .unwrap_or("default");
+
+    let mut rendered = vec![
+        format!("Document library root: {}", root.display()),
+        format!("Selected agent-ready bundle for: {selected_agent_id}"),
+        render_document_section("Document Source Priority", &root.join("references").join("source_priority.md")),
+        render_document_section(
+            "Canonical Reference Brief",
+            &root.join("references").join("canonical_reference_brief.md"),
+        ),
+        render_document_section(
+            "Operational Memory Database",
+            &root.join("databases").join("operational_memory.json"),
+        ),
+    ];
+
+    let targeted_sections: Vec<(&str, PathBuf)> = match selected_agent_id {
+        "anthony" | "zacchaeus" | "perpetua" | "bonaventure" => vec![
+            (
+                "Prospect Targets Database",
+                root.join("databases").join("prospect_targets.json"),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "External Communications Templates",
+                root.join("templates").join("external_communications.md"),
+            ),
+        ],
+        "bartholomew" | "pio" | "hildegard" | "francis" | "clare" | "columban" => vec![
+            (
+                "Document Registry Database",
+                root.join("databases").join("document_registry.json"),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Internal Operations Templates",
+                root.join("templates").join("internal_operations.md"),
+            ),
+        ],
+        "jacinta" | "duns-scotus" => vec![
+            (
+                "Document Registry Database",
+                root.join("databases").join("document_registry.json"),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Research And Applications Templates",
+                root.join("templates").join("research_and_applications.md"),
+            ),
+        ],
+        _ => vec![
+            ("Document Layer Overview", root.join("README.md")),
+            (
+                "Document Registry Database",
+                root.join("databases").join("document_registry.json"),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+        ],
+    };
+
+    rendered.extend(
+        targeted_sections
+            .into_iter()
+            .map(|(title, path)| render_document_section(title, &path)),
+    );
+
+    rendered.join("\n\n")
+}
+
 fn team_output_dir(runtime_dir: &Path, role: Option<&TeamRoleConfig>) -> Option<PathBuf> {
     let role = role?;
     let path = runtime_dir.join("teams").join(&role.role_id).join("outputs");
     fs::create_dir_all(&path).ok();
     Some(path)
+}
+
+fn grant_output_dir(runtime_dir: &Path) -> PathBuf {
+    let path = runtime_dir.join("grants");
+    fs::create_dir_all(&path).ok();
+    path
 }
 
 fn selected_agent_profile<'a>(
@@ -161,11 +256,14 @@ pub fn build_prompt(
     resolved_approval_policy: &str,
 ) -> String {
     let founder_brain = &config.founder_brain_path;
+    let founder_brain_overview = read_founder_file(&founder_brain.join("founder_brain.md"));
     let identity = read_founder_file(&founder_brain.join("references").join("identity.md"));
     let knowledge = read_founder_file(&founder_brain.join("references").join("knowledge-pack.md"));
     let team_structure = read_founder_file(&founder_brain.join("references").join("team-structure.md"));
     let workflows = read_founder_file(&founder_brain.join("references").join("workflows.md"));
     let patterns = read_founder_file(&founder_brain.join("references").join("output-patterns.md"));
+    let cloud_migration_plan = read_founder_file(&founder_brain.join("cloud_migration_plan.md"));
+    let agent_ready_documents = render_agent_ready_documents(config, job, role);
     let eris_knowledge = read_founder_file(&founder_brain.join("eris_knowledge.md"));
     let hormozi_protocols = read_founder_file(&founder_brain.join("hormozi_protocols.md"));
     let qa_rubrics = read_founder_file(&founder_brain.join("qa_rubrics.md"));
@@ -207,7 +305,7 @@ pub fn build_prompt(
     };
 
     format!(
-        "# FounderAI Autonomous Run Packet\n\nYou are running a bounded FounderAI background cycle.\n\nNon-negotiables:\n- Stay in the founder's exact voice.\n- Protect survival-first priorities.\n- Never send, publish, spend, delete, or commit externally without explicit approval.\n- If the task touches protected categories, draft the work and stop for validation.\n- Keep the founder's Franciscan mission and anti-hype discipline intact.\n\nRun metadata:\n- Trigger: {trigger}\n- Job ID: {job_id}\n- Job description: {job_description}\n- Workspace root: {workspace_root}\n- Runtime directory: {runtime_dir}\n- Outbox directory: {outbox_dir}\n- Output target for this run: {output_target}{request_note}\n\n## Founder Identity\n\n{identity}\n\n## Founder Knowledge Pack\n\n{knowledge}\n\n## ERIS Knowledge\n\n{eris_knowledge}\n\n## Hormozi Protocols\n\n{hormozi_protocols}\n\n## Team Structure\n\n{team_structure}\n\n## Founder Workflows\n\n{workflows}\n\n## Founder Output Patterns\n\n{patterns}\n\n## Strategic Roadmap\n\n{strategic_roadmap}\n\n## Risk Register\n\n{risk_register}\n\n## KPI Thresholds\n\n{kpi_thresholds}\n\n## QA Rubrics\n\n{qa_rubrics}\n\n## Forbidden Patterns\n\n{forbidden_patterns}\n\n## Governance Constraints\n\n{governance_constraints}\n\n## Agent Roster\n\n{agent_roster}\n\n## Selected Agent Context\n\n{selected_agent_context}\n\n## Team Role Context\n\n{role_note}\n\n## Requested Work\n\n{requested_work}\n\n## Strategic Validation\n\n- Protected tags for this run: {risk_tags}\n- Resolved approval policy: {approval_policy}\n- If an action would create outside consequences, stop and prepare a validation-ready draft.\n- Transparent AI signatures are mandatory for any client-facing draft.\n\n## Delivery Requirements\n\n- Write the primary output to the designated output file.\n- Keep the output concise, useful, and immediately reviewable.\n- Prefer a draft, brief, checklist, or structured note that the founder can validate quickly.\n- If this run fails QA or governance constraints, explain why clearly instead of pretending success.\n",
+        "# FounderAI Autonomous Run Packet\n\nYou are running a bounded FounderAI background cycle.\n\nNon-negotiables:\n- Stay in the founder's exact voice.\n- Protect survival-first priorities.\n- Never send, publish, spend, delete, or commit externally without explicit approval.\n- If the task touches protected categories, draft the work and stop for validation.\n- Keep the founder's Franciscan mission and anti-hype discipline intact.\n\nRun metadata:\n- Trigger: {trigger}\n- Job ID: {job_id}\n- Job description: {job_description}\n- Workspace root: {workspace_root}\n- Runtime directory: {runtime_dir}\n- Outbox directory: {outbox_dir}\n- Output target for this run: {output_target}{request_note}\n\n## Founder Brain\n\n{founder_brain_overview}\n\n## Founder Identity\n\n{identity}\n\n## Founder Knowledge Pack\n\n{knowledge}\n\n## ERIS Knowledge\n\n{eris_knowledge}\n\n## Hormozi Protocols\n\n{hormozi_protocols}\n\n## Team Structure\n\n{team_structure}\n\n## Founder Workflows\n\n{workflows}\n\n## Cloud Migration Context\n\n{cloud_migration_plan}\n\n## Agent-Ready Documents\n\n{agent_ready_documents}\n\n## Founder Output Patterns\n\n{patterns}\n\n## Strategic Roadmap\n\n{strategic_roadmap}\n\n## Risk Register\n\n{risk_register}\n\n## KPI Thresholds\n\n{kpi_thresholds}\n\n## QA Rubrics\n\n{qa_rubrics}\n\n## Forbidden Patterns\n\n{forbidden_patterns}\n\n## Governance Constraints\n\n{governance_constraints}\n\n## Agent Roster\n\n{agent_roster}\n\n## Selected Agent Context\n\n{selected_agent_context}\n\n## Team Role Context\n\n{role_note}\n\n## Requested Work\n\n{requested_work}\n\n## Strategic Validation\n\n- Protected tags for this run: {risk_tags}\n- Resolved approval policy: {approval_policy}\n- If an action would create outside consequences, stop and prepare a validation-ready draft.\n- Transparent AI signatures are mandatory for any client-facing draft.\n\n## Delivery Requirements\n\n- Write the primary output to the designated output file.\n- Keep the output concise, useful, and immediately reviewable.\n- Prefer a draft, brief, checklist, or structured note that the founder can validate quickly.\n- Never invent a concrete fact to make the draft feel complete.\n- If a date, budget, collaborator, site, contact, requirement, or institutional fact is missing, write `NEEDS_HUMAN_VERIFICATION`.\n- If this run fails QA or governance constraints, explain why clearly instead of pretending success.\n",
         trigger = trigger,
         job_id = job.job_id,
         job_description = if job.description.is_empty() {
@@ -220,12 +318,15 @@ pub fn build_prompt(
         outbox_dir = config.outbox_dir.display(),
         output_target = run_dir.join("output.md").display(),
         request_note = request_note,
+        founder_brain_overview = founder_brain_overview,
         identity = identity,
         knowledge = knowledge,
         eris_knowledge = eris_knowledge,
         hormozi_protocols = hormozi_protocols,
         team_structure = team_structure,
         workflows = workflows,
+        cloud_migration_plan = cloud_migration_plan,
+        agent_ready_documents = agent_ready_documents,
         patterns = patterns,
         strategic_roadmap = strategic_roadmap,
         risk_register = risk_register,
@@ -540,6 +641,11 @@ pub fn run_worker(
 
     let routed_worker = resolve_worker(config, job, role, current_internet);
     let team_output_file = team_output_dir(runtime_dir, role).map(|dir| dir.join(format!("{run_id}.md")));
+    let grant_output_file = if routed_worker.task_type == "grant" || job.agent_id.as_deref() == Some("bartholomew") {
+        Some(grant_output_dir(runtime_dir).join(format!("{run_id}.md")))
+    } else {
+        None
+    };
 
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
@@ -619,6 +725,15 @@ pub fn run_worker(
         }
     }
 
+    if let Some(grant_output_file) = &grant_output_file {
+        if let Ok(output_text) = fs::read_to_string(&output_file) {
+            let _ = fs::write(grant_output_file, &output_text);
+            if let Some(grants_root) = grant_output_file.parent() {
+                let _ = fs::write(grants_root.join("latest.md"), output_text);
+            }
+        }
+    }
+
     let finished_at = Utc::now().to_rfc3339();
     let summary = summary_from_output(&output_file, &stdout_text);
 
@@ -639,6 +754,7 @@ pub fn run_worker(
             .map(|item| item.agent_id.clone())
             .or_else(|| job.agent_id.clone()),
         "team_output_file": team_output_file.as_ref().map(|path| path.display().to_string()),
+        "grant_output_file": grant_output_file.as_ref().map(|path| path.display().to_string()),
     });
     if let Ok(metadata_text) = serde_json::to_string_pretty(&metadata) {
         let _ = fs::write(&metadata_file, metadata_text);

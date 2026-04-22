@@ -1,86 +1,47 @@
 # Workflows
 
-## Universal Output Workflow
+## Universal Run Workflow
 
-1. Classify the request as outreach, offer, content, automation, pilot, or decision.
-2. Ask which objective matters first: cash flow now, leverage next, or long-term ERIS positioning. If unclear, default to cash flow now.
-3. Assign the work to the right lane: Team A for survival cash flow, Team B for consulting growth, Team C for PhD and research leverage.
-4. If more than one lane is needed, split the work into bounded sub-packets with explicit role ownership.
-5. Pull one belief, one proof point, and one story that naturally support the task.
-6. Convert the output into a concrete, low-risk promise with scope, timeline, and clear deliverable.
-7. Write in the founder's exact voice.
-8. Add one number, field detail, or process detail.
-9. Remove hype, consulting filler, and generic AI phrasing.
-10. End with a natural next step.
-
-## Team Orchestration Workflow
-
-1. Start from the 6 roles, not from vague workload buckets.
-2. Set daily quotas clearly: A-Outreach 5, B-Outreach 3, C-Outreach 2, C-Production 5 papers when in literature mode, production roles otherwise 1 bounded asset or delivery packet.
-3. Convert the plan into individual work packets with one owner per packet.
-4. Keep external-send work draft-only until approval.
-5. Log every packet in the shared runtime schema so the system can review cadence and bottlenecks.
-6. On Monday, summarize KPIs. On Sunday, summarize strategic adjustments. On monthly checkpoints, map progress against the 5-year roadmap.
-
-## Survival Offer Workflow
-
-1. Start from the fastest believable path to $1,500-$2,000 per month.
-2. Prefer environmental data cleaning, MRV data structuring, or drone training leverage before complex custom builds.
-3. Pick one audience with one painful bottleneck.
-4. Offer one narrow outcome that can be delivered inside 72 hours.
-5. Add a free micro-sample to reduce risk.
-6. Add a humble guarantee only if the scope is controllable.
-7. Support the pitch with one proof point, project, or field example.
-8. End with one easy next step such as sending a sample file, a shapefile, or 20 records for a test run.
+1. Load founder identity, founder brain, governance, and the relevant agent prompt.
+2. Classify the work as briefing, outreach, proposal, grant, research, scheduler, or review.
+3. Route it to one owner with bounded scope.
+4. Draft first, then pause behind approval if external consequences exist.
+5. Preserve inspectable artifacts in run folders and team or grant outputs.
 
 ## Outreach Workflow
 
-1. Target one real organization or person, not a vague category.
-2. Reference a concrete program, field problem, compliance burden, or data bottleneck.
-3. Show that you understand their work before proposing help.
-4. Offer one specific 72h win rather than a broad service menu.
-5. Mention one proof point without bragging.
-6. Keep the ask light: offer a micro-sample, short call, or data review.
-7. Make the tone useful, humble, and low-pressure.
-8. Close with a single natural next step.
+1. Target one real organization or person.
+2. Reference a concrete project, paper, report, or field need.
+3. Lead with one useful low-friction offer, usually a free demo flight or bounded sample.
+4. Keep the CTA small and the tone sober.
+5. Do not price in cold outreach.
 
-## Content Workflow
+## Grant Workflow
 
-1. Open from a real observation, field moment, number, or experiment.
-2. Connect it to one principle such as transparency, interdisciplinary leverage, or community-anchored conservation.
-3. Explain what the data showed, not just how it felt.
-4. Tie the lesson to MRV, drone ecology, or ecological governance.
-5. Keep the language simple and vivid.
-6. Remove self-congratulation and empty inspiration.
-7. End with a calm invitation to continue the conversation.
+1. Pio raises the deadline or the founder drops a grant task into `inbox/`.
+2. Bartholomew drafts one bounded grant asset: narrative, budget note, attachment checklist, or short cover email.
+3. Clare checks for governance, realism, and the M350-not-M400 rule.
+4. Hildegard surfaces the item in the briefing and queue.
+5. Founder approves or rejects. Submission remains manual unless a future approved send path exists.
 
-## Automation Workflow
+## Deadline Workflow
 
-1. Define the workflow, not the job title.
-2. Break the work into 5-10 micro-steps with explicit inputs and outputs.
-3. Mark founder-only decisions and keep them human.
-4. Standardize file naming, folder structure, schema expectations, and QA checks.
-5. Automate repetitive steps first.
-6. Add a visible checkpoint after each risky transformation.
-7. Give visual troubleshooting advice such as what folder should contain, what columns should exist, what filenames should match, and what a correct screenshot should look like.
-8. Return the workflow as an SOP plus failure checks and a smallest next implementation step.
+1. Pio tracks dated and rolling deadlines through `config/pio_deadlines.json`.
+2. On alert windows, Pio creates inspectable inbox requests rather than silent reminders.
+3. Deadline requests route toward the assigned agent or founder review.
+4. Processed alerts remain recorded in state so the same alert is not duplicated.
 
-## Pilot Design Workflow
+## Team Orchestration Workflow
 
-1. Define the ecological or operational question in one sentence.
-2. Pick the minimum evidence stack needed: drone imagery, thermal, camera traps, field surveys, eDNA, or logs.
-3. Define the output metrics and the verification method.
-4. State regulatory, wildlife, and community safeguards.
-5. Scope a fast pilot with narrow geography, timeframe, and deliverables.
-6. Show how the pilot feeds future MRV or ERIS infrastructure.
-7. Keep the design transparent enough that another steward could audit it.
-8. End with the exact dataset, permission, or meeting needed to start.
+1. Start from the six roles, not abstract teams.
+2. Queue one bounded daily packet per role.
+3. Keep outreach and production separate unless a packet is trivially safe and small.
+4. Let overlay agents support the workflow without replacing the six-lane structure.
 
-## Decision Workflow
+## Cloud Migration Workflow
 
-1. State the decision in plain language.
-2. List the constraints: ethics, time, money, credibility, regulations, and survival urgency.
-3. Compare the smallest believable options.
-4. Recommend the lowest-risk path that protects present cash flow and future integrity.
-5. Name what not to do and why.
-6. End with the first 72-hour action.
+1. Keep the local daemon healthy.
+2. Add Gmail polling before replacing inbox assumptions.
+3. Dockerize the daemon.
+4. Add cloud persistence only after the runtime remains auditable and approval-safe.
+5. Keep any UI or webhook layer thin and reversible.

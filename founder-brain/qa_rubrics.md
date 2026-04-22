@@ -50,6 +50,22 @@ Fail if any are true:
 - Unsupported claims of guaranteed outcomes.
 - Missing approval signal for financial or partnership consequences.
 
+## Grant Rubric
+
+Pass only if all are true:
+
+- The narrative opens from real proof of concept or real field credibility.
+- The first equipment ask stays on the M350 RTK stack, not the M400.
+- The draft clearly supports the three-output logic: publication, replicable protocol, and pilot ERIS score.
+- The text names realistic outputs, constraints, and attachments.
+- Techni-Drones or the real institutional host is represented accurately.
+
+Fail if any are true:
+
+- The draft asks for an M400 as the first grant target.
+- The budget is inflated or detached from the stated scope.
+- The application implies capabilities or partnerships that are not yet real.
+
 ## Research Rubric
 
 Pass only if all are true:

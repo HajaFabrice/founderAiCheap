@@ -2,17 +2,17 @@
 
 | Risk | Why it matters | Mitigation | Signal |
 | --- | --- | --- | --- |
-| Single maintainer bottleneck | Progress stalls if one person is overloaded | Document setup, use issue templates, keep onboarding simple | Stale PRs and unanswered issues |
-| Model availability | Ollama smoke tests fail if the model is missing on the host | Use bootstrap scripts and document provider fallback | `status` shows provider reachable but no installed model |
-| Scope creep | The repo drifts into a generic agent platform | Hold changes against the charter and non-goals | Large proposals that bypass founder shape |
+| Grant deadline drift | Rufford and similar windows lose value if drafts slip silently | Pio tracks deadlines and surfaces alerts into `inbox/` | Deadline passes without an alert artifact |
+| Equipment overreach | An M400-first narrative weakens fundability and credibility | Clare and grant prompts enforce the M350-first rule | Drafts mention the M400 as the first ask |
+| Techni-Drones leverage stall | The conservation vertical and equity path can become vague talk | Keep explicit milestone reminders and Francis review notes | No written movement on the vertical or equity path |
 | Approval regression | Unsafe actions could slip past review | Keep approvals explicit and test protected categories | Actions run without approval artifacts |
-| Work-laptop dependence | Project becomes hard to sustain or move | Prefer Linux VM or personal host deployment | Runtime tied to one Windows machine |
-| Docs drift | Contributors cannot tell what is current | Update docs with behavior changes and review README in PRs | Commands in docs no longer match code |
-| Provider lock-in | Costs or runtime constraints limit adoption | Keep both Ollama and OpenAI paths healthy | Only one provider path actually works |
-| Hidden operational cost | The stack becomes too expensive or complex | Prefer static docs, GitHub Actions, small hosts, and plain files | New services appear without clear payoff |
+| Work-laptop dependence | The system remains fragile and hard to sustain | Preserve Docker, Linux deployment, and cloud migration docs | Runtime tied to one Windows machine |
+| Docs drift | Strategy docs and repo behavior diverge | Maintain repo-synced mirrors and update README with runtime changes | Commands or roles mismatch between docs and code |
+| Provider instability | Local and hosted inference may fail differently | Keep Ollama-first, OpenAI-ready routing and clear failure artifacts | Repeated provider failures with no clear fallback |
+| Hidden cloud rewrite | Portability work mutates into a product redesign | Treat cloud work as an extension of the same daemon shape | New services appear without preserving file auditability |
 
 ## Review Cadence
 
-- Review this register at least once per quarter
-- Re-rank risks after any deployment or provider strategy change
-- Open an issue for new risks that affect safety, cost, or portability
+- Review this register during the weekly strategy review when meaningful changes land.
+- Re-rank risks after grant submissions, deployment changes, or major workflow additions.
+- Open an issue for any new risk that touches safety, deadlines, or governance.

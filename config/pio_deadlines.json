@@ -1,0 +1,42 @@
+{
+  "WWF_Russell_Train": {
+    "deadline": "2026-04-15",
+    "alert_days_before": [
+      14,
+      7,
+      3,
+      1
+    ],
+    "assigned_to": "bartholomew",
+    "status": "in_progress"
+  },
+  "Rufford_Small_Grants": {
+    "deadline": "rolling",
+    "target_submit": "2026-05-01",
+    "alert_days_before": [
+      14,
+      7,
+      3
+    ],
+    "assigned_to": "bartholomew",
+    "status": "urgent"
+  },
+  "Techni_Drones_equity_pitch": {
+    "deadline": "2026-05-01",
+    "alert_days_before": [
+      7,
+      3
+    ],
+    "assigned_to": "francis_review",
+    "status": "pending"
+  },
+  "Conservation_client_demo_flight": {
+    "deadline": "2026-05-15",
+    "alert_days_before": [
+      14,
+      7
+    ],
+    "assigned_to": "anthony",
+    "status": "pending"
+  }
+}

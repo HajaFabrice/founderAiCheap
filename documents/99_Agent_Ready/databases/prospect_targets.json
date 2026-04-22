@@ -1,0 +1,94 @@
+{
+  "generated_at": "2026-04-22",
+  "source_note": "Warmth and organization focus come from the attached master plan plus the outreach email source. Candidate contact emails from the outreach draft remain unverified.",
+  "targets": [
+    {
+      "organization": "Madagascar Biodiversity Partnership",
+      "short_name": "MBP",
+      "segment": "Conservation partner",
+      "warmth": "warmest",
+      "recommended_language": "english",
+      "priority_offer": "Free demonstration flight or short biodiversity data support note",
+      "personalization_snippet": "Reference biodiversity partnership work and offer a concrete demo around survey, mapping, or monitoring.",
+      "contact_email_candidate": null,
+      "requires_human_verification": true
+    },
+    {
+      "organization": "Durrell Wildlife Conservation Trust Madagascar",
+      "short_name": "Durrell",
+      "segment": "Conservation NGO",
+      "warmth": "warm",
+      "recommended_language": "english",
+      "priority_offer": "Drone survey partnership or rapid monitoring data support",
+      "personalization_snippet": "Durrell's Menabe monitoring updates are strong context for a field-monitoring message.",
+      "contact_email_candidate": "supportercare@durrell.org",
+      "requires_human_verification": true
+    },
+    {
+      "organization": "Fanamby Madagascar",
+      "short_name": "Fanamby",
+      "segment": "Conservation NGO",
+      "warmth": "warm",
+      "recommended_language": "french",
+      "priority_offer": "Free patrol-area or restoration-area demonstration flight",
+      "personalization_snippet": "Fanamby's patrol and restoration metrics are a strong personalization hook.",
+      "contact_email_candidate": "contact@fanamby.org",
+      "requires_human_verification": true
+    },
+    {
+      "organization": "Blue Ventures",
+      "short_name": "Blue Ventures",
+      "segment": "Coastal and fisheries conservation",
+      "warmth": "warm",
+      "recommended_language": "english",
+      "priority_offer": "Drone mapping or community-monitoring data support",
+      "personalization_snippet": "Blue Ventures' mangrove and fisheries monitoring is a good hook for coastal mapping and data support.",
+      "contact_email_candidate": "info@blueventures.org",
+      "requires_human_verification": true
+    },
+    {
+      "organization": "Association Mitsinjo",
+      "short_name": "Mitsinjo",
+      "segment": "Andasibe conservation",
+      "warmth": "warm",
+      "recommended_language": "french",
+      "priority_offer": "Monitoring-data support or targeted biodiversity drone demonstration",
+      "personalization_snippet": "Use their amphibian and forest-edge monitoring work as the entry point.",
+      "contact_email_candidate": "mitsinjomadagascar@gmail.com",
+      "requires_human_verification": true
+    },
+    {
+      "organization": "SEED Madagascar",
+      "short_name": "SEED Madagascar",
+      "segment": "Conservation NGO",
+      "warmth": "target",
+      "recommended_language": "english",
+      "priority_offer": "Monitoring-data sample review",
+      "personalization_snippet": "Their Sainte Luce palm and herpetofauna monitoring appears in the outreach source as a strong opener.",
+      "contact_email_candidate": "info@seedmadagascar.org",
+      "requires_human_verification": true
+    },
+    {
+      "organization": "Madagascar Fauna and Flora Group",
+      "short_name": "MFG",
+      "segment": "Conservation NGO",
+      "warmth": "target",
+      "recommended_language": "french",
+      "priority_offer": "Monitoring-data support",
+      "personalization_snippet": "Parc Ivoloina and Betampona monitoring can anchor the message.",
+      "contact_email_candidate": "info@madagascarfaunaflora.org",
+      "requires_human_verification": true
+    },
+    {
+      "organization": "Duke Lemur Center Madagascar",
+      "short_name": "DLC Madagascar",
+      "segment": "Research and conservation programme",
+      "warmth": "target",
+      "recommended_language": "english",
+      "priority_offer": "Lemur monitoring dataset support",
+      "personalization_snippet": "Recent Madagascar programme updates and lemur monitoring are the relevant opener.",
+      "contact_email_candidate": "sava-conservation@duke.edu",
+      "requires_human_verification": true
+    }
+  ]
+}

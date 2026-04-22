@@ -46,6 +46,8 @@ pub struct AppState {
     pub roles: BTreeMap<String, RoleState>,
     #[serde(default)]
     pub processed_inbox_requests: BTreeMap<String, ProcessedInboxRequest>,
+    #[serde(default)]
+    pub processed_deadline_alerts: BTreeMap<String, String>,
 }
 
 impl AppState {

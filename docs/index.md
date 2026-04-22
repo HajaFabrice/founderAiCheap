@@ -1,8 +1,8 @@
 # FounderAI-Ollama-Rust Docs
 
 FounderAI-Ollama-Rust is a low-cost, file-auditable founder operating system.
-It keeps the original FounderAI mental model while moving the runtime into Rust
-and making the provider configurable between Ollama and OpenAI.
+It keeps the original FounderAI mental model while moving the runtime into Rust,
+and it is now synced to the April 2026 Techni-Drones and ERIS V4 document set.
 
 ## Start Here
 
@@ -29,6 +29,7 @@ and making the provider configurable between Ollama and OpenAI.
 ## What This Project Protects
 
 - Founder voice fidelity
+- Techni-Drones and grant-context realism
 - Approval gates for protected actions
 - Inspectable prompt, output, and approval artifacts
 - Windows-first usability with Linux portability

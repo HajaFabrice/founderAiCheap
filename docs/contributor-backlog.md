@@ -1,70 +1,54 @@
 # Contributor Backlog
 
-This backlog is the contributor-facing slice of the no-budget rollout. It keeps
-the next useful tasks visible without requiring a separate project management
-tool.
-
-The Windows and Linux smoke-test wrapper scripts are already included in this
-milestone, so the remaining backlog focuses on validation, testing, docs, and
-deployment hardening.
+This backlog is now aligned to the V4 strategy documents and the current runtime shape.
 
 ## `good first issue`
 
-### Add Rust unit tests for config parsing and provider overrides
+### Add unit tests for Pio deadline parsing and alert generation
 
-- Labels: `good first issue`, `help wanted`, `provider`
-- Goal: add small, deterministic tests around config loading and env override precedence.
+- Labels: `good first issue`, `help wanted`, `documentation`
+- Goal: cover `config/pio_deadlines.json` parsing and due-alert behavior.
 
 ### Add README screenshots or artifact examples
 
 - Labels: `good first issue`, `documentation`
-- Goal: show the structure of a successful run folder, approval summary, and status output.
+- Goal: show a run folder, a grant artifact, and a status output example.
 
-### Add a branchless onboarding guide for first-time contributors
-
-- Labels: `good first issue`, `documentation`
-- Goal: help first-time contributors submit small doc or script fixes without needing deep git knowledge.
-
-### Review founder-brain folder structure and index the references
+### Index the founder-brain reference files
 
 - Labels: `good first issue`, `documentation`, `founder-voice`
-- Goal: add an inventory of the founder-brain reference files and what each one is for.
+- Goal: document what each founder-brain file contributes to the prompt packet.
 
 ## `help wanted`
 
-### Improve provider timeout logging and recovery hints
+### Verify Bartholomew on a real grant draft
 
-- Labels: `help wanted`, `provider`, `smoke-test`
-- Goal: make slow Ollama generations easier to diagnose from `stderr.txt`, `stdout.txt`, and `output.md`.
+- Labels: `help wanted`, `provider`
+- Goal: run a bounded grant request and confirm the draft lands in `runtime/grants/`.
+
+### Prove Zacchaeus and Perpetua end to end
+
+- Labels: `help wanted`, `smoke-test`
+- Goal: run inbound-lead and nurture-sequence smoke flows and capture the artifacts.
+
+### Build the first Gmail polling bridge
+
+- Labels: `help wanted`, `provider`, `devops`
+- Goal: prototype Gmail API polling into inspectable inbox items without breaking the local-first workflow.
 
 ### Verify Docker deployment on a Linux host
 
 - Labels: `help wanted`, `devops`, `linux`
 - Goal: run the compose files on a real Linux machine and report any gaps.
 
-### Review and harden the isolated smoke-test wrapper scripts
-
-- Labels: `help wanted`, `smoke-test`, `windows`, `linux`
-- Goal: confirm the new wrapper scripts behave well on both platforms and improve the ergonomics if needed.
-
 ## `maintainer-only`
 
-### Enable GitHub Pages from `main` / `docs`
+### Review grant-governance checks
 
-- Labels: `devops`
-- Goal: publish the docs tree without adding a separate docs stack.
+- Labels: `approvals`, `founder-voice`
+- Goal: confirm the M350-first rule and Techni-Drones host logic stay enforced in prompts and QA.
 
-### Enable GitHub Discussions and create the initial categories
+### Plan the next cloud step without rewriting the app
 
-- Labels: `needs-triage`
-- Goal: use GitHub-native community workflow before adding any external chat tool.
-
-### Apply minimal branch protection and security settings
-
-- Labels: `needs-triage`
-- Goal: require the build workflow on `main`, keep admin bypass, and enable security alerts.
-
-### Create the `FounderAI No-Budget Board`
-
-- Labels: `needs-triage`
-- Goal: create the first GitHub Project board with the agreed workflow columns.
+- Labels: `devops`, `needs-triage`
+- Goal: sequence Gmail, Docker, and deployment changes while preserving auditability.

@@ -83,6 +83,24 @@ pub fn infer_task_type(job: &JobConfig, role: Option<&TeamRoleConfig>) -> String
         return "final_review".to_string();
     }
 
+    if job_id.contains("grant")
+        || description.contains("grant")
+        || prompt.contains("grant")
+        || prompt.contains("rufford")
+        || prompt.contains("russell train")
+    {
+        return "grant".to_string();
+    }
+
+    if job_id.contains("deadline")
+        || job_id.contains("scheduler")
+        || description.contains("deadline")
+        || prompt.contains("deadline")
+        || prompt.contains("schedule")
+    {
+        return "scheduler".to_string();
+    }
+
     if job_id.contains("phd")
         || prompt.contains("literature")
         || prompt.contains("manuscript")

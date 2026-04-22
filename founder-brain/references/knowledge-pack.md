@@ -1,60 +1,45 @@
 # Knowledge Pack
 
-## Offers
+## Current Offer Stack
 
-- Drone-enabled biodiversity surveys: thermal and multispectral aerial monitoring of wildlife and habitats, including lemurs, herpetofauna, and forest health, using DJI Matrice 400 workflows.
-- Data analysis and MRV pipelines: turn raw sensor data, camera traps, survey logs, drone imagery, and eDNA into cleaned datasets and decision-ready indicators such as species counts, forest cover, and carbon-relevant metrics.
-- Training and capacity building: teach drone piloting, photogrammetry, and data management to NGOs, universities, local communities, and field teams through Techni-Drone Madagascar leverage.
-- Consulting on MRV and ecosystem governance: advise REDD+ projects, government agencies, and funders on transparent, data-driven ecological monitoring.
-- Custom tool development: build automated workflows, wildlife detection models, databases, and dashboards for ecological operations.
+- Conservation drone services through Techni-Drones Madagascar: demo flights, habitat mapping, thermal wildlife surveys, patrol coverage, and multispectral monitoring.
+- ERIS and MRV pre-pipeline work: biodiversity data structuring, indicator design, pilot scoring logic, and transparent evidence workflows.
+- Research and grant support: literature synthesis, methods notes, grant narratives, and field protocol design.
+- Training and capacity building: drone piloting, field data handling, and ecological monitoring workflows.
 
-## Audiences
+## Priority Audiences
 
-- Conservation NGOs and wildlife trusts: Durrell, MBP, Panthera, AEECL, IUCN-linked groups.
-- Research institutions and universities: LJMU, Max Planck AB, local universities, and ecology labs.
-- Government and REDD+ projects: Malagasy environment agencies, CNRE, FCPF-linked work.
-- Development donors and CSR programs: Pierre Castel Fund, Regenfund, USAID, EU, and private foundations.
-- Corporate developers: mining, timber, and agribusiness groups that need transparent ecological baselines or offset evidence.
-- Community groups and youth: local volunteers, students, and grassroots monitoring teams.
+- Conservation NGOs and protected-area actors in Madagascar: MBP, Durrell, Fanamby, Blue Ventures, Mitsinjo, and aligned teams.
+- Research institutions and labs linked to PhD applications and field collaboration.
+- Donors and grant funders whose support can unlock equipment, methods, and pilot studies.
+- Techni-Drones leadership and partners where conservation work can become a durable company vertical.
+
+## Proof Anchors
+
+- IPS Congress 2025 presentation on thermal drone lemur surveys
+- Flowers et al. (2023) co-authorship
+- Pierre Castel Prize 2025
+- Techni-Drones Madagascar role as Drone Instructor and Conservation Technology Lead
+- Field background in Madagascar biodiversity research and ecological data workflows
+
+## Offer Logic
+
+- Lead with a free demonstration flight or a small evidence-first sample.
+- Keep the first ask narrow, useful, and fast to evaluate.
+- Use the M350 RTK + H30T + Altum-PT stack as the credible equipment story.
+- Do not treat the M400 as the first equipment narrative.
 
 ## Voice Anchors
 
-- Short, conversational, forward-looking, data-driven, and humble.
-- Blend field experience with technical clarity.
-- Use facts, numbers, and vivid project details.
-- Stay raw and honest rather than polished and salesy.
-
-## Example Lines
-
-- "Thrilled to be certified in drone photogrammetry - 39/40 score. At Techni-Drone Madagascar I'm now training others to map our forests in 3D. In one test flight, thermal drones found lemurs across the marsh in minutes - a task that took 2 days by canoe."
-- "Data isn't just numbers - it's nature's story. As a former field ecologist now specializing in MRV, I merge cameras, GPS and R-code to reveal hidden wildlife trends."
-- "Our MRV dashboard just published: eDNA + drone + camera trap confirm the same biodiversity hotspots. No hype, just data-driven insight."
-
-## Core Beliefs
-
-- "Technology should empower, not replace, community-driven conservation."
-- "Transparency builds trust in conservation finance."
-- "Interdisciplinary skills multiply impact."
-
-## Stories To Pull From
-
-- Ihofa forest: hours spent manually reconciling GPS tracks created a permanent bias toward automation, clean workflows, and decision-grade datasets.
-- Sifaka chased by fosa under camera trap: use this when arguing for multi-sensor monitoring and behavior-aware interpretation.
-- Mobile genetics lab: high-tech tools only create value when the data workflow is solid from collection to verification.
-
-## Proof
-
-- Collaborations: UC Berkeley, Max Planck Institute, Liverpool John Moores, Vet. Med Vienna.
-- Training: drone photogrammetry certified with 39/40.
-- Positioning: instructor at Techni-Drone Madagascar, Pierre Castel Prize 2025 laureate.
-- Projects: Ihofa biodiversity inventory, Ambatotsirongorongo herpetofauna surveys, amphibian climate stress research.
-- Output: publications, technical reports, and environmental data-cleaning services for consultancies.
+- Warm, exact, and field-grounded
+- Scientific without sounding academic for its own sake
+- Helpful before persuasive
+- Honest about limits, deadlines, and verification needs
 
 ## Hard Rules
 
-- Always back claims with data.
-- Respect local regulations, communities, and wildlife.
-- Use transparent processing steps, open formats, and documented methods.
-- Avoid marketing hyperbole and pressure.
-- Sell ethically: trust and shared vision first.
-- Favor volume and consistency over perfection.
+- No invented credentials, clients, or partnerships
+- No extractive-industry positioning
+- No generic tech-consulting drift
+- No hype-heavy conservation language without evidence
+- No pricing in cold outreach

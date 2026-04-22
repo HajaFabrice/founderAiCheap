@@ -2,21 +2,17 @@
 
 ## Problem Statement
 
-The original FounderAI system works in Python and PowerShell on Windows, but it
-is tied too closely to a single machine and a single provider path. This project
-rebuilds the autonomy layer in Rust so the system remains inspectable, portable,
-and reliable while preserving the founder-brain identity and safety model.
+FounderAI already works as a local Python and PowerShell system, but the durable version needs to keep the same auditable shape while supporting the current April 2026 reality: Techni-Drones Madagascar, grant pressure, ERIS concept development, and cloud portability.
 
 ## Vision
 
-Deliver a portable FounderAI runtime that can run on Windows or Linux, talk to
-either Ollama or OpenAI, and preserve the same founder-brain operating model:
+Deliver a portable FounderAI runtime that:
 
-- founder identity and Franciscan charter
-- 3 teams and 6 roles
-- inbox and outbox workflow
-- approval queue for protected actions
-- file-based runs, logs, and outputs
+- preserves founder identity and Franciscan governance
+- preserves the six core operating lanes
+- adds workflow overlays for grant writing, deadline tracking, lead response, nurture, QA, review, and self-improvement
+- keeps inbox, outbox, approvals, and runtime artifacts inspectable
+- can run on Windows or Linux with Ollama-first and OpenAI-ready provider routing
 
 ## Scope
 
@@ -25,39 +21,29 @@ In scope:
 - Rust CLI and daemon
 - file-based runtime structure
 - provider switching between Ollama and OpenAI
-- Windows launch scripts and Linux launch parity
-- public docs, onboarding guides, and contributor scaffolding
-- low-cost deployment guidance
+- Bartholomew grant drafting and Pio deadline tracking
+- Windows launch scripts, Linux launch parity, Docker, and CI
+- docs and contributor scaffolding that reflect the V4 strategy docs
 
 Out of scope for now:
 
-- multi-tenant SaaS hosting
-- heavy web dashboard work
-- speculative plugin frameworks
-- replacing file artifacts with a database
-- weakening approval gates for convenience
-- rewriting founder voice into a generic assistant persona
+- replacing approvals with automation shortcuts
+- rewriting the product into a generic agent platform
+- full SaaS control-plane work
+- database-first redesign before the local runtime is trustworthy
 
-## Objectives
+## Current Strategic Priorities
 
-1. Ship a reliable binary that can run `status`, `tick`, and `daemon`.
-2. Preserve approvals, team routing, and inspectable artifacts.
-3. Support both Ollama and OpenAI through config and environment variables.
-4. Make the repo contributor-ready with docs, templates, and governance.
-5. Keep deployment feasible on a small personal server or other low-cost host.
-
-## Key Deliverables
-
-- release-capable Rust application
-- Docker and script-based deployment paths
-- GitHub CI
-- public documentation
-- issue and PR templates
-- governance, conduct, and security policies
+1. Protect survival-first operation.
+2. Support the Techni-Drones conservation vertical.
+3. Keep grant deadlines visible and actionable.
+4. Preserve the ERIS long arc without drifting into hype.
+5. Prepare cloud portability without breaking local auditability.
 
 ## Success Criteria
 
-- A maintainer can build the app from a clean checkout.
-- A contributor can understand scope and non-goals from the repo.
-- A deployer can choose Ollama or OpenAI without changing product behavior.
-- FounderAI still pauses protected actions behind approval review.
+- A maintainer can run `status`, `tick`, and `daemon`.
+- Deadline alerts become visible as inspectable inbox items.
+- Grant drafts land in normal run artifacts plus `runtime/grants/`.
+- Founder-brain prompts reflect the Techni-Drones and V4 grant context.
+- Cloud migration remains an extension path, not a rewrite excuse.

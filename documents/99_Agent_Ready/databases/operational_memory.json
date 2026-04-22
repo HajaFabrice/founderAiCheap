@@ -1,0 +1,133 @@
+{
+  "generated_at": "2026-04-22",
+  "identity": {
+    "founder_name": "Haja Fabrice Razafindrabe Maminiaina",
+    "base_location": "Antananarivo, Madagascar",
+    "roles": [
+      "Conservation biologist",
+      "Drone instructor",
+      "Environmental data specialist",
+      "Drone Instructor and Conservation Technology Lead at Techni-Drones Madagascar",
+      "Founder of ERIS Verification Initiative"
+    ],
+    "scientific_credibility": [
+      "Co-author on Flowers et al. (2023)",
+      "IPS Congress 2025 presenter on thermal drone lemur surveys",
+      "Master-level field research in Madagascar"
+    ],
+    "contact_points": {
+      "email": "hajafabrice.r@gmail.com",
+      "phone_primary_strategy_docs": "+261 34 94 141 12",
+      "phone_service_sheet": "+261 34 91 700 76",
+      "verification_note": "Phone numbers differ across sources and require human verification before external use."
+    }
+  },
+  "mission": {
+    "north_star": "Build ERIS as ecological integrity scoring infrastructure for conservation finance and biodiversity MRV in Madagascar and the Global South.",
+    "salary_cap_usd": 150000,
+    "steward_ownership_target_year": 5,
+    "mission_before_money": true
+  },
+  "governance": {
+    "non_negotiables": [
+      "No autonomous external send without approval",
+      "No autonomous publish without approval",
+      "No autonomous financial commitment without approval",
+      "No destructive write without approval",
+      "No calendar commitment without approval",
+      "Do not serve extractive or biodiversity-destructive clients",
+      "Keep methodology open-access, reproducible, and auditable"
+    ]
+  },
+  "current_context": {
+    "strategic_anchor": "Techni-Drones Madagascar conservation and MRV vertical",
+    "primary_near_term_goal": "Use grants, drone proof-of-concept, and warm conservation contacts to create leverage inside Techni-Drones while keeping ERIS moving.",
+    "phd_status": "Active applications",
+    "grant_status": "Active conservation grant drafting and deadline tracking"
+  },
+  "priorities_2026": [
+    "Submit and strengthen Rufford and WWF-aligned grant applications",
+    "Pitch biodiversity vertical to Techni-Drones leadership",
+    "Sign one conservation NGO or research client",
+    "Negotiate equity or commission structure in writing",
+    "Keep PhD applications moving in parallel",
+    "Advance ERIS concept development without sacrificing survival work"
+  ],
+  "equipment_strategy": {
+    "first_grant_target": [
+      "DJI Matrice 350 RTK",
+      "Zenmuse H30T",
+      "MicaSense Altum-PT"
+    ],
+    "do_not_lead_with": "DJI Matrice 400",
+    "rationale": [
+      "wildlife detection via thermal imaging",
+      "forest and MRV mapping via multispectral imaging",
+      "RTK-grade precision for survey workflows"
+    ]
+  },
+  "grant_narrative": {
+    "required_outputs": [
+      "Peer-reviewed methodology paper",
+      "Replicable survey protocol for Madagascar conservation teams",
+      "Pilot ERIS biodiversity score for one community forest"
+    ],
+    "hosting_note": "When truthful and operationally useful, Techni-Drones Madagascar can be positioned as institutional host."
+  },
+  "offers": {
+    "primary_offer": "Conservation drone services via Techni-Drones Madagascar",
+    "secondary_offers": [
+      "MRV consulting pre-pipeline",
+      "Biodiversity data cleaning and validation",
+      "Field data collection in Madagascar",
+      "Ecological statistics and data interpretation",
+      "Publication-ready figures and short reports"
+    ],
+    "entry_offers": [
+      "Free demonstration flight for a study area",
+      "Free 5-20 row sample review for a dataset"
+    ],
+    "field_rate_mga_per_day": 40000,
+    "rate_note": "Field rate excludes transport, food, lodging, and permits. Project pricing for data analysis and cleaning is custom after sample review.",
+    "ethics_statement": "AI-assisted workflows are used under human supervision only and must respect academic integrity, local legal frameworks, and co-authorship ethics."
+  },
+  "communication_playbook": {
+    "tone": [
+      "Warm",
+      "Scientific",
+      "Honest",
+      "Specific over generic",
+      "Evidence over hype"
+    ],
+    "rules": [
+      "Use one clear CTA per message",
+      "Do not include pricing in cold outreach",
+      "Reference a real programme, report, paper, or site when available",
+      "Use English or French depending on recipient",
+      "Mark uncertain facts as NEEDS_HUMAN_VERIFICATION"
+    ]
+  },
+  "outreach_cadence": {
+    "follow_up_days": [
+      5,
+      12
+    ],
+    "pause_after_final_follow_up_days": 56,
+    "reply_sla_hours": 24
+  },
+  "cloud_portability": {
+    "default_mode": "local-first",
+    "next_most_useful_improvement": "Gmail API polling",
+    "next_engineering_layer": "Dockerized daemon",
+    "later_layers": [
+      "Low-cost host such as Railway or Fly",
+      "Thin Vercel UI",
+      "Cloud persistence only if inspectability is preserved"
+    ]
+  },
+  "verification_flags": [
+    "Recipient contact details from outreach drafts require human verification.",
+    "Funding deadlines and eligibility should be rechecked before submission.",
+    "Phone numbers conflict across source files."
+  ]
+}

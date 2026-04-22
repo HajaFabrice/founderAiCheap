@@ -1,0 +1,136 @@
+{
+  "generated_at": "2026-04-22",
+  "selection_rule": [
+    "User-attached text exports override older mirrors when they cover the same document family.",
+    "Otherwise, the highest explicit version number wins.",
+    "If version numbers are missing, the latest dated filename wins.",
+    "Older files remain archival unless the newer source omits a needed detail."
+  ],
+  "documents": [
+    {
+      "id": "master-plan",
+      "category": "strategy",
+      "canonical_path": "C:/Users/Student/Desktop/perso/01_MasterPlan_v4.0.txt",
+      "repo_mirror_path": "documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFileV4/01_MasterPlan_v4 - Repo Synced.md",
+      "supersedes": [
+        "documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFilesV3/01_MasterPlan_v3.docx",
+        "documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFilesV3/ERIS Master Plan.txt"
+      ],
+      "agent_uses": [
+        "founder identity",
+        "strategic priorities",
+        "KPIs",
+        "risk review",
+        "weekly planning"
+      ]
+    },
+    {
+      "id": "eris-build-spec",
+      "category": "system",
+      "canonical_path": "C:/Users/Student/Desktop/perso/ERIS_AgentSystem_CodexInput_v5.0.txt",
+      "repo_mirror_path": "documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFileV4/ERIS Agent System Codex Input v5 - Repo Synced.md",
+      "supersedes": [
+        "documents/01_Strategy_And_Systems/ERIS/ERIS_AgentSystem_Codex_v4_0.docx",
+        "documents/01_Strategy_And_Systems/ERIS/ERIS AGENT SYSTEM.txt"
+      ],
+      "agent_uses": [
+        "agent roster",
+        "workflow overlays",
+        "grant routing",
+        "model behavior",
+        "approval discipline"
+      ]
+    },
+    {
+      "id": "cloud-plan",
+      "category": "architecture",
+      "canonical_path": "documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFileV4/AI Tools Cloud Plan - Repo Synced.md",
+      "repo_mirror_path": "documents/01_Strategy_And_Systems/Claude_Document_Pack/ClaudeFileV4/AI Tools Cloud Plan - Repo Synced.md",
+      "supersedes": [],
+      "agent_uses": [
+        "cloud portability constraints",
+        "migration sequencing",
+        "tooling choices"
+      ]
+    },
+    {
+      "id": "communications-library",
+      "category": "templates",
+      "canonical_path": "documents/01_Strategy_And_Systems/ERIS/ERIS_Communication_Templates_v1.0.txt",
+      "repo_mirror_path": null,
+      "supersedes": [],
+      "agent_uses": [
+        "academic applications",
+        "freelance and NGO outreach",
+        "internal instruction templates"
+      ]
+    },
+    {
+      "id": "ngo-outreach-copy",
+      "category": "outreach",
+      "canonical_path": "documents/03_Freelance_And_Career/Outreach/Outreach Emails.docx",
+      "repo_mirror_path": null,
+      "supersedes": [],
+      "agent_uses": [
+        "cold outreach phrasing",
+        "follow-up cadence",
+        "personalization snippets",
+        "sample-review offer"
+      ]
+    },
+    {
+      "id": "service-statements",
+      "category": "offer-positioning",
+      "canonical_path": "documents/03_Freelance_And_Career/Profiles_And_Offers/service statement alternatives.docx",
+      "repo_mirror_path": null,
+      "supersedes": [
+        "documents/03_Freelance_And_Career/Profiles_And_Offers/Service statement v1.docx"
+      ],
+      "agent_uses": [
+        "one-line offer positioning",
+        "signature blurbs",
+        "cover note positioning"
+      ]
+    },
+    {
+      "id": "freelance-services-sheet",
+      "category": "offer-positioning",
+      "canonical_path": "documents/03_Freelance_And_Career/Profiles_And_Offers/Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx",
+      "repo_mirror_path": null,
+      "supersedes": [],
+      "agent_uses": [
+        "service scope",
+        "deliverables",
+        "field rate reference",
+        "ethics statement",
+        "payment method hints"
+      ]
+    },
+    {
+      "id": "business-blueprint",
+      "category": "strategy-support",
+      "canonical_path": "documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/The Billion-Scale Business Blueprint.txt",
+      "repo_mirror_path": null,
+      "supersedes": [],
+      "agent_uses": [
+        "workflow-company framing",
+        "not-to-do discipline",
+        "focus and compounding heuristics"
+      ]
+    },
+    {
+      "id": "current-cv-asset",
+      "category": "profile",
+      "canonical_path": "documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/Fabrice_CV_en 2026.docx",
+      "repo_mirror_path": null,
+      "supersedes": [
+        "documents/03_Freelance_And_Career/Profiles_And_Offers/Haja Fabrice Cv Optimized.docx"
+      ],
+      "agent_uses": [
+        "background summaries",
+        "attachments checklist",
+        "bio blocks"
+      ]
+    }
+  ]
+}

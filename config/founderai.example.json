@@ -5,6 +5,7 @@
   "inbox_dir": "../inbox",
   "outbox_dir": "../outbox",
   "agents_path": "agents.json",
+  "deadlines_path": "pio_deadlines.json",
   "poll_interval_seconds": 60,
   "internet_check": {
     "enabled": true,
@@ -56,13 +57,21 @@
       "phd_analysis": {
         "prefer": "online",
         "fallback": "offline"
+      },
+      "grant": {
+        "prefer": "online",
+        "fallback": "offline"
+      },
+      "scheduler": {
+        "prefer": "offline",
+        "fallback": "offline"
       }
     }
   },
   "offline_queue": {
     "enabled": true,
     "path": "runtime/offline_queue/",
-    "replay_on_job": "internet_up"
+    "replay_on_job": "internet-recovery-review"
   },
   "notifier": {
     "enabled": false,
@@ -300,6 +309,27 @@
       "metric_value": 5,
       "task_type": "phd_analysis",
       "prompt": "Read or review 5 papers, write concise reading notes, propose the best literature review type for the current question, and update the literature matrix or paper logic in draft form."
+    },
+    {
+      "id": "grant-pipeline-review",
+      "description": "Review active grant deadlines and draft the next bounded grant asset.",
+      "enabled": true,
+      "triggers": [
+        "periodic"
+      ],
+      "requires_internet": false,
+      "approval_policy": "never",
+      "risk_tags": [],
+      "mode": "single",
+      "run_at_local": "07:15",
+      "weekdays": [
+        "Monday",
+        "Thursday"
+      ],
+      "task_label": "Grant Pipeline Review",
+      "task_type": "grant",
+      "agent_id": "bartholomew",
+      "prompt": "Review the active grant pipeline, prioritize the next submission requirement, and draft one bounded asset: narrative paragraph, budget note, attachment checklist, or 3-line cover email. Keep every claim evidence-based, keep Techni-Drones Madagascar as institutional host when appropriate, and use the M350 RTK + H30T + Altum-PT stack as the first equipment ask."
     },
     {
       "id": "weekly-strategy-review",

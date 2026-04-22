@@ -2,6 +2,7 @@ use crate::agents::perpetua::{
     active_sequence_count, collect_due_actions, complete_action as complete_sequence_action, ensure_nurture_files,
     register_sequence_from_lead, SequenceAction, SequenceActionOutcome,
 };
+use crate::agents::pio::collect_due_alerts;
 use crate::agents::zacchaeus::{build_zacchaeus_job, collect_inbound_lead_requests};
 use crate::approvals::{
     approval_decision, create_approval_request, ensure_approval_dirs, list_pending_approvals, ApprovalDecision,
@@ -121,6 +122,7 @@ impl AutonomyApp {
             self.config.runtime_dir.join("runs"),
             self.config.runtime_dir.join("teams"),
             self.config.runtime_dir.join("briefings"),
+            self.config.runtime_dir.join("grants"),
             self.config.runtime_dir.join("nurture"),
             self.config.inbox_dir.clone(),
             self.config.outbox_dir.clone(),
@@ -649,6 +651,95 @@ impl AutonomyApp {
         Ok(path)
     }
 
+    fn create_structured_inbox_request(
+        &self,
+        prefix: &str,
+        title: &str,
+        body: &str,
+        approval_policy: &str,
+        risk_tags: &[String],
+        requires_internet: bool,
+        role_id: Option<&str>,
+        task_type: Option<&str>,
+        agent_id: Option<&str>,
+    ) -> Result<PathBuf> {
+        let file_name = format!(
+            "{}-{}-{}.json",
+            prefix,
+            utc_now().format("%Y%m%dT%H%M%SZ"),
+            slugify(title)
+        );
+        let path = self.config.inbox_dir.join(file_name);
+        let mut payload = serde_json::json!({
+            "title": title,
+            "body": body,
+            "approval_policy": approval_policy,
+            "risk_tags": risk_tags,
+            "requires_internet": requires_internet,
+        });
+        if let Some(object) = payload.as_object_mut() {
+            if let Some(role_id) = role_id {
+                object.insert("role_id".to_string(), Value::String(role_id.to_string()));
+            }
+            if let Some(task_type) = task_type {
+                object.insert("task_type".to_string(), Value::String(task_type.to_string()));
+            }
+            if let Some(agent_id) = agent_id {
+                object.insert("agent_id".to_string(), Value::String(agent_id.to_string()));
+            }
+        }
+        let payload_text =
+            serde_json::to_string_pretty(&payload).context("failed to serialize structured inbox request")?;
+        fs::write(&path, payload_text).with_context(|| format!("failed to write {}", path.display()))?;
+        Ok(path)
+    }
+
+    fn resolve_deadline_assignment(&self, assigned_to: &str) -> (Option<String>, Option<String>, Option<String>) {
+        let normalized = assigned_to.trim().to_ascii_lowercase();
+        if normalized.is_empty() {
+            return (None, Some("briefing".to_string()), None);
+        }
+
+        if let Some(role) = self.config.team_roles.values().find(|role| {
+            role.role_id.eq_ignore_ascii_case(assigned_to)
+                || role.agent_id.eq_ignore_ascii_case(&normalized)
+                || role.saint_name.eq_ignore_ascii_case(assigned_to)
+        }) {
+            let task_type = if role.role.eq_ignore_ascii_case("Outreach") {
+                "draft"
+            } else {
+                "proposal"
+            };
+            return (
+                Some(role.role_id.clone()),
+                Some(task_type.to_string()),
+                Some(role.agent_id.clone()),
+            );
+        }
+
+        match normalized.as_str() {
+            "bartholomew" => (
+                None,
+                Some("grant".to_string()),
+                Some("bartholomew".to_string()),
+            ),
+            "francis_review" | "francis" => (
+                None,
+                Some("final_review".to_string()),
+                Some("francis".to_string()),
+            ),
+            "pio" => (
+                None,
+                Some("scheduler".to_string()),
+                Some("pio".to_string()),
+            ),
+            _ if self.config.agent_profiles.contains_key(&normalized) => {
+                (None, Some("draft".to_string()), Some(normalized.clone()))
+            }
+            _ => (None, Some("briefing".to_string()), None),
+        }
+    }
+
     fn process_zacchaeus_inbound_requests(
         &self,
         state: &mut AppState,
@@ -767,6 +858,72 @@ impl AutonomyApp {
                 }
             }
         }
+        Ok(())
+    }
+
+    fn process_pio_deadlines(&self, state: &mut AppState, now_local: DateTime<Local>) -> Result<()> {
+        let scan_job_id = "pio-deadline-scan";
+        let scan_time = NaiveTime::parse_from_str("06:30", "%H:%M").context("invalid Pio scan time")?;
+        if now_local.time() < scan_time {
+            return Ok(());
+        }
+
+        let schedule_key = now_local.date_naive().to_string();
+        if state
+            .jobs
+            .get(scan_job_id)
+            .and_then(|job_state| job_state.last_schedule_key.as_deref())
+            == Some(schedule_key.as_str())
+        {
+            return Ok(());
+        }
+
+        let alerts = collect_due_alerts(&self.config, &state.processed_deadline_alerts, now_local)?;
+        let created_count = alerts.len();
+        for alert in alerts {
+            let (role_id, task_type, agent_id) = self.resolve_deadline_assignment(&alert.assigned_to);
+            let request_path = self.create_structured_inbox_request(
+                "pio-alert",
+                &alert.title,
+                &alert.body,
+                "never",
+                &[],
+                false,
+                role_id.as_deref(),
+                task_type.as_deref(),
+                agent_id.as_deref(),
+            )?;
+            state
+                .processed_deadline_alerts
+                .insert(alert.alert_key.clone(), request_path.display().to_string());
+            self.log(&format!(
+                "Pio queued deadline alert {} into {}.",
+                alert.deadline_id,
+                request_path.display()
+            ));
+        }
+
+        {
+            let job_state = state.ensure_job_state(scan_job_id);
+            job_state.last_started_at = Some(utc_now().to_rfc3339());
+            job_state.last_finished_at = Some(utc_now().to_rfc3339());
+            job_state.last_schedule_key = Some(schedule_key);
+            job_state.last_summary = Some(format!("Queued {created_count} Pio deadline alert(s)."));
+            job_state.last_exit_code = Some(0);
+            job_state.last_run_id = Some(format!(
+                "{}-{}",
+                utc_now().format("%Y%m%dT%H%M%SZ"),
+                scan_job_id
+            ));
+        }
+
+        if created_count > 0 {
+            self.notify_best_effort(
+                "FounderAI deadline alerts",
+                &format!("Pio queued {created_count} deadline alert(s) for review."),
+            );
+        }
+
         Ok(())
     }
 
@@ -1239,6 +1396,10 @@ impl AutonomyApp {
             self.log(&format!("Perpetua sequence processing failed: {err:#}"));
         }
 
+        if let Err(err) = self.process_pio_deadlines(&mut state, now_local) {
+            self.log(&format!("Pio deadline processing failed: {err:#}"));
+        }
+
         for request_file in self.iter_new_inbox_requests(&state)? {
             match self.build_inbox_job(&request_file) {
                 Ok((inbox_job, role)) => {
@@ -1300,6 +1461,7 @@ impl AutonomyApp {
         let pending = list_pending_approvals(&self.config.runtime_dir)?;
         let current_internet = internet_is_available(&self.config.internet_check);
         let provider_status = self.provider_status();
+        let pending_deadline_alerts = collect_due_alerts(&self.config, &state.processed_deadline_alerts, local_now())?.len();
 
         let mut lines = vec![
             format!("Config: {}", self.config.config_path.display()),
@@ -1308,11 +1470,13 @@ impl AutonomyApp {
             format!("Inbox: {}", self.config.inbox_dir.display()),
             format!("Outbox: {}", self.config.outbox_dir.display()),
             format!("Agent roster: {}", self.config.agent_roster_path.display()),
+            format!("Deadline tracker: {}", self.config.deadline_tracker_path.display()),
             format!("Configured agents: {}", self.config.agent_profiles.len()),
             format!("Internet status: {}", if current_internet { "available" } else { "unavailable" }),
             format!("Pending approvals: {}", pending.len()),
             format!("Offline queue pending: {}", count_pending_entries(&self.config)?),
             format!("Active nurture sequences: {}", active_sequence_count(&self.config)?),
+            format!("Pending deadline alerts: {}", pending_deadline_alerts),
             format!("Model router enabled: {}", self.config.model_router.enabled),
             format!("Model router routes: {}", self.config.model_router.routes.len()),
             format!("Notifier enabled: {}", self.config.notifier.enabled),

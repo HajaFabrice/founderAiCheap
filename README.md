@@ -13,6 +13,7 @@ Build a durable, low-cost FounderAI that:
 - preserves the founder-brain identity and Franciscan charter
 - preserves approvals for protected actions
 - preserves file-based runs, outputs, logs, and approvals
+- supports the current Techni-Drones Madagascar and ERIS operating reality
 - runs on Windows or Linux
 - can use Ollama now and OpenAI later without changing the product shape
 
@@ -23,6 +24,7 @@ Scope:
 - Rust daemon and CLI
 - file-based runtime structure
 - 3 teams and 6 role lanes
+- workflow overlays for grants, scheduling, lead response, nurture, QA, and review
 - provider switching between Ollama and OpenAI
 - Windows scripts, Linux scripts, Docker, and CI
 - contributor-ready docs and governance
@@ -46,6 +48,15 @@ Non-goals:
   - `B-Production`
   - `C-Outreach`
   - `C-Production`
+- Overlay agents extend the workflow without replacing the six lanes:
+  - `Bartholomew`
+  - `Pio`
+  - `Zacchaeus`
+  - `Perpetua`
+  - `Hildegard`
+  - `Clare`
+  - `Francis`
+  - `Columban`
 - Approval-sensitive work still pauses behind review for:
   - `external-send`
   - `publish`
@@ -58,6 +69,7 @@ Non-goals:
   - `outreach-batch`
   - `production-batch`
   - `phd-literature-engine`
+  - `grant-pipeline-review`
   - `weekly-strategy-review`
   - `internet-recovery-review`
 
@@ -71,6 +83,9 @@ Non-goals:
 - Provider settings can be overridden by environment variables for cloud deployment.
 - Linux launch scripts, Docker assets, and GitHub Actions build verification are included.
 - Failures are written into run artifacts instead of crashing the daemon.
+- Founder context is synced to the April 2026 Techni-Drones and ERIS V4 documents.
+- Deadline tracking now lives in `config/pio_deadlines.json` and surfaces through Pio-generated inbox requests.
+- Grant drafting now has a dedicated `runtime/grants/` artifact path.
 
 ## No-Budget Delivery Stack
 
@@ -85,7 +100,9 @@ Non-goals:
 - `founder-brain/`: preserved founder context copied from the Python reference workspace
 - `config/founderai.json`: live runtime config
 - `config/founderai.example.json`: starter copy
+- `config/pio_deadlines.json`: deadline tracker for grants and operational commitments
 - `docs/`: public project charter, roadmap, risks, and volunteer onboarding
+- `documents/99_Agent_Ready/`: curated references, databases, and templates loaded into prompt packets for agent work
 - `src/`: Rust autonomy engine
 - `scripts/start-founderai.ps1`: hidden or background launcher for Windows
 - `scripts/stop-founderai.ps1`: Windows stop helper
@@ -100,6 +117,7 @@ Non-goals:
 - `inbox/`: drop `.json`, `.md`, or `.txt` requests here
 - `outbox/`: FounderAI run copies
 - `runtime/`: logs, state, runs, approvals, and team outputs
+- `runtime/grants/`: grant draft copies generated for Bartholomew-driven work
 
 ## Project Docs
 
@@ -154,6 +172,9 @@ Supported environment overrides:
 - `FOUNDERAI_API_KEY_ENV`
 
 Use `.env.example` as a starting point for local overrides. Keep real API keys out of committed files.
+
+Pio reads deadline state from `config/pio_deadlines.json` and turns due alerts
+into inspectable inbox items instead of silent reminders.
 
 ## Build
 
@@ -332,11 +353,12 @@ The compose files keep `inbox/`, `outbox/`, and `runtime/` mounted as host direc
 
 ## Architecture Mapping To The Python Reference
 
-- `src/config.rs`: mirrors the Python config loader and preserves the job and role schema, with cloud-friendly provider overrides.
-- `src/app.rs`: mirrors the daemon loop, job scheduling, inbox ingestion, approvals, state updates, and status output.
-- `src/worker.rs`: mirrors prompt-packet assembly and run artifact creation, with a provider switch between Ollama and OpenAI.
+- `src/config.rs`: mirrors the Python config loader and preserves the job and role schema, with cloud-friendly provider overrides and deadline tracking config.
+- `src/app.rs`: mirrors the daemon loop, job scheduling, inbox ingestion, approvals, deadline routing, state updates, and status output.
+- `src/worker.rs`: mirrors prompt-packet assembly and run artifact creation, with a provider switch between Ollama and OpenAI and dedicated grant artifacts.
 - `src/approvals.rs`: preserves file-based approval payloads and summaries, and emits platform-appropriate helper scripts.
 - `src/state.rs`: preserves `runtime/state.json`.
+- `src/agents/pio.rs`: turns tracked deadlines into bounded inbox requests.
 - `src/team_logging.rs`: preserves CSV and JSONL team activity logs.
 - `src/singleton.rs`: preserves the single-daemon lock behavior across Windows and Linux.
 - `scripts/*.ps1` and `scripts/*.sh`: preserve the launcher pattern while making deployment transferable.

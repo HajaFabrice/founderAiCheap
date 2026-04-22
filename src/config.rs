@@ -174,6 +174,10 @@ fn default_agents_path() -> String {
     "agents.json".to_string()
 }
 
+fn default_deadlines_path() -> String {
+    "pio_deadlines.json".to_string()
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct AgentProfile {
     pub id: String,
@@ -370,6 +374,7 @@ pub struct AppConfig {
     pub inbox_dir: PathBuf,
     pub outbox_dir: PathBuf,
     pub agent_roster_path: PathBuf,
+    pub deadline_tracker_path: PathBuf,
     pub poll_interval_seconds: u64,
     pub internet_check: InternetCheckConfig,
     pub worker: WorkerConfig,
@@ -396,6 +401,8 @@ struct RawAppConfig {
     outbox_dir: String,
     #[serde(default = "default_agents_path")]
     agents_path: String,
+    #[serde(default = "default_deadlines_path")]
+    deadlines_path: String,
     #[serde(default = "default_poll_interval")]
     poll_interval_seconds: u64,
     #[serde(default)]
@@ -598,6 +605,24 @@ fn inject_default_routes(router: &mut ModelRouterConfig) {
             offline: Some(default_ollama_override()),
         },
     );
+    router.task_types.insert(
+        "grant".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "online".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
+    router.task_types.insert(
+        "scheduler".to_string(),
+        TaskTypeRouteConfig {
+            prefer: "offline".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_openai_override()),
+            offline: Some(default_ollama_override()),
+        },
+    );
 }
 
 fn expand_task_type_routes(router: &mut ModelRouterConfig) {
@@ -612,8 +637,8 @@ fn expand_task_type_routes(router: &mut ModelRouterConfig) {
             role_ids: Vec::new(),
             preferred_mode: route.prefer.clone(),
             fallback_mode: route.fallback.clone(),
-            online: route.online.clone(),
-            offline: route.offline.clone(),
+            online: route.online.clone().or_else(|| Some(default_openai_override())),
+            offline: route.offline.clone().or_else(|| Some(default_ollama_override())),
             notes: format!("Task-type route for {task_type}"),
         });
     }
@@ -659,6 +684,7 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
         .with_context(|| format!("failed to parse config {}", absolute_path.display()))?;
 
     let agent_roster_path = resolve_path(&base_dir, &raw.agents_path);
+    let deadline_tracker_path = resolve_path(&base_dir, &raw.deadlines_path);
     let agent_profiles = load_agent_profiles(&agent_roster_path)?;
 
     let mut team_roles = BTreeMap::new();
@@ -731,6 +757,7 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
         inbox_dir: resolve_path(&base_dir, &raw.inbox_dir),
         outbox_dir: resolve_path(&base_dir, &raw.outbox_dir),
         agent_roster_path,
+        deadline_tracker_path,
         poll_interval_seconds: raw.poll_interval_seconds,
         internet_check: raw.internet_check,
         worker,

@@ -5,10 +5,10 @@
     "canonical_role_id": "A-Outreach",
     "prompt_file": "prompts/anthony.md",
     "kind": "team-role",
-    "job_scope": "Draft cold outreach for biodiversity data cleaning and conservation consulting offers.",
+    "job_scope": "Draft conservation NGO and drone-services outreach for Techni-Drones Madagascar, plus selective ERIS MRV pre-pipeline outreach, with free demonstration flights as the default low-friction offer.",
     "primary_model": "qwen2.5:7b-instruct",
     "fallback_model": "gpt-4o-mini",
-    "escalation_rule": "Escalate if personalization data is missing, the prospect asks for a call, legal terms appear, or the request implies pricing above USD 500.",
+    "escalation_rule": "Escalate if personalization data is missing, the prospect asks for a call, legal terms appear, or the request moves toward pricing, contracts, or equipment promises beyond a free demo flight.",
     "external_facing": true,
     "transparency_note": "Anthony - AI Research Outreach Assistant, ERIS Verification Initiative. I work alongside Fabrice. He reviews and approves every message before it is sent.",
     "mentor_role": false
@@ -56,6 +56,19 @@
     "mentor_role": false
   },
   {
+    "id": "bartholomew",
+    "saint_name": "Bartholomew",
+    "prompt_file": "prompts/bartholomew.md",
+    "kind": "grant-writer",
+    "job_scope": "Draft Rufford, WWF Russell Train, GEF, and related conservation grant applications, budgets, cover emails, and attachment checklists for the M350 RTK equipment pathway and ERIS-aligned field research.",
+    "primary_model": "deepseek-chat",
+    "fallback_model": "gpt-4o-mini",
+    "escalation_rule": "Escalate when eligibility is unclear, factual support is missing, Techni-Drones host status is uncertain, or the draft drifts toward overreach such as an M400-first equipment request.",
+    "external_facing": false,
+    "transparency_note": "Internal grant-writing support.",
+    "mentor_role": false
+  },
+  {
     "id": "jacinta",
     "saint_name": "Jacinta",
     "canonical_role_id": "C-Outreach",
@@ -81,6 +94,19 @@
     "escalation_rule": "Escalate if literature contradicts ERIS assumptions, unpublished data is requested, or the evidence base is too weak to support a claim.",
     "external_facing": false,
     "transparency_note": "Internal research production support.",
+    "mentor_role": false
+  },
+  {
+    "id": "pio",
+    "saint_name": "Pio",
+    "prompt_file": "prompts/pio.md",
+    "kind": "scheduler",
+    "job_scope": "Track grant, equity, outreach, and submission deadlines; raise early alerts; and route time-sensitive work into the FounderAI inbox without bypassing approvals.",
+    "primary_model": "qwen2.5:7b-instruct",
+    "fallback_model": "qwen2.5:7b-instruct",
+    "escalation_rule": "Escalate if a deadline is within 24 hours, if the assignee is unclear, or if multiple critical deadlines collide.",
+    "external_facing": false,
+    "transparency_note": "Internal scheduling support.",
     "mentor_role": false
   },
   {
