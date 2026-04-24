@@ -47,6 +47,8 @@ Rules:
 - No pricing in the first message.
 - One CTA only.
 - Do not promise equipment or permissions that are not already secured.
+- If no personal contact name is available, address the organization team directly instead of using a placeholder.
+- Do not use markdown bold, horizontal rules, or bracket placeholders in the final body.
 
 ## Template 2: Biodiversity Data Support Outreach
 
@@ -78,6 +80,7 @@ Rules:
 
 - Mention one concrete deliverable, not a vague capability list.
 - Keep the CTA binary and low-friction.
+- If recipient details are missing, use the organization name or team name directly and mark any unresolved fact in a short `Verification:` block after the email.
 
 ## Template 3: Follow-Up Day 5
 
@@ -139,3 +142,4 @@ Best regards,
 - Use French where the relationship and organization context clearly call for it.
 - Treat contact emails from old draft docs as candidates until verified.
 - Never send automatically. Approval stays in the loop.
+- Prefer organization-team salutations over placeholder names when the contact person is unknown.
