@@ -1,6 +1,6 @@
 # Canonical Reference Brief
 
-Updated: 2026-04-22
+Updated: 2026-04-27
 
 This is the shortest trustworthy briefing for FounderAI agents. It reflects the
 attached V4/V5 strategy texts plus the latest operational documents.
@@ -9,9 +9,11 @@ attached V4/V5 strategy texts plus the latest operational documents.
 
 - The project is building ERIS: ecological integrity scoring infrastructure for
   conservation finance and biodiversity MRV in Madagascar and the Global South.
-- The founder's current real-world anchor is Techni-Drones Madagascar, where he
-  is building a conservation and MRV vertical rather than operating as a generic
-  freelancer.
+- The founder's current real-world anchor is Techni-Drones Madagascar, but as
+  an employee rather than the owner of that client base.
+- The near-term commercial structure is dual-track:
+  - strengthen value and written leverage inside Techni-Drones
+  - build a separate independent revenue engine for clearly non-Techni leads
 - The system remains local-first, approval-gated, and file-auditable even when
   cloud portability is discussed.
 
@@ -33,8 +35,8 @@ attached V4/V5 strategy texts plus the latest operational documents.
 
 1. Submit and strengthen conservation grant applications.
 2. Pitch and formalize the biodiversity vertical inside Techni-Drones.
-3. Sign one conservation NGO or research client.
-4. Put equity or commission conversations in writing.
+3. Sign one independent non-Techni client or pilot.
+4. Keep equity or commission conversations human-led and written.
 5. Maintain active PhD applications without breaking the survival engine.
 
 ## Core Narrative Constraints
@@ -77,20 +79,42 @@ attached V4/V5 strategy texts plus the latest operational documents.
   - Columban for bounded self-improvement
 - Inbox and outbox remain sacred. Agents draft, route, and pause for approval.
 
+## Employer Boundary
+
+- FounderAI may support Techni-Drones matters internally:
+  - internal notes
+  - briefing prep
+  - strategy support
+  - review-ready promotion drafts
+- FounderAI may not draft outbound client communication on behalf of
+  Techni-Drones clients or prospects.
+- Independent outreach is allowed only for clearly non-Techni leads.
+- If lead ownership is ambiguous, the correct output is
+  `NEEDS_HUMAN_CLARIFICATION`.
+
 ## Offers And Entry Points
 
-- Primary commercial wedge:
-  - conservation drone services through Techni-Drones Madagascar
-- Secondary wedge:
-  - MRV consulting and biodiversity data support
-- Supporting services:
+- Employer-context wedge:
+  - conservation and MRV vertical building inside Techni-Drones Madagascar
+- Independent wedge:
+  - biodiversity data cleaning and validation for clearly non-Techni leads
+- Supporting independent services:
   - field data collection in Madagascar
   - dataset cleaning and validation
   - ecological analysis and visualization
   - short reporting support
 - Low-friction offers:
-  - free demonstration flight for a study area
   - free 5-20 row sample review for a dataset
+  - bounded data-cleanup or reporting support after sample review
+
+## Proof Assets
+
+- Independent sample-work proof exists for biodiversity data cleanup:
+  - English cleaning summary
+  - French cleaning summary
+  - cleaned CSV with validation fields
+- Current bilingual environmental-data CV assets exist for English and French
+  counterparties.
 
 ## Communication Rules
 
@@ -100,6 +124,18 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - No pricing in cold outreach
 - Use specific observations about the recipient's work
 - When facts are missing, write `NEEDS_HUMAN_VERIFICATION`
+- Do not mix Techni-Drones promotion with a personal-service CTA in the same
+  message
+- Do not pitch ERIS in first-cycle independent freelance outreach
+- Use the shared conversation reference and answer bank for external drafts
+  instead of improvising claims
+
+## Auditability Rules
+
+- ERIS method language should stay versioned, confidence-tagged, and auditable
+- Metadata and lineage are part of the product, not afterthoughts
+- Do not describe ERIS as a validated standard when the current state is still
+  pilot and proof-building
 
 ## Cloud Direction
 

@@ -1,0 +1,109 @@
+{
+  "generated_at": "2026-04-27",
+  "operating_rule": "Independent-only service offers. Do not use this catalog for Techni-Drones client outreach or employer-owned leads.",
+  "offers": [
+    {
+      "id": "free-sample-review",
+      "category": "entry-offer",
+      "label": "Free 5-20 row sample review",
+      "fit_for": [
+        "messy biodiversity survey spreadsheets",
+        "camera-trap export cleanup",
+        "GPS table validation",
+        "donor-reporting dataset triage"
+      ],
+      "deliverables": [
+        "three practical fixes",
+        "scope recommendation",
+        "questions that block a quote"
+      ],
+      "turnaround": "short review after sample receipt",
+      "pricing": {
+        "model": "free",
+        "status": "verified from current outreach templates"
+      },
+      "source_basis": [
+        "documents/Freelance/Cleaning Summary.docx",
+        "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok",
+        "documents/99_Agent_Ready/templates/external_communications.md"
+      ]
+    },
+    {
+      "id": "dataset-cleaning-validation",
+      "category": "core-service",
+      "label": "Biodiversity dataset cleaning and validation",
+      "fit_for": [
+        "field survey datasets",
+        "Kobo exports",
+        "Excel and CSV monitoring tables",
+        "camera-trap and species observation records"
+      ],
+      "deliverables": [
+        "cleaned dataset",
+        "validation log",
+        "correction notes",
+        "structured table ready for analysis"
+      ],
+      "turnaround": "typically within 72 hours for a bounded small-to-mid dataset",
+      "pricing": {
+        "model": "custom quote after sample review",
+        "starting_point_hypothesis_usd": "80-150 for a small dataset",
+        "status": "needs_human_verification_before_public_use"
+      },
+      "source_basis": [
+        "documents/Freelance/Haja Fabrice Cv Optimized.docx",
+        "documents/Freelance/Cleaning Summary.docx",
+        "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok"
+      ]
+    },
+    {
+      "id": "gps-and-taxonomy-validation",
+      "category": "specialized-service",
+      "label": "GPS and taxonomy validation pass",
+      "fit_for": [
+        "datasets with suspect coordinates",
+        "species-name standardization needs",
+        "map-ready export preparation"
+      ],
+      "deliverables": [
+        "corrected coordinates where possible",
+        "flag list for unresolved records",
+        "taxonomic harmonization notes",
+        "QGIS-compatible export preparation"
+      ],
+      "turnaround": "bounded quote after sample review",
+      "pricing": {
+        "model": "custom quote after sample review",
+        "status": "not published as a separate public rate"
+      },
+      "source_basis": [
+        "documents/Freelance/Haja Fabrice Cv Optimized.docx",
+        "documents/Freelance/cleaned_data.csv"
+      ]
+    },
+    {
+      "id": "reporting-summary-pack",
+      "category": "supporting-service",
+      "label": "Short reporting summary pack",
+      "fit_for": [
+        "donor reporting support",
+        "grant attachment cleanup",
+        "monitoring summary preparation"
+      ],
+      "deliverables": [
+        "summary sheet",
+        "five-line explanation of improvements",
+        "bounded reporting-ready note"
+      ],
+      "turnaround": "usually paired with the main cleanup scope",
+      "pricing": {
+        "model": "bundle into the scoped quote",
+        "status": "proposal-dependent"
+      },
+      "source_basis": [
+        "documents/Freelance/Cleaning Summary.docx",
+        "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok"
+      ]
+    }
+  ]
+}

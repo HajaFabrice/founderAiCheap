@@ -1,4 +1,4 @@
-use crate::config::{AppConfig, JobConfig, ModelRouteConfig, TeamRoleConfig, WorkerConfig};
+use crate::config::{apply_worker_env_overrides, AppConfig, JobConfig, ModelRouteConfig, TeamRoleConfig, WorkerConfig};
 
 #[derive(Debug, Clone)]
 pub struct RoutedWorker {
@@ -47,7 +47,7 @@ fn worker_for_mode(
     route: &ModelRouteConfig,
     mode: &str,
 ) -> WorkerConfig {
-    match normalize(mode).as_str() {
+    let worker = match normalize(mode).as_str() {
         "online" => route
             .online
             .as_ref()
@@ -59,7 +59,8 @@ fn worker_for_mode(
             .map(|override_config| override_config.apply_to(&config.worker))
             .unwrap_or_else(|| config.worker.clone()),
         _ => config.worker.clone(),
-    }
+    };
+    apply_worker_env_overrides(worker)
 }
 
 pub fn infer_task_type(job: &JobConfig, role: Option<&TeamRoleConfig>) -> String {

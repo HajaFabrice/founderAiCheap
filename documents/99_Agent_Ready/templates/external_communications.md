@@ -1,12 +1,25 @@
 # External Communications Templates
 
-Updated: 2026-04-22
+Updated: 2026-04-27
 
 Source basis:
 - `ERIS_Communication_Templates_v1.0.txt`
 - `Outreach Emails.docx`
 - `service statement alternatives.docx`
 - `Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx`
+- `documents/Freelance/Cleaning Summary.docx`
+- `documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok`
+
+## Boundary Gate
+
+Before using any template below:
+
+- if the lead is employer-owned, stay in internal-support mode unless a human
+  explicitly asks for a review-ready public promotion draft
+- if the lead is clearly independent, you may use the independent variants
+- if ownership is ambiguous, stop and return `NEEDS_HUMAN_CLARIFICATION`
+- for clearly independent outreach, prefer
+  `independent_freelance_templates.md` first
 
 ## Core Positioning Lines
 
@@ -17,8 +30,8 @@ Use one of these when a short service statement is needed:
 
 ## Template 1: Conservation Drone-Service Outreach
 
-Use for Techni-Drones conservation and biodiversity outreach. Keep it short and
-lead with the free demonstration-flight offer.
+Use only for Techni-Drones-adjacent promotion that a human will review before
+any external use. Keep it short and lead with a bounded proof-of-value offer.
 
 Subject options:
 
@@ -52,7 +65,8 @@ Rules:
 
 ## Template 2: Biodiversity Data Support Outreach
 
-Use when the entry offer is a sample data review rather than a flight.
+Use for clearly independent, non-Techni data-support outreach when the entry
+offer is a sample review rather than a flight.
 
 Subject options:
 
@@ -81,6 +95,7 @@ Rules:
 - Mention one concrete deliverable, not a vague capability list.
 - Keep the CTA binary and low-friction.
 - If recipient details are missing, use the organization name or team name directly and mark any unresolved fact in a short `Verification:` block after the email.
+- Do not mention Techni-Drones in this independent template.
 
 ## Template 3: Follow-Up Day 5
 
@@ -143,3 +158,4 @@ Best regards,
 - Treat contact emails from old draft docs as candidates until verified.
 - Never send automatically. Approval stays in the loop.
 - Prefer organization-team salutations over placeholder names when the contact person is unknown.
+- Do not mix employer promotion with independent service capture in one message.

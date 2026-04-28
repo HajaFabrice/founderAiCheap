@@ -1,0 +1,149 @@
+{
+  "generated_at": "2026-04-27",
+  "status": "pilot-default",
+  "purpose": "Filtered ERIS scoring defaults derived from Appendix B and aligned to the V4 master plan.",
+  "normalization_principles": [
+    "Indicators are normalized to a common scale.",
+    "Normalization accounts for sampling effort, spatial coverage, and temporal duration where applicable.",
+    "Context-aware reference ranges are preferred over theoretical maxima.",
+    "Normalization settings are versioned for reproducibility."
+  ],
+  "indicator_defaults": [
+    {
+      "indicator_type": "species_richness_effort_normalized",
+      "normalization_method": "min_max_scaling",
+      "reference_range": "observed_pilot_range_cross_checked_with_regional_benchmarks",
+      "note": "Prevents inflation from outlier detections."
+    },
+    {
+      "indicator_type": "encounter_rates",
+      "normalization_method": "rate_normalization_plus_scaling",
+      "reference_range": "effort_adjusted_percentiles",
+      "note": "Reduces sensitivity to rare bursts."
+    },
+    {
+      "indicator_type": "habitat_quality_indices",
+      "normalization_method": "index_rescaling",
+      "reference_range": "sensor_specific_valid_range",
+      "note": "Maintains physical interpretability."
+    },
+    {
+      "indicator_type": "fragmentation_metrics",
+      "normalization_method": "inverted_scaling",
+      "reference_range": "ecologically_meaningful_thresholds",
+      "note": "Higher score means lower fragmentation."
+    },
+    {
+      "indicator_type": "pressure_indicators",
+      "normalization_method": "distance_or_intensity_decay_functions",
+      "reference_range": "empirical_pressure_gradients",
+      "note": "Emphasizes near-field effects."
+    }
+  ],
+  "within_pillar_weighting": {
+    "principles": [
+      "No single indicator should dominate a pillar score.",
+      "Higher weights go to stronger ecological linkage and more robust data.",
+      "Weighting is expert judgment, not a universal constant."
+    ],
+    "groups": [
+      {
+        "pillar": "biodiversity_integrity",
+        "indicator_group": "species_richness_and_encounters",
+        "relative_weight": "medium_high"
+      },
+      {
+        "pillar": "biodiversity_integrity",
+        "indicator_group": "indicator_species",
+        "relative_weight": "high"
+      },
+      {
+        "pillar": "biodiversity_integrity",
+        "indicator_group": "functional_groups",
+        "relative_weight": "medium"
+      },
+      {
+        "pillar": "habitat_and_landscape_quality",
+        "indicator_group": "habitat_quality",
+        "relative_weight": "high"
+      },
+      {
+        "pillar": "habitat_and_landscape_quality",
+        "indicator_group": "fragmentation_and_connectivity",
+        "relative_weight": "medium_high"
+      },
+      {
+        "pillar": "pressure_and_resilience",
+        "indicator_group": "direct_disturbance",
+        "relative_weight": "high"
+      },
+      {
+        "pillar": "pressure_and_resilience",
+        "indicator_group": "access_proximity",
+        "relative_weight": "medium_high"
+      },
+      {
+        "pillar": "pressure_and_resilience",
+        "indicator_group": "resilience_or_refugia",
+        "relative_weight": "medium"
+      }
+    ]
+  },
+  "pillar_aggregation": [
+    {
+      "pillar": "biodiversity_integrity",
+      "minimum_indicator_coverage": "at_least_2_indicator_groups",
+      "aggregation_method": "weighted_mean"
+    },
+    {
+      "pillar": "habitat_and_landscape_quality",
+      "minimum_indicator_coverage": "at_least_2_indicators",
+      "aggregation_method": "weighted_mean"
+    },
+    {
+      "pillar": "pressure_and_resilience",
+      "minimum_indicator_coverage": "at_least_2_indicators",
+      "aggregation_method": "weighted_mean_inverted_where_applicable"
+    }
+  ],
+  "composite_score_defaults": {
+    "pillar_weights": {
+      "biodiversity_integrity": 0.4,
+      "habitat_and_landscape_quality": 0.35,
+      "pressure_and_resilience": 0.25
+    },
+    "rules": [
+      "Pillar weights must sum to 100 percent.",
+      "Weights may change under documented ecosystem-specific scenarios.",
+      "Extreme pillar degradation should not be fully compensated by strong scores elsewhere."
+    ]
+  },
+  "interpretation_bands": [
+    {
+      "score_range": "80_100",
+      "interpretation": "high_ecological_integrity"
+    },
+    {
+      "score_range": "60_79",
+      "interpretation": "functioning_but_vulnerable"
+    },
+    {
+      "score_range": "40_59",
+      "interpretation": "degraded_with_recovery_potential"
+    },
+    {
+      "score_range": "below_40",
+      "interpretation": "highly_stressed_or_degraded"
+    }
+  ],
+  "override_and_sensitivity_rules": [
+    "Run sensitivity checks for indicator and weight influence.",
+    "Manual overrides require written justification and version tracking.",
+    "Any configuration change must create a new version identifier."
+  ],
+  "governance_rules": [
+    "Parameter sets are versioned and time-stamped.",
+    "Parameter sets are linked to specific pilot or deployment contexts.",
+    "Parameter sets are stored alongside metadata and raw data references."
+  ]
+}

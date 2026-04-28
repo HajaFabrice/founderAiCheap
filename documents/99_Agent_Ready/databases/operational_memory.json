@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-22",
+  "generated_at": "2026-04-27",
   "identity": {
     "founder_name": "Haja Fabrice Razafindrabe Maminiaina",
     "base_location": "Antananarivo, Madagascar",
@@ -40,19 +40,30 @@
     ]
   },
   "current_context": {
-    "strategic_anchor": "Techni-Drones Madagascar conservation and MRV vertical",
-    "primary_near_term_goal": "Use grants, drone proof-of-concept, and warm conservation contacts to create leverage inside Techni-Drones while keeping ERIS moving.",
+    "strategic_anchor": "Dual-track reality: Techni-Drones Madagascar as employer platform plus a separate independent non-Techni freelance pipeline.",
+    "primary_near_term_goal": "Keep salary and leverage stable inside Techni-Drones while closing one independent non-Techni data-support engagement and keeping ERIS moving.",
     "phd_status": "Active applications",
     "grant_status": "Active conservation grant drafting and deadline tracking"
   },
   "priorities_2026": [
     "Submit and strengthen Rufford and WWF-aligned grant applications",
     "Pitch biodiversity vertical to Techni-Drones leadership",
-    "Sign one conservation NGO or research client",
-    "Negotiate equity or commission structure in writing",
+    "Sign one independent non-Techni client or pilot",
+    "Negotiate equity or commission structure in writing only through human-led conversations",
     "Keep PhD applications moving in parallel",
     "Advance ERIS concept development without sacrificing survival work"
   ],
+  "boundary_policy": {
+    "employer_status": "Techni-Drones is the founder's employer, not the founder's owned client base.",
+    "employer_lead_rule": "FounderAI may support internal notes, briefing material, and review-ready promotion drafts, but may not draft outbound client communication for Techni-Drones clients or prospects.",
+    "independent_lead_rule": "FounderAI may support outreach, replies, proposals, and operations only for clearly non-Techni leads.",
+    "ambiguous_lead_rule": "If ownership is unclear, stop and return NEEDS_HUMAN_CLARIFICATION.",
+    "separation_rules": [
+      "Do not mix Techni-Drones promotion with a personal-service CTA in one message.",
+      "Do not use Techni-Drones client data as the independent prospect database.",
+      "Do not represent FounderAI as speaking for Techni-Drones externally."
+    ]
+  },
   "equipment_strategy": {
     "first_grant_target": [
       "DJI Matrice 350 RTK",
@@ -75,21 +86,38 @@
     "hosting_note": "When truthful and operationally useful, Techni-Drones Madagascar can be positioned as institutional host."
   },
   "offers": {
-    "primary_offer": "Conservation drone services via Techni-Drones Madagascar",
-    "secondary_offers": [
-      "MRV consulting pre-pipeline",
+    "employer_context": "Conservation and MRV vertical building inside Techni-Drones Madagascar",
+    "independent_primary_offer": "Biodiversity data cleaning and validation for clearly non-Techni leads",
+    "independent_secondary_offers": [
       "Biodiversity data cleaning and validation",
       "Field data collection in Madagascar",
       "Ecological statistics and data interpretation",
       "Publication-ready figures and short reports"
     ],
     "entry_offers": [
-      "Free demonstration flight for a study area",
       "Free 5-20 row sample review for a dataset"
     ],
     "field_rate_mga_per_day": 40000,
     "rate_note": "Field rate excludes transport, food, lodging, and permits. Project pricing for data analysis and cleaning is custom after sample review.",
     "ethics_statement": "AI-assisted workflows are used under human supervision only and must respect academic integrity, local legal frameworks, and co-authorship ethics."
+  },
+  "independent_business": {
+    "core_deliverables": [
+      "cleaned dataset",
+      "validation note",
+      "correction log",
+      "short reporting summary"
+    ],
+    "turnaround_signal": "Small-to-mid bounded datasets can often be delivered within 72 hours.",
+    "pricing_rule": "Custom quote after sample review.",
+    "pricing_hypothesis_only": "The 30-day plan mentions USD 80-150 for small datasets, but this must not be treated as a verified public rate card without human approval.",
+    "proof_assets": [
+      "English cleaning summary",
+      "French cleaning summary",
+      "cleaned sample CSV with validation fields",
+      "English environmental-data CV",
+      "French environmental-data CV"
+    ]
   },
   "communication_playbook": {
     "tone": [
@@ -104,7 +132,9 @@
       "Do not include pricing in cold outreach",
       "Reference a real programme, report, paper, or site when available",
       "Use English or French depending on recipient",
-      "Mark uncertain facts as NEEDS_HUMAN_VERIFICATION"
+      "Mark uncertain facts as NEEDS_HUMAN_VERIFICATION",
+      "Do not mix employer promotion with independent service capture in one message",
+      "Do not pitch ERIS in first-cycle independent freelance outreach"
     ]
   },
   "outreach_cadence": {
@@ -114,6 +144,21 @@
     ],
     "pause_after_final_follow_up_days": 56,
     "reply_sla_hours": 24
+  },
+  "independent_pipeline": {
+    "first_cycle_goal": "One independent paid engagement or two to three active conversations.",
+    "verified_non_techni_target": 20,
+    "daily_targets": {
+      "linkedin_messages": 10,
+      "direct_emails": 3,
+      "relevant_proposals": 5
+    },
+    "follow_up_days": [
+      3,
+      4,
+      5,
+      12
+    ]
   },
   "cloud_portability": {
     "default_mode": "local-first",
@@ -128,6 +173,7 @@
   "verification_flags": [
     "Recipient contact details from outreach drafts require human verification.",
     "Funding deadlines and eligibility should be rechecked before submission.",
-    "Phone numbers conflict across source files."
+    "Phone numbers conflict across source files.",
+    "The freelance 30-day plan is a tactical artifact, not verified public pricing or a verified contact database."
   ]
 }

@@ -1,0 +1,68 @@
+{
+  "generated_at": "2026-04-27",
+  "purpose": "Separate non-Techni pipeline memory and stage rules for independent freelance work.",
+  "ownership_rule": "Only clearly non-Techni leads belong in this pipeline.",
+  "tracker_sources": [
+    {
+      "path": "documents/Freelance/Client Outreach tracker 1.xlsx",
+      "status": "normalized into independent_crm.json"
+    },
+    {
+      "path": "documents/Freelance/client outreach tracker 2.xlsx",
+      "status": "normalized into independent_crm.json"
+    }
+  ],
+  "normalized_crm_path": "documents/99_Agent_Ready/databases/independent_crm.json",
+  "normalized_crm_summary": {
+    "total_organizations": 34,
+    "ready_for_human_review": 30,
+    "secondary_queue": 4
+  },
+  "stages": [
+    "candidate",
+    "verified",
+    "contacted",
+    "follow_up_due",
+    "reply_received",
+    "scope_clarification",
+    "proposal_sent",
+    "won",
+    "lost",
+    "paused"
+  ],
+  "first_cycle_targets": {
+    "verified_non_techni_prospects": 20,
+    "success_metric": "first independent income or two to three active conversations",
+    "do_not_measure": "perfect website, ERIS commercialization, or more architecture"
+  },
+  "cadence": {
+    "daily_linkedin_messages_target": 10,
+    "daily_direct_emails_target": 3,
+    "daily_relevant_proposals_target": 5,
+    "initial_follow_up_after_days": [
+      3,
+      4,
+      5
+    ],
+    "secondary_follow_up_after_days": [
+      12
+    ]
+  },
+  "qualification_rules": [
+    "Lead must be clearly outside Techni-Drones ownership.",
+    "Lead should have a real monitoring, reporting, or biodiversity data problem.",
+    "Lead should be reachable through verified contact information before being marked verified.",
+    "If ownership is unclear, classify as ambiguous and stop."
+  ],
+  "stop_rules": [
+    "Stop after an opt-out.",
+    "Stop when a human says the lead belongs to Techni-Drones.",
+    "Pause when a legal, payment, or contract question appears and a human answer is needed."
+  ],
+  "notes": [
+    "Do not pitch ERIS during first-cycle independent outreach.",
+    "Use sample-review offers to reduce friction before quoting.",
+    "Execution and proof matter more than expanding the system.",
+    "The normalized CRM supports drafting and prioritization, but human contact verification is still mandatory before any external send."
+  ]
+}

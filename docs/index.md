@@ -14,6 +14,13 @@ and it is now synced to the April 2026 Techni-Drones and ERIS V4 document set.
 - [GitHub admin checklist](github-admin-checklist.md)
 - [Provider troubleshooting](provider-troubleshooting.md)
 
+## Independent Marketing Pack
+
+- [Independent services landing page (EN)](independent-services-en.md)
+- [Independent services landing page (FR)](services-fr.md)
+- [Independent services one-pager](services-one-pager.md)
+- [Dataset cleaning case study](case-study-biodiversity-dataset-cleaning.md)
+
 ## No-Budget Stack
 
 | Need | Default choice | Why |

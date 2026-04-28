@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-22",
+  "generated_at": "2026-04-27",
   "selection_rule": [
     "User-attached text exports override older mirrors when they cover the same document family.",
     "Otherwise, the highest explicit version number wins.",
@@ -51,6 +51,81 @@
         "cloud portability constraints",
         "migration sequencing",
         "tooling choices"
+      ]
+    },
+    {
+      "id": "agent-conversation-reference",
+      "category": "conversation-governance",
+      "canonical_path": "documents/99_Agent_Ready/references/agent_conversation_reference.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/agent_conversation_reference.md",
+      "supersedes": [
+        "filtered planning notes from agent conversation reference materials"
+      ],
+      "agent_uses": [
+        "shared external tone",
+        "safe ERIS claims",
+        "difficult-moment handling",
+        "stop and flag discipline"
+      ]
+    },
+    {
+      "id": "new-contact-answer-bank",
+      "category": "conversation-governance",
+      "canonical_path": "documents/99_Agent_Ready/references/new_contact_answer_bank.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/new_contact_answer_bank.md",
+      "supersedes": [
+        "filtered planning notes from FAQ materials"
+      ],
+      "agent_uses": [
+        "common-contact replies",
+        "ERIS stage explanation",
+        "AI transparency answers",
+        "data safety answers"
+      ]
+    },
+    {
+      "id": "collaboration-charter",
+      "category": "operations",
+      "canonical_path": "documents/99_Agent_Ready/references/collaboration_charter.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/collaboration_charter.md",
+      "supersedes": [
+        "filtered planning notes from team charter materials"
+      ],
+      "agent_uses": [
+        "approval discipline",
+        "inbox outbox expectations",
+        "human collaborator onboarding",
+        "operational safety"
+      ]
+    },
+    {
+      "id": "eris-scoring-defaults",
+      "category": "methodology",
+      "canonical_path": "documents/99_Agent_Ready/databases/eris_scoring_defaults.json",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/eris_scoring_defaults.json",
+      "supersedes": [
+        "Appendix B planning notes"
+      ],
+      "agent_uses": [
+        "score explanation",
+        "grant methodology language",
+        "research framing",
+        "QA checks"
+      ]
+    },
+    {
+      "id": "eris-metadata-governance",
+      "category": "methodology",
+      "canonical_path": "documents/99_Agent_Ready/references/eris_metadata_governance.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/eris_metadata_governance.md",
+      "supersedes": [
+        "Appendix C planning notes"
+      ],
+      "agent_uses": [
+        "audit language",
+        "traceability framing",
+        "confidence explanations",
+        "metadata requirements"
       ]
     },
     {
@@ -119,17 +194,174 @@
       ]
     },
     {
+      "id": "current-cv-user-supplied",
+      "category": "profile",
+      "canonical_path": "user-provided CV in chat on 2026-04-27",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/founder_profile_blocks.json",
+      "supersedes": [
+        "documents/Freelance/Haja Fabrice Cv Optimized.docx",
+        "documents/Freelance/Haja Fabrice CV-EnvData-FR.docx"
+      ],
+      "agent_uses": [
+        "bio blocks",
+        "credentials summaries",
+        "public marketing positioning",
+        "founder proof points"
+      ]
+    },
+    {
       "id": "current-cv-asset",
       "category": "profile",
-      "canonical_path": "documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/Fabrice_CV_en 2026.docx",
+      "canonical_path": "documents/Freelance/Haja Fabrice Cv Optimized.docx",
       "repo_mirror_path": null,
       "supersedes": [
-        "documents/03_Freelance_And_Career/Profiles_And_Offers/Haja Fabrice Cv Optimized.docx"
+        "documents/03_Freelance_And_Career/Profiles_And_Offers/Haja Fabrice Cv Optimized.docx",
+        "documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/Fabrice_CV_en 2026.docx"
       ],
       "agent_uses": [
         "background summaries",
         "attachments checklist",
         "bio blocks"
+      ]
+    },
+    {
+      "id": "current-cv-asset-fr",
+      "category": "profile",
+      "canonical_path": "documents/Freelance/Haja Fabrice CV-EnvData-FR.docx",
+      "repo_mirror_path": null,
+      "supersedes": [],
+      "agent_uses": [
+        "French-language bio blocks",
+        "French proposal attachment",
+        "Francophone profile support"
+      ]
+    },
+    {
+      "id": "independent-outreach-plan",
+      "category": "operations",
+      "canonical_path": "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/freelance_operating_brief.md",
+      "supersedes": [],
+      "agent_uses": [
+        "independent outreach cadence",
+        "first-contract discipline",
+        "pipeline activity targets"
+      ]
+    },
+    {
+      "id": "freelance-proof-sample-en",
+      "category": "proof",
+      "canonical_path": "documents/Freelance/Cleaning Summary.docx",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/freelance_proof_assets.json",
+      "supersedes": [],
+      "agent_uses": [
+        "proof section grounding",
+        "sample-work references",
+        "service capability support"
+      ]
+    },
+    {
+      "id": "freelance-proof-sample-fr",
+      "category": "proof",
+      "canonical_path": "documents/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.docx",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/freelance_proof_assets.json",
+      "supersedes": [],
+      "agent_uses": [
+        "French-language proof section grounding",
+        "Francophone sample-work references"
+      ]
+    },
+    {
+      "id": "freelance-cleaned-dataset-sample",
+      "category": "proof",
+      "canonical_path": "documents/Freelance/cleaned_data.csv",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/freelance_proof_assets.json",
+      "supersedes": [],
+      "agent_uses": [
+        "deliverable example",
+        "cleanup-output structure",
+        "traceability explanation"
+      ]
+    },
+    {
+      "id": "independent-outreach-tracker-1",
+      "category": "pipeline",
+      "canonical_path": "documents/Freelance/Client Outreach tracker 1.xlsx",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/independent_pipeline.json",
+      "supersedes": [],
+      "agent_uses": [
+        "separate CRM seed",
+        "pipeline normalization source"
+      ]
+    },
+    {
+      "id": "independent-outreach-tracker-2",
+      "category": "pipeline",
+      "canonical_path": "documents/Freelance/client outreach tracker 2.xlsx",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/independent_pipeline.json",
+      "supersedes": [],
+      "agent_uses": [
+        "separate CRM seed",
+        "pipeline normalization source"
+      ]
+    },
+    {
+      "id": "independent-crm",
+      "category": "pipeline",
+      "canonical_path": "documents/99_Agent_Ready/databases/independent_crm.json",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/independent_crm.json",
+      "supersedes": [
+        "documents/Freelance/Client Outreach tracker 1.xlsx",
+        "documents/Freelance/client outreach tracker 2.xlsx"
+      ],
+      "agent_uses": [
+        "independent lead prioritization",
+        "human-review-ready outreach queue",
+        "contact and personalization lookup"
+      ]
+    },
+    {
+      "id": "independent-marketing-brief",
+      "category": "offer-positioning",
+      "canonical_path": "documents/99_Agent_Ready/references/independent_marketing_brief.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/independent_marketing_brief.md",
+      "supersedes": [
+        "older generic outreach positioning fragments"
+      ],
+      "agent_uses": [
+        "landing-page positioning",
+        "outreach tone discipline",
+        "service framing",
+        "boundary-safe CTA language"
+      ]
+    },
+    {
+      "id": "first-outbound-pack",
+      "category": "templates",
+      "canonical_path": "documents/99_Agent_Ready/templates/first_outbound_pack.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/templates/first_outbound_pack.md",
+      "supersedes": [
+        "ad hoc first-touch outreach snippets"
+      ],
+      "agent_uses": [
+        "first-touch outreach",
+        "follow-up drafting",
+        "reply handling",
+        "EN and FR message consistency"
+      ]
+    },
+    {
+      "id": "review-ready-outreach-shortlist",
+      "category": "pipeline",
+      "canonical_path": "documents/99_Agent_Ready/databases/review_ready_outreach_shortlist.json",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/review_ready_outreach_shortlist.json",
+      "supersedes": [
+        "ad hoc shortlist selection from independent_crm.json"
+      ],
+      "agent_uses": [
+        "priority outreach targeting",
+        "smaller prompt-friendly lead selection",
+        "human-review-ready shortlist routing"
       ]
     }
   ]

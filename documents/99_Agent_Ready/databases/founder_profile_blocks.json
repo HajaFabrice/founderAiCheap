@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-04-27",
+  "source_documents": [
+    "user-provided CV in chat on 2026-04-27",
+    "documents/Freelance/Haja Fabrice Cv Optimized.docx",
+    "documents/Freelance/Haja Fabrice CV-EnvData-FR.docx"
+  ],
+  "public_contact_status": "founder_confirmed_on_2026-04-27",
+  "public_contact_details": {
+    "email": "hajafabriceeris@gmail.com",
+    "phone": "+261349414112",
+    "approved_for_public_marketing_use": true
+  },
+  "english": {
+    "one_line_tagline": "Conservation biologist and environmental data specialist helping biodiversity teams clean, validate, and prepare field datasets for analysis and reporting.",
+    "short_bio": "Environmental data specialist focused on biodiversity monitoring, dataset cleaning, validation, reporting support, and field-to-analysis workflows for conservation work in Madagascar.",
+    "medium_bio": "Haja Fabrice Razafindrabe Maminiaina is a conservation biologist and environmental data specialist based in Antananarivo, Madagascar. He supports biodiversity teams with dataset cleaning, validation, reporting-ready structuring, and field-informed data interpretation, drawing on research and monitoring experience across mammals, amphibians, reptiles, camera traps, thermal-drone survey support, and vegetation inventories.",
+    "long_bio": "Haja Fabrice Razafindrabe Maminiaina holds a Master's degree in Biology of Animal Conservation and a Bachelor's degree in Biology of Organisms and Ecosystems from the University of Antananarivo. His field and research work spans multiple conservation projects in Madagascar, including mammal surveys, amphibian and reptile inventories, vegetation plots, camera trapping, thermal-drone-supported monitoring, and biodiversity dataset handling. He currently teaches theoretical and practical drone pilot training with Techni-Drone Madagascar while building an independent, non-Techni service line for biodiversity data cleaning, validation, and reporting support.",
+    "proof_points": [
+      "Master's degree in Biology of Animal Conservation, University of Antananarivo",
+      "Field and research experience across Madagascar from 2019 to 2026",
+      "Co-author on Flowers et al. (2023) in the American Journal of Biological Anthropology",
+      "Experience with Excel, CSV cleanup, R, QGIS, Kobo-style field exports, GPS review, and biodiversity monitoring workflows",
+      "Current drone-training instructor with Techni-Drone Madagascar"
+    ],
+    "credentials_highlights": [
+      "Master's thesis on lizard foraging behavior with R-based analysis",
+      "Research assistant roles on biodiversity inventories, predator-prey monitoring, amphibian physiology work, and lemur feeding studies",
+      "Volunteer contributions to OpenStreetMap and Malagasy conservation networks"
+    ],
+    "languages": [
+      "Malagasy",
+      "English",
+      "French"
+    ],
+    "references_policy": "Named academic and research references exist in the CV, but direct contact details should be shared only after human approval."
+  },
+  "french": {
+    "one_line_tagline": "Biologiste de la conservation et specialiste des donnees environnementales pour le nettoyage, la validation et la preparation de donnees de biodiversite.",
+    "short_bio": "Specialiste des donnees environnementales axe sur le suivi de la biodiversite, le nettoyage de jeux de donnees, la validation et le support de reporting pour des equipes de conservation a Madagascar.",
+    "medium_bio": "Haja Fabrice Razafindrabe Maminiaina est un biologiste de la conservation et specialiste des donnees environnementales base a Antananarivo. Il aide les equipes biodiversite a structurer, nettoyer et valider leurs jeux de donnees en s'appuyant sur une experience de terrain en inventaires fauniques, vegetation, camera traps et suivi assiste par drone thermique.",
+    "long_bio": "Titulaire d'un Master en Biologie de la Conservation Animale et d'une Licence en Biologie des Organismes et des Ecosystemes a l'Universite d'Antananarivo, Haja Fabrice Razafindrabe Maminiaina a travaille sur plusieurs projets de recherche et de suivi de la biodiversite a Madagascar. Il combine experience de terrain, nettoyage de donnees, validation GPS, structuration pour l'analyse et appui au reporting. Il enseigne actuellement la formation au pilotage de drone chez Techni-Drone Madagascar, tout en developpant une offre independante, non-Techni, de nettoyage et validation de donnees de biodiversite.",
+    "proof_points": [
+      "Master en Biologie de la Conservation Animale",
+      "Experience de terrain et de recherche a Madagascar de 2019 a 2026",
+      "Co-auteur sur Flowers et al. (2023)",
+      "Competences en Excel, CSV, R, QGIS, validation GPS et jeux de donnees de suivi environnemental",
+      "Formateur en pilotage de drone chez Techni-Drone Madagascar"
+    ],
+    "credentials_highlights": [
+      "Memoire de master sur le comportement de recherche alimentaire de lezards avec analyse sous R",
+      "Experience sur inventaires biodiversite, suivis de mammiferes, amphibiens, reptiles et vegetation",
+      "Capacite de travail en malagasy, anglais et francais"
+    ],
+    "languages": [
+      "Malagasy",
+      "Anglais",
+      "Francais"
+    ],
+    "references_policy": "Des references academiques et de recherche existent dans le CV, mais leurs coordonnees ne doivent pas etre republiees sans validation humaine."
+  },
+  "contact_cautions": [
+    "Use the founder-confirmed email and phone only for the independent, non-Techni service line.",
+    "Do not reuse this public contact block inside Techni-Drones employer promotion without explicit separation.",
+    "Do not publish referee email addresses on public-facing marketing pages."
+  ]
+}

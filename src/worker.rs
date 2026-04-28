@@ -36,11 +36,246 @@ fn read_founder_file(path: &Path) -> String {
     fs::read_to_string(path).unwrap_or_else(|_| format!("[Missing context file: {}]", path.display()))
 }
 
+fn truncate_for_prompt(raw: &str, max_chars: usize) -> String {
+    if raw.chars().count() <= max_chars {
+        return raw.to_string();
+    }
+
+    let truncated: String = raw.chars().take(max_chars).collect();
+    format!(
+        "{truncated}\n\n[Prompt view truncated. Original content exceeded {max_chars} characters.]"
+    )
+}
+
+fn json_text(value: &Value) -> String {
+    serde_json::to_string_pretty(value).unwrap_or_else(|_| value.to_string())
+}
+
+fn compact_independent_crm_section(value: &Value) -> String {
+    let purpose = value
+        .get("purpose")
+        .and_then(Value::as_str)
+        .unwrap_or("Normalized independent CRM.");
+    let ownership_rule = value
+        .get("ownership_rule")
+        .and_then(Value::as_str)
+        .unwrap_or("Human ownership review remains mandatory.");
+
+    let summary = value
+        .get("summary")
+        .map(json_text)
+        .unwrap_or_else(|| "{}".to_string());
+
+    let priority_queue = value
+        .get("priority_queue")
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .take(10)
+                .filter_map(Value::as_str)
+                .map(|item| format!("- {item}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        })
+        .filter(|text| !text.is_empty())
+        .unwrap_or_else(|| "- none".to_string());
+
+    let top_leads = value
+        .get("leads")
+        .and_then(Value::as_array)
+        .map(|leads| {
+            leads
+                .iter()
+                .take(8)
+                .map(|lead| {
+                    let organization = lead
+                        .get("organization")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown");
+                    let country = lead
+                        .get("country")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown");
+                    let readiness = lead
+                        .get("outreach_readiness")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown");
+                    let priority = lead
+                        .get("priority_band")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown");
+                    let language = lead
+                        .get("recommended_language")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown");
+                    let offer = lead
+                        .get("recommended_entry_offer")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown");
+                    let fit_notes = lead
+                        .get("fit_notes")
+                        .and_then(Value::as_str)
+                        .unwrap_or("none");
+                    let email_candidate = lead
+                        .get("contact_routes")
+                        .and_then(|routes| routes.get("general_email_candidate"))
+                        .and_then(Value::as_str)
+                        .unwrap_or("NEEDS_HUMAN_VERIFICATION");
+
+                    format!(
+                        "- {organization} | country={country} | readiness={readiness} | priority={priority} | language={language} | offer={offer} | email_candidate={email_candidate} | fit={fit_notes}"
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("\n")
+        })
+        .filter(|text| !text.is_empty())
+        .unwrap_or_else(|| "- none".to_string());
+
+    format!(
+        "Compact prompt view for independent CRM.\n\nPurpose: {purpose}\nOwnership rule: {ownership_rule}\n\nSummary:\n{summary}\n\nPriority queue sample:\n{priority_queue}\n\nTop lead cards:\n{top_leads}\n\nAll contact details still require human verification before any external send."
+    )
+}
+
+fn compact_generic_json_section(path: &Path, raw: &str, value: &Value) -> String {
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or("unknown.json");
+
+    if file_name.eq_ignore_ascii_case("independent_crm.json") {
+        return compact_independent_crm_section(value);
+    }
+
+    let mut lines = vec![format!("Compact prompt view for {file_name}.")];
+
+    if let Some(generated_at) = value.get("generated_at").and_then(Value::as_str) {
+        lines.push(format!("generated_at: {generated_at}"));
+    }
+    for key in ["purpose", "operating_rule", "ownership_rule", "status"] {
+        if let Some(text) = value.get(key).and_then(Value::as_str) {
+            lines.push(format!("{key}: {text}"));
+        }
+    }
+    if let Some(summary) = value.get("summary") {
+        lines.push(format!("\nsummary:\n{}", json_text(summary)));
+    }
+    if let Some(stages) = value.get("stages").and_then(Value::as_array) {
+        let stage_list = stages
+            .iter()
+            .take(12)
+            .filter_map(Value::as_str)
+            .collect::<Vec<_>>();
+        if !stage_list.is_empty() {
+            lines.push(format!("\nstages: {}", stage_list.join(", ")));
+        }
+    }
+    if let Some(notes) = value.get("notes").and_then(Value::as_array) {
+        let note_list = notes
+            .iter()
+            .take(6)
+            .filter_map(Value::as_str)
+            .map(|item| format!("- {item}"))
+            .collect::<Vec<_>>();
+        if !note_list.is_empty() {
+            lines.push(format!("\nnotes:\n{}", note_list.join("\n")));
+        }
+    }
+    if let Some(offers) = value.get("offers").and_then(Value::as_array) {
+        let offer_lines = offers
+            .iter()
+            .take(6)
+            .map(|offer| {
+                let id = offer.get("id").and_then(Value::as_str).unwrap_or("unknown");
+                let label = offer.get("label").and_then(Value::as_str).unwrap_or("unknown");
+                let category = offer
+                    .get("category")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
+                let turnaround = offer
+                    .get("turnaround")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
+                format!("- {id} | {label} | category={category} | turnaround={turnaround}")
+            })
+            .collect::<Vec<_>>();
+        if !offer_lines.is_empty() {
+            lines.push(format!("\noffers:\n{}", offer_lines.join("\n")));
+        }
+    }
+    if let Some(assets) = value.get("assets").and_then(Value::as_array) {
+        let asset_lines = assets
+            .iter()
+            .take(6)
+            .map(|asset| {
+                let id = asset.get("id").and_then(Value::as_str).unwrap_or("unknown");
+                let kind = asset.get("type").and_then(Value::as_str).unwrap_or("unknown");
+                let source = asset
+                    .get("source_path")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
+                format!("- {id} | type={kind} | source={source}")
+            })
+            .collect::<Vec<_>>();
+        if !asset_lines.is_empty() {
+            lines.push(format!("\nassets:\n{}", asset_lines.join("\n")));
+        }
+    }
+    if let Some(documents) = value.get("documents").and_then(Value::as_array) {
+        let document_lines = documents
+            .iter()
+            .take(10)
+            .map(|document| {
+                let id = document.get("id").and_then(Value::as_str).unwrap_or("unknown");
+                let category = document
+                    .get("category")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
+                format!("- {id} | category={category}")
+            })
+            .collect::<Vec<_>>();
+        if !document_lines.is_empty() {
+            lines.push(format!("\ndocument sample:\n{}", document_lines.join("\n")));
+        }
+    }
+
+    let compact = lines.join("\n");
+    truncate_for_prompt(&compact, 12000).replace(
+        "[Prompt view truncated. Original content exceeded 12000 characters.]",
+        &format!(
+            "[Prompt view compacted from a larger JSON source. Raw length was {} characters.]",
+            raw.chars().count()
+        ),
+    )
+}
+
+fn prompt_ready_content(path: &Path) -> String {
+    let raw = read_founder_file(path);
+    if raw.starts_with("[Missing context file:") {
+        return raw;
+    }
+
+    let extension = path.extension().and_then(|value| value.to_str()).unwrap_or_default();
+    if extension.eq_ignore_ascii_case("json") && raw.chars().count() > 12000 {
+        if let Ok(value) = serde_json::from_str::<Value>(&raw) {
+            return compact_generic_json_section(path, &raw, &value);
+        }
+    }
+
+    let max_chars = if extension.eq_ignore_ascii_case("json") {
+        12000
+    } else {
+        16000
+    };
+    truncate_for_prompt(&raw, max_chars)
+}
+
 fn render_document_section(title: &str, path: &Path) -> String {
     format!(
         "### {title}\nSource file: {}\n\n{}",
         path.display(),
-        read_founder_file(path)
+        prompt_ready_content(path)
     )
 }
 
@@ -67,6 +302,10 @@ fn render_agent_ready_documents(
             &root.join("references").join("canonical_reference_brief.md"),
         ),
         render_document_section(
+            "Independent Business Boundary",
+            &root.join("references").join("independent_business_boundary.md"),
+        ),
+        render_document_section(
             "Operational Memory Database",
             &root.join("databases").join("operational_memory.json"),
         ),
@@ -75,19 +314,95 @@ fn render_agent_ready_documents(
     let targeted_sections: Vec<(&str, PathBuf)> = match selected_agent_id {
         "anthony" | "zacchaeus" | "perpetua" | "bonaventure" => vec![
             (
-                "Prospect Targets Database",
-                root.join("databases").join("prospect_targets.json"),
+                "Independent Marketing Brief",
+                root.join("references").join("independent_marketing_brief.md"),
+            ),
+            (
+                "Agent Conversation Reference",
+                root.join("references").join("agent_conversation_reference.md"),
+            ),
+            (
+                "New Contact Answer Bank",
+                root.join("references").join("new_contact_answer_bank.md"),
+            ),
+            (
+                "Freelance Operating Brief",
+                root.join("references").join("freelance_operating_brief.md"),
+            ),
+            (
+                "Independent CRM Database",
+                root.join("databases").join("independent_crm.json"),
+            ),
+            (
+                "Review-Ready Outreach Shortlist Database",
+                root.join("databases").join("review_ready_outreach_shortlist.json"),
+            ),
+            (
+                "Independent Pipeline Database",
+                root.join("databases").join("independent_pipeline.json"),
+            ),
+            (
+                "Independent Service Catalog Database",
+                root.join("databases").join("independent_service_catalog.json"),
+            ),
+            (
+                "Freelance Proof Assets Database",
+                root.join("databases").join("freelance_proof_assets.json"),
+            ),
+            (
+                "Founder Profile Blocks Database",
+                root.join("databases").join("founder_profile_blocks.json"),
             ),
             ("Template Index", root.join("templates").join("template_index.md")),
             (
                 "External Communications Templates",
                 root.join("templates").join("external_communications.md"),
             ),
+            (
+                "First Outbound Pack",
+                root.join("templates").join("first_outbound_pack.md"),
+            ),
+            (
+                "Independent Freelance Templates",
+                root.join("templates").join("independent_freelance_templates.md"),
+            ),
         ],
-        "bartholomew" | "pio" | "hildegard" | "francis" | "clare" | "columban" => vec![
+        "hildegard" | "francis" => vec![
+            (
+                "Collaboration Charter",
+                root.join("references").join("collaboration_charter.md"),
+            ),
+            (
+                "Freelance Operating Brief",
+                root.join("references").join("freelance_operating_brief.md"),
+            ),
+            (
+                "Independent CRM Database",
+                root.join("databases").join("independent_crm.json"),
+            ),
+            (
+                "Independent Pipeline Database",
+                root.join("databases").join("independent_pipeline.json"),
+            ),
+            (
+                "Freelance Proof Assets Database",
+                root.join("databases").join("freelance_proof_assets.json"),
+            ),
+            (
+                "Founder Profile Blocks Database",
+                root.join("databases").join("founder_profile_blocks.json"),
+            ),
             (
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
+            ),
+            (
+                "ERIS Scoring Defaults Database",
+                root.join("databases").join("eris_scoring_defaults.json"),
+            ),
+            (
+                "ERIS Metadata And Governance",
+                root.join("references").join("eris_metadata_governance.md"),
             ),
             ("Template Index", root.join("templates").join("template_index.md")),
             (
@@ -95,10 +410,64 @@ fn render_agent_ready_documents(
                 root.join("templates").join("internal_operations.md"),
             ),
         ],
-        "jacinta" | "duns-scotus" => vec![
+        "bartholomew" | "pio" | "clare" | "columban" => vec![
+            (
+                "Collaboration Charter",
+                root.join("references").join("collaboration_charter.md"),
+            ),
             (
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
+            ),
+            (
+                "ERIS Scoring Defaults Database",
+                root.join("databases").join("eris_scoring_defaults.json"),
+            ),
+            (
+                "ERIS Metadata And Governance",
+                root.join("references").join("eris_metadata_governance.md"),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Internal Operations Templates",
+                root.join("templates").join("internal_operations.md"),
+            ),
+        ],
+        "jacinta" => vec![
+            (
+                "Document Registry Database",
+                root.join("databases").join("document_registry.json"),
+            ),
+            (
+                "Agent Conversation Reference",
+                root.join("references").join("agent_conversation_reference.md"),
+            ),
+            (
+                "New Contact Answer Bank",
+                root.join("references").join("new_contact_answer_bank.md"),
+            ),
+            (
+                "ERIS Metadata And Governance",
+                root.join("references").join("eris_metadata_governance.md"),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Research And Applications Templates",
+                root.join("templates").join("research_and_applications.md"),
+            ),
+        ],
+        "duns-scotus" => vec![
+            (
+                "Document Registry Database",
+                root.join("databases").join("document_registry.json"),
+            ),
+            (
+                "ERIS Scoring Defaults Database",
+                root.join("databases").join("eris_scoring_defaults.json"),
+            ),
+            (
+                "ERIS Metadata And Governance",
+                root.join("references").join("eris_metadata_governance.md"),
             ),
             ("Template Index", root.join("templates").join("template_index.md")),
             (
@@ -594,6 +963,10 @@ fn summary_from_output(output_file: &Path, stdout: &str) -> String {
     "Run completed with no summary text.".to_string()
 }
 
+fn prompt_word_count(text: &str) -> usize {
+    text.split_whitespace().count()
+}
+
 fn failure_output(worker: &WorkerConfig, reason: &str) -> String {
     format!(
         "# FounderAI Run Blocked\n\nProvider generation failed for this run.\n\n- Provider: {}\n- Base URL: {}\n- Model: {}\n- Reason: {}\n\n## Safe Recovery\n\n- Confirm the configured provider is reachable.\n- If using Ollama, confirm the configured model exists locally: `ollama pull {}`\n- If using OpenAI, confirm `{}` is set in the environment.\n- Re-run the FounderAI tick after the provider is healthy.\n",
@@ -638,6 +1011,8 @@ pub fn run_worker(
         resolved_approval_policy,
     );
     fs::write(&prompt_file, &prompt_text).ok();
+    let prompt_chars = prompt_text.chars().count();
+    let prompt_words = prompt_word_count(&prompt_text);
 
     let routed_worker = resolve_worker(config, job, role, current_internet);
     let team_output_file = team_output_dir(runtime_dir, role).map(|dir| dir.join(format!("{run_id}.md")));
@@ -650,20 +1025,26 @@ pub fn run_worker(
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
     let mut active_worker = routed_worker.primary.clone();
+    let mut failure_reason: Option<String> = None;
     let mut stdout_text = format!(
-        "Task type: {}\nRoute summary: {}\nPrimary provider: {}\nPrimary base URL: {}\nPrimary model: {}\nPrompt file: {}\nOutput file: {}\n",
+        "Task type: {}\nRoute summary: {}\nPrimary provider: {}\nPrimary base URL: {}\nPrimary model: {}\nPrimary timeout seconds: {}\nPrompt file: {}\nOutput file: {}\n",
         routed_worker.task_type,
         routed_worker.route_summary,
         routed_worker.primary.provider,
         routed_worker.primary.base_url,
         routed_worker.primary.model,
+        routed_worker.primary.timeout_seconds,
         prompt_file.display(),
         output_file.display()
     );
+    stdout_text.push_str(&format!(
+        "Prompt size: {} chars / {} words\n",
+        prompt_chars, prompt_words
+    ));
     if let Some(fallback) = &routed_worker.fallback {
         stdout_text.push_str(&format!(
-            "Fallback provider: {}\nFallback base URL: {}\nFallback model: {}\n",
-            fallback.provider, fallback.base_url, fallback.model
+            "Fallback provider: {}\nFallback base URL: {}\nFallback model: {}\nFallback timeout seconds: {}\n",
+            fallback.provider, fallback.base_url, fallback.model, fallback.timeout_seconds
         ));
     }
     let mut stderr_text = String::new();
@@ -678,14 +1059,18 @@ pub fn run_worker(
                     Ok(output_text) => {
                         stdout_text.push_str("Fallback worker succeeded.\n");
                         active_worker = fallback_worker.clone();
-                        Ok(output_text)
+                    Ok(output_text)
                     }
                     Err(fallback_err) => {
                         stderr_text.push_str(&format!("Fallback worker failed: {fallback_err:#}\n"));
+                        failure_reason = Some(format!(
+                            "Primary worker failed: {primary_err}. Fallback worker failed: {fallback_err}."
+                        ));
                         Err(fallback_err)
                     }
                 }
             } else {
+                failure_reason = Some(format!("Primary worker failed: {primary_err}."));
                 Err(primary_err)
             }
         }
@@ -709,7 +1094,8 @@ pub fn run_worker(
         Err(err) => {
             exit_code = 1;
             stderr_text.push_str(&format!("{err:#}\n"));
-            let _ = fs::write(&output_file, failure_output(&active_worker, &err.to_string()));
+            let reason = failure_reason.unwrap_or_else(|| err.to_string());
+            let _ = fs::write(&output_file, failure_output(&active_worker, &reason));
         }
     }
 
@@ -746,9 +1132,12 @@ pub fn run_worker(
         "exit_code": exit_code,
         "provider": active_worker.provider,
         "model": active_worker.model,
+        "worker_timeout_seconds": active_worker.timeout_seconds,
         "task_type": routed_worker.task_type,
         "route_summary": routed_worker.route_summary,
         "request_source": request_source.map(|path| path.display().to_string()),
+        "prompt_chars": prompt_chars,
+        "prompt_words": prompt_words,
         "role_id": role.map(|item| item.role_id.clone()),
         "agent_id": role
             .map(|item| item.agent_id.clone())

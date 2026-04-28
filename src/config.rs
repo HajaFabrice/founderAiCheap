@@ -524,6 +524,16 @@ fn env_override_u64(name: &str, current: u64) -> u64 {
         .unwrap_or(current)
 }
 
+pub fn apply_worker_env_overrides(mut worker: WorkerConfig) -> WorkerConfig {
+    worker.provider = env_override_string("FOUNDERAI_PROVIDER", worker.provider);
+    worker.base_url = env_override_string("FOUNDERAI_BASE_URL", worker.base_url);
+    worker.model = env_override_string("FOUNDERAI_MODEL", worker.model);
+    worker.system_prompt = env_override_string("FOUNDERAI_SYSTEM_PROMPT", worker.system_prompt);
+    worker.api_key_env = env_override_string("FOUNDERAI_API_KEY_ENV", worker.api_key_env);
+    worker.timeout_seconds = env_override_u64("FOUNDERAI_TIMEOUT_SECONDS", worker.timeout_seconds);
+    worker
+}
+
 fn default_openai_override() -> WorkerOverride {
     WorkerOverride {
         provider: Some("openai".to_string()),
@@ -737,13 +747,7 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
         })
         .collect();
 
-    let mut worker = raw.worker;
-    worker.provider = env_override_string("FOUNDERAI_PROVIDER", worker.provider);
-    worker.base_url = env_override_string("FOUNDERAI_BASE_URL", worker.base_url);
-    worker.model = env_override_string("FOUNDERAI_MODEL", worker.model);
-    worker.system_prompt = env_override_string("FOUNDERAI_SYSTEM_PROMPT", worker.system_prompt);
-    worker.api_key_env = env_override_string("FOUNDERAI_API_KEY_ENV", worker.api_key_env);
-    worker.timeout_seconds = env_override_u64("FOUNDERAI_TIMEOUT_SECONDS", worker.timeout_seconds);
+    let worker = apply_worker_env_overrides(raw.worker);
 
     let mut model_router = raw.model_router;
     inject_default_routes(&mut model_router);

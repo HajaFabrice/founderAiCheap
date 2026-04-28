@@ -1,0 +1,164 @@
+{
+  "generated_at": "2026-04-27",
+  "purpose": "Sanitized shortlist for human-reviewed independent outreach. This is smaller and more targeted than the full CRM and is intended for prompt use.",
+  "operating_rule": "All entries remain independent_candidate leads until a human confirms ownership, contact route, and approval for outreach.",
+  "source_basis": [
+    "documents/99_Agent_Ready/databases/independent_crm.json",
+    "user-provided CV in chat on 2026-04-27",
+    "documents/99_Agent_Ready/databases/independent_service_catalog.json"
+  ],
+  "selection_logic": [
+    "Prefer organizations with visible biodiversity monitoring, field inventory, NGO, or research alignment.",
+    "Prefer targets that fit dataset cleaning, validation, and reporting support.",
+    "Prefer organizations that can be pursued independently without leaning on Techni-Drones ownership."
+  ],
+  "shortlist": [
+    {
+      "rank": 1,
+      "organization_id": "asity-madagascar",
+      "organization": "Asity Madagascar",
+      "country": "Madagascar",
+      "recommended_language": "english_or_french_needs_human_choice",
+      "focus_area": "Biodiversity / NGO",
+      "why_fit": "Strong Madagascar conservation fit and close alignment with biodiversity monitoring and reporting realities.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "confirm independent ownership boundary",
+        "choose English or French",
+        "confirm the best current contact route"
+      ]
+    },
+    {
+      "rank": 2,
+      "organization_id": "association-mitsinjo",
+      "organization": "Association Mitsinjo",
+      "country": "Madagascar",
+      "recommended_language": "english_or_french_needs_human_choice",
+      "focus_area": "Community conservation / NGO",
+      "why_fit": "Likely to value practical, field-aware dataset support anchored in Madagascar conditions.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "confirm independent ownership boundary",
+        "confirm current programme contact",
+        "tailor the message to current monitoring work"
+      ]
+    },
+    {
+      "rank": 3,
+      "organization_id": "africa-biodiversity-collaborative-group",
+      "organization": "Africa Biodiversity Collaborative Group",
+      "country": "Global",
+      "recommended_language": "english",
+      "focus_area": "Biodiversity / NGO",
+      "why_fit": "Biodiversity reporting and collaborative field-data realities make the sample-review offer credible.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "identify a relevant recent report or programme for personalization"
+      ]
+    },
+    {
+      "rank": 4,
+      "organization_id": "cab-international",
+      "organization": "CAB International",
+      "country": "Global",
+      "recommended_language": "english",
+      "focus_area": "Bioscience / NGO",
+      "why_fit": "Scientific and bioscience framing matches a calm, evidence-based biodiversity data support offer.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "check the strongest biodiversity or monitoring programme angle"
+      ]
+    },
+    {
+      "rank": 5,
+      "organization_id": "maliasili",
+      "organization": "Maliasili",
+      "country": "Kenya",
+      "recommended_language": "english",
+      "focus_area": "Conservation capacity / NGO",
+      "why_fit": "Likely fit for operational reporting support and clean data handoff for partner programmes.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "confirm whether the best angle is data quality, reporting, or partner support"
+      ]
+    },
+    {
+      "rank": 6,
+      "organization_id": "school-for-field-studies-kenya",
+      "organization": "School for Field Studies Kenya",
+      "country": "Kenya",
+      "recommended_language": "english",
+      "focus_area": "Field research / education",
+      "why_fit": "Direct overlap with field data handling, training, and biodiversity research workflows.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify the relevant research or field-programme contact",
+        "personalize around field data handling and reporting"
+      ]
+    },
+    {
+      "rank": 7,
+      "organization_id": "natureuganda",
+      "organization": "NatureUganda",
+      "country": "Uganda",
+      "recommended_language": "english",
+      "focus_area": "Nature / NGO",
+      "why_fit": "Bird and biodiversity survey work is a clean fit for dataset validation and reporting support.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "confirm a recent survey or reporting angle"
+      ]
+    },
+    {
+      "rank": 8,
+      "organization_id": "frankfurt-zoological-society-tanzania",
+      "organization": "Frankfurt Zoological Society Tanzania",
+      "country": "Tanzania",
+      "recommended_language": "english",
+      "focus_area": "Wildlife monitoring",
+      "why_fit": "Wildlife-monitoring context fits cleanup, validation, and analysis-ready dataset support.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "identify a specific Tanzania monitoring or reporting anchor"
+      ]
+    },
+    {
+      "rank": 9,
+      "organization_id": "save-the-elephants",
+      "organization": "Save the Elephants",
+      "country": "Kenya",
+      "recommended_language": "english",
+      "focus_area": "Wildlife / NGO",
+      "why_fit": "Field-heavy monitoring work makes a low-friction data review offer believable and relevant.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "confirm whether the cleaner angle is monitoring data or donor reporting"
+      ]
+    },
+    {
+      "rank": 10,
+      "organization_id": "a-rocha",
+      "organization": "A Rocha",
+      "country": "Global",
+      "recommended_language": "english",
+      "focus_area": "Christian / Conservation",
+      "why_fit": "Conservation identity and practical field support framing can fit a careful, low-hype outreach approach.",
+      "recommended_entry_offer": "Free 5-20 row sample review",
+      "next_human_review": [
+        "verify current contact route",
+        "confirm whether to lead with biodiversity support or dataset-cleanup language"
+      ]
+    }
+  ],
+  "global_cautions": [
+    "This shortlist is for human review, not autonomous send.",
+    "Do not treat the listed organizations as verified clients or warm contacts.",
+    "Do not publish candidate emails from the CRM in public-facing marketing pages."
+  ]
+}
