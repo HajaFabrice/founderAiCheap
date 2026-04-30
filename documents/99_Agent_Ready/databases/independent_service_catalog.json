@@ -23,8 +23,8 @@
         "status": "verified from current outreach templates"
       },
       "source_basis": [
-        "documents/Freelance/Cleaning Summary.docx",
-        "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok",
+        "documents/Plans/Freelance/Cleaning Summary.docx",
+        "documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok",
         "documents/99_Agent_Ready/templates/external_communications.md"
       ]
     },
@@ -51,9 +51,9 @@
         "status": "needs_human_verification_before_public_use"
       },
       "source_basis": [
-        "documents/Freelance/Haja Fabrice Cv Optimized.docx",
-        "documents/Freelance/Cleaning Summary.docx",
-        "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok"
+        "documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx",
+        "documents/Plans/Freelance/Cleaning Summary.docx",
+        "documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok"
       ]
     },
     {
@@ -77,8 +77,8 @@
         "status": "not published as a separate public rate"
       },
       "source_basis": [
-        "documents/Freelance/Haja Fabrice Cv Optimized.docx",
-        "documents/Freelance/cleaned_data.csv"
+        "documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx",
+        "documents/Plans/Freelance/cleaned_data.csv"
       ]
     },
     {
@@ -101,8 +101,8 @@
         "status": "proposal-dependent"
       },
       "source_basis": [
-        "documents/Freelance/Cleaning Summary.docx",
-        "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok"
+        "documents/Plans/Freelance/Cleaning Summary.docx",
+        "documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok"
       ]
     }
   ]

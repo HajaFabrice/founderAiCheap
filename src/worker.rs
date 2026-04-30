@@ -1,4 +1,8 @@
 use crate::config::{AgentProfile, AppConfig, JobConfig, TeamRoleConfig, WorkerConfig};
+use crate::marketing::{
+    funnel_reviews_dir, funnel_snapshot_path, latest_funnel_review_path, latest_marketing_brief_path,
+    marketing_briefs_dir, shortlist_scorecard_path,
+};
 use crate::model_router::resolve_worker;
 use anyhow::{Context, Result};
 use chrono::Utc;
@@ -25,11 +29,17 @@ pub struct WorkerRunResult {
     pub team_output_file: Option<PathBuf>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct ProviderStatus {
     pub reachable: bool,
     pub model_available: Option<bool>,
     pub detail: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct ProviderCallResponse {
+    output_text: String,
+    usage: Option<Value>,
 }
 
 fn read_founder_file(path: &Path) -> String {
@@ -309,6 +319,14 @@ fn render_agent_ready_documents(
             "Operational Memory Database",
             &root.join("databases").join("operational_memory.json"),
         ),
+        render_document_section(
+            "Marketing Funnel Snapshot",
+            &funnel_snapshot_path(&config.runtime_dir),
+        ),
+        render_document_section(
+            "Review-Ready Shortlist Scorecard",
+            &shortlist_scorecard_path(&config.runtime_dir),
+        ),
     ];
 
     let targeted_sections: Vec<(&str, PathBuf)> = match selected_agent_id {
@@ -328,6 +346,10 @@ fn render_agent_ready_documents(
             (
                 "Freelance Operating Brief",
                 root.join("references").join("freelance_operating_brief.md"),
+            ),
+            (
+                "Marketing Intelligence Overlay",
+                root.join("references").join("marketing_intelligence_overlay.md"),
             ),
             (
                 "Independent CRM Database",
@@ -353,6 +375,14 @@ fn render_agent_ready_documents(
                 "Founder Profile Blocks Database",
                 root.join("databases").join("founder_profile_blocks.json"),
             ),
+            (
+                "Latest Weekly Marketing Brief",
+                latest_marketing_brief_path(&config.runtime_dir),
+            ),
+            (
+                "Latest Weekly Funnel Review",
+                latest_funnel_review_path(&config.runtime_dir),
+            ),
             ("Template Index", root.join("templates").join("template_index.md")),
             (
                 "External Communications Templates",
@@ -366,6 +396,10 @@ fn render_agent_ready_documents(
                 "Independent Freelance Templates",
                 root.join("templates").join("independent_freelance_templates.md"),
             ),
+            (
+                "Marketing Intelligence Templates",
+                root.join("templates").join("marketing_intelligence_templates.md"),
+            ),
         ],
         "hildegard" | "francis" => vec![
             (
@@ -375,6 +409,10 @@ fn render_agent_ready_documents(
             (
                 "Freelance Operating Brief",
                 root.join("references").join("freelance_operating_brief.md"),
+            ),
+            (
+                "Marketing Intelligence Overlay",
+                root.join("references").join("marketing_intelligence_overlay.md"),
             ),
             (
                 "Independent CRM Database",
@@ -393,6 +431,10 @@ fn render_agent_ready_documents(
                 root.join("databases").join("founder_profile_blocks.json"),
             ),
             (
+                "Review-Ready Outreach Shortlist Database",
+                root.join("databases").join("review_ready_outreach_shortlist.json"),
+            ),
+            (
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
             ),
@@ -404,10 +446,69 @@ fn render_agent_ready_documents(
                 "ERIS Metadata And Governance",
                 root.join("references").join("eris_metadata_governance.md"),
             ),
+            (
+                "Latest Weekly Marketing Brief",
+                latest_marketing_brief_path(&config.runtime_dir),
+            ),
+            (
+                "Latest Weekly Funnel Review",
+                latest_funnel_review_path(&config.runtime_dir),
+            ),
             ("Template Index", root.join("templates").join("template_index.md")),
             (
                 "Internal Operations Templates",
                 root.join("templates").join("internal_operations.md"),
+            ),
+            (
+                "Marketing Intelligence Templates",
+                root.join("templates").join("marketing_intelligence_templates.md"),
+            ),
+        ],
+        "juniper" => vec![
+            (
+                "Freelance Operating Brief",
+                root.join("references").join("freelance_operating_brief.md"),
+            ),
+            (
+                "Marketing Intelligence Overlay",
+                root.join("references").join("marketing_intelligence_overlay.md"),
+            ),
+            (
+                "Independent CRM Database",
+                root.join("databases").join("independent_crm.json"),
+            ),
+            (
+                "Independent Pipeline Database",
+                root.join("databases").join("independent_pipeline.json"),
+            ),
+            (
+                "Independent Service Catalog Database",
+                root.join("databases").join("independent_service_catalog.json"),
+            ),
+            (
+                "Freelance Proof Assets Database",
+                root.join("databases").join("freelance_proof_assets.json"),
+            ),
+            (
+                "Review-Ready Outreach Shortlist Database",
+                root.join("databases").join("review_ready_outreach_shortlist.json"),
+            ),
+            (
+                "Latest Weekly Marketing Brief",
+                latest_marketing_brief_path(&config.runtime_dir),
+            ),
+            (
+                "Latest Weekly Funnel Review",
+                latest_funnel_review_path(&config.runtime_dir),
+            ),
+            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Internal Operations Templates",
+                root.join("templates").join("internal_operations.md"),
+            ),
+            (
+                "Marketing Intelligence Templates",
+                root.join("templates").join("marketing_intelligence_templates.md"),
             ),
         ],
         "bartholomew" | "pio" | "clare" | "columban" => vec![
@@ -458,8 +559,16 @@ fn render_agent_ready_documents(
         ],
         "duns-scotus" => vec![
             (
+                "Marketing Intelligence Overlay",
+                root.join("references").join("marketing_intelligence_overlay.md"),
+            ),
+            (
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
+            ),
+            (
+                "Independent Pipeline Database",
+                root.join("databases").join("independent_pipeline.json"),
             ),
             (
                 "ERIS Scoring Defaults Database",
@@ -469,10 +578,22 @@ fn render_agent_ready_documents(
                 "ERIS Metadata And Governance",
                 root.join("references").join("eris_metadata_governance.md"),
             ),
+            (
+                "Latest Weekly Marketing Brief",
+                latest_marketing_brief_path(&config.runtime_dir),
+            ),
+            (
+                "Latest Weekly Funnel Review",
+                latest_funnel_review_path(&config.runtime_dir),
+            ),
             ("Template Index", root.join("templates").join("template_index.md")),
             (
                 "Research And Applications Templates",
                 root.join("templates").join("research_and_applications.md"),
+            ),
+            (
+                "Marketing Intelligence Templates",
+                root.join("templates").join("marketing_intelligence_templates.md"),
             ),
         ],
         _ => vec![
@@ -505,6 +626,22 @@ fn grant_output_dir(runtime_dir: &Path) -> PathBuf {
     let path = runtime_dir.join("grants");
     fs::create_dir_all(&path).ok();
     path
+}
+
+fn marketing_brief_output_file(runtime_dir: &Path, job: &JobConfig, run_id: &str) -> Option<PathBuf> {
+    if job.job_id == "weekly-marketing-brief" {
+        Some(marketing_briefs_dir(runtime_dir).join(format!("{run_id}.md")))
+    } else {
+        None
+    }
+}
+
+fn funnel_review_output_file(runtime_dir: &Path, job: &JobConfig, run_id: &str) -> Option<PathBuf> {
+    if job.job_id == "weekly-funnel-review" {
+        Some(funnel_reviews_dir(runtime_dir).join(format!("{run_id}.md")))
+    } else {
+        None
+    }
 }
 
 fn selected_agent_profile<'a>(
@@ -876,7 +1013,7 @@ pub fn provider_status(worker: &WorkerConfig) -> ProviderStatus {
     }
 }
 
-fn call_ollama(prompt_text: &str, worker: &WorkerConfig) -> Result<String> {
+fn call_ollama(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallResponse> {
     let client = build_client(worker)?;
     let url = format!("{}/api/generate", normalize_base_url(&worker.base_url));
     let request = OllamaGenerateRequest {
@@ -910,10 +1047,26 @@ fn call_ollama(prompt_text: &str, worker: &WorkerConfig) -> Result<String> {
         .map(str::to_string)
         .ok_or_else(|| anyhow::anyhow!("Ollama returned no response text"))?;
 
-    Ok(output)
+    let usage = serde_json::json!({
+        "input_tokens": payload.get("prompt_eval_count").and_then(Value::as_u64),
+        "output_tokens": payload.get("eval_count").and_then(Value::as_u64),
+        "total_tokens": payload
+            .get("prompt_eval_count")
+            .and_then(Value::as_u64)
+            .zip(payload.get("eval_count").and_then(Value::as_u64))
+            .map(|(left, right)| left + right),
+        "provider_duration_ns": payload.get("total_duration").and_then(Value::as_u64),
+        "load_duration_ns": payload.get("load_duration").and_then(Value::as_u64),
+        "eval_duration_ns": payload.get("eval_duration").and_then(Value::as_u64)
+    });
+
+    Ok(ProviderCallResponse {
+        output_text: output,
+        usage: Some(usage),
+    })
 }
 
-fn call_openai(prompt_text: &str, worker: &WorkerConfig) -> Result<String> {
+fn call_openai(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallResponse> {
     let client = build_client(worker)?;
     let api_key = api_key_from_env(worker)?;
     let url = format!("{}/responses", normalize_base_url(&worker.base_url));
@@ -938,11 +1091,15 @@ fn call_openai(prompt_text: &str, worker: &WorkerConfig) -> Result<String> {
     }
 
     let payload: Value = serde_json::from_str(&raw).context("failed to parse OpenAI response JSON")?;
-    extract_openai_output_text(&payload)
-        .ok_or_else(|| anyhow::anyhow!("OpenAI returned no response text"))
+    let output_text = extract_openai_output_text(&payload)
+        .ok_or_else(|| anyhow::anyhow!("OpenAI returned no response text"))?;
+    Ok(ProviderCallResponse {
+        output_text,
+        usage: payload.get("usage").cloned(),
+    })
 }
 
-fn call_provider(prompt_text: &str, worker: &WorkerConfig) -> Result<String> {
+fn call_provider(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallResponse> {
     if worker.provider.eq_ignore_ascii_case("ollama") {
         return call_ollama(prompt_text, worker);
     }
@@ -1021,11 +1178,14 @@ pub fn run_worker(
     } else {
         None
     };
+    let marketing_brief_file = marketing_brief_output_file(runtime_dir, job, &run_id);
+    let funnel_review_file = funnel_review_output_file(runtime_dir, job, &run_id);
 
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
     let mut active_worker = routed_worker.primary.clone();
     let mut failure_reason: Option<String> = None;
+    let mut usage: Option<Value> = None;
     let mut stdout_text = format!(
         "Task type: {}\nRoute summary: {}\nPrimary provider: {}\nPrimary base URL: {}\nPrimary model: {}\nPrimary timeout seconds: {}\nPrompt file: {}\nOutput file: {}\n",
         routed_worker.task_type,
@@ -1050,16 +1210,16 @@ pub fn run_worker(
     let mut stderr_text = String::new();
 
     let provider_result = match call_provider(&prompt_text, &routed_worker.primary) {
-        Ok(output_text) => Ok(output_text),
+        Ok(response) => Ok(response),
         Err(primary_err) => {
             stderr_text.push_str(&format!("Primary worker failed: {primary_err:#}\n"));
             if let Some(fallback_worker) = &routed_worker.fallback {
                 stdout_text.push_str("Attempting fallback worker.\n");
                 match call_provider(&prompt_text, fallback_worker) {
-                    Ok(output_text) => {
+                    Ok(response) => {
                         stdout_text.push_str("Fallback worker succeeded.\n");
                         active_worker = fallback_worker.clone();
-                    Ok(output_text)
+                        Ok(response)
                     }
                     Err(fallback_err) => {
                         stderr_text.push_str(&format!("Fallback worker failed: {fallback_err:#}\n"));
@@ -1077,9 +1237,20 @@ pub fn run_worker(
     };
 
     match provider_result {
-        Ok(output_text) => {
-            stdout_text.push_str(&format!("Generated {} characters.\n", output_text.chars().count()));
-            if fs::write(&output_file, output_text).is_err() {
+        Ok(response) => {
+            if let Some(response_usage) = response.usage.clone() {
+                stdout_text.push_str(&format!(
+                    "Usage summary: {}\n",
+                    serde_json::to_string_pretty(&response_usage)
+                        .unwrap_or_else(|_| response_usage.to_string())
+                ));
+                usage = Some(response_usage);
+            }
+            stdout_text.push_str(&format!(
+                "Generated {} characters.\n",
+                response.output_text.chars().count()
+            ));
+            if fs::write(&output_file, response.output_text).is_err() {
                 exit_code = 1;
                 stderr_text.push_str("Failed to write provider output file.\n");
                 let _ = fs::write(
@@ -1120,6 +1291,20 @@ pub fn run_worker(
         }
     }
 
+    if let Some(marketing_brief_file) = &marketing_brief_file {
+        if let Ok(output_text) = fs::read_to_string(&output_file) {
+            let _ = fs::write(marketing_brief_file, &output_text);
+            let _ = fs::write(latest_marketing_brief_path(runtime_dir), output_text);
+        }
+    }
+
+    if let Some(funnel_review_file) = &funnel_review_file {
+        if let Ok(output_text) = fs::read_to_string(&output_file) {
+            let _ = fs::write(funnel_review_file, &output_text);
+            let _ = fs::write(latest_funnel_review_path(runtime_dir), output_text);
+        }
+    }
+
     let finished_at = Utc::now().to_rfc3339();
     let summary = summary_from_output(&output_file, &stdout_text);
 
@@ -1138,12 +1323,15 @@ pub fn run_worker(
         "request_source": request_source.map(|path| path.display().to_string()),
         "prompt_chars": prompt_chars,
         "prompt_words": prompt_words,
+        "usage": usage,
         "role_id": role.map(|item| item.role_id.clone()),
         "agent_id": role
             .map(|item| item.agent_id.clone())
             .or_else(|| job.agent_id.clone()),
         "team_output_file": team_output_file.as_ref().map(|path| path.display().to_string()),
         "grant_output_file": grant_output_file.as_ref().map(|path| path.display().to_string()),
+        "marketing_brief_file": marketing_brief_file.as_ref().map(|path| path.display().to_string()),
+        "funnel_review_file": funnel_review_file.as_ref().map(|path| path.display().to_string()),
     });
     if let Ok(metadata_text) = serde_json::to_string_pretty(&metadata) {
         let _ = fs::write(&metadata_file, metadata_text);

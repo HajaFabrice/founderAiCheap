@@ -20,7 +20,7 @@ They should override older repo mirrors if a conflict appears.
    - `documents/03_Freelance_And_Career/Outreach/Outreach Emails.docx`
    - `documents/03_Freelance_And_Career/Profiles_And_Offers/service statement alternatives.docx`
    - `documents/03_Freelance_And_Career/Profiles_And_Offers/Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx`
-5. Newer freelance execution and proof assets in `documents/Freelance/`:
+5. Newer freelance execution and proof assets in `documents/Plans/Freelance/`:
    - `Cleaning Summary.docx`
    - `cleaned_data.csv`
    - `Haja Fabrice Cv Optimized.docx`
@@ -49,9 +49,9 @@ They should override older repo mirrors if a conflict appears.
 | Communication library | `ERIS_Communication_Templates_v1.0.txt` | Earlier ad hoc draft snippets | Use as the broad template baseline. |
 | NGO outreach copy | `Outreach Emails.docx` | Generic cold email patterns | Use for concrete biodiversity NGO outreach phrasing and cadence. |
 | Service positioning | `service statement alternatives.docx` plus `Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx` | `Service statement v1.docx` | Use the newer concise offer language first, then the longer service sheet for rates and deliverables. |
-| Independent proof assets | `documents/Freelance/Cleaning Summary.docx` plus `documents/Freelance/cleaned_data.csv` | older abstract service claims without sample work | Use to ground dataset-cleaning capability in a real, inspectable sample. |
-| Current CV asset | `documents/Freelance/Haja Fabrice Cv Optimized.docx` and `documents/Freelance/Haja Fabrice CV-EnvData-FR.docx` | missing or older CV variants | Use for bio blocks, capability summaries, and bilingual profile material. |
-| Independent outreach execution | `documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok` plus the two outreach tracker workbooks | generic outreach heuristics | Use for cadence and pipeline structure, not as proof of verified contacts or public pricing. |
+| Independent proof assets | `documents/Plans/Freelance/Cleaning Summary.docx` plus `documents/Plans/Freelance/cleaned_data.csv` | older abstract service claims without sample work | Use to ground dataset-cleaning capability in a real, inspectable sample. |
+| Current CV asset | `documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx` and `documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx` | missing or older CV variants | Use for bio blocks, capability summaries, and bilingual profile material. |
+| Independent outreach execution | `documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok` plus the two outreach tracker workbooks | generic outreach heuristics | Use for cadence and pipeline structure, not as proof of verified contacts or public pricing. |
 | Shared conversation discipline | filtered `Plans` conversation-reference notes | older ad hoc outreach rules | Use for tone, safe claims, difficult-moment handling, and stop-and-flag behavior. |
 | FAQ and answer handling | filtered `Plans` FAQ notes | improvised reply language | Use for review-ready answers, never for unverified claims. |
 | ERIS scoring defaults | MEP Appendix B | scattered score-description fragments | Use for methodological consistency and audit-safe score language. |

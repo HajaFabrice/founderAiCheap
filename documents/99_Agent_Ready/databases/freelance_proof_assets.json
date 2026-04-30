@@ -6,12 +6,12 @@
       "id": "biodiversity-dataset-cleaning-sample-en",
       "type": "proof-asset",
       "language": "en",
-      "source_path": "documents/Freelance/Cleaning Summary.docx",
+      "source_path": "documents/Plans/Freelance/Cleaning Summary.docx",
       "paired_files": [
-        "documents/Freelance/Cleaning Summary.pdf",
-        "documents/Freelance/cleaned_data.csv",
-        "documents/Freelance/cleaned_data.xlsx",
-        "documents/Freelance/raw_data.xlsx"
+        "documents/Plans/Freelance/Cleaning Summary.pdf",
+        "documents/Plans/Freelance/cleaned_data.csv",
+        "documents/Plans/Freelance/cleaned_data.xlsx",
+        "documents/Plans/Freelance/raw_data.xlsx"
       ],
       "verified_details": [
         "The sample describes cleaning a 27-row biodiversity survey dataset into 25 consistent records.",
@@ -33,9 +33,9 @@
       "id": "biodiversity-dataset-cleaning-sample-fr",
       "type": "proof-asset",
       "language": "fr",
-      "source_path": "documents/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.docx",
+      "source_path": "documents/Plans/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.docx",
       "paired_files": [
-        "documents/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.pdf"
+        "documents/Plans/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.pdf"
       ],
       "verified_details": [
         "French-language mirror of the biodiversity dataset-cleaning sample exists for Francophone outreach and proposals.",
@@ -54,7 +54,7 @@
       "id": "cleaned-dataset-sample",
       "type": "sample-deliverable",
       "language": "en",
-      "source_path": "documents/Freelance/cleaned_data.csv",
+      "source_path": "documents/Plans/Freelance/cleaned_data.csv",
       "verified_details": [
         "The cleaned CSV includes audit-oriented fields such as Validation, Correction_made, and Data_Source_Note.",
         "The sample columns are compatible with biodiversity field data cleanup and structured reporting workflows."
@@ -72,9 +72,9 @@
       "id": "environmental-data-cv-en",
       "type": "profile-asset",
       "language": "en",
-      "source_path": "documents/Freelance/Haja Fabrice Cv Optimized.docx",
+      "source_path": "documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx",
       "paired_files": [
-        "documents/Freelance/Haja Fabrice Cv EnvData.pdf"
+        "documents/Plans/Freelance/Haja Fabrice Cv EnvData.pdf"
       ],
       "verified_details": [
         "Positions the founder as an environmental data specialist focused on biodiversity monitoring and MRV support.",
@@ -94,9 +94,9 @@
       "id": "environmental-data-cv-fr",
       "type": "profile-asset",
       "language": "fr",
-      "source_path": "documents/Freelance/Haja Fabrice CV-EnvData-FR.docx",
+      "source_path": "documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx",
       "paired_files": [
-        "documents/Freelance/Haja Fabrice CV-EnvData-FR.pdf"
+        "documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.pdf"
       ],
       "verified_details": [
         "French-language environmental-data CV exists for Francophone counterparties.",

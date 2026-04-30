@@ -4,11 +4,13 @@ mod approvals;
 mod config;
 mod network;
 mod model_router;
+mod marketing;
 mod notifier;
 mod offline;
 mod singleton;
 mod state;
 mod team_logging;
+mod web;
 mod worker;
 
 use anyhow::Result;
@@ -49,6 +51,10 @@ struct Cli {
 #[derive(Debug, Subcommand)]
 enum Commands {
     Daemon,
+    Serve {
+        #[arg(long, default_value = "127.0.0.1:8080")]
+        listen: String,
+    },
     Tick,
     Trigger {
         trigger_name: String,
@@ -94,6 +100,12 @@ fn main() -> Result<()> {
         Commands::Daemon => {
             app.daemon()?;
         }
+        Commands::Serve { listen } => {
+            let runtime = tokio::runtime::Builder::new_multi_thread()
+                .enable_all()
+                .build()?;
+            runtime.block_on(web::serve(app, &listen))?;
+        }
         Commands::Tick => {
             app.tick(false, None)?;
             println!("FounderAI tick completed.");
@@ -122,13 +134,11 @@ fn main() -> Result<()> {
             }
         }
         Commands::Approve { approval_id, notes } => {
-            let destination =
-                decide_approval(&app.config.runtime_dir, &approval_id, ApprovalDecision::Approved, &notes)?;
+            let destination = app.approve_pending_approval(&approval_id, &notes)?;
             println!("Approval saved to {}", destination.display());
         }
         Commands::Reject { approval_id, notes } => {
-            let destination =
-                decide_approval(&app.config.runtime_dir, &approval_id, ApprovalDecision::Rejected, &notes)?;
+            let destination = app.reject_pending_approval(&approval_id, &notes)?;
             println!("Rejection saved to {}", destination.display());
         }
         Commands::Request {

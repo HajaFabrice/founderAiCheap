@@ -5,10 +5,12 @@ use crate::agents::perpetua::{
 use crate::agents::pio::collect_due_alerts;
 use crate::agents::zacchaeus::{build_zacchaeus_job, collect_inbound_lead_requests};
 use crate::approvals::{
-    approval_decision, create_approval_request, ensure_approval_dirs, list_pending_approvals, ApprovalDecision,
+    approval_decision, create_approval_request, decide_approval, ensure_approval_dirs, list_pending_approvals,
+    ApprovalDecision,
 };
 use crate::config::{AppConfig, JobConfig, TeamRoleConfig};
 use crate::network::internet_is_available;
+use crate::marketing::{ensure_marketing_dirs, sync_marketing_state};
 use crate::notifier::send_notification;
 use crate::offline::{
     count_pending_entries, enqueue_offline_job, ensure_offline_queue_dirs, replay_pending_entries,
@@ -19,7 +21,7 @@ use crate::team_logging::{append_team_activity, ensure_log_files};
 use crate::worker::{provider_status, run_worker, ProviderStatus, WorkerRunResult};
 use anyhow::{Context, Result};
 use chrono::{DateTime, Datelike, Local, NaiveTime, Utc, Weekday};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -96,6 +98,100 @@ struct InboxRequestPayload {
     agent_id: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct ApprovalSnapshot {
+    pub approval_id: String,
+    pub job_id: String,
+    pub phase: String,
+    pub status: String,
+    pub reason: String,
+    pub summary: String,
+    pub artifacts: Vec<String>,
+    pub risk_tags: Vec<String>,
+    pub created_at: String,
+    pub decision_notes: Option<String>,
+    pub decided_at: Option<String>,
+    pub summary_path: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct JobStatusSnapshot {
+    pub job_id: String,
+    pub last_run_id: Option<String>,
+    pub last_exit_code: Option<i32>,
+    pub last_summary: Option<String>,
+    pub pending_approval_id: Option<String>,
+    pub role_id: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct RoleStatusSnapshot {
+    pub role_id: String,
+    pub saint_name: String,
+    pub display_name: String,
+    pub last_job_id: Option<String>,
+    pub last_status: Option<String>,
+    pub last_metric_value: Option<i64>,
+    pub last_output_file: Option<String>,
+    pub pending_approval_id: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct StatusSnapshot {
+    pub config_path: String,
+    pub workspace_root: String,
+    pub runtime_dir: String,
+    pub inbox_dir: String,
+    pub outbox_dir: String,
+    pub agent_roster_path: String,
+    pub deadline_tracker_path: String,
+    pub configured_agents: usize,
+    pub internet_available: bool,
+    pub pending_approvals: usize,
+    pub offline_queue_pending: usize,
+    pub active_nurture_sequences: usize,
+    pub pending_deadline_alerts: usize,
+    pub model_router_enabled: bool,
+    pub model_router_routes: usize,
+    pub notifier_enabled: bool,
+    pub active_provider: String,
+    pub active_model: String,
+    pub provider_status: ProviderStatus,
+    pub jobs: Vec<JobStatusSnapshot>,
+    pub roles: Option<Vec<RoleStatusSnapshot>>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct RunListEntry {
+    pub run_id: String,
+    pub job_id: Option<String>,
+    pub trigger: Option<String>,
+    pub started_at: Option<String>,
+    pub finished_at: Option<String>,
+    pub exit_code: Option<i64>,
+    pub provider: Option<String>,
+    pub model: Option<String>,
+    pub role_id: Option<String>,
+    pub agent_id: Option<String>,
+    pub output_file: String,
+    pub metadata_file: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct RunDetailSnapshot {
+    pub run_id: String,
+    pub prompt_file: String,
+    pub output_file: String,
+    pub stdout_file: String,
+    pub stderr_file: String,
+    pub metadata_file: String,
+    pub prompt: String,
+    pub output: String,
+    pub stdout: String,
+    pub stderr: String,
+    pub metadata: Value,
+}
+
 pub struct AutonomyApp {
     pub config: AppConfig,
     state_path: PathBuf,
@@ -146,6 +242,7 @@ impl AutonomyApp {
         ensure_offline_queue_dirs(&self.config)?;
         ensure_nurture_files(&self.config)?;
         ensure_log_files(&self.config.runtime_dir)?;
+        ensure_marketing_dirs(&self.config.runtime_dir)?;
         Ok(())
     }
 
@@ -1345,6 +1442,9 @@ impl AutonomyApp {
         self.ensure_runtime()?;
         let mut state = self.load_state_or_default();
         self.refresh_after_run_approvals(&mut state);
+        if let Err(err) = sync_marketing_state(&self.config) {
+            self.log(&format!("Marketing state sync failed: {err:#}"));
+        }
 
         let previous_internet = state.last_internet_available;
         let current_internet = internet_is_available(&self.config.internet_check);
@@ -1454,80 +1554,332 @@ impl AutonomyApp {
         provider_status(&self.config.worker)
     }
 
-    pub fn status_text(&self, show_teams: bool) -> Result<String> {
+    fn read_text_artifact(path: &Path) -> String {
+        fs::read_to_string(path)
+            .unwrap_or_else(|err| format!("[Failed to read {}: {err}]", path.display()))
+    }
+
+    fn validate_run_id(run_id: &str) -> Result<&str> {
+        let candidate = run_id.trim();
+        if candidate.is_empty()
+            || candidate == "."
+            || candidate == ".."
+            || candidate.contains('/')
+            || candidate.contains('\\')
+        {
+            anyhow::bail!("invalid run id '{}'", run_id);
+        }
+        Ok(candidate)
+    }
+
+    pub fn healthcheck(&self) -> Result<()> {
+        self.ensure_runtime()
+    }
+
+    pub fn approval_snapshots(&self) -> Result<Vec<ApprovalSnapshot>> {
+        self.ensure_runtime()?;
+        let mut snapshots = Vec::new();
+        for approval in list_pending_approvals(&self.config.runtime_dir)? {
+            snapshots.push(ApprovalSnapshot {
+                approval_id: approval.record.approval_id,
+                job_id: approval.record.job_id,
+                phase: approval.record.phase,
+                status: approval.record.status,
+                reason: approval.record.reason,
+                summary: approval.record.summary,
+                artifacts: approval.record.artifacts,
+                risk_tags: approval.record.risk_tags,
+                created_at: approval.record.created_at,
+                decision_notes: approval.record.decision_notes,
+                decided_at: approval.record.decided_at,
+                summary_path: approval.summary_path.display().to_string(),
+            });
+        }
+        Ok(snapshots)
+    }
+
+    pub fn approve_pending_approval(&self, approval_id: &str, notes: &str) -> Result<PathBuf> {
+        decide_approval(
+            &self.config.runtime_dir,
+            approval_id,
+            ApprovalDecision::Approved,
+            notes,
+        )
+    }
+
+    pub fn reject_pending_approval(&self, approval_id: &str, notes: &str) -> Result<PathBuf> {
+        decide_approval(
+            &self.config.runtime_dir,
+            approval_id,
+            ApprovalDecision::Rejected,
+            notes,
+        )
+    }
+
+    pub fn status_snapshot(&self, show_teams: bool) -> Result<StatusSnapshot> {
         self.ensure_runtime()?;
         let mut state = self.load_state_or_default();
         state.normalize();
         let pending = list_pending_approvals(&self.config.runtime_dir)?;
         let current_internet = internet_is_available(&self.config.internet_check);
         let provider_status = self.provider_status();
-        let pending_deadline_alerts = collect_due_alerts(&self.config, &state.processed_deadline_alerts, local_now())?.len();
+        let pending_deadline_alerts =
+            collect_due_alerts(&self.config, &state.processed_deadline_alerts, local_now())?.len();
+
+        let jobs = self
+            .config
+            .jobs
+            .iter()
+            .map(|job| {
+                let job_state = state.ensure_job_state(&job.job_id).clone();
+                JobStatusSnapshot {
+                    job_id: job.job_id.clone(),
+                    last_run_id: job_state.last_run_id,
+                    last_exit_code: job_state.last_exit_code,
+                    last_summary: job_state.last_summary,
+                    pending_approval_id: job_state.pending_approval_id,
+                    role_id: job_state.role_id,
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let roles = if show_teams {
+            Some(
+                self.config
+                    .team_roles
+                    .values()
+                    .map(|role| {
+                        let role_state = state.ensure_role_state(&role.role_id).clone();
+                        RoleStatusSnapshot {
+                            role_id: role.role_id.clone(),
+                            saint_name: role.saint_name.clone(),
+                            display_name: role.display_name.clone(),
+                            last_job_id: display_job_label(
+                                role_state.last_job_id.as_deref(),
+                                Some(role),
+                            ),
+                            last_status: role_state.last_status,
+                            last_metric_value: role_state.last_metric_value,
+                            last_output_file: role_state.last_output_file,
+                            pending_approval_id: role_state.pending_approval_id,
+                        }
+                    })
+                    .collect::<Vec<_>>(),
+            )
+        } else {
+            None
+        };
+
+        Ok(StatusSnapshot {
+            config_path: self.config.config_path.display().to_string(),
+            workspace_root: self.config.workspace_root.display().to_string(),
+            runtime_dir: self.config.runtime_dir.display().to_string(),
+            inbox_dir: self.config.inbox_dir.display().to_string(),
+            outbox_dir: self.config.outbox_dir.display().to_string(),
+            agent_roster_path: self.config.agent_roster_path.display().to_string(),
+            deadline_tracker_path: self.config.deadline_tracker_path.display().to_string(),
+            configured_agents: self.config.agent_profiles.len(),
+            internet_available: current_internet,
+            pending_approvals: pending.len(),
+            offline_queue_pending: count_pending_entries(&self.config)?,
+            active_nurture_sequences: active_sequence_count(&self.config)?,
+            pending_deadline_alerts,
+            model_router_enabled: self.config.model_router.enabled,
+            model_router_routes: self.config.model_router.routes.len(),
+            notifier_enabled: self.config.notifier.enabled,
+            active_provider: self.config.worker.provider.clone(),
+            active_model: self.config.worker.model.clone(),
+            provider_status,
+            jobs,
+            roles,
+        })
+    }
+
+    pub fn recent_runs(&self, limit: usize) -> Result<Vec<RunListEntry>> {
+        self.ensure_runtime()?;
+        let runs_dir = self.config.runtime_dir.join("runs");
+        if !runs_dir.exists() {
+            return Ok(Vec::new());
+        }
+
+        let mut runs = Vec::new();
+        for entry in fs::read_dir(&runs_dir)
+            .with_context(|| format!("failed to list {}", runs_dir.display()))?
+        {
+            let path = entry?.path();
+            if !path.is_dir() {
+                continue;
+            }
+
+            let run_id = match path.file_name().and_then(|value| value.to_str()) {
+                Some(value) => value.to_string(),
+                None => continue,
+            };
+            let metadata_path = path.join("metadata.json");
+            let metadata = fs::read_to_string(&metadata_path)
+                .ok()
+                .and_then(|raw| serde_json::from_str::<Value>(&raw).ok())
+                .unwrap_or_else(|| Value::Object(Map::new()));
+
+            runs.push(RunListEntry {
+                run_id,
+                job_id: metadata
+                    .get("job_id")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                trigger: metadata
+                    .get("trigger")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                started_at: metadata
+                    .get("started_at")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                finished_at: metadata
+                    .get("finished_at")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                exit_code: metadata.get("exit_code").and_then(Value::as_i64),
+                provider: metadata
+                    .get("provider")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                model: metadata
+                    .get("model")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                role_id: metadata
+                    .get("role_id")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                agent_id: metadata
+                    .get("agent_id")
+                    .and_then(Value::as_str)
+                    .map(ToString::to_string),
+                output_file: path.join("output.md").display().to_string(),
+                metadata_file: metadata_path.display().to_string(),
+            });
+        }
+
+        runs.sort_by(|left, right| right.run_id.cmp(&left.run_id));
+        runs.truncate(limit);
+        Ok(runs)
+    }
+
+    pub fn run_detail(&self, run_id: &str) -> Result<RunDetailSnapshot> {
+        self.ensure_runtime()?;
+        let run_id = Self::validate_run_id(run_id)?;
+        let run_dir = self.config.runtime_dir.join("runs").join(run_id);
+        if !run_dir.is_dir() {
+            anyhow::bail!("run '{}' was not found", run_id);
+        }
+
+        let prompt_file = run_dir.join("prompt.md");
+        let output_file = run_dir.join("output.md");
+        let stdout_file = run_dir.join("stdout.txt");
+        let stderr_file = run_dir.join("stderr.txt");
+        let metadata_file = run_dir.join("metadata.json");
+        let metadata = fs::read_to_string(&metadata_file)
+            .with_context(|| format!("failed to read {}", metadata_file.display()))
+            .and_then(|raw| {
+                serde_json::from_str::<Value>(&raw)
+                    .with_context(|| format!("failed to parse {}", metadata_file.display()))
+            })?;
+
+        Ok(RunDetailSnapshot {
+            run_id: run_id.to_string(),
+            prompt_file: prompt_file.display().to_string(),
+            output_file: output_file.display().to_string(),
+            stdout_file: stdout_file.display().to_string(),
+            stderr_file: stderr_file.display().to_string(),
+            metadata_file: metadata_file.display().to_string(),
+            prompt: Self::read_text_artifact(&prompt_file),
+            output: Self::read_text_artifact(&output_file),
+            stdout: Self::read_text_artifact(&stdout_file),
+            stderr: Self::read_text_artifact(&stderr_file),
+            metadata,
+        })
+    }
+
+    pub fn status_text(&self, show_teams: bool) -> Result<String> {
+        let snapshot = self.status_snapshot(show_teams)?;
 
         let mut lines = vec![
-            format!("Config: {}", self.config.config_path.display()),
-            format!("Workspace: {}", self.config.workspace_root.display()),
-            format!("Runtime: {}", self.config.runtime_dir.display()),
-            format!("Inbox: {}", self.config.inbox_dir.display()),
-            format!("Outbox: {}", self.config.outbox_dir.display()),
-            format!("Agent roster: {}", self.config.agent_roster_path.display()),
-            format!("Deadline tracker: {}", self.config.deadline_tracker_path.display()),
-            format!("Configured agents: {}", self.config.agent_profiles.len()),
-            format!("Internet status: {}", if current_internet { "available" } else { "unavailable" }),
-            format!("Pending approvals: {}", pending.len()),
-            format!("Offline queue pending: {}", count_pending_entries(&self.config)?),
-            format!("Active nurture sequences: {}", active_sequence_count(&self.config)?),
-            format!("Pending deadline alerts: {}", pending_deadline_alerts),
-            format!("Model router enabled: {}", self.config.model_router.enabled),
-            format!("Model router routes: {}", self.config.model_router.routes.len()),
-            format!("Notifier enabled: {}", self.config.notifier.enabled),
-            format!("Active provider: {}", self.config.worker.provider),
-            format!("Active model: {}", self.config.worker.model),
-            format!("Provider reachable: {}", provider_status.reachable),
+            format!("Config: {}", snapshot.config_path),
+            format!("Workspace: {}", snapshot.workspace_root),
+            format!("Runtime: {}", snapshot.runtime_dir),
+            format!("Inbox: {}", snapshot.inbox_dir),
+            format!("Outbox: {}", snapshot.outbox_dir),
+            format!("Agent roster: {}", snapshot.agent_roster_path),
+            format!("Deadline tracker: {}", snapshot.deadline_tracker_path),
+            format!("Configured agents: {}", snapshot.configured_agents),
+            format!(
+                "Internet status: {}",
+                if snapshot.internet_available {
+                    "available"
+                } else {
+                    "unavailable"
+                }
+            ),
+            format!("Pending approvals: {}", snapshot.pending_approvals),
+            format!("Offline queue pending: {}", snapshot.offline_queue_pending),
+            format!(
+                "Active nurture sequences: {}",
+                snapshot.active_nurture_sequences
+            ),
+            format!(
+                "Pending deadline alerts: {}",
+                snapshot.pending_deadline_alerts
+            ),
+            format!("Model router enabled: {}", snapshot.model_router_enabled),
+            format!("Model router routes: {}", snapshot.model_router_routes),
+            format!("Notifier enabled: {}", snapshot.notifier_enabled),
+            format!("Active provider: {}", snapshot.active_provider),
+            format!("Active model: {}", snapshot.active_model),
+            format!("Provider reachable: {}", snapshot.provider_status.reachable),
         ];
-        if let Some(model_available) = provider_status.model_available {
+        if let Some(model_available) = snapshot.provider_status.model_available {
             lines.push(format!("Configured model installed: {}", model_available));
         }
-        if let Some(detail) = provider_status.detail {
+        if let Some(detail) = snapshot.provider_status.detail {
             lines.push(format!("Provider detail: {}", detail));
         }
 
         lines.push("Jobs:".to_string());
-        for job in &self.config.jobs {
-            let job_state = state.ensure_job_state(&job.job_id).clone();
+        for job in snapshot.jobs {
             lines.push(format!(
                 "- {}: last_run={} exit={} pending_approval={}",
                 job.job_id,
-                job_state
+                job
                     .last_run_id
                     .unwrap_or_else(|| "none".to_string()),
-                job_state
+                job
                     .last_exit_code
                     .map(|value| value.to_string())
                     .unwrap_or_else(|| "none".to_string()),
-                job_state
+                job
                     .pending_approval_id
                     .unwrap_or_else(|| "none".to_string())
             ));
         }
 
-        if show_teams {
+        if let Some(roles) = snapshot.roles {
             lines.push("Teams:".to_string());
-            for role in self.config.team_roles.values() {
-                let role_state = state.ensure_role_state(&role.role_id).clone();
-                let last_job_id = display_job_label(role_state.last_job_id.as_deref(), Some(role))
-                    .unwrap_or_else(|| "unknown".to_string());
+            for role in roles {
                 lines.push(format!(
                     "- {}: last_job={} status={} metric={} pending_approval={}",
                     role.role_id,
-                    last_job_id,
-                    role_state
+                    role
+                        .last_job_id
+                        .unwrap_or_else(|| "unknown".to_string()),
+                    role
                         .last_status
                         .unwrap_or_else(|| "unknown".to_string()),
-                    role_state
+                    role
                         .last_metric_value
                         .map(|value| value.to_string())
                         .unwrap_or_else(|| "none".to_string()),
-                    role_state
+                    role
                         .pending_approval_id
                         .unwrap_or_else(|| "none".to_string())
                 ));

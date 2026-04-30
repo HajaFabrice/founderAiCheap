@@ -1,6 +1,6 @@
 param(
-    [string]$TrackerOnePath = "$(Join-Path $PSScriptRoot '..\documents\Freelance\Client Outreach tracker 1.xlsx')",
-    [string]$TrackerTwoPath = "$(Join-Path $PSScriptRoot '..\documents\Freelance\client outreach tracker 2.xlsx')",
+    [string]$TrackerOnePath = "$(Join-Path $PSScriptRoot '..\documents\Plans\Freelance\Client Outreach tracker 1.xlsx')",
+    [string]$TrackerTwoPath = "$(Join-Path $PSScriptRoot '..\documents\Plans\Freelance\client outreach tracker 2.xlsx')",
     [string]$ProspectTargetsPath = "$(Join-Path $PSScriptRoot '..\documents\99_Agent_Ready\databases\prospect_targets.json')",
     [string]$OutputPath = "$(Join-Path $PSScriptRoot '..\documents\99_Agent_Ready\databases\independent_crm.json')"
 )
@@ -224,7 +224,7 @@ foreach ($row in ($trackerOneRows | Select-Object -Skip 1)) {
             )
         }
         source_refs = @(
-            "documents/Freelance/Client Outreach tracker 1.xlsx"
+            "documents/Plans/Freelance/Client Outreach tracker 1.xlsx"
         )
     }
 
@@ -278,12 +278,12 @@ foreach ($row in ($trackerTwoRows | Select-Object -Skip 1)) {
                 human_verified = $false
                 ownership_verification_required = $true
                 notes = @(
-                    "Normalized from workbook trackers; still requires human verification before any external send."
-                )
-            }
-            source_refs = @(
-                "documents/Freelance/client outreach tracker 2.xlsx"
+                "Normalized from workbook trackers; still requires human verification before any external send."
             )
+        }
+        source_refs = @(
+            "documents/Plans/Freelance/client outreach tracker 2.xlsx"
+        )
         }
     }
 
@@ -313,8 +313,8 @@ foreach ($row in ($trackerTwoRows | Select-Object -Skip 1)) {
     $entry.outreach_personalization.data_insights = Normalize-OptionalValue $row.V
     $entry.outreach_personalization.suggested_message = Normalize-OptionalValue $row.W
 
-    if (-not ($entry.source_refs -contains "documents/Freelance/client outreach tracker 2.xlsx")) {
-        $entry.source_refs += "documents/Freelance/client outreach tracker 2.xlsx"
+    if (-not ($entry.source_refs -contains "documents/Plans/Freelance/client outreach tracker 2.xlsx")) {
+        $entry.source_refs += "documents/Plans/Freelance/client outreach tracker 2.xlsx"
     }
 }
 
@@ -347,6 +347,26 @@ foreach ($key in $byOrganization.Keys) {
         $entry.outreach_readiness = "research_more"
     }
 
+    $segment = if ($null -ne $entry.focus_area) {
+        $entry.focus_area
+    } else {
+        "general-biodiversity-data-support"
+    }
+    $entry.segment = $segment
+    $entry.funnel_tracking = [ordered]@{
+        lead_id = $entry.organization_id
+        ownership_classification = $entry.ownership_classification
+        language = $entry.recommended_language
+        segment = $segment
+        offer_used = $null
+        proof_asset_used = $null
+        current_stage = $entry.pipeline_stage
+        last_touch_at = $null
+        next_action_at = $null
+        outcome = $null
+        human_verified = $entry.verification.human_verified
+    }
+
     $entry.verification.notes += "No autonomous send. Human review and contact verification stay mandatory."
     $normalizedLeads.Add($entry)
 }
@@ -376,8 +396,8 @@ $outputPayload = [ordered]@{
     purpose = "Normalized independent, non-Techni CRM built from freelance outreach trackers."
     ownership_rule = "All entries remain independent_candidate leads until a human confirms they are outside Techni-Drones ownership and approves outreach."
     sources = @(
-        "documents/Freelance/Client Outreach tracker 1.xlsx",
-        "documents/Freelance/client outreach tracker 2.xlsx",
+        "documents/Plans/Freelance/Client Outreach tracker 1.xlsx",
+        "documents/Plans/Freelance/client outreach tracker 2.xlsx",
         "documents/99_Agent_Ready/databases/prospect_targets.json"
     )
     summary = [ordered]@{

@@ -7,8 +7,8 @@ Source basis:
 - `Outreach Emails.docx`
 - `service statement alternatives.docx`
 - `Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx`
-- `documents/Freelance/Cleaning Summary.docx`
-- `documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok`
+- `documents/Plans/Freelance/Cleaning Summary.docx`
+- `documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok`
 
 ## Boundary Gate
 

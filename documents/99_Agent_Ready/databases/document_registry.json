@@ -212,7 +212,7 @@
     {
       "id": "current-cv-asset",
       "category": "profile",
-      "canonical_path": "documents/Freelance/Haja Fabrice Cv Optimized.docx",
+      "canonical_path": "documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx",
       "repo_mirror_path": null,
       "supersedes": [
         "documents/03_Freelance_And_Career/Profiles_And_Offers/Haja Fabrice Cv Optimized.docx",
@@ -227,7 +227,7 @@
     {
       "id": "current-cv-asset-fr",
       "category": "profile",
-      "canonical_path": "documents/Freelance/Haja Fabrice CV-EnvData-FR.docx",
+      "canonical_path": "documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx",
       "repo_mirror_path": null,
       "supersedes": [],
       "agent_uses": [
@@ -239,7 +239,7 @@
     {
       "id": "independent-outreach-plan",
       "category": "operations",
-      "canonical_path": "documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok",
+      "canonical_path": "documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok",
       "repo_mirror_path": "documents/99_Agent_Ready/references/freelance_operating_brief.md",
       "supersedes": [],
       "agent_uses": [
@@ -251,7 +251,7 @@
     {
       "id": "freelance-proof-sample-en",
       "category": "proof",
-      "canonical_path": "documents/Freelance/Cleaning Summary.docx",
+      "canonical_path": "documents/Plans/Freelance/Cleaning Summary.docx",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/freelance_proof_assets.json",
       "supersedes": [],
       "agent_uses": [
@@ -263,7 +263,7 @@
     {
       "id": "freelance-proof-sample-fr",
       "category": "proof",
-      "canonical_path": "documents/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.docx",
+      "canonical_path": "documents/Plans/Freelance/R\\u00e9sum\\u00e9 de nettoyage de jeu de donn\\u00e9es.docx",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/freelance_proof_assets.json",
       "supersedes": [],
       "agent_uses": [
@@ -274,7 +274,7 @@
     {
       "id": "freelance-cleaned-dataset-sample",
       "category": "proof",
-      "canonical_path": "documents/Freelance/cleaned_data.csv",
+      "canonical_path": "documents/Plans/Freelance/cleaned_data.csv",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/freelance_proof_assets.json",
       "supersedes": [],
       "agent_uses": [
@@ -286,7 +286,7 @@
     {
       "id": "independent-outreach-tracker-1",
       "category": "pipeline",
-      "canonical_path": "documents/Freelance/Client Outreach tracker 1.xlsx",
+      "canonical_path": "documents/Plans/Freelance/Client Outreach tracker 1.xlsx",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/independent_pipeline.json",
       "supersedes": [],
       "agent_uses": [
@@ -297,7 +297,7 @@
     {
       "id": "independent-outreach-tracker-2",
       "category": "pipeline",
-      "canonical_path": "documents/Freelance/client outreach tracker 2.xlsx",
+      "canonical_path": "documents/Plans/Freelance/client outreach tracker 2.xlsx",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/independent_pipeline.json",
       "supersedes": [],
       "agent_uses": [
@@ -336,6 +336,20 @@
       ]
     },
     {
+      "id": "marketing-intelligence-overlay",
+      "category": "operations",
+      "canonical_path": "documents/99_Agent_Ready/references/marketing_intelligence_overlay.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/marketing_intelligence_overlay.md",
+      "supersedes": [
+        "ad hoc campaign-planning notes without stable runtime artifacts"
+      ],
+      "agent_uses": [
+        "weekly campaign direction",
+        "funnel interpretation boundaries",
+        "role ownership for strategist and analyst overlays"
+      ]
+    },
+    {
       "id": "first-outbound-pack",
       "category": "templates",
       "canonical_path": "documents/99_Agent_Ready/templates/first_outbound_pack.md",
@@ -348,6 +362,20 @@
         "follow-up drafting",
         "reply handling",
         "EN and FR message consistency"
+      ]
+    },
+    {
+      "id": "marketing-intelligence-templates",
+      "category": "templates",
+      "canonical_path": "documents/99_Agent_Ready/templates/marketing_intelligence_templates.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/templates/marketing_intelligence_templates.md",
+      "supersedes": [
+        "implied strategist or analyst output shapes"
+      ],
+      "agent_uses": [
+        "weekly marketing brief structure",
+        "weekly funnel review structure",
+        "CRM cleanup note structure"
       ]
     },
     {

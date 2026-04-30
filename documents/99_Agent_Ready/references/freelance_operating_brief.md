@@ -2,7 +2,7 @@
 
 Updated: 2026-04-27
 
-This brief captures what the `documents/Freelance/` folder adds to the system
+This brief captures what the `documents/Plans/Freelance/` folder adds to the system
 for independent, non-Techni business development.
 
 ## Strongest Verified Assets
@@ -79,8 +79,8 @@ for independent, non-Techni business development.
 
 ## Source Basis
 
-- `documents/Freelance/Cleaning Summary.docx`
-- `documents/Freelance/cleaned_data.csv`
-- `documents/Freelance/Haja Fabrice Cv Optimized.docx`
-- `documents/Freelance/Haja Fabrice CV-EnvData-FR.docx`
-- `documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok`
+- `documents/Plans/Freelance/Cleaning Summary.docx`
+- `documents/Plans/Freelance/cleaned_data.csv`
+- `documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx`
+- `documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx`
+- `documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok`

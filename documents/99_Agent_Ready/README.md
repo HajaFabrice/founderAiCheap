@@ -34,13 +34,13 @@ operations instead of relying on raw mixed-version source files.
 
 ## Current Canonical Freelance Sources
 
-- `documents/Freelance/Cleaning Summary.docx`
-- `documents/Freelance/cleaned_data.csv`
-- `documents/Freelance/Haja Fabrice Cv Optimized.docx`
-- `documents/Freelance/Haja Fabrice CV-EnvData-FR.docx`
-- `documents/Freelance/30-Day NGO Outreach & Contract Plan - Grok`
-- `documents/Freelance/Client Outreach tracker 1.xlsx`
-- `documents/Freelance/client outreach tracker 2.xlsx`
+- `documents/Plans/Freelance/Cleaning Summary.docx`
+- `documents/Plans/Freelance/cleaned_data.csv`
+- `documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx`
+- `documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx`
+- `documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok`
+- `documents/Plans/Freelance/Client Outreach tracker 1.xlsx`
+- `documents/Plans/Freelance/client outreach tracker 2.xlsx`
 
 ## Subfolders
 
@@ -52,6 +52,7 @@ operations instead of relying on raw mixed-version source files.
 
 - `references/independent_business_boundary.md`
 - `references/independent_marketing_brief.md`
+- `references/marketing_intelligence_overlay.md`
 - `references/freelance_operating_brief.md`
 - `references/agent_conversation_reference.md`
 - `references/new_contact_answer_bank.md`
@@ -66,6 +67,7 @@ operations instead of relying on raw mixed-version source files.
 - `databases/eris_scoring_defaults.json`
 - `templates/independent_freelance_templates.md`
 - `templates/first_outbound_pack.md`
+- `templates/marketing_intelligence_templates.md`
 
 ## Working Rule For Agents
 

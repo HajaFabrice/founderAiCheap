@@ -332,6 +332,26 @@
       "prompt": "Generate the daily task list for all 6 saint-mapped roles and create role-specific inbox requests that stay bounded, auditable, and approval-safe."
     },
     {
+      "id": "weekly-marketing-brief",
+      "description": "Produce the weekly campaign brief for the independent outreach engine.",
+      "enabled": true,
+      "triggers": [
+        "periodic"
+      ],
+      "requires_internet": false,
+      "approval_policy": "never",
+      "risk_tags": [],
+      "mode": "single",
+      "run_at_local": "06:15",
+      "weekdays": [
+        "Monday"
+      ],
+      "task_label": "Weekly Marketing Brief",
+      "task_type": "briefing",
+      "agent_id": "hildegard",
+      "prompt": "Act as the marketing strategist overlay for independent, non-Techni outreach. Use the latest funnel snapshot, shortlist scorecard, proof assets, and employer-boundary rules to produce this week's campaign brief for Anthony, Bonaventure, Zacchaeus, and Perpetua. Include the target segment for the week, priority organizations, selected proof asset, primary CTA, EN vs FR emphasis, and risks or boundaries. If live signal is weak, say so plainly and recommend the next bounded experiment instead of pretending certainty."
+    },
+    {
       "id": "outreach-batch",
       "description": "Run the 3 outreach lanes in parallel draft mode.",
       "enabled": true,
@@ -414,6 +434,26 @@
       "task_type": "grant",
       "agent_id": "bartholomew",
       "prompt": "Review the active grant pipeline, prioritize the next submission requirement, and draft one bounded asset: narrative paragraph, budget note, attachment checklist, or 3-line cover email. Keep every claim evidence-based, keep Techni-Drones Madagascar as institutional host when appropriate, and use the M350 RTK + H30T + Altum-PT stack as the first equipment ask."
+    },
+    {
+      "id": "weekly-funnel-review",
+      "description": "Review funnel performance, stalled leads, and weak campaign assumptions.",
+      "enabled": true,
+      "triggers": [
+        "periodic"
+      ],
+      "requires_internet": false,
+      "approval_policy": "never",
+      "risk_tags": [],
+      "mode": "single",
+      "run_at_local": "08:00",
+      "weekdays": [
+        "Monday"
+      ],
+      "task_label": "Weekly Funnel Review",
+      "task_type": "final_review",
+      "agent_id": "francis",
+      "prompt": "Act as the growth and data analyst overlay for the independent, non-Techni pipeline. Review the latest funnel snapshot, shortlist scorecard, and weekly marketing brief. Report outreach counts by stage, response rates, EN versus FR patterns, best-performing segment, best-performing proof asset, stalled leads, and the next experiment. If sent_count is zero or the signal is too thin, say insufficient_live_signal explicitly and recommend what needs to be measured next."
     },
     {
       "id": "weekly-strategy-review",

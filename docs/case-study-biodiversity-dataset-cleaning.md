@@ -56,6 +56,6 @@ large consulting process.
 
 ## Related Assets
 
-- English cleanup summary in `documents/Freelance/Cleaning Summary.docx`
-- French cleanup summary in `documents/Freelance/Resume de nettoyage de jeu de donnees.docx`
-- cleaned CSV example in `documents/Freelance/cleaned_data.csv`
+- English cleanup summary in `documents/Plans/Freelance/Cleaning Summary.docx`
+- French cleanup summary in `documents/Plans/Freelance/Resume de nettoyage de jeu de donnees.docx`
+- cleaned CSV example in `documents/Plans/Freelance/cleaned_data.csv`

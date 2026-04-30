@@ -10,9 +10,12 @@ fields, verify facts, and keep approvals in place.
 - `Anthony`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
+  - `references/marketing_intelligence_overlay.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `runtime/marketing/latest_marketing_brief.md`
+  - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
   - `independent_freelance_templates.md`
@@ -20,9 +23,12 @@ fields, verify facts, and keep approvals in place.
 - `Zacchaeus`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
+  - `references/marketing_intelligence_overlay.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `runtime/marketing/latest_marketing_brief.md`
+  - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
   - `independent_freelance_templates.md`
@@ -30,9 +36,12 @@ fields, verify facts, and keep approvals in place.
 - `Perpetua`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
+  - `references/marketing_intelligence_overlay.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `runtime/marketing/latest_marketing_brief.md`
+  - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
   - `independent_freelance_templates.md`
@@ -40,9 +49,12 @@ fields, verify facts, and keep approvals in place.
 - `Bonaventure`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
+  - `references/marketing_intelligence_overlay.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `runtime/marketing/latest_marketing_brief.md`
+  - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
   - `independent_freelance_templates.md`
@@ -54,10 +66,15 @@ fields, verify facts, and keep approvals in place.
   - `research_and_applications.md`
   - use supervisor and programme contact patterns
 - `Duns Scotus`
+  - `references/marketing_intelligence_overlay.md`
+  - `databases/independent_pipeline.json`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
+  - `runtime/marketing/independent_funnel.json`
+  - `runtime/marketing/latest_funnel_review.md`
   - `research_and_applications.md`
-  - use statement, proposal-note, and application framing
+  - `marketing_intelligence_templates.md`
+  - use statement, proposal-note, application framing, and evidence interpretation for funnel decisions
 - `Bartholomew`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
@@ -70,16 +87,35 @@ fields, verify facts, and keep approvals in place.
   - use deadline-entry structure
 - `Hildegard`
   - `references/collaboration_charter.md`
+  - `references/marketing_intelligence_overlay.md`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
+  - `databases/review_ready_outreach_shortlist.json`
+  - `runtime/marketing/independent_funnel.json`
+  - `runtime/marketing/review_ready_shortlist_scorecard.json`
   - `internal_operations.md`
-  - use morning briefing and meeting-note patterns
+  - `marketing_intelligence_templates.md`
+  - use morning briefing, meeting-note, and weekly marketing brief patterns
 - `Francis`
   - `references/collaboration_charter.md`
+  - `references/marketing_intelligence_overlay.md`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
+  - `runtime/marketing/independent_funnel.json`
+  - `runtime/marketing/review_ready_shortlist_scorecard.json`
+  - `runtime/marketing/latest_marketing_brief.md`
   - `internal_operations.md`
-  - use weekly review agenda and KPI discipline
+  - `marketing_intelligence_templates.md`
+  - use weekly review agenda, KPI discipline, and weekly funnel review structure
+- `Juniper`
+  - `references/marketing_intelligence_overlay.md`
+  - `databases/independent_crm.json`
+  - `databases/independent_pipeline.json`
+  - `runtime/marketing/independent_funnel.json`
+  - `runtime/marketing/review_ready_shortlist_scorecard.json`
+  - `internal_operations.md`
+  - `marketing_intelligence_templates.md`
+  - use CRM cleanup, funnel hygiene, and service-asset support patterns
 - `Columban`
   - `references/collaboration_charter.md`
   - `internal_operations.md`

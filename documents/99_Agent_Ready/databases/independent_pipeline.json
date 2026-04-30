@@ -25,11 +25,38 @@
     "follow_up_due",
     "reply_received",
     "scope_clarification",
+    "meeting_booked",
     "proposal_sent",
     "won",
     "lost",
     "paused"
   ],
+  "funnel_fields_required": [
+    "lead_id",
+    "ownership_classification",
+    "language",
+    "segment",
+    "offer_used",
+    "proof_asset_used",
+    "current_stage",
+    "last_touch_at",
+    "next_action_at",
+    "outcome",
+    "human_verified"
+  ],
+  "funnel_field_guidance": {
+    "lead_id": "Use the normalized organization_id from independent_crm.json.",
+    "ownership_classification": "Must remain independent_candidate or another clearly non-Techni classification until a human says otherwise.",
+    "language": "Track the language actually used for outreach, not only the recommended language.",
+    "segment": "Use the current outreach segment or the lead's closest fit area.",
+    "offer_used": "Record the exact entry offer used in the touchpoint.",
+    "proof_asset_used": "Record the proof asset that anchored the message, if any.",
+    "current_stage": "Use the stage list in this file and avoid inventing parallel labels.",
+    "last_touch_at": "RFC3339 timestamp or YYYY-MM-DD.",
+    "next_action_at": "RFC3339 timestamp or YYYY-MM-DD for the next human or agent action.",
+    "outcome": "Use plain outcomes like replied, meeting-booked, won, lost, paused, or null when none exists yet.",
+    "human_verified": "True only when a human has verified lead ownership and the current contact route."
+  },
   "first_cycle_targets": {
     "verified_non_techni_prospects": 20,
     "success_metric": "first independent income or two to three active conversations",
@@ -63,6 +90,7 @@
     "Do not pitch ERIS during first-cycle independent outreach.",
     "Use sample-review offers to reduce friction before quoting.",
     "Execution and proof matter more than expanding the system.",
-    "The normalized CRM supports drafting and prioritization, but human contact verification is still mandatory before any external send."
+    "The normalized CRM supports drafting and prioritization, but human contact verification is still mandatory before any external send.",
+    "If no real sends happened in a review window, strategist and analyst outputs must say insufficient_live_signal instead of inventing conclusions."
   ]
 }
