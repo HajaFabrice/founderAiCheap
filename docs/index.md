@@ -13,6 +13,8 @@ and it is now synced to the April 2026 Techni-Drones and ERIS V4 document set.
 - [Contributor backlog](contributor-backlog.md)
 - [GitHub admin checklist](github-admin-checklist.md)
 - [Provider troubleshooting](provider-troubleshooting.md)
+- [Cloud deployment](cloud-deployment.md)
+- [Cloud operations](cloud-operations.md)
 
 ## Independent Marketing Pack
 

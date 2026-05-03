@@ -32,6 +32,13 @@ operations instead of relying on raw mixed-version source files.
 - `documents/03_Freelance_And_Career/Profiles_And_Offers/Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx`
 - `documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/The Billion-Scale Business Blueprint.txt`
 
+## Current Canonical Digital Product Sources
+
+- `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
+- `documents/oplurix-site/ExpertToInfluencer.txt`
+- `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
+- `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+
 ## Current Canonical Freelance Sources
 
 - `documents/Plans/Freelance/Cleaning Summary.docx`
@@ -58,6 +65,7 @@ operations instead of relying on raw mixed-version source files.
 - `references/new_contact_answer_bank.md`
 - `references/collaboration_charter.md`
 - `references/eris_metadata_governance.md`
+- `references/digital_products_sales_brief.md`
 - `databases/freelance_proof_assets.json`
 - `databases/independent_service_catalog.json`
 - `databases/independent_pipeline.json`
@@ -65,9 +73,12 @@ operations instead of relying on raw mixed-version source files.
 - `databases/review_ready_outreach_shortlist.json`
 - `databases/founder_profile_blocks.json`
 - `databases/eris_scoring_defaults.json`
+- `databases/digital_products_catalog.json`
 - `templates/independent_freelance_templates.md`
 - `templates/first_outbound_pack.md`
+- `templates/ecor_first_sale_launch_pack.md`
 - `templates/marketing_intelligence_templates.md`
+- `templates/digital_product_sales_templates.md`
 
 ## Working Rule For Agents
 

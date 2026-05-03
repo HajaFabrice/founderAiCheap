@@ -1,0 +1,160 @@
+{
+  "generated_at": "2026-05-02",
+  "brand": {
+    "name": "OPLURIX",
+    "tagline": "Ecological Intelligence for Conservation Finance",
+    "mission_note": "Digital product revenue supports the longer ERIS mission.",
+    "language_rule": "Public storefront copy must work in English and French.",
+    "public_contact": {
+      "email": "hajafabriceeris@gmail.com",
+      "phone": "+261349414112"
+    }
+  },
+  "sales_channels": {
+    "primary_frontend": "Netlify static storefront",
+    "checkout": "PayPal payment links or buy buttons",
+    "delivery_mode": "Manual email delivery after payment confirmation during the first sales cycle",
+    "manual_delivery_window_hours": 12,
+    "checkout_status": "PAYPAL_SMART_BUTTONS_WITH_MANUAL_FALLBACK",
+    "non_goals": [
+      "Do not imply instant automated digital delivery if manual delivery is still in use.",
+      "Do not require Gumroad for the first launch if Netlify plus PayPal is sufficient.",
+      "Do not mix Techni-Drones employer promotion with product checkout copy."
+    ]
+  },
+  "products": [
+    {
+      "id": "expert_to_influencer_content_engine",
+      "status": "live",
+      "headline": "Turn field notes, research, and conservation work into clear LinkedIn content.",
+      "price_usd": 39,
+      "launch_pricing_note": "Founder-launch price while delivery is still manual and the first buyer feedback loop is being built.",
+      "primary_cta": "Buy with PayPal",
+      "fallback_cta": "Request a PayPal checkout link",
+      "audience": [
+        "biodiversity researchers",
+        "conservation NGO workers",
+        "field biologists",
+        "graduate students"
+      ],
+      "core_promise": "Help conservation professionals turn real field and research work into credible thought-leadership content without sounding fake, promotional, or scientifically careless.",
+      "what_is_inside": [
+        "capture templates for field notes and project observations",
+        "LinkedIn post prompts for conservation communication",
+        "content frameworks grounded in science communication",
+        "editing checklist for clarity and authority",
+        "ethics and safety guide for sensitive conservation information"
+      ],
+      "truthful_outcomes": [
+        "less blank-page friction",
+        "clearer scientific communication",
+        "more consistent visibility for real expertise"
+      ],
+      "source_documents": [
+        "documents/oplurix-site/OPLURIX_Master_Context_Brief.md",
+        "documents/oplurix-site/ExpertToInfluencer.txt"
+      ],
+      "delivery_assets": [
+        "PDF or document bundle",
+        "prompt pack",
+        "framework and example library"
+      ]
+    },
+    {
+      "id": "ecor_toolkit",
+      "status": "live",
+      "first_sale_focus_tier_id": "ecor_toolkit_tier_2_complete_toolkit",
+      "headline": "Go from raw field data to cleaner tables, figures, and Results-ready outputs faster.",
+      "pricing_model": "three-tier_hormozi_aligned",
+      "pricing_strategy_note": "Use a low entry tier, a clearly preferred middle tier, and a higher anchor tier with real added support.",
+      "public_tiers": [
+        {
+          "id": "ecor_toolkit_tier_1_starter",
+          "legacy_package_name": "EcoR_Toolkit_Tier_1_Starter_19USD",
+          "public_label": "EcoR Toolkit Starter",
+          "status": "live",
+          "role": "entry",
+          "price_usd": 29,
+          "headline": "The core R and AI workflow for biodiversity data.",
+          "cta": "Buy Starter with PayPal",
+          "truthful_positioning": "Low-friction entry point for buyers who mainly need the core scripts and prompts."
+        },
+        {
+          "id": "ecor_toolkit_tier_2_complete_toolkit",
+          "legacy_package_name": "EcoR_Toolkit_Tier_2_Complete_Toolkit_39USD",
+          "public_label": "EcoR Toolkit Complete",
+          "status": "live",
+          "role": "target",
+          "price_usd": 97,
+          "headline": "The full workflow from field notes to cleaner tables, figures, and Results-ready drafts.",
+          "cta": "Buy Complete with PayPal",
+          "truthful_positioning": "Main offer tier. This is the version the storefront should steer most buyers toward."
+        },
+        {
+          "id": "ecor_toolkit_tier_3_pro_bundle",
+          "legacy_package_name": "EcoR_Toolkit_Tier_3_Pro_Bundle_69USD",
+          "public_label": "EcoR Toolkit Pro Bundle",
+          "status": "coming_soon",
+          "checkout_enabled": false,
+          "role": "anchor",
+          "price_usd": 149,
+          "headline": "The planned full EcoR workflow with walkthroughs, community access, and one month of email support.",
+          "cta": "Request Pro access",
+          "truthful_positioning": "Public anchor tier only. Do not take payment until the walkthrough assets and support workflow are actually ready."
+        }
+      ],
+      "fallback_cta": "Request a PayPal checkout link",
+      "audience": [
+        "ecology and biology graduate students",
+        "early-career researchers",
+        "field biologists",
+        "conservation researchers working with biodiversity count data"
+      ],
+      "core_promise": "Help buyers move from messy biodiversity field data to usable R workflows, figures, and interpretation-ready outputs without wasting hours on scattered tutorials.",
+      "what_is_inside": [
+        "annotated R scripts",
+        "Claude prompt library for debugging and interpretation",
+        "field data templates",
+        "ggplot2 figure templates",
+        "workflow guide from field notes to Results section"
+      ],
+      "truthful_outcomes": [
+        "faster analysis setup",
+        "cleaner biodiversity data workflows",
+        "better starting point for figures and written results"
+      ],
+      "future_pricing_strategy_note": "Future price increases should be tied to added proof, new assets, or stronger support rather than arbitrary repositioning.",
+      "first_sale_delivery_rule": "Verify payment in PayPal first, then send the Google Drive delivery link manually by email and log the fulfillment event.",
+      "source_documents": [
+        "documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md",
+        "documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md"
+      ],
+      "delivery_assets": [
+        "script bundle",
+        "prompt bundle",
+        "template files",
+        "workflow guide"
+      ]
+    }
+  ],
+  "shared_copy_rules": {
+    "tone": [
+      "smart",
+      "practical",
+      "scientific",
+      "no hype"
+    ],
+    "always_include": [
+      "clear product outcome",
+      "who it is for",
+      "manual-delivery truth if checkout automation is not live yet",
+      "one clean CTA"
+    ],
+    "never_claim": [
+      "automatic virality",
+      "guaranteed publication acceptance",
+      "instant research mastery",
+      "fully automated delivery when that is not yet true"
+    ]
+  }
+}

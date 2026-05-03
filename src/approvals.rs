@@ -75,7 +75,13 @@ fn quote_shell(text: &str) -> String {
     format!("'{}'", text.replace('\'', "'\"'\"'"))
 }
 
-fn approval_command(executable_path: &Path, approval_id: &str, action: &str, config_path: &Path, notes: Option<&str>) -> String {
+fn approval_command(
+    executable_path: &Path,
+    approval_id: &str,
+    action: &str,
+    config_path: &Path,
+    notes: Option<&str>,
+) -> String {
     let mut command = if cfg!(windows) {
         format!(
             "{} {} \"{}\" --config \"{}\"",
@@ -162,10 +168,16 @@ fn write_summary_files(
     } else {
         format!("#!/usr/bin/env bash\nset -euo pipefail\n{reject_cmd}{line_ending}")
     };
-    fs::write(command_path(runtime_dir, approval_id, "approve"), approve_content)
-        .with_context(|| format!("failed to write approve helper for {approval_id}"))?;
-    fs::write(command_path(runtime_dir, approval_id, "reject"), reject_content)
-        .with_context(|| format!("failed to write reject helper for {approval_id}"))?;
+    fs::write(
+        command_path(runtime_dir, approval_id, "approve"),
+        approve_content,
+    )
+    .with_context(|| format!("failed to write approve helper for {approval_id}"))?;
+    fs::write(
+        command_path(runtime_dir, approval_id, "reject"),
+        reject_content,
+    )
+    .with_context(|| format!("failed to write reject helper for {approval_id}"))?;
     Ok(())
 }
 
@@ -198,10 +210,17 @@ pub fn create_approval_request(
     let path = approvals_root(runtime_dir)
         .join("pending")
         .join(format!("{approval_id}.json"));
-    let payload_text = serde_json::to_string_pretty(&payload).context("failed to serialize approval payload")?;
+    let payload_text =
+        serde_json::to_string_pretty(&payload).context("failed to serialize approval payload")?;
     fs::write(&path, payload_text)
         .with_context(|| format!("failed to write approval payload {}", path.display()))?;
-    write_summary_files(runtime_dir, approval_id, &payload, config_path, executable_path)?;
+    write_summary_files(
+        runtime_dir,
+        approval_id,
+        &payload,
+        config_path,
+        executable_path,
+    )?;
     Ok(path)
 }
 
@@ -232,19 +251,36 @@ pub fn list_pending_approvals(runtime_dir: &Path) -> Result<Vec<PendingApproval>
 
 pub fn approval_decision(runtime_dir: &Path, approval_id: &str) -> Option<ApprovalDecision> {
     let root = approvals_root(runtime_dir);
-    if root.join("approved").join(format!("{approval_id}.json")).exists() {
+    if root
+        .join("approved")
+        .join(format!("{approval_id}.json"))
+        .exists()
+    {
         return Some(ApprovalDecision::Approved);
     }
-    if root.join("rejected").join(format!("{approval_id}.json")).exists() {
+    if root
+        .join("rejected")
+        .join(format!("{approval_id}.json"))
+        .exists()
+    {
         return Some(ApprovalDecision::Rejected);
     }
-    if root.join("pending").join(format!("{approval_id}.json")).exists() {
+    if root
+        .join("pending")
+        .join(format!("{approval_id}.json"))
+        .exists()
+    {
         return Some(ApprovalDecision::Pending);
     }
     None
 }
 
-pub fn decide_approval(runtime_dir: &Path, approval_id: &str, decision: ApprovalDecision, notes: &str) -> Result<PathBuf> {
+pub fn decide_approval(
+    runtime_dir: &Path,
+    approval_id: &str,
+    decision: ApprovalDecision,
+    notes: &str,
+) -> Result<PathBuf> {
     ensure_approval_dirs(runtime_dir)?;
     let pending_path = approvals_root(runtime_dir)
         .join("pending")
@@ -264,9 +300,14 @@ pub fn decide_approval(runtime_dir: &Path, approval_id: &str, decision: Approval
     let destination = approvals_root(runtime_dir)
         .join(decision.as_str())
         .join(format!("{approval_id}.json"));
-    let payload_text = serde_json::to_string_pretty(&payload).context("failed to serialize approval decision")?;
-    fs::write(&destination, payload_text)
-        .with_context(|| format!("failed to write approval decision {}", destination.display()))?;
+    let payload_text =
+        serde_json::to_string_pretty(&payload).context("failed to serialize approval decision")?;
+    fs::write(&destination, payload_text).with_context(|| {
+        format!(
+            "failed to write approval decision {}",
+            destination.display()
+        )
+    })?;
 
     fs::remove_file(&pending_path).ok();
     fs::remove_file(summary_path(runtime_dir, approval_id)).ok();

@@ -64,14 +64,23 @@ fn failed_dir(config: &AppConfig) -> PathBuf {
 }
 
 pub fn ensure_offline_queue_dirs(config: &AppConfig) -> Result<()> {
-    for path in [queue_root(config), pending_dir(config), replayed_dir(config), failed_dir(config)] {
+    for path in [
+        queue_root(config),
+        pending_dir(config),
+        replayed_dir(config),
+        failed_dir(config),
+    ] {
         fs::create_dir_all(&path)
             .with_context(|| format!("failed to create {}", path.display()))?;
     }
     Ok(())
 }
 
-fn dedupe_key(job: &JobConfig, role: Option<&TeamRoleConfig>, request_source: Option<&Path>) -> String {
+fn dedupe_key(
+    job: &JobConfig,
+    role: Option<&TeamRoleConfig>,
+    request_source: Option<&Path>,
+) -> String {
     if let Some(request_source) = request_source {
         return format!(
             "request::{}",
@@ -82,7 +91,11 @@ fn dedupe_key(job: &JobConfig, role: Option<&TeamRoleConfig>, request_source: Op
         );
     }
 
-    let logical_job_id = job.job_id.split_once("--").map(|(left, _)| left).unwrap_or(&job.job_id);
+    let logical_job_id = job
+        .job_id
+        .split_once("--")
+        .map(|(left, _)| left)
+        .unwrap_or(&job.job_id);
     if let Some(role) = role {
         format!("job::{logical_job_id}::{}", role.role_id)
     } else {
@@ -152,7 +165,8 @@ pub fn enqueue_offline_job(
         request_source: request_source.map(|path| path.display().to_string()),
     };
 
-    let payload = serde_json::to_string_pretty(&entry).context("failed to serialize offline queue entry")?;
+    let payload =
+        serde_json::to_string_pretty(&entry).context("failed to serialize offline queue entry")?;
     fs::write(&json_path, payload)
         .with_context(|| format!("failed to write {}", json_path.display()))?;
 
@@ -212,8 +226,13 @@ where
                 .and_then(|value| value.to_str())
                 .unwrap_or("offline-entry.json"),
         );
-        fs::rename(&path, &destination)
-            .with_context(|| format!("failed to move {} to {}", path.display(), destination.display()))?;
+        fs::rename(&path, &destination).with_context(|| {
+            format!(
+                "failed to move {} to {}",
+                path.display(),
+                destination.display()
+            )
+        })?;
 
         let summary_path = pending_summary_path(config, &entry.dedupe_key);
         if summary_path.exists() {

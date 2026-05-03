@@ -6,7 +6,15 @@ use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-const CSV_HEADERS: [&str; 7] = ["Date", "Team", "Role", "Task", "Status", "Notes", "MetricValue"];
+const CSV_HEADERS: [&str; 7] = [
+    "Date",
+    "Team",
+    "Role",
+    "Task",
+    "Status",
+    "Notes",
+    "MetricValue",
+];
 
 pub fn ensure_log_files(runtime_dir: &Path) -> Result<(PathBuf, PathBuf)> {
     let logs_dir = runtime_dir.join("logs");
@@ -57,7 +65,9 @@ pub fn append_team_activity(
         .append(true)
         .open(&csv_path)
         .with_context(|| format!("failed to open {}", csv_path.display()))?;
-    let mut writer = WriterBuilder::new().has_headers(false).from_writer(csv_file);
+    let mut writer = WriterBuilder::new()
+        .has_headers(false)
+        .from_writer(csv_file);
     writer
         .write_record([
             &date_value,
@@ -80,15 +90,22 @@ pub fn append_team_activity(
     payload.insert("Task".to_string(), Value::String(task.to_string()));
     payload.insert("Status".to_string(), Value::String(status.to_string()));
     payload.insert("Notes".to_string(), Value::String(notes.to_string()));
-    payload.insert("MetricValue".to_string(), Value::Number(metric_value.into()));
-    payload.insert("timestamp_utc".to_string(), Value::String(Utc::now().to_rfc3339()));
+    payload.insert(
+        "MetricValue".to_string(),
+        Value::Number(metric_value.into()),
+    );
+    payload.insert(
+        "timestamp_utc".to_string(),
+        Value::String(Utc::now().to_rfc3339()),
+    );
     if let Some(extra_map) = extra {
         for (key, value) in extra_map {
             payload.insert(key, value);
         }
     }
 
-    let mut jsonl_text = serde_json::to_string(&payload).context("failed to serialize team activity entry")?;
+    let mut jsonl_text =
+        serde_json::to_string(&payload).context("failed to serialize team activity entry")?;
     jsonl_text.push('\n');
     let mut jsonl_file = OpenOptions::new()
         .append(true)

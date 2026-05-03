@@ -1,44 +1,88 @@
 use crate::app::{ApprovalSnapshot, AutonomyApp, RunDetailSnapshot, RunListEntry, StatusSnapshot};
 use anyhow::{Context, Result};
-use axum::{
-    extract::{Form, Path, Query, State},
-    http::StatusCode,
-    response::{Html, IntoResponse, Redirect},
-    routing::{get, post},
-    Json, Router,
-};
-use serde::Deserialize;
+use serde::Serialize;
 use serde_json::json;
-use std::net::SocketAddr;
+use std::collections::BTreeMap;
+use std::io::{BufRead, BufReader, Read, Write};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
 
 #[derive(Clone)]
 struct WebState {
     app: Arc<AutonomyApp>,
 }
 
-#[derive(Debug, Deserialize, Default)]
-struct StatusQuery {
-    teams: Option<bool>,
+#[derive(Debug)]
+struct HttpRequest {
+    method: String,
+    path: String,
+    query: BTreeMap<String, String>,
+    body: Vec<u8>,
 }
 
-#[derive(Debug, Deserialize, Default)]
-struct RequestFormPayload {
-    title: String,
-    body: String,
-    approval_policy: Option<String>,
-    risk_tags: Option<String>,
-    requires_internet: Option<String>,
-    role_id: Option<String>,
+struct WebResponse {
+    status_code: u16,
+    reason_phrase: &'static str,
+    content_type: &'static str,
+    body: Vec<u8>,
+    extra_headers: Vec<(String, String)>,
 }
 
-#[derive(Debug, Deserialize, Default)]
-struct DecisionFormPayload {
-    notes: Option<String>,
+fn html_response(body: String) -> WebResponse {
+    WebResponse {
+        status_code: 200,
+        reason_phrase: "OK",
+        content_type: "text/html; charset=utf-8",
+        body: body.into_bytes(),
+        extra_headers: Vec::new(),
+    }
 }
 
-fn internal_error(err: anyhow::Error) -> (StatusCode, String) {
-    (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
+fn json_response<T: Serialize>(value: &T) -> WebResponse {
+    match serde_json::to_vec_pretty(value) {
+        Ok(body) => WebResponse {
+            status_code: 200,
+            reason_phrase: "OK",
+            content_type: "application/json; charset=utf-8",
+            body,
+            extra_headers: Vec::new(),
+        },
+        Err(err) => internal_error(anyhow::anyhow!("failed to serialize JSON response: {err}")),
+    }
+}
+
+fn text_response(status_code: u16, reason_phrase: &'static str, body: String) -> WebResponse {
+    WebResponse {
+        status_code,
+        reason_phrase,
+        content_type: "text/plain; charset=utf-8",
+        body: body.into_bytes(),
+        extra_headers: Vec::new(),
+    }
+}
+
+fn redirect_response(location: &str) -> WebResponse {
+    WebResponse {
+        status_code: 303,
+        reason_phrase: "See Other",
+        content_type: "text/plain; charset=utf-8",
+        body: Vec::new(),
+        extra_headers: vec![("Location".to_string(), location.to_string())],
+    }
+}
+
+fn bad_request(message: &str) -> WebResponse {
+    text_response(400, "Bad Request", message.to_string())
+}
+
+fn not_found() -> WebResponse {
+    text_response(404, "Not Found", "not found".to_string())
+}
+
+fn internal_error(err: anyhow::Error) -> WebResponse {
+    text_response(500, "Internal Server Error", err.to_string())
 }
 
 fn escape_html(raw: &str) -> String {
@@ -54,6 +98,156 @@ fn escape_html(raw: &str) -> String {
         }
     }
     escaped
+}
+
+fn decode_hex_nibble(value: u8) -> Option<u8> {
+    match value {
+        b'0'..=b'9' => Some(value - b'0'),
+        b'a'..=b'f' => Some(value - b'a' + 10),
+        b'A'..=b'F' => Some(value - b'A' + 10),
+        _ => None,
+    }
+}
+
+fn percent_decode(raw: &str) -> String {
+    let bytes = raw.as_bytes();
+    let mut output = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'+' => {
+                output.push(b' ');
+                index += 1;
+            }
+            b'%' if index + 2 < bytes.len() => {
+                if let (Some(high), Some(low)) = (
+                    decode_hex_nibble(bytes[index + 1]),
+                    decode_hex_nibble(bytes[index + 2]),
+                ) {
+                    output.push((high << 4) | low);
+                    index += 3;
+                } else {
+                    output.push(bytes[index]);
+                    index += 1;
+                }
+            }
+            value => {
+                output.push(value);
+                index += 1;
+            }
+        }
+    }
+
+    String::from_utf8_lossy(&output).into_owned()
+}
+
+fn parse_form_encoded(raw: &str) -> BTreeMap<String, String> {
+    let mut map = BTreeMap::new();
+    for pair in raw.split('&') {
+        if pair.is_empty() {
+            continue;
+        }
+        let (key, value) = pair.split_once('=').unwrap_or((pair, ""));
+        map.insert(percent_decode(key), percent_decode(value));
+    }
+    map
+}
+
+fn parse_request_path(raw_target: &str) -> (String, BTreeMap<String, String>) {
+    let (path, query) = raw_target.split_once('?').unwrap_or((raw_target, ""));
+    let query_map = if query.is_empty() {
+        BTreeMap::new()
+    } else {
+        parse_form_encoded(query)
+    };
+    (path.to_string(), query_map)
+}
+
+fn read_http_request(stream: &TcpStream) -> Result<HttpRequest> {
+    let cloned = stream.try_clone().context("failed to clone TCP stream")?;
+    let mut reader = BufReader::new(cloned);
+
+    let mut request_line = String::new();
+    reader
+        .read_line(&mut request_line)
+        .context("failed to read request line")?;
+    if request_line.trim().is_empty() {
+        anyhow::bail!("received an empty request line");
+    }
+
+    let mut request_parts = request_line.split_whitespace();
+    let method = request_parts
+        .next()
+        .context("request line was missing an HTTP method")?
+        .to_string();
+    let target = request_parts
+        .next()
+        .context("request line was missing a request target")?;
+    let _version = request_parts
+        .next()
+        .context("request line was missing an HTTP version")?;
+
+    let (path, query) = parse_request_path(target);
+
+    let mut headers = BTreeMap::new();
+    loop {
+        let mut line = String::new();
+        reader
+            .read_line(&mut line)
+            .context("failed to read HTTP headers")?;
+        let trimmed = line.trim_end_matches(['\r', '\n']);
+        if trimmed.is_empty() {
+            break;
+        }
+        if let Some((key, value)) = trimmed.split_once(':') {
+            headers.insert(key.trim().to_ascii_lowercase(), value.trim().to_string());
+        }
+    }
+
+    let content_length = headers
+        .get("content-length")
+        .and_then(|value| value.parse::<usize>().ok())
+        .unwrap_or(0);
+    let mut body = vec![0_u8; content_length];
+    if content_length > 0 {
+        reader
+            .read_exact(&mut body)
+            .context("failed to read request body")?;
+    }
+
+    Ok(HttpRequest {
+        method,
+        path,
+        query,
+        body,
+    })
+}
+
+fn write_response(stream: &mut TcpStream, response: WebResponse) -> Result<()> {
+    let mut headers = vec![
+        format!(
+            "HTTP/1.1 {} {}\r\n",
+            response.status_code, response.reason_phrase
+        ),
+        format!("Content-Type: {}\r\n", response.content_type),
+        format!("Content-Length: {}\r\n", response.body.len()),
+        "Connection: close\r\n".to_string(),
+    ];
+    for (name, value) in response.extra_headers {
+        headers.push(format!("{name}: {value}\r\n"));
+    }
+    headers.push("\r\n".to_string());
+
+    for header in headers {
+        stream
+            .write_all(header.as_bytes())
+            .context("failed to write HTTP headers")?;
+    }
+    stream
+        .write_all(&response.body)
+        .context("failed to write HTTP body")?;
+    stream.flush().context("failed to flush HTTP response")?;
+    Ok(())
 }
 
 fn render_pending_approvals(approvals: &[ApprovalSnapshot]) -> String {
@@ -145,11 +339,7 @@ fn render_recent_runs(runs: &[RunListEntry]) -> String {
 }
 
 fn render_status(snapshot: &StatusSnapshot) -> String {
-    let provider_detail = snapshot
-        .provider_status
-        .detail
-        .as_deref()
-        .unwrap_or("none");
+    let provider_detail = snapshot.provider_status.detail.as_deref().unwrap_or("none");
     let jobs = snapshot
         .jobs
         .iter()
@@ -229,7 +419,12 @@ fn render_status(snapshot: &StatusSnapshot) -> String {
     )
 }
 
-fn render_dashboard(snapshot: &StatusSnapshot, approvals: &[ApprovalSnapshot], runs: &[RunListEntry], app: &AutonomyApp) -> String {
+fn render_dashboard(
+    snapshot: &StatusSnapshot,
+    approvals: &[ApprovalSnapshot],
+    runs: &[RunListEntry],
+    app: &AutonomyApp,
+) -> String {
     let role_options = app
         .config
         .team_roles
@@ -389,140 +584,174 @@ fn render_run_detail(detail: &RunDetailSnapshot) -> String {
     )
 }
 
-async fn healthz(State(state): State<WebState>) -> Result<impl IntoResponse, (StatusCode, String)> {
-    state.app.healthcheck().map_err(internal_error)?;
-    Ok(Json(json!({ "ok": true })))
+fn parse_bool(value: Option<&String>) -> bool {
+    value
+        .map(|raw| {
+            matches!(
+                raw.trim().to_ascii_lowercase().as_str(),
+                "1" | "true" | "yes" | "on"
+            )
+        })
+        .unwrap_or(false)
 }
 
-async fn dashboard(State(state): State<WebState>) -> Result<Html<String>, (StatusCode, String)> {
-    let status = state.app.status_snapshot(true).map_err(internal_error)?;
-    let approvals = state.app.approval_snapshots().map_err(internal_error)?;
-    let runs = state.app.recent_runs(15).map_err(internal_error)?;
-    Ok(Html(render_dashboard(&status, &approvals, &runs, &state.app)))
-}
+fn handle_request(request: HttpRequest, state: &WebState) -> WebResponse {
+    match (request.method.as_str(), request.path.as_str()) {
+        ("GET", "/") => {
+            let status = match state.app.status_snapshot(true) {
+                Ok(value) => value,
+                Err(err) => return internal_error(err),
+            };
+            let approvals = match state.app.approval_snapshots() {
+                Ok(value) => value,
+                Err(err) => return internal_error(err),
+            };
+            let runs = match state.app.recent_runs(15) {
+                Ok(value) => value,
+                Err(err) => return internal_error(err),
+            };
+            html_response(render_dashboard(&status, &approvals, &runs, &state.app))
+        }
+        ("GET", "/healthz") => match state.app.healthcheck() {
+            Ok(_) => json_response(&json!({ "ok": true })),
+            Err(err) => internal_error(err),
+        },
+        ("GET", "/status") => {
+            let show_teams = parse_bool(request.query.get("teams"));
+            match state.app.status_snapshot(show_teams) {
+                Ok(snapshot) => json_response(&snapshot),
+                Err(err) => internal_error(err),
+            }
+        }
+        ("GET", "/approvals") => match state.app.approval_snapshots() {
+            Ok(approvals) => json_response(&approvals),
+            Err(err) => internal_error(err),
+        },
+        ("POST", "/requests") => {
+            let form = parse_form_encoded(&String::from_utf8_lossy(&request.body));
+            let title = form.get("title").map(|value| value.trim()).unwrap_or("");
+            let body = form.get("body").map(|value| value.trim()).unwrap_or("");
+            if title.is_empty() || body.is_empty() {
+                return bad_request("title and body are required");
+            }
 
-async fn status_json(
-    State(state): State<WebState>,
-    Query(query): Query<StatusQuery>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
-    let snapshot = state
-        .app
-        .status_snapshot(query.teams.unwrap_or(false))
-        .map_err(internal_error)?;
-    Ok(Json(snapshot))
-}
+            let risk_tags = form
+                .get("risk_tags")
+                .map(|raw| {
+                    raw.split(',')
+                        .map(str::trim)
+                        .filter(|item| !item.is_empty())
+                        .map(ToString::to_string)
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+            let approval_policy = form
+                .get("approval_policy")
+                .cloned()
+                .unwrap_or_else(|| "inherit".to_string());
+            let requires_internet = form.contains_key("requires_internet");
+            let role_id = form
+                .get("role_id")
+                .map(String::as_str)
+                .filter(|value| !value.trim().is_empty());
 
-async fn approvals_json(
-    State(state): State<WebState>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
-    let approvals = state.app.approval_snapshots().map_err(internal_error)?;
-    Ok(Json(approvals))
-}
-
-async fn approve(
-    State(state): State<WebState>,
-    Path(approval_id): Path<String>,
-    Form(form): Form<DecisionFormPayload>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
-    state
-        .app
-        .approve_pending_approval(&approval_id, form.notes.as_deref().unwrap_or(""))
-        .map_err(internal_error)?;
-    Ok(Redirect::to("/"))
-}
-
-async fn reject(
-    State(state): State<WebState>,
-    Path(approval_id): Path<String>,
-    Form(form): Form<DecisionFormPayload>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
-    state
-        .app
-        .reject_pending_approval(&approval_id, form.notes.as_deref().unwrap_or(""))
-        .map_err(internal_error)?;
-    Ok(Redirect::to("/"))
-}
-
-async fn create_request(
-    State(state): State<WebState>,
-    Form(form): Form<RequestFormPayload>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
-    if form.title.trim().is_empty() || form.body.trim().is_empty() {
-        return Err((StatusCode::BAD_REQUEST, "title and body are required".to_string()));
+            match state.app.create_request_file(
+                title,
+                body,
+                &approval_policy,
+                &risk_tags,
+                requires_internet,
+                role_id,
+            ) {
+                Ok(_) => redirect_response("/"),
+                Err(err) => internal_error(err),
+            }
+        }
+        ("GET", "/runs") => match state.app.recent_runs(50) {
+            Ok(runs) => json_response(&runs),
+            Err(err) => internal_error(err),
+        },
+        ("POST", path) if path.starts_with("/approvals/") => {
+            let parts = path.trim_matches('/').split('/').collect::<Vec<_>>();
+            if parts.len() != 3 {
+                return not_found();
+            }
+            let approval_id = parts[1];
+            let action = parts[2];
+            let form = parse_form_encoded(&String::from_utf8_lossy(&request.body));
+            let notes = form.get("notes").map(String::as_str).unwrap_or("");
+            let result = match action {
+                "approve" => state.app.approve_pending_approval(approval_id, notes),
+                "reject" => state.app.reject_pending_approval(approval_id, notes),
+                _ => return not_found(),
+            };
+            match result {
+                Ok(_) => redirect_response("/"),
+                Err(err) => internal_error(err),
+            }
+        }
+        ("GET", path) if path.starts_with("/runs/") => {
+            let parts = path.trim_matches('/').split('/').collect::<Vec<_>>();
+            if parts.len() < 2 {
+                return not_found();
+            }
+            let run_id = parts[1];
+            match state.app.run_detail(run_id) {
+                Ok(detail) if parts.len() == 2 => json_response(&detail),
+                Ok(detail) if parts.len() == 3 && parts[2] == "view" => {
+                    html_response(render_run_detail(&detail))
+                }
+                Ok(_) => not_found(),
+                Err(err) => internal_error(err),
+            }
+        }
+        _ => not_found(),
     }
-
-    let risk_tags = form
-        .risk_tags
-        .unwrap_or_default()
-        .split(',')
-        .map(str::trim)
-        .filter(|item| !item.is_empty())
-        .map(ToString::to_string)
-        .collect::<Vec<_>>();
-    let approval_policy = form
-        .approval_policy
-        .unwrap_or_else(|| "inherit".to_string());
-    let requires_internet = form.requires_internet.is_some();
-    state
-        .app
-        .create_request_file(
-            form.title.trim(),
-            form.body.trim(),
-            &approval_policy,
-            &risk_tags,
-            requires_internet,
-            form.role_id.as_deref().filter(|value| !value.trim().is_empty()),
-        )
-        .map_err(internal_error)?;
-    Ok(Redirect::to("/"))
 }
 
-async fn runs_json(State(state): State<WebState>) -> Result<impl IntoResponse, (StatusCode, String)> {
-    let runs = state.app.recent_runs(50).map_err(internal_error)?;
-    Ok(Json(runs))
+fn handle_client(mut stream: TcpStream, state: WebState) -> Result<()> {
+    stream
+        .set_read_timeout(Some(Duration::from_secs(15)))
+        .context("failed to set stream read timeout")?;
+    stream
+        .set_write_timeout(Some(Duration::from_secs(15)))
+        .context("failed to set stream write timeout")?;
+
+    let request = match read_http_request(&stream) {
+        Ok(request) => request,
+        Err(err) => {
+            let response = bad_request(&err.to_string());
+            let _ = write_response(&mut stream, response);
+            return Ok(());
+        }
+    };
+    let response = handle_request(request, &state);
+    write_response(&mut stream, response)
 }
 
-async fn run_json(
-    State(state): State<WebState>,
-    Path(run_id): Path<String>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
-    let detail = state.app.run_detail(&run_id).map_err(internal_error)?;
-    Ok(Json(detail))
-}
-
-async fn run_view(
-    State(state): State<WebState>,
-    Path(run_id): Path<String>,
-) -> Result<Html<String>, (StatusCode, String)> {
-    let detail = state.app.run_detail(&run_id).map_err(internal_error)?;
-    Ok(Html(render_run_detail(&detail)))
-}
-
-pub async fn serve(app: AutonomyApp, listen: &str) -> Result<()> {
+pub fn serve(app: AutonomyApp, listen: &str) -> Result<()> {
     let socket_addr: SocketAddr = listen
         .parse()
         .with_context(|| format!("failed to parse listen address '{listen}'"))?;
-    let state = WebState {
-        app: Arc::new(app),
-    };
-
-    let router = Router::new()
-        .route("/", get(dashboard))
-        .route("/healthz", get(healthz))
-        .route("/status", get(status_json))
-        .route("/approvals", get(approvals_json))
-        .route("/approvals/:approval_id/approve", post(approve))
-        .route("/approvals/:approval_id/reject", post(reject))
-        .route("/requests", post(create_request))
-        .route("/runs", get(runs_json))
-        .route("/runs/:run_id", get(run_json))
-        .route("/runs/:run_id/view", get(run_view))
-        .with_state(state);
-
-    let listener = tokio::net::TcpListener::bind(socket_addr)
-        .await
+    let listener = TcpListener::bind(socket_addr)
         .with_context(|| format!("failed to bind FounderAI web listener on {listen}"))?;
-    axum::serve(listener, router)
-        .await
-        .context("FounderAI web server stopped unexpectedly")
+    let state = WebState { app: Arc::new(app) };
+
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                let state = state.clone();
+                thread::spawn(move || {
+                    if let Err(err) = handle_client(stream, state) {
+                        eprintln!("FounderAI web connection error: {err:#}");
+                    }
+                });
+            }
+            Err(err) => {
+                eprintln!("FounderAI web accept error: {err}");
+            }
+        }
+    }
+
+    Ok(())
 }

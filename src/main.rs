@@ -2,9 +2,9 @@ mod agents;
 mod app;
 mod approvals;
 mod config;
-mod network;
-mod model_router;
 mod marketing;
+mod model_router;
+mod network;
 mod notifier;
 mod offline;
 mod singleton;
@@ -15,7 +15,7 @@ mod worker;
 
 use anyhow::Result;
 use app::AutonomyApp;
-use approvals::{decide_approval, list_pending_approvals, ApprovalDecision};
+use approvals::list_pending_approvals;
 use clap::{Parser, Subcommand, ValueEnum};
 use config::load_config;
 use std::path::PathBuf;
@@ -40,7 +40,10 @@ impl ApprovalPolicyArg {
 }
 
 #[derive(Debug, Parser)]
-#[command(name = "founderai-ollama-rust", about = "FounderAI autonomy daemon backed by local Ollama.")]
+#[command(
+    name = "founderai-ollama-rust",
+    about = "FounderAI autonomy daemon backed by local Ollama."
+)]
 struct Cli {
     #[arg(long, default_value = "config/founderai.json", global = true)]
     config: PathBuf,
@@ -101,10 +104,7 @@ fn main() -> Result<()> {
             app.daemon()?;
         }
         Commands::Serve { listen } => {
-            let runtime = tokio::runtime::Builder::new_multi_thread()
-                .enable_all()
-                .build()?;
-            runtime.block_on(web::serve(app, &listen))?;
+            web::serve(app, &listen)?;
         }
         Commands::Tick => {
             app.tick(false, None)?;

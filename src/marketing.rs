@@ -253,9 +253,7 @@ fn normalize_tracking(lead: &IndependentLead) -> FunnelTrackingRecord {
         last_touch_at: tracking.last_touch_at,
         next_action_at: tracking.next_action_at,
         outcome: tracking.outcome,
-        human_verified: tracking
-            .human_verified
-            .or(Some(default_human_verified)),
+        human_verified: tracking.human_verified.or(Some(default_human_verified)),
     }
 }
 
@@ -295,7 +293,10 @@ fn stage_implies_reply(stage: &str) -> bool {
 }
 
 fn stage_implies_interest(stage: &str) -> bool {
-    matches!(stage, "scope_clarification" | "meeting_booked" | "proposal_sent" | "won")
+    matches!(
+        stage,
+        "scope_clarification" | "meeting_booked" | "proposal_sent" | "won"
+    )
 }
 
 fn stage_implies_proposal(stage: &str) -> bool {
@@ -347,7 +348,9 @@ fn build_funnel_snapshot(crm: &IndependentCrmPayload) -> serde_json::Value {
             human_verified += 1;
         }
 
-        let bucket = language_buckets.entry(language.clone()).or_insert((0, 0, 0));
+        let bucket = language_buckets
+            .entry(language.clone())
+            .or_insert((0, 0, 0));
 
         if stage_implies_sent(&stage) {
             sent_count += 1;
@@ -575,8 +578,7 @@ fn build_shortlist_scorecard(
                 .or_else(|| item.focus_area.clone())
                 .unwrap_or_else(|| "general-biodiversity-data-support".to_string());
 
-            if crm_lead
-                .and_then(|lead| lead.ownership_classification.as_deref())
+            if crm_lead.and_then(|lead| lead.ownership_classification.as_deref())
                 == Some("independent_candidate")
             {
                 score += 25;
@@ -587,7 +589,8 @@ fn build_shortlist_scorecard(
                 rationale.push("Lead is already marked ready for human review.".to_string());
             } else if readiness == "secondary_queue" {
                 score += 10;
-                rationale.push("Lead is in the secondary queue and may still be usable.".to_string());
+                rationale
+                    .push("Lead is in the secondary queue and may still be usable.".to_string());
             }
             if crm_lead
                 .and_then(|lead| lead.contact_routes.as_ref())
@@ -597,7 +600,10 @@ fn build_shortlist_scorecard(
                 score += 15;
                 rationale.push("An email candidate exists for follow-up research.".to_string());
             }
-            if crm_lead.and_then(|lead| lead.dataset_evidence_found).unwrap_or(false) {
+            if crm_lead
+                .and_then(|lead| lead.dataset_evidence_found)
+                .unwrap_or(false)
+            {
                 score += 10;
                 rationale.push("Dataset or reporting evidence was found.".to_string());
             }
@@ -687,7 +693,8 @@ pub fn sync_marketing_state(config: &AppConfig) -> Result<()> {
         .with_context(|| format!("failed to parse {}", crm_path.display()))?;
 
     let snapshot = build_funnel_snapshot(&crm);
-    let snapshot_text = serde_json::to_string_pretty(&snapshot).context("failed to serialize marketing funnel snapshot")?;
+    let snapshot_text = serde_json::to_string_pretty(&snapshot)
+        .context("failed to serialize marketing funnel snapshot")?;
     fs::write(funnel_snapshot_path(&config.runtime_dir), snapshot_text)
         .context("failed to write marketing funnel snapshot")?;
 
@@ -698,10 +705,13 @@ pub fn sync_marketing_state(config: &AppConfig) -> Result<()> {
         let shortlist: ReviewReadyShortlistPayload = serde_json::from_str(&shortlist_raw)
             .with_context(|| format!("failed to parse {}", shortlist_path.display()))?;
         let scorecard = build_shortlist_scorecard(&crm, &shortlist);
-        let scorecard_text =
-            serde_json::to_string_pretty(&scorecard).context("failed to serialize shortlist scorecard")?;
-        fs::write(shortlist_scorecard_path(&config.runtime_dir), scorecard_text)
-            .context("failed to write shortlist scorecard")?;
+        let scorecard_text = serde_json::to_string_pretty(&scorecard)
+            .context("failed to serialize shortlist scorecard")?;
+        fs::write(
+            shortlist_scorecard_path(&config.runtime_dir),
+            scorecard_text,
+        )
+        .context("failed to write shortlist scorecard")?;
     }
 
     Ok(())
@@ -750,7 +760,9 @@ mod tests {
             INSUFFICIENT_LIVE_SIGNAL
         );
         assert_eq!(
-            snapshot["summary"]["sent_count"].as_u64().expect("sent_count"),
+            snapshot["summary"]["sent_count"]
+                .as_u64()
+                .expect("sent_count"),
             0
         );
         assert_eq!(

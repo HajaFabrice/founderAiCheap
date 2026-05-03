@@ -1,0 +1,5 @@
+site,transect_id,date,species,abondance,longueur_m,observateur,heure_debut,habitat_type,notes
+Foret_Primaire,T01,2024-07-01,Zonosaurus_karsteni,3,200,Haja,07:00,foret_primaire,
+Foret_Primaire,T01,2024-07-01,Furcifer_lateralis,1,200,Haja,07:00,foret_primaire,
+Lisiere_Nord,T02,2024-07-02,Mantella_aurantiaca,2,200,Assistant_1,08:00,foret_secondaire,
+Zone_Degradee,T03,2024-07-03,Ptychadena_mascareniensis,5,200,Assistant_2,09:00,zone_degradee,

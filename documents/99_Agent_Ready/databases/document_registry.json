@@ -391,6 +391,66 @@
         "smaller prompt-friendly lead selection",
         "human-review-ready shortlist routing"
       ]
+    },
+    {
+      "id": "oplurix-master-context-brief",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/oplurix-site/OPLURIX_Master_Context_Brief.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/digital_products_sales_brief.md",
+      "supersedes": [
+        "older storefront notes and brand fragments"
+      ],
+      "agent_uses": [
+        "OPLURIX brand framing",
+        "bilingual storefront rules",
+        "mission-first product positioning",
+        "revenue ladder context"
+      ]
+    },
+    {
+      "id": "expert-to-influencer-blueprint",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/oplurix-site/ExpertToInfluencer.txt",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/digital_products_catalog.json",
+      "supersedes": [
+        "generic social-content product notes"
+      ],
+      "agent_uses": [
+        "content-engine promise",
+        "pain-point and outcome mapping",
+        "landing-page copy",
+        "product sales messaging"
+      ]
+    },
+    {
+      "id": "ecor-toolkit-product-strategy",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/digital_products_catalog.json",
+      "supersedes": [
+        "generic R-toolkit idea fragments"
+      ],
+      "agent_uses": [
+        "EcoR main-offer framing",
+        "product stack decisions",
+        "buyer-fit guidance",
+        "truthful public copy"
+      ]
+    },
+    {
+      "id": "digital-products-catalog",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/99_Agent_Ready/databases/digital_products_catalog.json",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/digital_products_catalog.json",
+      "supersedes": [
+        "ad hoc product notes scattered across storefront drafts"
+      ],
+      "agent_uses": [
+        "product pricing",
+        "checkout truthfulness",
+        "PayPal fallback behavior",
+        "sales-page grounding"
+      ]
     }
   ]
 }

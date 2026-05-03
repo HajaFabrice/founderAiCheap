@@ -30,13 +30,18 @@ They should override older repo mirrors if a conflict appears.
    - `client outreach tracker 2.xlsx`
 6. Supporting business heuristics:
    - `documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/The Billion-Scale Business Blueprint.txt`
-7. Filtered helper documents from `C:/Users/Student/Desktop/perso/Plans/` only
+7. Digital product storefront and product documents:
+   - `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
+   - `documents/oplurix-site/ExpertToInfluencer.txt`
+   - `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
+   - `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+8. Filtered helper documents from `C:/Users/Student/Desktop/perso/Plans/` only
    when they strengthen the V4 strategy without changing it:
    - conversation-reference planning notes
    - new-contact FAQ planning notes
    - MEP Appendix B on scoring parameters
    - MEP Appendix C on metadata and governance
-8. Older versions and archives only if the newer files omit a needed detail.
+9. Older versions and archives only if the newer files omit a needed detail.
 
 ## Duplicate Resolution
 
@@ -49,6 +54,9 @@ They should override older repo mirrors if a conflict appears.
 | Communication library | `ERIS_Communication_Templates_v1.0.txt` | Earlier ad hoc draft snippets | Use as the broad template baseline. |
 | NGO outreach copy | `Outreach Emails.docx` | Generic cold email patterns | Use for concrete biodiversity NGO outreach phrasing and cadence. |
 | Service positioning | `service statement alternatives.docx` plus `Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx` | `Service statement v1.docx` | Use the newer concise offer language first, then the longer service sheet for rates and deliverables. |
+| OPLURIX brand and storefront logic | `documents/oplurix-site/OPLURIX_Master_Context_Brief.md` | scattered brand notes and older storefront drafts | Use for OPLURIX identity, bilingual storefront rules, mission lock, and product-ladder framing. |
+| Expert-to-Influencer product | `documents/oplurix-site/ExpertToInfluencer.txt` | older generic content-engine snippets | Use for promise, pain points, product structure, and landing-page copy for the content product. |
+| EcoR toolkit main offer | `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md` plus `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md` | generic R-toolkit fragments and marketplace-specific draft language | Use for EcoR positioning, main-offer scope, and truthful product outcomes while keeping the first launch on Netlify plus PayPal. |
 | Independent proof assets | `documents/Plans/Freelance/Cleaning Summary.docx` plus `documents/Plans/Freelance/cleaned_data.csv` | older abstract service claims without sample work | Use to ground dataset-cleaning capability in a real, inspectable sample. |
 | Current CV asset | `documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx` and `documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx` | missing or older CV variants | Use for bio blocks, capability summaries, and bilingual profile material. |
 | Independent outreach execution | `documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok` plus the two outreach tracker workbooks | generic outreach heuristics | Use for cadence and pipeline structure, not as proof of verified contacts or public pricing. |
@@ -66,6 +74,8 @@ They should override older repo mirrors if a conflict appears.
   before they become final send-ready assets.
 - Founder confirmed the independent public contact channel on `2026-04-27`:
   `hajafabriceeris@gmail.com` and `+261349414112`.
+- Product checkout copy still needs the exact PayPal links or button snippets
+  before the public storefront can point to live checkout URLs.
 - The M350 RTK pathway is canonical for first grants. Do not upgrade the
   narrative to an M400-first ask.
 - The freelance 30-day plan is a tactical planning artifact. Do not treat its

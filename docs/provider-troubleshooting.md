@@ -61,3 +61,25 @@ Smoke wrapper scripts:
 
 - Windows: `scripts/run-smoke-test.ps1`
 - Linux: `scripts/run-smoke-test.sh`
+
+## Cloud Mode Notes
+
+Cloud mode uses `config/founderai.cloud.json` and assumes:
+
+- OpenAI is the primary provider
+- the private founder console is exposed through `serve`
+- Cloudflare Tunnel and Access protect the browser surface
+
+Quick cloud checks:
+
+1. `docker compose -f docker-compose.cloud.yml ps`
+2. `docker exec founderai-daemon /app/founderai-ollama-rust status --config /srv/founderai/config/founderai.cloud.json`
+3. open `/healthz` through the private hostname after Access login
+4. inspect `runtime/runs/<run-id>/metadata.json` for `usage`, `prompt_chars`, and `prompt_words`
+
+If cloud runs fail while the daemon stays healthy:
+
+- confirm `OPENAI_API_KEY` is present inside both `founderai-daemon` and `founderai-web`
+- confirm `FOUNDERAI_MODEL` matches a supported mini model in your account
+- check Cloudflare logs only for ingress problems; provider failures still show up in FounderAI run artifacts
+- use `scripts/cloud-weekly-review.sh` to spot growing prompt sizes before spend becomes the real problem

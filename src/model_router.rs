@@ -1,4 +1,7 @@
-use crate::config::{apply_worker_env_overrides, AppConfig, JobConfig, ModelRouteConfig, TeamRoleConfig, WorkerConfig};
+use crate::config::{
+    apply_worker_env_overrides, AppConfig, JobConfig, ModelRouteConfig, TeamRoleConfig,
+    WorkerConfig,
+};
 
 #[derive(Debug, Clone)]
 pub struct RoutedWorker {
@@ -9,7 +12,10 @@ pub struct RoutedWorker {
 }
 
 fn logical_job_id(job_id: &str) -> &str {
-    job_id.split_once("--").map(|(left, _)| left).unwrap_or(job_id)
+    job_id
+        .split_once("--")
+        .map(|(left, _)| left)
+        .unwrap_or(job_id)
 }
 
 fn normalize(value: &str) -> String {
@@ -42,11 +48,7 @@ fn route_matches(
     task_ok && job_ok && role_ok
 }
 
-fn worker_for_mode(
-    config: &AppConfig,
-    route: &ModelRouteConfig,
-    mode: &str,
-) -> WorkerConfig {
+fn worker_for_mode(config: &AppConfig, route: &ModelRouteConfig, mode: &str) -> WorkerConfig {
     let worker = match normalize(mode).as_str() {
         "online" => route
             .online
@@ -198,8 +200,7 @@ pub fn resolve_worker(
     } else {
         format!(
             "Task type '{task_type}' matched router notes '{}'; preferred '{}' mode selected.",
-            route.notes,
-            preferred_mode
+            route.notes, preferred_mode
         )
     };
 

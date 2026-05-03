@@ -1,4 +1,13 @@
-target/
-runtime/
-.git/
-*.log
+.git
+target
+runtime
+runtime-smoke
+inbox
+outbox
+inbox-smoke
+outbox-smoke
+.env
+.env.*
+documents/*
+!documents/99_Agent_Ready
+!documents/99_Agent_Ready/**

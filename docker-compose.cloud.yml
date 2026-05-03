@@ -1,0 +1,89 @@
+services:
+  founderai-daemon:
+    build: .
+    container_name: founderai-daemon
+    env_file:
+      - .env.cloud
+    environment:
+      FOUNDERAI_PROVIDER: ${FOUNDERAI_PROVIDER:-openai}
+      FOUNDERAI_BASE_URL: ${FOUNDERAI_BASE_URL:-https://api.openai.com/v1}
+      FOUNDERAI_MODEL: ${FOUNDERAI_MODEL:-gpt-5-mini}
+      FOUNDERAI_TIMEOUT_SECONDS: ${FOUNDERAI_TIMEOUT_SECONDS:-300}
+      FOUNDERAI_API_KEY_ENV: ${FOUNDERAI_API_KEY_ENV:-OPENAI_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - /srv/founderai/inbox:/srv/founderai/inbox
+      - /srv/founderai/outbox:/srv/founderai/outbox
+      - /srv/founderai/runtime:/srv/founderai/runtime
+      - /srv/founderai/founder-brain:/srv/founderai/founder-brain
+      - /srv/founderai/docs:/srv/founderai/docs:ro
+      - /srv/founderai/documents/99_Agent_Ready:/srv/founderai/documents/99_Agent_Ready:ro
+      - /srv/founderai/config:/srv/founderai/config
+    command:
+      - /app/founderai-ollama-rust
+      - daemon
+      - --config
+      - /srv/founderai/config/founderai.cloud.json
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - /app/founderai-ollama-rust
+        - status
+        - --config
+        - /srv/founderai/config/founderai.cloud.json
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 20s
+
+  founderai-web:
+    build: .
+    container_name: founderai-web
+    env_file:
+      - .env.cloud
+    environment:
+      FOUNDERAI_PROVIDER: ${FOUNDERAI_PROVIDER:-openai}
+      FOUNDERAI_BASE_URL: ${FOUNDERAI_BASE_URL:-https://api.openai.com/v1}
+      FOUNDERAI_MODEL: ${FOUNDERAI_MODEL:-gpt-5-mini}
+      FOUNDERAI_TIMEOUT_SECONDS: ${FOUNDERAI_TIMEOUT_SECONDS:-300}
+      FOUNDERAI_API_KEY_ENV: ${FOUNDERAI_API_KEY_ENV:-OPENAI_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - /srv/founderai/inbox:/srv/founderai/inbox
+      - /srv/founderai/outbox:/srv/founderai/outbox
+      - /srv/founderai/runtime:/srv/founderai/runtime
+      - /srv/founderai/founder-brain:/srv/founderai/founder-brain
+      - /srv/founderai/docs:/srv/founderai/docs:ro
+      - /srv/founderai/documents/99_Agent_Ready:/srv/founderai/documents/99_Agent_Ready:ro
+      - /srv/founderai/config:/srv/founderai/config
+    command:
+      - /app/founderai-ollama-rust
+      - serve
+      - --listen
+      - 0.0.0.0:8080
+      - --config
+      - /srv/founderai/config/founderai.cloud.json
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /healthz HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && grep -q '200 OK' <&3
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 10s
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: founderai-cloudflared
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      founderai-web:
+        condition: service_healthy
+    restart: unless-stopped

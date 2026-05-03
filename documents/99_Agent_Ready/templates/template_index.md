@@ -11,52 +11,68 @@ fields, verify facts, and keep approvals in place.
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `databases/digital_products_catalog.json`
   - `runtime/marketing/latest_marketing_brief.md`
   - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
+  - `ecor_first_sale_launch_pack.md`
+  - `digital_product_sales_templates.md`
   - `independent_freelance_templates.md`
   - use independent outreach only for clearly non-Techni leads
 - `Zacchaeus`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `databases/digital_products_catalog.json`
   - `runtime/marketing/latest_marketing_brief.md`
   - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
+  - `ecor_first_sale_launch_pack.md`
+  - `digital_product_sales_templates.md`
   - `independent_freelance_templates.md`
   - use short, fast, low-friction inbound replies
 - `Perpetua`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `databases/digital_products_catalog.json`
   - `runtime/marketing/latest_marketing_brief.md`
   - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
+  - `ecor_first_sale_launch_pack.md`
+  - `digital_product_sales_templates.md`
   - `independent_freelance_templates.md`
   - use follow-up cadence and stop rules
 - `Bonaventure`
   - `references/independent_business_boundary.md`
   - `references/independent_marketing_brief.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `references/agent_conversation_reference.md`
   - `references/new_contact_answer_bank.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `databases/digital_products_catalog.json`
   - `runtime/marketing/latest_marketing_brief.md`
   - `runtime/marketing/latest_funnel_review.md`
   - `external_communications.md`
   - `first_outbound_pack.md`
+  - `ecor_first_sale_launch_pack.md`
+  - `digital_product_sales_templates.md`
   - `independent_freelance_templates.md`
   - adapt the same structure for independent institutional outreach or internal employer notes
 - `Jacinta`
@@ -88,33 +104,42 @@ fields, verify facts, and keep approvals in place.
 - `Hildegard`
   - `references/collaboration_charter.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
   - `databases/review_ready_outreach_shortlist.json`
+  - `databases/digital_products_catalog.json`
   - `runtime/marketing/independent_funnel.json`
   - `runtime/marketing/review_ready_shortlist_scorecard.json`
   - `internal_operations.md`
   - `marketing_intelligence_templates.md`
+  - `digital_product_sales_templates.md`
   - use morning briefing, meeting-note, and weekly marketing brief patterns
 - `Francis`
   - `references/collaboration_charter.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
   - `runtime/marketing/independent_funnel.json`
   - `runtime/marketing/review_ready_shortlist_scorecard.json`
   - `runtime/marketing/latest_marketing_brief.md`
+  - `databases/digital_products_catalog.json`
   - `internal_operations.md`
   - `marketing_intelligence_templates.md`
+  - `digital_product_sales_templates.md`
   - use weekly review agenda, KPI discipline, and weekly funnel review structure
 - `Juniper`
   - `references/marketing_intelligence_overlay.md`
+  - `references/digital_products_sales_brief.md`
   - `databases/independent_crm.json`
   - `databases/independent_pipeline.json`
+  - `databases/digital_products_catalog.json`
   - `runtime/marketing/independent_funnel.json`
   - `runtime/marketing/review_ready_shortlist_scorecard.json`
   - `internal_operations.md`
   - `marketing_intelligence_templates.md`
+  - `digital_product_sales_templates.md`
   - use CRM cleanup, funnel hygiene, and service-asset support patterns
 - `Columban`
   - `references/collaboration_charter.md`

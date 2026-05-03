@@ -14,6 +14,15 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - The near-term commercial structure is dual-track:
   - strengthen value and written leverage inside Techni-Drones
   - build a separate independent revenue engine for clearly non-Techni leads
+- OPLURIX is the commercial brand for the independent side of the system.
+- Two current digital products now sit inside that revenue engine:
+  - `Expert-to-Influencer Content Engine` at `USD 39`
+  - `EcoR Toolkit` with a three-tier ladder:
+    - `Starter` at `USD 29`
+    - `Complete` at `USD 97`
+    - `Pro Bundle` at `USD 149`
+    - `Complete` is the first-sale focus
+    - `Pro Bundle` is a public anchor, not a live checkout until its walkthrough assets exist
 - The system remains local-first, approval-gated, and file-auditable even when
   cloud portability is discussed.
 
@@ -36,8 +45,10 @@ attached V4/V5 strategy texts plus the latest operational documents.
 1. Submit and strengthen conservation grant applications.
 2. Pitch and formalize the biodiversity vertical inside Techni-Drones.
 3. Sign one independent non-Techni client or pilot.
-4. Keep equity or commission conversations human-led and written.
-5. Maintain active PhD applications without breaking the survival engine.
+4. Launch and validate the first two OPLURIX digital products with clean
+   checkout and truthful manual delivery.
+5. Keep equity or commission conversations human-led and written.
+6. Maintain active PhD applications without breaking the survival engine.
 
 ## Core Narrative Constraints
 
@@ -106,6 +117,11 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - Low-friction offers:
   - free 5-20 row sample review for a dataset
   - bounded data-cleanup or reporting support after sample review
+- Digital products:
+  - `Expert-to-Influencer Content Engine`
+  - `EcoR Toolkit Starter`
+  - `EcoR Toolkit Complete`
+  - `EcoR Toolkit Pro Bundle`
 
 ## Proof Assets
 
@@ -115,6 +131,10 @@ attached V4/V5 strategy texts plus the latest operational documents.
   - cleaned CSV with validation fields
 - Current bilingual environmental-data CV assets exist for English and French
   counterparties.
+- Product authority for OPLURIX can also draw from:
+  - the founder's real field and research background
+  - the co-authored publication record
+  - the OPLURIX product documents and product-structure notes
 
 ## Communication Rules
 
@@ -122,11 +142,16 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - English or French depending on recipient
 - Use one clear CTA per message
 - No pricing in cold outreach
+- Product storefront copy may show clean list prices where checkout is the goal
 - Use specific observations about the recipient's work
 - When facts are missing, write `NEEDS_HUMAN_VERIFICATION`
 - Do not mix Techni-Drones promotion with a personal-service CTA in the same
   message
 - Do not pitch ERIS in first-cycle independent freelance outreach
+- Do not imply automated digital fulfillment if the current delivery path is
+  still manual by email after payment confirmation
+- Do not sell a higher tier that promises assets the founder has not yet
+  finished
 - Use the shared conversation reference and answer bank for external drafts
   instead of improvising claims
 

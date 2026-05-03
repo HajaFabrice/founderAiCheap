@@ -82,6 +82,7 @@ Non-goals:
 - The default Ollama model is `qwen2.5:7b-instruct`.
 - Provider settings can be overridden by environment variables for cloud deployment.
 - Linux launch scripts, Docker assets, and GitHub Actions build verification are included.
+- A private browser control surface is available through `serve` for cloud use.
 - Failures are written into run artifacts instead of crashing the daemon.
 - Founder context is synced to the April 2026 Techni-Drones and ERIS V4 documents.
 - Deadline tracking now lives in `config/pio_deadlines.json` and surfaces through Pio-generated inbox requests.
@@ -102,6 +103,8 @@ Non-goals:
 - `config/founderai.example.json`: starter copy
 - `config/pio_deadlines.json`: deadline tracker for grants and operational commitments
 - `docs/`: public project charter, roadmap, risks, and volunteer onboarding
+- `docs/cloud-deployment.md`: cheapest VPS deployment path with Cloudflare Access
+- `docs/cloud-operations.md`: backup, restore, and weekly review runbook
 - `documents/99_Agent_Ready/`: curated references, databases, and templates loaded into prompt packets for agent work
 - `src/`: Rust autonomy engine
 - `scripts/start-founderai.ps1`: hidden or background launcher for Windows
@@ -110,10 +113,15 @@ Non-goals:
 - `scripts/start-founderai.sh`: Linux launcher
 - `scripts/stop-founderai.sh`: Linux stop helper
 - `scripts/bootstrap-ollama-model.sh`: Linux helper to pull the default Ollama model
+- `scripts/bootstrap-cloud-layout.sh`: prepares the `/srv/founderai` root-disk layout for the VPS
+- `scripts/cloud-backup.sh`: creates local and optional Backblaze-ready backup archives
+- `scripts/cloud-weekly-review.sh`: prints uptime, disk use, approvals, and prompt/token summaries
 - `scripts/founderai.service.example`: systemd example for Linux deployment
 - `.github/workflows/build.yml`: Windows and Linux build verification
 - `docker-compose.openai.yml`: Docker deployment using OpenAI
 - `docker-compose.ollama.yml`: Docker deployment using Ollama
+- `docker-compose.cloud.yml`: private VPS deployment with daemon, web console, and Cloudflare tunnel
+- `.env.cloud.example`: starter environment file for the VPS
 - `inbox/`: drop `.json`, `.md`, or `.txt` requests here
 - `outbox/`: FounderAI run copies
 - `runtime/`: logs, state, runs, approvals, and team outputs
@@ -122,6 +130,7 @@ Non-goals:
 ## Project Docs
 
 - Live docs: [hajafabrice.github.io/founderAiCheap](https://hajafabrice.github.io/founderAiCheap/)
+- Public storefront root: `docs/index.html` for the OPLURIX Netlify or Pages launch
 - [Project charter](docs/project-charter.md)
 - [Roadmap](docs/roadmap.md)
 - [Risk register](docs/risk-register.md)
@@ -129,10 +138,13 @@ Non-goals:
 - [Contributor backlog](docs/contributor-backlog.md)
 - [GitHub admin checklist](docs/github-admin-checklist.md)
 - [Provider troubleshooting](docs/provider-troubleshooting.md)
+- [Cloud deployment](docs/cloud-deployment.md)
+- [Cloud operations](docs/cloud-operations.md)
 - [Independent services landing page (EN)](docs/independent-services-en.md)
 - [Independent services landing page (FR)](docs/services-fr.md)
 - [Independent services one-pager](docs/services-one-pager.md)
 - [Dataset cleaning case study](docs/case-study-biodiversity-dataset-cleaning.md)
+- [Netlify-ready OPLURIX storefront](docs/index.html)
 - [Contributing guide](CONTRIBUTING.md)
 - [Governance](GOVERNANCE.md)
 - [Security policy](SECURITY.md)
@@ -208,6 +220,12 @@ Linux status:
 ```bash
 ./target/release/founderai-ollama-rust status --config ./config/founderai.json
 ./target/release/founderai-ollama-rust status --config ./config/founderai.json --teams
+```
+
+Local private web console:
+
+```powershell
+.\target\release\founderai-ollama-rust.exe serve --config .\config\founderai.json --listen 127.0.0.1:8080
 ```
 
 Windows single tick:
@@ -327,6 +345,22 @@ docker exec -it founderai-ollama ollama pull qwen2.5:7b-instruct
 ```
 
 The compose files keep `inbox/`, `outbox/`, and `runtime/` mounted as host directories so FounderAI remains file-auditable in the cloud.
+
+Private VPS cloud stack:
+
+```bash
+cp .env.cloud.example .env.cloud
+./scripts/bootstrap-cloud-layout.sh /srv/founderai
+docker compose -f docker-compose.cloud.yml up -d --build
+```
+
+Cloud deployment uses:
+
+- `config/founderai.cloud.json`
+- `serve` for the browser-only control surface
+- Cloudflare Tunnel plus Cloudflare Access for private ingress
+- OpenAI as the default cloud provider
+- the same file-based inbox, outbox, runtime, and approval artifacts
 
 ## Suggested Smoke Test
 

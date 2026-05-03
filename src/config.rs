@@ -109,8 +109,14 @@ pub struct WorkerOverride {
 impl WorkerOverride {
     pub fn apply_to(&self, base: &WorkerConfig) -> WorkerConfig {
         WorkerConfig {
-            provider: self.provider.clone().unwrap_or_else(|| base.provider.clone()),
-            base_url: self.base_url.clone().unwrap_or_else(|| base.base_url.clone()),
+            provider: self
+                .provider
+                .clone()
+                .unwrap_or_else(|| base.provider.clone()),
+            base_url: self
+                .base_url
+                .clone()
+                .unwrap_or_else(|| base.base_url.clone()),
             model: self.model.clone().unwrap_or_else(|| base.model.clone()),
             timeout_seconds: self.timeout_seconds.unwrap_or(base.timeout_seconds),
             system_prompt: self
@@ -258,7 +264,10 @@ pub struct ModelRouterConfig {
     pub enabled: bool,
     #[serde(default = "default_router_connectivity_check_url")]
     pub connectivity_check_url: String,
-    #[serde(default = "default_model_router_timeout", alias = "connectivity_timeout_seconds")]
+    #[serde(
+        default = "default_model_router_timeout",
+        alias = "connectivity_timeout_seconds"
+    )]
     pub timeout_seconds: u64,
     #[serde(default)]
     pub task_types: BTreeMap<String, TaskTypeRouteConfig>,
@@ -647,8 +656,14 @@ fn expand_task_type_routes(router: &mut ModelRouterConfig) {
             role_ids: Vec::new(),
             preferred_mode: route.prefer.clone(),
             fallback_mode: route.fallback.clone(),
-            online: route.online.clone().or_else(|| Some(default_openai_override())),
-            offline: route.offline.clone().or_else(|| Some(default_ollama_override())),
+            online: route
+                .online
+                .clone()
+                .or_else(|| Some(default_openai_override())),
+            offline: route
+                .offline
+                .clone()
+                .or_else(|| Some(default_ollama_override())),
             notes: format!("Task-type route for {task_type}"),
         });
     }
@@ -679,11 +694,10 @@ pub fn load_config(config_path: impl AsRef<Path>) -> Result<AppConfig> {
             .context("failed to read current directory")?
             .join(path)
     };
-    let absolute_path = normalize_windows_path(
-        absolute_path
-            .canonicalize()
-            .with_context(|| format!("failed to resolve config path {}", absolute_path.display()))?,
-    );
+    let absolute_path =
+        normalize_windows_path(absolute_path.canonicalize().with_context(|| {
+            format!("failed to resolve config path {}", absolute_path.display())
+        })?);
     let base_dir = absolute_path
         .parent()
         .map(Path::to_path_buf)

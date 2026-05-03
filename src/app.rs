@@ -1,16 +1,16 @@
 use crate::agents::perpetua::{
-    active_sequence_count, collect_due_actions, complete_action as complete_sequence_action, ensure_nurture_files,
-    register_sequence_from_lead, SequenceAction, SequenceActionOutcome,
+    active_sequence_count, collect_due_actions, complete_action as complete_sequence_action,
+    ensure_nurture_files, register_sequence_from_lead, SequenceAction, SequenceActionOutcome,
 };
 use crate::agents::pio::collect_due_alerts;
 use crate::agents::zacchaeus::{build_zacchaeus_job, collect_inbound_lead_requests};
 use crate::approvals::{
-    approval_decision, create_approval_request, decide_approval, ensure_approval_dirs, list_pending_approvals,
-    ApprovalDecision,
+    approval_decision, create_approval_request, decide_approval, ensure_approval_dirs,
+    list_pending_approvals, ApprovalDecision,
 };
 use crate::config::{AppConfig, JobConfig, TeamRoleConfig};
-use crate::network::internet_is_available;
 use crate::marketing::{ensure_marketing_dirs, sync_marketing_state};
+use crate::network::internet_is_available;
 use crate::notifier::send_notification;
 use crate::offline::{
     count_pending_entries, enqueue_offline_job, ensure_offline_queue_dirs, replay_pending_entries,
@@ -301,9 +301,12 @@ impl AutonomyApp {
             }
         }
         let effective_risk_tags = self.effective_risk_tags(job, role);
-        let requires_validation = effective_risk_tags
-            .iter()
-            .any(|tag| self.config.strategic_validation.always_require_tags.contains(tag));
+        let requires_validation = effective_risk_tags.iter().any(|tag| {
+            self.config
+                .strategic_validation
+                .always_require_tags
+                .contains(tag)
+        });
         if requires_validation {
             return self.config.strategic_validation.default_policy.clone();
         }
@@ -350,7 +353,11 @@ impl AutonomyApp {
         role: Option<&TeamRoleConfig>,
         result: Option<&WorkerRunResult>,
     ) -> Result<String> {
-        if let Some(existing) = state.ensure_job_state(&job.job_id).pending_approval_id.clone() {
+        if let Some(existing) = state
+            .ensure_job_state(&job.job_id)
+            .pending_approval_id
+            .clone()
+        {
             return Ok(existing);
         }
 
@@ -452,12 +459,22 @@ impl AutonomyApp {
         job: &JobConfig,
         role: Option<&TeamRoleConfig>,
     ) -> Option<String> {
-        let approval_id = state.ensure_job_state(&job.job_id).pending_approval_id.clone()?;
+        let approval_id = state
+            .ensure_job_state(&job.job_id)
+            .pending_approval_id
+            .clone()?;
         match approval_decision(&self.config.runtime_dir, &approval_id) {
             Some(ApprovalDecision::Pending) => Some("pending".to_string()),
             Some(ApprovalDecision::Rejected) => {
-                self.log(&format!("Approval rejected for {}: {}", job.job_id, approval_id));
-                self.clear_pending_approval(state, &job.job_id, role.map(|item| item.role_id.as_str()));
+                self.log(&format!(
+                    "Approval rejected for {}: {}",
+                    job.job_id, approval_id
+                ));
+                self.clear_pending_approval(
+                    state,
+                    &job.job_id,
+                    role.map(|item| item.role_id.as_str()),
+                );
                 Some("rejected".to_string())
             }
             Some(ApprovalDecision::Approved) => {
@@ -466,8 +483,15 @@ impl AutonomyApp {
                     .pending_approval_phase
                     .clone()
                     .unwrap_or_else(|| "approved".to_string());
-                self.log(&format!("Approval approved for {}: {}", job.job_id, approval_id));
-                self.clear_pending_approval(state, &job.job_id, role.map(|item| item.role_id.as_str()));
+                self.log(&format!(
+                    "Approval approved for {}: {}",
+                    job.job_id, approval_id
+                ));
+                self.clear_pending_approval(
+                    state,
+                    &job.job_id,
+                    role.map(|item| item.role_id.as_str()),
+                );
                 Some(phase)
             }
             None => None,
@@ -511,7 +535,10 @@ impl AutonomyApp {
         }
 
         if let Some(schedule_key) = self.schedule_key(job, now_local) {
-            return (job_state.last_schedule_key.as_deref() != Some(schedule_key.as_str()), Some(schedule_key));
+            return (
+                job_state.last_schedule_key.as_deref() != Some(schedule_key.as_str()),
+                Some(schedule_key),
+            );
         }
 
         if job.triggers.iter().any(|item| item == "periodic") {
@@ -555,7 +582,11 @@ impl AutonomyApp {
         }
 
         if let Some(role) = role {
-            let status = if result.exit_code == 0 { "Completed" } else { "Failed" };
+            let status = if result.exit_code == 0 {
+                "Completed"
+            } else {
+                "Failed"
+            };
             let output_path = result
                 .team_output_file
                 .as_ref()
@@ -578,7 +609,13 @@ impl AutonomyApp {
             extra.insert("run_id".to_string(), Value::String(result.run_id.clone()));
             extra.insert(
                 "job_id".to_string(),
-                Value::String(job.job_id.split_once("--").map(|(left, _)| left).unwrap_or(&job.job_id).to_string()),
+                Value::String(
+                    job.job_id
+                        .split_once("--")
+                        .map(|(left, _)| left)
+                        .unwrap_or(&job.job_id)
+                        .to_string(),
+                ),
             );
             extra.insert("output_file".to_string(), Value::String(output_path));
             if let Err(err) = append_team_activity(
@@ -591,7 +628,10 @@ impl AutonomyApp {
                 metric_value,
                 Some(extra),
             ) {
-                self.log(&format!("Failed to append team activity for {}: {err:#}", role.role_id));
+                self.log(&format!(
+                    "Failed to append team activity for {}: {err:#}",
+                    role.role_id
+                ));
             }
         }
     }
@@ -617,10 +657,17 @@ impl AutonomyApp {
         {
             let raw = fs::read_to_string(file_path)
                 .with_context(|| format!("failed to read inbox request {}", file_path.display()))?;
-            let payload: InboxRequestPayload = serde_json::from_str(&raw)
-                .with_context(|| format!("failed to parse inbox request {}", file_path.display()))?;
+            let payload: InboxRequestPayload = serde_json::from_str(&raw).with_context(|| {
+                format!("failed to parse inbox request {}", file_path.display())
+            })?;
             return Ok((
-                payload.title.unwrap_or_else(|| file_path.file_stem().and_then(|stem| stem.to_str()).unwrap_or("request").to_string()),
+                payload.title.unwrap_or_else(|| {
+                    file_path
+                        .file_stem()
+                        .and_then(|stem| stem.to_str())
+                        .unwrap_or("request")
+                        .to_string()
+                }),
                 payload.body.unwrap_or_default().trim().to_string(),
                 payload.risk_tags,
                 payload
@@ -654,8 +701,16 @@ impl AutonomyApp {
     }
 
     fn build_inbox_job(&self, file_path: &Path) -> Result<(JobConfig, Option<TeamRoleConfig>)> {
-        let (title, body, risk_tags, approval_policy, requires_internet, role_id, task_type, agent_id) =
-            self.load_inbox_request(file_path)?;
+        let (
+            title,
+            body,
+            risk_tags,
+            approval_policy,
+            requires_internet,
+            role_id,
+            task_type,
+            agent_id,
+        ) = self.load_inbox_request(file_path)?;
         let role = role_id
             .as_deref()
             .and_then(|role_id| self.config.team_roles.get(role_id))
@@ -665,9 +720,20 @@ impl AutonomyApp {
         let job = JobConfig {
             job_id: format!(
                 "inbox-{}",
-                slugify(file_path.file_stem().and_then(|value| value.to_str()).unwrap_or("request"))
+                slugify(
+                    file_path
+                        .file_stem()
+                        .and_then(|value| value.to_str())
+                        .unwrap_or("request")
+                )
             ),
-            description: format!("Inbox request from {}", file_path.file_name().and_then(|value| value.to_str()).unwrap_or("request")),
+            description: format!(
+                "Inbox request from {}",
+                file_path
+                    .file_name()
+                    .and_then(|value| value.to_str())
+                    .unwrap_or("request")
+            ),
             enabled: true,
             triggers: vec!["inbox_request".to_string()],
             prompt,
@@ -742,8 +808,7 @@ impl AutonomyApp {
             slugify(title)
         );
         let path = self.config.inbox_dir.join(file_name);
-        fs::write(&path, body)
-            .with_context(|| format!("failed to write {}", path.display()))?;
+        fs::write(&path, body).with_context(|| format!("failed to write {}", path.display()))?;
         self.mark_request_processed(state, &path, status);
         Ok(path)
     }
@@ -779,19 +844,26 @@ impl AutonomyApp {
                 object.insert("role_id".to_string(), Value::String(role_id.to_string()));
             }
             if let Some(task_type) = task_type {
-                object.insert("task_type".to_string(), Value::String(task_type.to_string()));
+                object.insert(
+                    "task_type".to_string(),
+                    Value::String(task_type.to_string()),
+                );
             }
             if let Some(agent_id) = agent_id {
                 object.insert("agent_id".to_string(), Value::String(agent_id.to_string()));
             }
         }
-        let payload_text =
-            serde_json::to_string_pretty(&payload).context("failed to serialize structured inbox request")?;
-        fs::write(&path, payload_text).with_context(|| format!("failed to write {}", path.display()))?;
+        let payload_text = serde_json::to_string_pretty(&payload)
+            .context("failed to serialize structured inbox request")?;
+        fs::write(&path, payload_text)
+            .with_context(|| format!("failed to write {}", path.display()))?;
         Ok(path)
     }
 
-    fn resolve_deadline_assignment(&self, assigned_to: &str) -> (Option<String>, Option<String>, Option<String>) {
+    fn resolve_deadline_assignment(
+        &self,
+        assigned_to: &str,
+    ) -> (Option<String>, Option<String>, Option<String>) {
         let normalized = assigned_to.trim().to_ascii_lowercase();
         if normalized.is_empty() {
             return (None, Some("briefing".to_string()), None);
@@ -825,11 +897,7 @@ impl AutonomyApp {
                 Some("final_review".to_string()),
                 Some("francis".to_string()),
             ),
-            "pio" => (
-                None,
-                Some("scheduler".to_string()),
-                Some("pio".to_string()),
-            ),
+            "pio" => (None, Some("scheduler".to_string()), Some("pio".to_string())),
             _ if self.config.agent_profiles.contains_key(&normalized) => {
                 (None, Some("draft".to_string()), Some(normalized.clone()))
             }
@@ -860,7 +928,9 @@ impl AutonomyApp {
                 None,
             )?;
 
-            if let Some(sequence_id) = register_sequence_from_lead(&self.config, &lead, &request_path)? {
+            if let Some(sequence_id) =
+                register_sequence_from_lead(&self.config, &lead, &request_path)?
+            {
                 self.log(&format!(
                     "Perpetua registered nurture sequence {} from {}.",
                     sequence_id,
@@ -941,7 +1011,10 @@ impl AutonomyApp {
                         &sequence_id,
                         &step_id,
                         SequenceActionOutcome::Flagged {
-                            note: Some(format!("Phone follow-up flagged at {}", note_path.display())),
+                            note: Some(format!(
+                                "Phone follow-up flagged at {}",
+                                note_path.display()
+                            )),
                         },
                     )?;
                     self.notify_best_effort(
@@ -958,9 +1031,14 @@ impl AutonomyApp {
         Ok(())
     }
 
-    fn process_pio_deadlines(&self, state: &mut AppState, now_local: DateTime<Local>) -> Result<()> {
+    fn process_pio_deadlines(
+        &self,
+        state: &mut AppState,
+        now_local: DateTime<Local>,
+    ) -> Result<()> {
         let scan_job_id = "pio-deadline-scan";
-        let scan_time = NaiveTime::parse_from_str("06:30", "%H:%M").context("invalid Pio scan time")?;
+        let scan_time =
+            NaiveTime::parse_from_str("06:30", "%H:%M").context("invalid Pio scan time")?;
         if now_local.time() < scan_time {
             return Ok(());
         }
@@ -978,7 +1056,8 @@ impl AutonomyApp {
         let alerts = collect_due_alerts(&self.config, &state.processed_deadline_alerts, now_local)?;
         let created_count = alerts.len();
         for alert in alerts {
-            let (role_id, task_type, agent_id) = self.resolve_deadline_assignment(&alert.assigned_to);
+            let (role_id, task_type, agent_id) =
+                self.resolve_deadline_assignment(&alert.assigned_to);
             let request_path = self.create_structured_inbox_request(
                 "pio-alert",
                 &alert.title,
@@ -1054,11 +1133,19 @@ impl AutonomyApp {
         role_job
     }
 
-    fn create_daily_team_requests(&self, state: &mut AppState, job: &JobConfig, schedule_key: Option<&str>) -> Result<()> {
+    fn create_daily_team_requests(
+        &self,
+        state: &mut AppState,
+        job: &JobConfig,
+        schedule_key: Option<&str>,
+    ) -> Result<()> {
         let date_key = schedule_key
             .map(|value| value.to_string())
             .unwrap_or_else(|| local_now().date_naive().to_string());
-        let mut plan_lines = vec![format!("# Daily Team Orchestration - {date_key}"), String::new()];
+        let mut plan_lines = vec![
+            format!("# Daily Team Orchestration - {date_key}"),
+            String::new(),
+        ];
         let mut created = 0;
 
         for role in self.config.team_roles.values() {
@@ -1094,7 +1181,8 @@ impl AutonomyApp {
                 "task_type": if role.role.eq_ignore_ascii_case("Outreach") { "draft" } else { "proposal" },
                 "agent_id": role.agent_id,
             });
-            let payload_text = serde_json::to_string_pretty(&payload).context("failed to serialize daily request")?;
+            let payload_text = serde_json::to_string_pretty(&payload)
+                .context("failed to serialize daily request")?;
             fs::write(&request_path, &payload_text)
                 .with_context(|| format!("failed to write {}", request_path.display()))?;
 
@@ -1111,7 +1199,10 @@ impl AutonomyApp {
             created += 1;
             let mut extra = Map::new();
             extra.insert("role_id".to_string(), Value::String(role.role_id.clone()));
-            extra.insert("request_file".to_string(), Value::String(request_path.display().to_string()));
+            extra.insert(
+                "request_file".to_string(),
+                Value::String(request_path.display().to_string()),
+            );
             if let Err(err) = append_team_activity(
                 &self.config.runtime_dir,
                 &role.team,
@@ -1122,7 +1213,10 @@ impl AutonomyApp {
                 role.daily_quota,
                 Some(extra),
             ) {
-                self.log(&format!("Failed to append orchestration activity for {}: {err:#}", role.role_id));
+                self.log(&format!(
+                    "Failed to append orchestration activity for {}: {err:#}",
+                    role.role_id
+                ));
             }
             plan_lines.push(format!(
                 "- {}: queued daily packet with quota {} {}",
@@ -1164,8 +1258,13 @@ impl AutonomyApp {
         {
             let job_state = state.ensure_job_state(&job.job_id);
             if job_state.logical_job_id.is_none() {
-                job_state.logical_job_id =
-                    Some(job.job_id.split_once("--").map(|(left, _)| left).unwrap_or(&job.job_id).to_string());
+                job_state.logical_job_id = Some(
+                    job.job_id
+                        .split_once("--")
+                        .map(|(left, _)| left)
+                        .unwrap_or(&job.job_id)
+                        .to_string(),
+                );
             }
             job_state.role_id = role.map(|item| item.role_id.clone());
         }
@@ -1193,7 +1292,10 @@ impl AutonomyApp {
             ));
             self.notify_best_effort(
                 "FounderAI queued offline work",
-                &format!("{} was queued because internet was unavailable.", job.job_id),
+                &format!(
+                    "{} was queued because internet was unavailable.",
+                    job.job_id
+                ),
             );
             if let Some(request_source) = request_source {
                 self.mark_request_processed(state, request_source, "queued_offline");
@@ -1214,8 +1316,12 @@ impl AutonomyApp {
             return Ok(());
         }
         if resolved_policy == "before_run" && approval_phase.as_deref() != Some("before_run") {
-            let approval_id = self.request_approval(state, job, trigger, "before_run", role, None)?;
-            self.log(&format!("Created before-run approval {} for {}.", approval_id, job.job_id));
+            let approval_id =
+                self.request_approval(state, job, trigger, "before_run", role, None)?;
+            self.log(&format!(
+                "Created before-run approval {} for {}.",
+                approval_id, job.job_id
+            ));
             return Ok(());
         }
 
@@ -1226,14 +1332,19 @@ impl AutonomyApp {
                 .clone()
                 .and_then(|value| parse_timestamp(&value))
             {
-                let elapsed = utc_now().signed_duration_since(last_finished_at).num_seconds();
+                let elapsed = utc_now()
+                    .signed_duration_since(last_finished_at)
+                    .num_seconds();
                 if elapsed < job.cooldown_seconds as i64 {
                     return Ok(());
                 }
             }
         }
 
-        self.log(&format!("Running job {} from trigger {}.", job.job_id, trigger));
+        self.log(&format!(
+            "Running job {} from trigger {}.",
+            job.job_id, trigger
+        ));
         let result = run_worker(
             &self.config,
             job,
@@ -1273,7 +1384,10 @@ impl AutonomyApp {
         let outbox_copy = self.config.outbox_dir.join(format!("{}.md", result.run_id));
         if let Ok(output_text) = fs::read_to_string(&result.output_file) {
             if let Err(err) = fs::write(&outbox_copy, output_text) {
-                self.log(&format!("Failed to write outbox copy {}: {err}", outbox_copy.display()));
+                self.log(&format!(
+                    "Failed to write outbox copy {}: {err}",
+                    outbox_copy.display()
+                ));
             }
         }
 
@@ -1282,8 +1396,12 @@ impl AutonomyApp {
         }
 
         if resolved_policy == "after_run" {
-            let approval_id = self.request_approval(state, job, trigger, "after_run", role, Some(&result))?;
-            self.log(&format!("Created after-run approval {} for {}.", approval_id, job.job_id));
+            let approval_id =
+                self.request_approval(state, job, trigger, "after_run", role, Some(&result))?;
+            self.log(&format!(
+                "Created after-run approval {} for {}.",
+                approval_id, job.job_id
+            ));
         }
 
         if result.exit_code != 0 {
@@ -1329,7 +1447,15 @@ impl AutonomyApp {
         }
 
         if role.is_some() {
-            return self.run_single_job(state, job, trigger, current_internet, now_local, request_source, role);
+            return self.run_single_job(
+                state,
+                job,
+                trigger,
+                current_internet,
+                now_local,
+                request_source,
+                role,
+            );
         }
 
         if job.mode == "daily_orchestration" {
@@ -1352,7 +1478,10 @@ impl AutonomyApp {
 
             for role_id in &job.team_roles {
                 let Some(team_role) = self.config.team_roles.get(role_id).cloned() else {
-                    self.log(&format!("Configured role '{}' was not found for job {}.", role_id, job.job_id));
+                    self.log(&format!(
+                        "Configured role '{}' was not found for job {}.",
+                        role_id, job.job_id
+                    ));
                     continue;
                 };
                 let role_job = self.role_specific_job(job, &team_role);
@@ -1400,7 +1529,15 @@ impl AutonomyApp {
             return Ok(());
         }
 
-        self.run_single_job(state, job, trigger, current_internet, now_local, request_source, None)
+        self.run_single_job(
+            state,
+            job,
+            trigger,
+            current_internet,
+            now_local,
+            request_source,
+            None,
+        )
     }
 
     fn replay_offline_queue(
@@ -1431,7 +1568,9 @@ impl AutonomyApp {
             self.log(&format!("Replayed {replayed} offline queue item(s)."));
             self.notify_best_effort(
                 "FounderAI replayed queued work",
-                &format!("{replayed} offline queue item(s) were replayed after connectivity returned."),
+                &format!(
+                    "{replayed} offline queue item(s) were replayed after connectivity returned."
+                ),
             );
         }
 
@@ -1453,42 +1592,92 @@ impl AutonomyApp {
 
         if include_startup {
             for job in &self.config.jobs {
-                if let Err(err) = self.dispatch_job(&mut state, job, "startup", current_internet, now_local, None, None) {
-                    self.log(&format!("Job {} failed during startup trigger: {err:#}", job.job_id));
+                if let Err(err) = self.dispatch_job(
+                    &mut state,
+                    job,
+                    "startup",
+                    current_internet,
+                    now_local,
+                    None,
+                    None,
+                ) {
+                    self.log(&format!(
+                        "Job {} failed during startup trigger: {err:#}",
+                        job.job_id
+                    ));
                 }
             }
         }
 
         if let Some(trigger) = manual_trigger {
             for job in &self.config.jobs {
-                if let Err(err) = self.dispatch_job(&mut state, job, trigger, current_internet, now_local, None, None) {
-                    self.log(&format!("Job {} failed during trigger {}: {err:#}", job.job_id, trigger));
+                if let Err(err) = self.dispatch_job(
+                    &mut state,
+                    job,
+                    trigger,
+                    current_internet,
+                    now_local,
+                    None,
+                    None,
+                ) {
+                    self.log(&format!(
+                        "Job {} failed during trigger {}: {err:#}",
+                        job.job_id, trigger
+                    ));
                 }
             }
         }
 
         for job in &self.config.jobs {
-            if let Err(err) = self.dispatch_job(&mut state, job, "periodic", current_internet, now_local, None, None) {
-                self.log(&format!("Job {} failed during periodic trigger: {err:#}", job.job_id));
+            if let Err(err) = self.dispatch_job(
+                &mut state,
+                job,
+                "periodic",
+                current_internet,
+                now_local,
+                None,
+                None,
+            ) {
+                self.log(&format!(
+                    "Job {} failed during periodic trigger: {err:#}",
+                    job.job_id
+                ));
             }
         }
 
         if previous_internet == Some(false) && current_internet {
-            if self.config.offline_queue.replay_trigger.eq_ignore_ascii_case("internet_up") {
-                if let Err(err) = self.replay_offline_queue(&mut state, current_internet, now_local) {
+            if self
+                .config
+                .offline_queue
+                .replay_trigger
+                .eq_ignore_ascii_case("internet_up")
+            {
+                if let Err(err) = self.replay_offline_queue(&mut state, current_internet, now_local)
+                {
                     self.log(&format!("Offline queue replay failed: {err:#}"));
                 }
             }
             for job in &self.config.jobs {
-                if let Err(err) =
-                    self.dispatch_job(&mut state, job, "internet_up", current_internet, now_local, None, None)
-                {
-                    self.log(&format!("Job {} failed during internet_up trigger: {err:#}", job.job_id));
+                if let Err(err) = self.dispatch_job(
+                    &mut state,
+                    job,
+                    "internet_up",
+                    current_internet,
+                    now_local,
+                    None,
+                    None,
+                ) {
+                    self.log(&format!(
+                        "Job {} failed during internet_up trigger: {err:#}",
+                        job.job_id
+                    ));
                 }
             }
         }
 
-        if let Err(err) = self.process_zacchaeus_inbound_requests(&mut state, current_internet, now_local) {
+        if let Err(err) =
+            self.process_zacchaeus_inbound_requests(&mut state, current_internet, now_local)
+        {
             self.log(&format!("Zacchaeus lead processing failed: {err:#}"));
         }
 
@@ -1850,15 +2039,11 @@ impl AutonomyApp {
             lines.push(format!(
                 "- {}: last_run={} exit={} pending_approval={}",
                 job.job_id,
-                job
-                    .last_run_id
-                    .unwrap_or_else(|| "none".to_string()),
-                job
-                    .last_exit_code
+                job.last_run_id.unwrap_or_else(|| "none".to_string()),
+                job.last_exit_code
                     .map(|value| value.to_string())
                     .unwrap_or_else(|| "none".to_string()),
-                job
-                    .pending_approval_id
+                job.pending_approval_id
                     .unwrap_or_else(|| "none".to_string())
             ));
         }
@@ -1869,18 +2054,12 @@ impl AutonomyApp {
                 lines.push(format!(
                     "- {}: last_job={} status={} metric={} pending_approval={}",
                     role.role_id,
-                    role
-                        .last_job_id
-                        .unwrap_or_else(|| "unknown".to_string()),
-                    role
-                        .last_status
-                        .unwrap_or_else(|| "unknown".to_string()),
-                    role
-                        .last_metric_value
+                    role.last_job_id.unwrap_or_else(|| "unknown".to_string()),
+                    role.last_status.unwrap_or_else(|| "unknown".to_string()),
+                    role.last_metric_value
                         .map(|value| value.to_string())
                         .unwrap_or_else(|| "none".to_string()),
-                    role
-                        .pending_approval_id
+                    role.pending_approval_id
                         .unwrap_or_else(|| "none".to_string())
                 ));
             }
@@ -1915,7 +2094,8 @@ impl AutonomyApp {
                 object.insert("role_id".to_string(), Value::String(role_id.to_string()));
             }
         }
-        let payload_text = serde_json::to_string_pretty(&payload).context("failed to serialize inbox request")?;
+        let payload_text =
+            serde_json::to_string_pretty(&payload).context("failed to serialize inbox request")?;
         fs::write(&file_path, payload_text)
             .with_context(|| format!("failed to write inbox request {}", file_path.display()))?;
         Ok(file_path)

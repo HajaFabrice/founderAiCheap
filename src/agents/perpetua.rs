@@ -151,10 +151,9 @@ fn parse_timestamp(value: &str) -> Option<DateTime<Utc>> {
 
 fn load_templates(config: &AppConfig) -> Result<SequenceTemplateStore> {
     let path = template_path(config);
-    let raw = fs::read_to_string(&path)
-        .with_context(|| format!("failed to read {}", path.display()))?;
-    serde_json::from_str(&raw)
-        .with_context(|| format!("failed to parse {}", path.display()))
+    let raw =
+        fs::read_to_string(&path).with_context(|| format!("failed to read {}", path.display()))?;
+    serde_json::from_str(&raw).with_context(|| format!("failed to parse {}", path.display()))
 }
 
 fn load_runtime_state(config: &AppConfig) -> Result<SequenceStateFile> {
@@ -162,10 +161,9 @@ fn load_runtime_state(config: &AppConfig) -> Result<SequenceStateFile> {
     if !path.exists() {
         return Ok(SequenceStateFile::default());
     }
-    let raw = fs::read_to_string(&path)
-        .with_context(|| format!("failed to read {}", path.display()))?;
-    serde_json::from_str(&raw)
-        .with_context(|| format!("failed to parse {}", path.display()))
+    let raw =
+        fs::read_to_string(&path).with_context(|| format!("failed to read {}", path.display()))?;
+    serde_json::from_str(&raw).with_context(|| format!("failed to parse {}", path.display()))
 }
 
 fn save_runtime_state(config: &AppConfig, state: &SequenceStateFile) -> Result<()> {
@@ -174,7 +172,8 @@ fn save_runtime_state(config: &AppConfig, state: &SequenceStateFile) -> Result<(
         fs::create_dir_all(parent)
             .with_context(|| format!("failed to create {}", parent.display()))?;
     }
-    let payload = serde_json::to_string_pretty(state).context("failed to serialize nurture state")?;
+    let payload =
+        serde_json::to_string_pretty(state).context("failed to serialize nurture state")?;
     fs::write(&path, payload).with_context(|| format!("failed to write {}", path.display()))
 }
 
@@ -245,15 +244,11 @@ pub fn register_sequence_from_lead(
 
     let mut state = load_runtime_state(config)?;
     let request_key = request_source.display().to_string();
-    if let Some(existing) = state
-        .entries
-        .iter()
-        .find(|entry| {
-            entry.status.eq_ignore_ascii_case("active")
-                && (entry.source_request.as_deref() == Some(request_key.as_str())
-                    || entry.sequence_id.contains(&active_dedupe_key(lead)))
-        })
-    {
+    if let Some(existing) = state.entries.iter().find(|entry| {
+        entry.status.eq_ignore_ascii_case("active")
+            && (entry.source_request.as_deref() == Some(request_key.as_str())
+                || entry.sequence_id.contains(&active_dedupe_key(lead)))
+    }) {
         return Ok(Some(existing.sequence_id.clone()));
     }
 
@@ -440,8 +435,7 @@ pub fn complete_action(
     sequence.last_run_id = run_id;
     sequence.current_step_index += 1;
     if let Some(next_step) = template.steps.get(sequence.current_step_index) {
-        let started_at = parse_timestamp(&sequence.started_at)
-            .unwrap_or_else(Utc::now);
+        let started_at = parse_timestamp(&sequence.started_at).unwrap_or_else(Utc::now);
         sequence.next_due_at = Some(step_due_at(started_at, next_step).to_rfc3339());
     } else {
         sequence.status = "completed".to_string();

@@ -66,9 +66,14 @@ impl DaemonLock {
         let payload = LockPayload {
             pid: std::process::id(),
         };
-        let serialized = serde_json::to_string(&payload).context("failed to serialize lock payload")?;
+        let serialized =
+            serde_json::to_string(&payload).context("failed to serialize lock payload")?;
 
-        match OpenOptions::new().create_new(true).write(true).open(&self.path) {
+        match OpenOptions::new()
+            .create_new(true)
+            .write(true)
+            .open(&self.path)
+        {
             Ok(mut file) => {
                 file.write_all(serialized.as_bytes())
                     .with_context(|| format!("failed to write lock {}", self.path.display()))?;
@@ -86,8 +91,9 @@ impl DaemonLock {
                     bail!("FounderAI daemon already running with PID {existing_pid}.");
                 }
 
-                fs::write(&self.path, serialized)
-                    .with_context(|| format!("failed to refresh stale lock {}", self.path.display()))?;
+                fs::write(&self.path, serialized).with_context(|| {
+                    format!("failed to refresh stale lock {}", self.path.display())
+                })?;
                 self.acquired = true;
                 Ok(())
             }

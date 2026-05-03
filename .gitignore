@@ -10,6 +10,7 @@ outbox/*
 .env
 .env.*
 !.env.example
+!.env.cloud.example
 documents/**
 !documents/
 !documents/01_Strategy_And_Systems/

@@ -1,7 +1,7 @@
 use crate::config::{AgentProfile, AppConfig, JobConfig, TeamRoleConfig, WorkerConfig};
 use crate::marketing::{
-    funnel_reviews_dir, funnel_snapshot_path, latest_funnel_review_path, latest_marketing_brief_path,
-    marketing_briefs_dir, shortlist_scorecard_path,
+    funnel_reviews_dir, funnel_snapshot_path, latest_funnel_review_path,
+    latest_marketing_brief_path, marketing_briefs_dir, shortlist_scorecard_path,
 };
 use crate::model_router::resolve_worker;
 use anyhow::{Context, Result};
@@ -43,7 +43,8 @@ struct ProviderCallResponse {
 }
 
 fn read_founder_file(path: &Path) -> String {
-    fs::read_to_string(path).unwrap_or_else(|_| format!("[Missing context file: {}]", path.display()))
+    fs::read_to_string(path)
+        .unwrap_or_else(|_| format!("[Missing context file: {}]", path.display()))
 }
 
 fn truncate_for_prompt(raw: &str, max_chars: usize) -> String {
@@ -198,7 +199,10 @@ fn compact_generic_json_section(path: &Path, raw: &str, value: &Value) -> String
             .take(6)
             .map(|offer| {
                 let id = offer.get("id").and_then(Value::as_str).unwrap_or("unknown");
-                let label = offer.get("label").and_then(Value::as_str).unwrap_or("unknown");
+                let label = offer
+                    .get("label")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
                 let category = offer
                     .get("category")
                     .and_then(Value::as_str)
@@ -220,7 +224,10 @@ fn compact_generic_json_section(path: &Path, raw: &str, value: &Value) -> String
             .take(6)
             .map(|asset| {
                 let id = asset.get("id").and_then(Value::as_str).unwrap_or("unknown");
-                let kind = asset.get("type").and_then(Value::as_str).unwrap_or("unknown");
+                let kind = asset
+                    .get("type")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
                 let source = asset
                     .get("source_path")
                     .and_then(Value::as_str)
@@ -237,7 +244,10 @@ fn compact_generic_json_section(path: &Path, raw: &str, value: &Value) -> String
             .iter()
             .take(10)
             .map(|document| {
-                let id = document.get("id").and_then(Value::as_str).unwrap_or("unknown");
+                let id = document
+                    .get("id")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown");
                 let category = document
                     .get("category")
                     .and_then(Value::as_str)
@@ -266,7 +276,10 @@ fn prompt_ready_content(path: &Path) -> String {
         return raw;
     }
 
-    let extension = path.extension().and_then(|value| value.to_str()).unwrap_or_default();
+    let extension = path
+        .extension()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default();
     if extension.eq_ignore_ascii_case("json") && raw.chars().count() > 12000 {
         if let Ok(value) = serde_json::from_str::<Value>(&raw) {
             return compact_generic_json_section(path, &raw, &value);
@@ -306,14 +319,19 @@ fn render_agent_ready_documents(
     let mut rendered = vec![
         format!("Document library root: {}", root.display()),
         format!("Selected agent-ready bundle for: {selected_agent_id}"),
-        render_document_section("Document Source Priority", &root.join("references").join("source_priority.md")),
+        render_document_section(
+            "Document Source Priority",
+            &root.join("references").join("source_priority.md"),
+        ),
         render_document_section(
             "Canonical Reference Brief",
             &root.join("references").join("canonical_reference_brief.md"),
         ),
         render_document_section(
             "Independent Business Boundary",
-            &root.join("references").join("independent_business_boundary.md"),
+            &root
+                .join("references")
+                .join("independent_business_boundary.md"),
         ),
         render_document_section(
             "Operational Memory Database",
@@ -333,11 +351,18 @@ fn render_agent_ready_documents(
         "anthony" | "zacchaeus" | "perpetua" | "bonaventure" => vec![
             (
                 "Independent Marketing Brief",
-                root.join("references").join("independent_marketing_brief.md"),
+                root.join("references")
+                    .join("independent_marketing_brief.md"),
+            ),
+            (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
             ),
             (
                 "Agent Conversation Reference",
-                root.join("references").join("agent_conversation_reference.md"),
+                root.join("references")
+                    .join("agent_conversation_reference.md"),
             ),
             (
                 "New Contact Answer Bank",
@@ -349,7 +374,8 @@ fn render_agent_ready_documents(
             ),
             (
                 "Marketing Intelligence Overlay",
-                root.join("references").join("marketing_intelligence_overlay.md"),
+                root.join("references")
+                    .join("marketing_intelligence_overlay.md"),
             ),
             (
                 "Independent CRM Database",
@@ -357,7 +383,8 @@ fn render_agent_ready_documents(
             ),
             (
                 "Review-Ready Outreach Shortlist Database",
-                root.join("databases").join("review_ready_outreach_shortlist.json"),
+                root.join("databases")
+                    .join("review_ready_outreach_shortlist.json"),
             ),
             (
                 "Independent Pipeline Database",
@@ -365,7 +392,12 @@ fn render_agent_ready_documents(
             ),
             (
                 "Independent Service Catalog Database",
-                root.join("databases").join("independent_service_catalog.json"),
+                root.join("databases")
+                    .join("independent_service_catalog.json"),
+            ),
+            (
+                "Digital Products Catalog Database",
+                root.join("databases").join("digital_products_catalog.json"),
             ),
             (
                 "Freelance Proof Assets Database",
@@ -383,7 +415,10 @@ fn render_agent_ready_documents(
                 "Latest Weekly Funnel Review",
                 latest_funnel_review_path(&config.runtime_dir),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
             (
                 "External Communications Templates",
                 root.join("templates").join("external_communications.md"),
@@ -393,12 +428,19 @@ fn render_agent_ready_documents(
                 root.join("templates").join("first_outbound_pack.md"),
             ),
             (
+                "Digital Product Sales Templates",
+                root.join("templates")
+                    .join("digital_product_sales_templates.md"),
+            ),
+            (
                 "Independent Freelance Templates",
-                root.join("templates").join("independent_freelance_templates.md"),
+                root.join("templates")
+                    .join("independent_freelance_templates.md"),
             ),
             (
                 "Marketing Intelligence Templates",
-                root.join("templates").join("marketing_intelligence_templates.md"),
+                root.join("templates")
+                    .join("marketing_intelligence_templates.md"),
             ),
         ],
         "hildegard" | "francis" => vec![
@@ -412,7 +454,13 @@ fn render_agent_ready_documents(
             ),
             (
                 "Marketing Intelligence Overlay",
-                root.join("references").join("marketing_intelligence_overlay.md"),
+                root.join("references")
+                    .join("marketing_intelligence_overlay.md"),
+            ),
+            (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
             ),
             (
                 "Independent CRM Database",
@@ -431,8 +479,13 @@ fn render_agent_ready_documents(
                 root.join("databases").join("founder_profile_blocks.json"),
             ),
             (
+                "Digital Products Catalog Database",
+                root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
                 "Review-Ready Outreach Shortlist Database",
-                root.join("databases").join("review_ready_outreach_shortlist.json"),
+                root.join("databases")
+                    .join("review_ready_outreach_shortlist.json"),
             ),
             (
                 "Document Registry Database",
@@ -454,14 +507,23 @@ fn render_agent_ready_documents(
                 "Latest Weekly Funnel Review",
                 latest_funnel_review_path(&config.runtime_dir),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
             (
                 "Internal Operations Templates",
                 root.join("templates").join("internal_operations.md"),
             ),
             (
                 "Marketing Intelligence Templates",
-                root.join("templates").join("marketing_intelligence_templates.md"),
+                root.join("templates")
+                    .join("marketing_intelligence_templates.md"),
+            ),
+            (
+                "Digital Product Sales Templates",
+                root.join("templates")
+                    .join("digital_product_sales_templates.md"),
             ),
         ],
         "juniper" => vec![
@@ -471,7 +533,13 @@ fn render_agent_ready_documents(
             ),
             (
                 "Marketing Intelligence Overlay",
-                root.join("references").join("marketing_intelligence_overlay.md"),
+                root.join("references")
+                    .join("marketing_intelligence_overlay.md"),
+            ),
+            (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
             ),
             (
                 "Independent CRM Database",
@@ -483,7 +551,12 @@ fn render_agent_ready_documents(
             ),
             (
                 "Independent Service Catalog Database",
-                root.join("databases").join("independent_service_catalog.json"),
+                root.join("databases")
+                    .join("independent_service_catalog.json"),
+            ),
+            (
+                "Digital Products Catalog Database",
+                root.join("databases").join("digital_products_catalog.json"),
             ),
             (
                 "Freelance Proof Assets Database",
@@ -491,7 +564,8 @@ fn render_agent_ready_documents(
             ),
             (
                 "Review-Ready Outreach Shortlist Database",
-                root.join("databases").join("review_ready_outreach_shortlist.json"),
+                root.join("databases")
+                    .join("review_ready_outreach_shortlist.json"),
             ),
             (
                 "Latest Weekly Marketing Brief",
@@ -501,14 +575,23 @@ fn render_agent_ready_documents(
                 "Latest Weekly Funnel Review",
                 latest_funnel_review_path(&config.runtime_dir),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
             (
                 "Internal Operations Templates",
                 root.join("templates").join("internal_operations.md"),
             ),
             (
                 "Marketing Intelligence Templates",
-                root.join("templates").join("marketing_intelligence_templates.md"),
+                root.join("templates")
+                    .join("marketing_intelligence_templates.md"),
+            ),
+            (
+                "Digital Product Sales Templates",
+                root.join("templates")
+                    .join("digital_product_sales_templates.md"),
             ),
         ],
         "bartholomew" | "pio" | "clare" | "columban" => vec![
@@ -528,7 +611,10 @@ fn render_agent_ready_documents(
                 "ERIS Metadata And Governance",
                 root.join("references").join("eris_metadata_governance.md"),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
             (
                 "Internal Operations Templates",
                 root.join("templates").join("internal_operations.md"),
@@ -541,7 +627,8 @@ fn render_agent_ready_documents(
             ),
             (
                 "Agent Conversation Reference",
-                root.join("references").join("agent_conversation_reference.md"),
+                root.join("references")
+                    .join("agent_conversation_reference.md"),
             ),
             (
                 "New Contact Answer Bank",
@@ -551,7 +638,10 @@ fn render_agent_ready_documents(
                 "ERIS Metadata And Governance",
                 root.join("references").join("eris_metadata_governance.md"),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
             (
                 "Research And Applications Templates",
                 root.join("templates").join("research_and_applications.md"),
@@ -560,7 +650,8 @@ fn render_agent_ready_documents(
         "duns-scotus" => vec![
             (
                 "Marketing Intelligence Overlay",
-                root.join("references").join("marketing_intelligence_overlay.md"),
+                root.join("references")
+                    .join("marketing_intelligence_overlay.md"),
             ),
             (
                 "Document Registry Database",
@@ -586,14 +677,18 @@ fn render_agent_ready_documents(
                 "Latest Weekly Funnel Review",
                 latest_funnel_review_path(&config.runtime_dir),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
             (
                 "Research And Applications Templates",
                 root.join("templates").join("research_and_applications.md"),
             ),
             (
                 "Marketing Intelligence Templates",
-                root.join("templates").join("marketing_intelligence_templates.md"),
+                root.join("templates")
+                    .join("marketing_intelligence_templates.md"),
             ),
         ],
         _ => vec![
@@ -602,7 +697,10 @@ fn render_agent_ready_documents(
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
             ),
-            ("Template Index", root.join("templates").join("template_index.md")),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
         ],
     };
 
@@ -617,7 +715,10 @@ fn render_agent_ready_documents(
 
 fn team_output_dir(runtime_dir: &Path, role: Option<&TeamRoleConfig>) -> Option<PathBuf> {
     let role = role?;
-    let path = runtime_dir.join("teams").join(&role.role_id).join("outputs");
+    let path = runtime_dir
+        .join("teams")
+        .join(&role.role_id)
+        .join("outputs");
     fs::create_dir_all(&path).ok();
     Some(path)
 }
@@ -628,7 +729,11 @@ fn grant_output_dir(runtime_dir: &Path) -> PathBuf {
     path
 }
 
-fn marketing_brief_output_file(runtime_dir: &Path, job: &JobConfig, run_id: &str) -> Option<PathBuf> {
+fn marketing_brief_output_file(
+    runtime_dir: &Path,
+    job: &JobConfig,
+    run_id: &str,
+) -> Option<PathBuf> {
     if job.job_id == "weekly-marketing-brief" {
         Some(marketing_briefs_dir(runtime_dir).join(format!("{run_id}.md")))
     } else {
@@ -679,7 +784,11 @@ fn render_agent_roster(config: &AppConfig) -> String {
                 agent.saint_name,
                 agent.id,
                 role_text,
-                if agent.kind.is_empty() { "unspecified" } else { &agent.kind },
+                if agent.kind.is_empty() {
+                    "unspecified"
+                } else {
+                    &agent.kind
+                },
                 if agent.primary_model.is_empty() {
                     "unspecified"
                 } else {
@@ -765,7 +874,8 @@ pub fn build_prompt(
     let founder_brain_overview = read_founder_file(&founder_brain.join("founder_brain.md"));
     let identity = read_founder_file(&founder_brain.join("references").join("identity.md"));
     let knowledge = read_founder_file(&founder_brain.join("references").join("knowledge-pack.md"));
-    let team_structure = read_founder_file(&founder_brain.join("references").join("team-structure.md"));
+    let team_structure =
+        read_founder_file(&founder_brain.join("references").join("team-structure.md"));
     let workflows = read_founder_file(&founder_brain.join("references").join("workflows.md"));
     let patterns = read_founder_file(&founder_brain.join("references").join("output-patterns.md"));
     let cloud_migration_plan = read_founder_file(&founder_brain.join("cloud_migration_plan.md"));
@@ -776,7 +886,8 @@ pub fn build_prompt(
     let risk_register = read_founder_file(&founder_brain.join("risk_register.md"));
     let kpi_thresholds = read_founder_file(&founder_brain.join("kpi_thresholds.md"));
     let forbidden_patterns = read_founder_file(&founder_brain.join("forbidden_patterns.txt"));
-    let governance_constraints = read_founder_file(&founder_brain.join("governance_constraints.json"));
+    let governance_constraints =
+        read_founder_file(&founder_brain.join("governance_constraints.json"));
     let strategic_roadmap = read_founder_file(&founder_brain.join("strategic_roadmap.md"));
 
     let request_note = request_source
@@ -880,8 +991,12 @@ fn build_client(worker: &WorkerConfig) -> Result<Client> {
 }
 
 fn api_key_from_env(worker: &WorkerConfig) -> Result<String> {
-    let value = env::var(&worker.api_key_env)
-        .with_context(|| format!("environment variable {} is required for the OpenAI provider", worker.api_key_env))?;
+    let value = env::var(&worker.api_key_env).with_context(|| {
+        format!(
+            "environment variable {} is required for the OpenAI provider",
+            worker.api_key_env
+        )
+    })?;
     let trimmed = value.trim();
     if trimmed.is_empty() {
         anyhow::bail!("environment variable {} is empty", worker.api_key_env);
@@ -898,8 +1013,18 @@ fn extract_openai_output_text(payload: &Value) -> Option<String> {
     }
 
     let mut chunks = Vec::new();
-    for item in payload.get("output").and_then(Value::as_array).into_iter().flatten() {
-        for content in item.get("content").and_then(Value::as_array).into_iter().flatten() {
+    for item in payload
+        .get("output")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        for content in item
+            .get("content")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
             if let Some(text) = content.get("text").and_then(Value::as_str) {
                 if !text.trim().is_empty() {
                     chunks.push(text.trim().to_string());
@@ -971,18 +1096,15 @@ pub fn provider_status(worker: &WorkerConfig) -> ProviderStatus {
             }
         };
 
-        let model_available = data
-            .get("models")
-            .and_then(Value::as_array)
-            .map(|models| {
-                models.iter().any(|model| {
-                    model
-                        .get("name")
-                        .and_then(Value::as_str)
-                        .map(|name| name == worker.model)
-                        .unwrap_or(false)
-                })
-            });
+        let model_available = data.get("models").and_then(Value::as_array).map(|models| {
+            models.iter().any(|model| {
+                model
+                    .get("name")
+                    .and_then(Value::as_str)
+                    .map(|name| name == worker.model)
+                    .unwrap_or(false)
+            })
+        });
 
         return ProviderStatus {
             reachable: true,
@@ -1029,13 +1151,16 @@ fn call_ollama(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallR
         .send()
         .with_context(|| format!("failed to reach Ollama at {}", worker.base_url))?;
     let status = response.status();
-    let raw = response.text().context("failed to read Ollama response body")?;
+    let raw = response
+        .text()
+        .context("failed to read Ollama response body")?;
 
     if !status.is_success() {
         anyhow::bail!("Ollama returned HTTP {}: {}", status, raw);
     }
 
-    let payload: Value = serde_json::from_str(&raw).context("failed to parse Ollama response JSON")?;
+    let payload: Value =
+        serde_json::from_str(&raw).context("failed to parse Ollama response JSON")?;
     if let Some(error) = payload.get("error").and_then(Value::as_str) {
         anyhow::bail!("Ollama error: {error}");
     }
@@ -1084,13 +1209,16 @@ fn call_openai(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallR
         .send()
         .with_context(|| format!("failed to reach OpenAI at {}", worker.base_url))?;
     let status = response.status();
-    let raw = response.text().context("failed to read OpenAI response body")?;
+    let raw = response
+        .text()
+        .context("failed to read OpenAI response body")?;
 
     if !status.is_success() {
         anyhow::bail!("OpenAI returned HTTP {}: {}", status, raw);
     }
 
-    let payload: Value = serde_json::from_str(&raw).context("failed to parse OpenAI response JSON")?;
+    let payload: Value =
+        serde_json::from_str(&raw).context("failed to parse OpenAI response JSON")?;
     let output_text = extract_openai_output_text(&payload)
         .ok_or_else(|| anyhow::anyhow!("OpenAI returned no response text"))?;
     Ok(ProviderCallResponse {
@@ -1143,7 +1271,10 @@ pub fn run_worker(
     current_internet: bool,
 ) -> WorkerRunResult {
     let timestamp = Utc::now();
-    let mut run_id_parts = vec![timestamp.format("%Y%m%dT%H%M%SZ").to_string(), job.job_id.clone()];
+    let mut run_id_parts = vec![
+        timestamp.format("%Y%m%dT%H%M%SZ").to_string(),
+        job.job_id.clone(),
+    ];
     if let Some(role) = role {
         run_id_parts.push(role.role_id.clone());
     }
@@ -1172,12 +1303,14 @@ pub fn run_worker(
     let prompt_words = prompt_word_count(&prompt_text);
 
     let routed_worker = resolve_worker(config, job, role, current_internet);
-    let team_output_file = team_output_dir(runtime_dir, role).map(|dir| dir.join(format!("{run_id}.md")));
-    let grant_output_file = if routed_worker.task_type == "grant" || job.agent_id.as_deref() == Some("bartholomew") {
-        Some(grant_output_dir(runtime_dir).join(format!("{run_id}.md")))
-    } else {
-        None
-    };
+    let team_output_file =
+        team_output_dir(runtime_dir, role).map(|dir| dir.join(format!("{run_id}.md")));
+    let grant_output_file =
+        if routed_worker.task_type == "grant" || job.agent_id.as_deref() == Some("bartholomew") {
+            Some(grant_output_dir(runtime_dir).join(format!("{run_id}.md")))
+        } else {
+            None
+        };
     let marketing_brief_file = marketing_brief_output_file(runtime_dir, job, &run_id);
     let funnel_review_file = funnel_review_output_file(runtime_dir, job, &run_id);
 
@@ -1222,7 +1355,8 @@ pub fn run_worker(
                         Ok(response)
                     }
                     Err(fallback_err) => {
-                        stderr_text.push_str(&format!("Fallback worker failed: {fallback_err:#}\n"));
+                        stderr_text
+                            .push_str(&format!("Fallback worker failed: {fallback_err:#}\n"));
                         failure_reason = Some(format!(
                             "Primary worker failed: {primary_err}. Fallback worker failed: {fallback_err}."
                         ));

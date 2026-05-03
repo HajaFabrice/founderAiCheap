@@ -54,16 +54,30 @@ impl AppState {
     pub fn normalize(&mut self) {
         for (job_id, job_state) in self.jobs.iter_mut() {
             if job_state.logical_job_id.is_none() {
-                job_state.logical_job_id = Some(job_id.split_once("--").map(|(left, _)| left).unwrap_or(job_id).to_string());
+                job_state.logical_job_id = Some(
+                    job_id
+                        .split_once("--")
+                        .map(|(left, _)| left)
+                        .unwrap_or(job_id)
+                        .to_string(),
+                );
             }
         }
     }
 
     pub fn ensure_job_state(&mut self, job_id: &str) -> &mut JobState {
-        self.jobs.entry(job_id.to_string()).or_insert_with(|| JobState {
-            logical_job_id: Some(job_id.split_once("--").map(|(left, _)| left).unwrap_or(job_id).to_string()),
-            ..JobState::default()
-        })
+        self.jobs
+            .entry(job_id.to_string())
+            .or_insert_with(|| JobState {
+                logical_job_id: Some(
+                    job_id
+                        .split_once("--")
+                        .map(|(left, _)| left)
+                        .unwrap_or(job_id)
+                        .to_string(),
+                ),
+                ..JobState::default()
+            })
     }
 
     pub fn ensure_role_state(&mut self, role_id: &str) -> &mut RoleState {

@@ -1,0 +1,4 @@
+site,date,temperature_c,humidity_pct,precipitation_mm,canopy_cover_pct,litter_depth_cm,distance_water_m,notes
+Foret_Primaire,2024-07-01,22.4,83,0,78,5.2,120,
+Lisiere_Nord,2024-07-02,24.1,76,2,54,3.1,240,
+Zone_Degradee,2024-07-03,27.8,61,0,18,1.0,500,
