@@ -66,6 +66,7 @@ operations instead of relying on raw mixed-version source files.
 - `references/collaboration_charter.md`
 - `references/eris_metadata_governance.md`
 - `references/digital_products_sales_brief.md`
+- `references/continuous_improvement_system.md`
 - `databases/freelance_proof_assets.json`
 - `databases/independent_service_catalog.json`
 - `databases/independent_pipeline.json`
@@ -74,11 +75,16 @@ operations instead of relying on raw mixed-version source files.
 - `databases/founder_profile_blocks.json`
 - `databases/eris_scoring_defaults.json`
 - `databases/digital_products_catalog.json`
+- `runtime/improvement/achievement_log.json`
+- `runtime/improvement/customer_feedback.json`
+- `runtime/improvement/improvement_backlog.json`
+- `runtime/improvement/latest_weekly_retrospective.md`
 - `templates/independent_freelance_templates.md`
 - `templates/first_outbound_pack.md`
 - `templates/ecor_first_sale_launch_pack.md`
 - `templates/marketing_intelligence_templates.md`
 - `templates/digital_product_sales_templates.md`
+- `templates/continuous_improvement_templates.md`
 
 ## Working Rule For Agents
 

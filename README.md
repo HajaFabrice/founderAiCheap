@@ -87,6 +87,8 @@ Non-goals:
 - Founder context is synced to the April 2026 Techni-Drones and ERIS V4 documents.
 - Deadline tracking now lives in `config/pio_deadlines.json` and surfaces through Pio-generated inbox requests.
 - Grant drafting now has a dedicated `runtime/grants/` artifact path.
+- Achievements, feedback, and backlog signals now sync into `runtime/improvement/`
+  with a weekly retrospective artifact.
 
 ## No-Budget Delivery Stack
 
@@ -126,6 +128,7 @@ Non-goals:
 - `outbox/`: FounderAI run copies
 - `runtime/`: logs, state, runs, approvals, and team outputs
 - `runtime/grants/`: grant draft copies generated for Bartholomew-driven work
+- `runtime/improvement/`: achievement log, customer feedback log, improvement backlog, and weekly retrospectives
 
 ## Project Docs
 
@@ -140,6 +143,7 @@ Non-goals:
 - [Provider troubleshooting](docs/provider-troubleshooting.md)
 - [Cloud deployment](docs/cloud-deployment.md)
 - [Cloud operations](docs/cloud-operations.md)
+- [Continuous improvement](docs/continuous-improvement.md)
 - [Independent services landing page (EN)](docs/independent-services-en.md)
 - [Independent services landing page (FR)](docs/services-fr.md)
 - [Independent services one-pager](docs/services-one-pager.md)

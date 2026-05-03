@@ -35,13 +35,16 @@ They should override older repo mirrors if a conflict appears.
    - `documents/oplurix-site/ExpertToInfluencer.txt`
    - `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
    - `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
-8. Filtered helper documents from `C:/Users/Student/Desktop/perso/Plans/` only
+8. Live sales and feedback evidence:
+   - `sales/oplurix-first-sale/delivery_log.csv`
+   - `sales/customer_feedback_log.csv`
+9. Filtered helper documents from `C:/Users/Student/Desktop/perso/Plans/` only
    when they strengthen the V4 strategy without changing it:
    - conversation-reference planning notes
    - new-contact FAQ planning notes
    - MEP Appendix B on scoring parameters
    - MEP Appendix C on metadata and governance
-9. Older versions and archives only if the newer files omit a needed detail.
+10. Older versions and archives only if the newer files omit a needed detail.
 
 ## Duplicate Resolution
 
@@ -57,6 +60,8 @@ They should override older repo mirrors if a conflict appears.
 | OPLURIX brand and storefront logic | `documents/oplurix-site/OPLURIX_Master_Context_Brief.md` | scattered brand notes and older storefront drafts | Use for OPLURIX identity, bilingual storefront rules, mission lock, and product-ladder framing. |
 | Expert-to-Influencer product | `documents/oplurix-site/ExpertToInfluencer.txt` | older generic content-engine snippets | Use for promise, pain points, product structure, and landing-page copy for the content product. |
 | EcoR toolkit main offer | `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md` plus `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md` | generic R-toolkit fragments and marketplace-specific draft language | Use for EcoR positioning, main-offer scope, and truthful product outcomes while keeping the first launch on Netlify plus PayPal. |
+| Live delivery proof | `sales/oplurix-first-sale/delivery_log.csv` | unlogged verbal recollection of launch outcomes | Use for buyer-payment, delivery, access, and download confirmation before claiming product traction. |
+| Customer feedback | `sales/customer_feedback_log.csv` | vague memory of objections or reactions | Use for post-launch learning, objections, buyer friction, and packaging adjustments. |
 | Independent proof assets | `documents/Plans/Freelance/Cleaning Summary.docx` plus `documents/Plans/Freelance/cleaned_data.csv` | older abstract service claims without sample work | Use to ground dataset-cleaning capability in a real, inspectable sample. |
 | Current CV asset | `documents/Plans/Freelance/Haja Fabrice Cv Optimized.docx` and `documents/Plans/Freelance/Haja Fabrice CV-EnvData-FR.docx` | missing or older CV variants | Use for bio blocks, capability summaries, and bilingual profile material. |
 | Independent outreach execution | `documents/Plans/Freelance/30-Day NGO Outreach & Contract Plan - Grok` plus the two outreach tracker workbooks | generic outreach heuristics | Use for cadence and pipeline structure, not as proof of verified contacts or public pricing. |

@@ -1,9 +1,10 @@
 # Digital Products Sales Brief
 
-Updated: 2026-05-02
+Updated: 2026-05-03
 
-This is the compact sales and positioning brief for the two digital products now
-active inside the OPLURIX revenue ladder.
+This is the compact sales and positioning brief for the digital products inside
+the OPLURIX revenue ladder. Two products are live; two are documented and
+pending checkout activation.
 
 ## Strategic Role
 
@@ -13,7 +14,7 @@ active inside the OPLURIX revenue ladder.
   professionals, not as generic AI gadgets.
 - The public storefront should stay warm, scientific, and specific.
 
-## Current Sellable Products
+## Sellable Products (Live)
 
 ### 1. Expert-to-Influencer Content Engine
 
@@ -65,6 +66,53 @@ active inside the OPLURIX revenue ladder.
   - built by a field biologist with real Madagascar field and analysis context
   - not a substitute for statistical judgment
 
+## Pipeline Products (Coming Soon — Do Not Activate Checkout Yet)
+
+### 3. Training-to-Quiz Generator
+
+- Price: `USD 29`
+- Status: PDF built, checkout not yet activated
+- Audience:
+  - NGO training officers
+  - field team leaders
+  - conservation workshop facilitators
+  - graduate research supervisors
+- Core promise:
+  - convert SOPs, field manuals, and workshop materials into validated quizzes
+    that verify field protocol competency, not just recall
+- Core components:
+  - 5-step SOP-to-quiz conversion system
+  - 8 question type library with conservation scenarios
+  - AI prompt pack for quiz generation
+  - quality and validation checklist
+  - scenario-based examples from real field training contexts
+- Activation rule:
+  - activate checkout only after delivery assets are packaged and the payment
+    confirmation flow is tested end-to-end
+
+### 4. Biodiversity Pitch Deck Builder
+
+- Price: `USD 69`
+- Status: PDF built, checkout not yet activated
+- Audience:
+  - conservation NGOs
+  - field researchers seeking funding
+  - graduate students preparing research proposals
+  - protected area managers
+- Core promise:
+  - convert biodiversity data, field evidence, and project outcomes into
+    structured pitch decks that communicate to donors, funders, and
+    institutional partners
+- Core components:
+  - 4-step deck build system
+  - 12-slide conservation pitch blueprint template
+  - audience adaptation guide for donors, funders, and partners
+  - AI prompt pack for deck content generation
+  - before-and-after examples from real conservation contexts
+- Activation rule:
+  - activate checkout only after delivery assets are packaged and the payment
+    confirmation flow is tested end-to-end
+
 ## Recommended Checkout Structure
 
 - Frontend: Netlify static site
@@ -80,10 +128,12 @@ active inside the OPLURIX revenue ladder.
 ## Pricing Discipline
 
 - Use one clean headline price per product on the public storefront:
-  - `Expert-to-Influencer Content Engine`: `USD 39`
-  - `EcoR Toolkit Starter`: `USD 29`
-  - `EcoR Toolkit Complete`: `USD 97`
-  - `EcoR Toolkit Pro Bundle`: `USD 149`
+  - `Expert-to-Influencer Content Engine`: `USD 39` — live
+  - `EcoR Toolkit Starter`: `USD 29` — live
+  - `EcoR Toolkit Complete`: `USD 97` — live
+  - `EcoR Toolkit Pro Bundle`: `USD 149` — anchor only, no active checkout
+  - `Training-to-Quiz Generator`: `USD 29` — coming soon, no active checkout
+  - `Biodiversity Pitch Deck Builder`: `USD 69` — coming soon, no active checkout
 - Hormozi-style pricing and upsell notes are useful, but should be applied with
   delivery discipline:
   - keep the live storefront on truthful deliverables only

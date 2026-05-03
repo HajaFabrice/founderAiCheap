@@ -565,6 +565,18 @@ fn default_ollama_override() -> WorkerOverride {
     }
 }
 
+#[allow(dead_code)]
+pub fn default_claude_override() -> WorkerOverride {
+    WorkerOverride {
+        provider: Some("claude".to_string()),
+        base_url: Some("https://api.anthropic.com/v1".to_string()),
+        model: Some("claude-sonnet-4-6".to_string()),
+        timeout_seconds: Some(300),
+        system_prompt: None,
+        api_key_env: Some("ANTHROPIC_API_KEY".to_string()),
+    }
+}
+
 fn inject_default_routes(router: &mut ModelRouterConfig) {
     if !router.routes.is_empty() || !router.task_types.is_empty() {
         return;

@@ -88,6 +88,11 @@ attached V4/V5 strategy texts plus the latest operational documents.
   - Clare for QA
   - Francis for weekly review
   - Columban for bounded self-improvement
+- The improvement loop now has dedicated artifacts for:
+  - achievements
+  - customer feedback
+  - heuristic backlog generation
+  - weekly retrospectives
 - Inbox and outbox remain sacred. Agents draft, route, and pause for approval.
 
 ## Employer Boundary

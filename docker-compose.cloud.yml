@@ -10,7 +10,8 @@ services:
       FOUNDERAI_MODEL: ${FOUNDERAI_MODEL:-gpt-5-mini}
       FOUNDERAI_TIMEOUT_SECONDS: ${FOUNDERAI_TIMEOUT_SECONDS:-300}
       FOUNDERAI_API_KEY_ENV: ${FOUNDERAI_API_KEY_ENV:-OPENAI_API_KEY}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
       - /srv/founderai/inbox:/srv/founderai/inbox
       - /srv/founderai/outbox:/srv/founderai/outbox
@@ -48,7 +49,8 @@ services:
       FOUNDERAI_MODEL: ${FOUNDERAI_MODEL:-gpt-5-mini}
       FOUNDERAI_TIMEOUT_SECONDS: ${FOUNDERAI_TIMEOUT_SECONDS:-300}
       FOUNDERAI_API_KEY_ENV: ${FOUNDERAI_API_KEY_ENV:-OPENAI_API_KEY}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
       - /srv/founderai/inbox:/srv/founderai/inbox
       - /srv/founderai/outbox:/srv/founderai/outbox

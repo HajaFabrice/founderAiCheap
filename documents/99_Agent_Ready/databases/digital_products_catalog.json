@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02",
+  "generated_at": "2026-05-03",
   "brand": {
     "name": "OPLURIX",
     "tagline": "Ecological Intelligence for Conservation Finance",
@@ -134,6 +134,84 @@
         "prompt bundle",
         "template files",
         "workflow guide"
+      ]
+    }
+  ],
+    {
+      "id": "training_to_quiz_generator",
+      "status": "coming_soon",
+      "checkout_enabled": false,
+      "headline": "Turn training documents, SOPs, and field protocols into validated quizzes that prove competency.",
+      "price_usd": 29,
+      "launch_pricing_note": "Planned launch price. Do not activate checkout until delivery assets and payment flow are verified.",
+      "primary_cta": "Join the waitlist",
+      "fallback_cta": "Contact for early access",
+      "audience": [
+        "NGO training officers",
+        "field team leaders",
+        "conservation workshop facilitators",
+        "graduate research supervisors"
+      ],
+      "core_promise": "Help conservation trainers convert SOPs, field manuals, and workshop materials into validated quizzes that verify understanding and field protocol competency rather than just recall.",
+      "what_is_inside": [
+        "5-step SOP-to-quiz conversion system",
+        "8 question type library with conservation scenarios",
+        "AI prompt pack for quiz generation",
+        "quality and validation checklist",
+        "scenario-based example set from real field training contexts"
+      ],
+      "truthful_outcomes": [
+        "faster quiz creation from existing documents",
+        "stronger field protocol verification",
+        "more consistent competency assessment across training cohorts"
+      ],
+      "source_documents": [
+        "documents/oplurix-site/OPLURIX_Product2_Training_to_Quiz_Generator.pdf"
+      ],
+      "delivery_assets": [
+        "PDF guide",
+        "prompt pack",
+        "question type library",
+        "scenario examples"
+      ]
+    },
+    {
+      "id": "biodiversity_pitch_deck_builder",
+      "status": "coming_soon",
+      "checkout_enabled": false,
+      "headline": "Turn conservation data, field findings, and project results into donor-ready, funder-ready pitch decks.",
+      "price_usd": 69,
+      "launch_pricing_note": "Planned launch price. Do not activate checkout until delivery assets and payment flow are verified.",
+      "primary_cta": "Join the waitlist",
+      "fallback_cta": "Contact for early access",
+      "audience": [
+        "conservation NGOs",
+        "field researchers seeking funding",
+        "graduate students preparing research proposals",
+        "protected area managers"
+      ],
+      "core_promise": "Help conservation professionals convert biodiversity data, field evidence, and project outcomes into structured pitch decks that communicate clearly to donors, funders, and institutional partners.",
+      "what_is_inside": [
+        "4-step deck build system",
+        "12-slide conservation pitch blueprint template",
+        "audience adaptation guide for donors, funders, and partners",
+        "AI prompt pack for deck content generation",
+        "before-and-after examples from real conservation contexts"
+      ],
+      "truthful_outcomes": [
+        "faster pitch deck production from existing data",
+        "clearer conservation narrative for non-specialist audiences",
+        "more fundable presentation of field and research results"
+      ],
+      "source_documents": [
+        "documents/oplurix-site/OPLURIX_Product4_Biodiversity_Pitch_Deck_Builder.pdf"
+      ],
+      "delivery_assets": [
+        "PDF guide",
+        "slide blueprint template",
+        "prompt pack",
+        "audience adaptation guide",
+        "example deck sections"
       ]
     }
   ],

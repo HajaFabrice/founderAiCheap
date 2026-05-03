@@ -451,6 +451,51 @@
         "PayPal fallback behavior",
         "sales-page grounding"
       ]
+    },
+    {
+      "id": "continuous-improvement-system",
+      "category": "operations",
+      "canonical_path": "documents/99_Agent_Ready/references/continuous_improvement_system.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/continuous_improvement_system.md",
+      "supersedes": [
+        "implicit weekly learning habits without stable runtime artifacts"
+      ],
+      "agent_uses": [
+        "retrospective discipline",
+        "achievement handling",
+        "feedback-to-change rules",
+        "bounded self-improvement"
+      ]
+    },
+    {
+      "id": "customer-feedback-log",
+      "category": "operations",
+      "canonical_path": "sales/customer_feedback_log.csv",
+      "repo_mirror_path": null,
+      "supersedes": [
+        "unlogged buyer objections kept only in memory"
+      ],
+      "agent_uses": [
+        "feedback capture",
+        "launch learning",
+        "offer refinement",
+        "retrospective evidence"
+      ]
+    },
+    {
+      "id": "delivery-log",
+      "category": "operations",
+      "canonical_path": "sales/oplurix-first-sale/delivery_log.csv",
+      "repo_mirror_path": null,
+      "supersedes": [
+        "informal delivery tracking"
+      ],
+      "agent_uses": [
+        "buyer proof",
+        "delivery confirmation",
+        "download confirmation",
+        "post-sale follow-up evidence"
+      ]
     }
   ]
 }

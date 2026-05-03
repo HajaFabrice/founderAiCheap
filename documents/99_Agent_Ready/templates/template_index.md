@@ -104,6 +104,7 @@ fields, verify facts, and keep approvals in place.
 - `Hildegard`
   - `references/collaboration_charter.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/continuous_improvement_system.md`
   - `references/digital_products_sales_brief.md`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
@@ -111,39 +112,60 @@ fields, verify facts, and keep approvals in place.
   - `databases/digital_products_catalog.json`
   - `runtime/marketing/independent_funnel.json`
   - `runtime/marketing/review_ready_shortlist_scorecard.json`
+  - `runtime/improvement/achievement_log.json`
+  - `runtime/improvement/customer_feedback.json`
+  - `runtime/improvement/improvement_backlog.json`
+  - `runtime/improvement/latest_weekly_retrospective.md`
   - `internal_operations.md`
   - `marketing_intelligence_templates.md`
+  - `continuous_improvement_templates.md`
   - `digital_product_sales_templates.md`
   - use morning briefing, meeting-note, and weekly marketing brief patterns
 - `Francis`
   - `references/collaboration_charter.md`
   - `references/marketing_intelligence_overlay.md`
+  - `references/continuous_improvement_system.md`
   - `references/digital_products_sales_brief.md`
   - `databases/eris_scoring_defaults.json`
   - `references/eris_metadata_governance.md`
   - `runtime/marketing/independent_funnel.json`
   - `runtime/marketing/review_ready_shortlist_scorecard.json`
   - `runtime/marketing/latest_marketing_brief.md`
+  - `runtime/improvement/achievement_log.json`
+  - `runtime/improvement/customer_feedback.json`
+  - `runtime/improvement/improvement_backlog.json`
+  - `runtime/improvement/latest_weekly_retrospective.md`
   - `databases/digital_products_catalog.json`
   - `internal_operations.md`
   - `marketing_intelligence_templates.md`
+  - `continuous_improvement_templates.md`
   - `digital_product_sales_templates.md`
   - use weekly review agenda, KPI discipline, and weekly funnel review structure
 - `Juniper`
   - `references/marketing_intelligence_overlay.md`
+  - `references/continuous_improvement_system.md`
   - `references/digital_products_sales_brief.md`
   - `databases/independent_crm.json`
   - `databases/independent_pipeline.json`
   - `databases/digital_products_catalog.json`
   - `runtime/marketing/independent_funnel.json`
   - `runtime/marketing/review_ready_shortlist_scorecard.json`
+  - `runtime/improvement/achievement_log.json`
+  - `runtime/improvement/customer_feedback.json`
+  - `runtime/improvement/improvement_backlog.json`
+  - `runtime/improvement/latest_weekly_retrospective.md`
   - `internal_operations.md`
   - `marketing_intelligence_templates.md`
+  - `continuous_improvement_templates.md`
   - `digital_product_sales_templates.md`
   - use CRM cleanup, funnel hygiene, and service-asset support patterns
 - `Columban`
   - `references/collaboration_charter.md`
+  - `references/continuous_improvement_system.md`
+  - `runtime/improvement/improvement_backlog.json`
+  - `runtime/improvement/latest_weekly_retrospective.md`
   - `internal_operations.md`
+  - `continuous_improvement_templates.md`
   - use bounded change-instruction JSON only
 - `Clare`
   - `references/collaboration_charter.md`

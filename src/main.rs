@@ -2,6 +2,7 @@ mod agents;
 mod app;
 mod approvals;
 mod config;
+mod improvement;
 mod marketing;
 mod model_router;
 mod network;

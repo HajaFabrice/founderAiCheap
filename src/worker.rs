@@ -1,4 +1,8 @@
 use crate::config::{AgentProfile, AppConfig, JobConfig, TeamRoleConfig, WorkerConfig};
+use crate::improvement::{
+    achievement_log_path, customer_feedback_path, improvement_backlog_path,
+    latest_weekly_retrospective_path, retrospectives_dir,
+};
 use crate::marketing::{
     funnel_reviews_dir, funnel_snapshot_path, latest_funnel_review_path,
     latest_marketing_brief_path, marketing_briefs_dir, shortlist_scorecard_path,
@@ -345,6 +349,18 @@ fn render_agent_ready_documents(
             "Review-Ready Shortlist Scorecard",
             &shortlist_scorecard_path(&config.runtime_dir),
         ),
+        render_document_section(
+            "Achievement Log",
+            &achievement_log_path(&config.runtime_dir),
+        ),
+        render_document_section(
+            "Customer Feedback Log",
+            &customer_feedback_path(&config.runtime_dir),
+        ),
+        render_document_section(
+            "Improvement Backlog",
+            &improvement_backlog_path(&config.runtime_dir),
+        ),
     ];
 
     let targeted_sections: Vec<(&str, PathBuf)> = match selected_agent_id {
@@ -414,6 +430,10 @@ fn render_agent_ready_documents(
             (
                 "Latest Weekly Funnel Review",
                 latest_funnel_review_path(&config.runtime_dir),
+            ),
+            (
+                "Latest Weekly Retrospective",
+                latest_weekly_retrospective_path(&config.runtime_dir),
             ),
             (
                 "Template Index",
@@ -508,6 +528,15 @@ fn render_agent_ready_documents(
                 latest_funnel_review_path(&config.runtime_dir),
             ),
             (
+                "Latest Weekly Retrospective",
+                latest_weekly_retrospective_path(&config.runtime_dir),
+            ),
+            (
+                "Continuous Improvement System",
+                root.join("references")
+                    .join("continuous_improvement_system.md"),
+            ),
+            (
                 "Template Index",
                 root.join("templates").join("template_index.md"),
             ),
@@ -519,6 +548,11 @@ fn render_agent_ready_documents(
                 "Marketing Intelligence Templates",
                 root.join("templates")
                     .join("marketing_intelligence_templates.md"),
+            ),
+            (
+                "Continuous Improvement Templates",
+                root.join("templates")
+                    .join("continuous_improvement_templates.md"),
             ),
             (
                 "Digital Product Sales Templates",
@@ -576,6 +610,15 @@ fn render_agent_ready_documents(
                 latest_funnel_review_path(&config.runtime_dir),
             ),
             (
+                "Latest Weekly Retrospective",
+                latest_weekly_retrospective_path(&config.runtime_dir),
+            ),
+            (
+                "Continuous Improvement System",
+                root.join("references")
+                    .join("continuous_improvement_system.md"),
+            ),
+            (
                 "Template Index",
                 root.join("templates").join("template_index.md"),
             ),
@@ -587,6 +630,11 @@ fn render_agent_ready_documents(
                 "Marketing Intelligence Templates",
                 root.join("templates")
                     .join("marketing_intelligence_templates.md"),
+            ),
+            (
+                "Continuous Improvement Templates",
+                root.join("templates")
+                    .join("continuous_improvement_templates.md"),
             ),
             (
                 "Digital Product Sales Templates",
@@ -612,12 +660,26 @@ fn render_agent_ready_documents(
                 root.join("references").join("eris_metadata_governance.md"),
             ),
             (
+                "Latest Weekly Retrospective",
+                latest_weekly_retrospective_path(&config.runtime_dir),
+            ),
+            (
+                "Continuous Improvement System",
+                root.join("references")
+                    .join("continuous_improvement_system.md"),
+            ),
+            (
                 "Template Index",
                 root.join("templates").join("template_index.md"),
             ),
             (
                 "Internal Operations Templates",
                 root.join("templates").join("internal_operations.md"),
+            ),
+            (
+                "Continuous Improvement Templates",
+                root.join("templates")
+                    .join("continuous_improvement_templates.md"),
             ),
         ],
         "jacinta" => vec![
@@ -744,6 +806,18 @@ fn marketing_brief_output_file(
 fn funnel_review_output_file(runtime_dir: &Path, job: &JobConfig, run_id: &str) -> Option<PathBuf> {
     if job.job_id == "weekly-funnel-review" {
         Some(funnel_reviews_dir(runtime_dir).join(format!("{run_id}.md")))
+    } else {
+        None
+    }
+}
+
+fn weekly_retrospective_output_file(
+    runtime_dir: &Path,
+    job: &JobConfig,
+    run_id: &str,
+) -> Option<PathBuf> {
+    if job.job_id == "weekly-retrospective" {
+        Some(retrospectives_dir(runtime_dir).join(format!("{run_id}.md")))
     } else {
         None
     }
@@ -979,6 +1053,20 @@ struct OpenAiResponsesRequest<'a> {
     input: &'a str,
 }
 
+#[derive(Serialize)]
+struct ClaudeMessagesRequest<'a> {
+    model: &'a str,
+    max_tokens: u32,
+    system: &'a str,
+    messages: Vec<ClaudeMessage<'a>>,
+}
+
+#[derive(Serialize)]
+struct ClaudeMessage<'a> {
+    role: &'a str,
+    content: &'a str,
+}
+
 fn normalize_base_url(base_url: &str) -> String {
     base_url.trim_end_matches('/').to_string()
 }
@@ -993,8 +1081,8 @@ fn build_client(worker: &WorkerConfig) -> Result<Client> {
 fn api_key_from_env(worker: &WorkerConfig) -> Result<String> {
     let value = env::var(&worker.api_key_env).with_context(|| {
         format!(
-            "environment variable {} is required for the OpenAI provider",
-            worker.api_key_env
+            "environment variable {} is required for the {} provider",
+            worker.api_key_env, worker.provider
         )
     })?;
     let trimmed = value.trim();
@@ -1113,7 +1201,10 @@ pub fn provider_status(worker: &WorkerConfig) -> ProviderStatus {
         };
     }
 
-    if worker.provider.eq_ignore_ascii_case("openai") {
+    if worker.provider.eq_ignore_ascii_case("openai")
+        || worker.provider.eq_ignore_ascii_case("claude")
+        || worker.provider.eq_ignore_ascii_case("anthropic")
+    {
         return match api_key_from_env(worker) {
             Ok(_) => ProviderStatus {
                 reachable: true,
@@ -1227,12 +1318,84 @@ fn call_openai(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallR
     })
 }
 
+fn call_claude(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallResponse> {
+    let client = build_client(worker)?;
+    let api_key = api_key_from_env(worker)?;
+    let url = format!("{}/messages", normalize_base_url(&worker.base_url));
+    let request = ClaudeMessagesRequest {
+        model: &worker.model,
+        max_tokens: 8096,
+        system: &worker.system_prompt,
+        messages: vec![ClaudeMessage {
+            role: "user",
+            content: prompt_text,
+        }],
+    };
+
+    let response = client
+        .post(&url)
+        .header("x-api-key", api_key)
+        .header("anthropic-version", "2023-06-01")
+        .header(CONTENT_TYPE, "application/json")
+        .json(&request)
+        .send()
+        .with_context(|| format!("failed to reach Claude API at {}", worker.base_url))?;
+    let status = response.status();
+    let raw = response
+        .text()
+        .context("failed to read Claude API response body")?;
+
+    if !status.is_success() {
+        anyhow::bail!("Claude API returned HTTP {}: {}", status, raw);
+    }
+
+    let payload: Value =
+        serde_json::from_str(&raw).context("failed to parse Claude API response JSON")?;
+    let output_text = payload
+        .get("content")
+        .and_then(Value::as_array)
+        .and_then(|items| {
+            items.iter().find_map(|item| {
+                if item.get("type").and_then(Value::as_str) == Some("text") {
+                    item.get("text")
+                        .and_then(Value::as_str)
+                        .map(str::trim)
+                        .filter(|text| !text.is_empty())
+                        .map(str::to_string)
+                } else {
+                    None
+                }
+            })
+        })
+        .ok_or_else(|| anyhow::anyhow!("Claude API returned no response text"))?;
+
+    let usage = payload.get("usage").map(|u| {
+        let input = u.get("input_tokens").and_then(Value::as_u64);
+        let output = u.get("output_tokens").and_then(Value::as_u64);
+        serde_json::json!({
+            "input_tokens": input,
+            "output_tokens": output,
+            "total_tokens": input.zip(output).map(|(i, o)| i + o),
+        })
+    });
+
+    Ok(ProviderCallResponse {
+        output_text,
+        usage,
+    })
+}
+
 fn call_provider(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallResponse> {
     if worker.provider.eq_ignore_ascii_case("ollama") {
         return call_ollama(prompt_text, worker);
     }
     if worker.provider.eq_ignore_ascii_case("openai") {
         return call_openai(prompt_text, worker);
+    }
+    if worker.provider.eq_ignore_ascii_case("claude")
+        || worker.provider.eq_ignore_ascii_case("anthropic")
+    {
+        return call_claude(prompt_text, worker);
     }
     anyhow::bail!("unsupported provider '{}'", worker.provider);
 }
@@ -1253,9 +1416,20 @@ fn prompt_word_count(text: &str) -> usize {
 }
 
 fn failure_output(worker: &WorkerConfig, reason: &str) -> String {
+    let key_hint = if worker.provider.eq_ignore_ascii_case("ollama") {
+        format!(
+            "If using Ollama, confirm the configured model exists locally: `ollama pull {}`",
+            worker.model
+        )
+    } else {
+        format!(
+            "If using {}, confirm `{}` is set in the environment.",
+            worker.provider, worker.api_key_env
+        )
+    };
     format!(
-        "# FounderAI Run Blocked\n\nProvider generation failed for this run.\n\n- Provider: {}\n- Base URL: {}\n- Model: {}\n- Reason: {}\n\n## Safe Recovery\n\n- Confirm the configured provider is reachable.\n- If using Ollama, confirm the configured model exists locally: `ollama pull {}`\n- If using OpenAI, confirm `{}` is set in the environment.\n- Re-run the FounderAI tick after the provider is healthy.\n",
-        worker.provider, worker.base_url, worker.model, reason, worker.model, worker.api_key_env
+        "# FounderAI Run Blocked\n\nProvider generation failed for this run.\n\n- Provider: {}\n- Base URL: {}\n- Model: {}\n- Reason: {}\n\n## Safe Recovery\n\n- Confirm the configured provider is reachable.\n- {}\n- Re-run the FounderAI tick after the provider is healthy.\n",
+        worker.provider, worker.base_url, worker.model, reason, key_hint
     )
 }
 
@@ -1313,6 +1487,7 @@ pub fn run_worker(
         };
     let marketing_brief_file = marketing_brief_output_file(runtime_dir, job, &run_id);
     let funnel_review_file = funnel_review_output_file(runtime_dir, job, &run_id);
+    let weekly_retrospective_file = weekly_retrospective_output_file(runtime_dir, job, &run_id);
 
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
@@ -1439,6 +1614,13 @@ pub fn run_worker(
         }
     }
 
+    if let Some(weekly_retrospective_file) = &weekly_retrospective_file {
+        if let Ok(output_text) = fs::read_to_string(&output_file) {
+            let _ = fs::write(weekly_retrospective_file, &output_text);
+            let _ = fs::write(latest_weekly_retrospective_path(runtime_dir), output_text);
+        }
+    }
+
     let finished_at = Utc::now().to_rfc3339();
     let summary = summary_from_output(&output_file, &stdout_text);
 
@@ -1466,6 +1648,7 @@ pub fn run_worker(
         "grant_output_file": grant_output_file.as_ref().map(|path| path.display().to_string()),
         "marketing_brief_file": marketing_brief_file.as_ref().map(|path| path.display().to_string()),
         "funnel_review_file": funnel_review_file.as_ref().map(|path| path.display().to_string()),
+        "weekly_retrospective_file": weekly_retrospective_file.as_ref().map(|path| path.display().to_string()),
     });
     if let Ok(metadata_text) = serde_json::to_string_pretty(&metadata) {
         let _ = fs::write(&metadata_file, metadata_text);

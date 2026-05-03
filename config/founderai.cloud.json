@@ -448,6 +448,26 @@
       "prompt": "Summarize KPIs across the 3 teams, compare progress against the 5-year SMART roadmap, flag red thresholds, and propose the next bounded strategic adjustments with a mentor-style paragraph."
     },
     {
+      "id": "weekly-retrospective",
+      "description": "Turn achievements, data, and feedback into the next bounded improvements.",
+      "enabled": true,
+      "triggers": [
+        "periodic"
+      ],
+      "requires_internet": false,
+      "approval_policy": "never",
+      "risk_tags": [],
+      "mode": "single",
+      "run_at_local": "08:45",
+      "weekdays": [
+        "Monday"
+      ],
+      "task_label": "Weekly Retrospective",
+      "task_type": "final_review",
+      "agent_id": "francis",
+      "prompt": "Review the achievement log, customer feedback log, improvement backlog, latest funnel review, latest marketing brief, KPI thresholds, and risk register. Produce a weekly retrospective that names what worked, what failed, what feedback changed our understanding, which backlog items matter next, and the next three bounded changes. If live customer feedback is absent, say that plainly and state what evidence must be captured next."
+    },
+    {
       "id": "internet-recovery-review",
       "description": "Resume network-dependent work after internet returns.",
       "enabled": true,

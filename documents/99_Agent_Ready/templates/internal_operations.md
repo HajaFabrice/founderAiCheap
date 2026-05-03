@@ -110,11 +110,12 @@ Date:
 # Weekly Review Agenda
 
 1. Review submitted work, approvals, and blocked items.
-2. Review grant progress, outreach progress, and PhD progress.
+2. Review grant progress, outreach progress, PhD progress, and launch outcomes.
 3. Review KPI colors: green, yellow, red.
-4. Review risks, mission drift, and missed deadlines.
-5. Decide next three priorities for the coming week.
-6. Record any system changes for Columban.
+4. Review achievements, buyer or collaborator feedback, and missing evidence.
+5. Review risks, mission drift, and missed deadlines.
+6. Decide next three priorities for the coming week.
+7. Record any system changes for Columban.
 ```
 
 ## Template 6: Columban Change Instruction JSON

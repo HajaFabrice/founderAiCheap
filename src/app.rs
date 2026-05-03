@@ -9,6 +9,7 @@ use crate::approvals::{
     list_pending_approvals, ApprovalDecision,
 };
 use crate::config::{AppConfig, JobConfig, TeamRoleConfig};
+use crate::improvement::{ensure_improvement_dirs, sync_improvement_state};
 use crate::marketing::{ensure_marketing_dirs, sync_marketing_state};
 use crate::network::internet_is_available;
 use crate::notifier::send_notification;
@@ -243,6 +244,7 @@ impl AutonomyApp {
         ensure_nurture_files(&self.config)?;
         ensure_log_files(&self.config.runtime_dir)?;
         ensure_marketing_dirs(&self.config.runtime_dir)?;
+        ensure_improvement_dirs(&self.config.runtime_dir)?;
         Ok(())
     }
 
@@ -1391,6 +1393,13 @@ impl AutonomyApp {
             }
         }
 
+        if let Err(err) = sync_improvement_state(&self.config) {
+            self.log(&format!(
+                "Improvement state sync failed after {}: {err:#}",
+                job.job_id
+            ));
+        }
+
         if let Some(request_source) = request_source {
             self.mark_request_processed(state, request_source, "completed");
         }
@@ -1583,6 +1592,9 @@ impl AutonomyApp {
         self.refresh_after_run_approvals(&mut state);
         if let Err(err) = sync_marketing_state(&self.config) {
             self.log(&format!("Marketing state sync failed: {err:#}"));
+        }
+        if let Err(err) = sync_improvement_state(&self.config) {
+            self.log(&format!("Improvement state sync failed: {err:#}"));
         }
 
         let previous_internet = state.last_internet_available;
