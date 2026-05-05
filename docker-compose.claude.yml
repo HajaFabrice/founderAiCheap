@@ -1,0 +1,20 @@
+services:
+  founderai:
+    build: .
+    container_name: founderai-claude
+    environment:
+      FOUNDERAI_PROVIDER: claude
+      FOUNDERAI_BASE_URL: https://api.anthropic.com/v1
+      FOUNDERAI_MODEL: claude-sonnet-4-20250514
+      FOUNDERAI_API_KEY_ENV: ANTHROPIC_API_KEY
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    volumes:
+      - ./inbox:/app/inbox
+      - ./outbox:/app/outbox
+      - ./runtime:/app/runtime
+      - ./docs:/app/docs:ro
+      - ./documents/99_Agent_Ready:/app/documents/99_Agent_Ready:ro
+      - ./founder-brain:/app/founder-brain:ro
+      - ./config:/app/config:ro
+    command: ["/app/founderai-ollama-rust", "daemon", "--config", "/app/config/founderai.json"]
+    restart: unless-stopped

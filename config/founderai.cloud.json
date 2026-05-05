@@ -22,12 +22,12 @@
     "timeout_seconds": 2.0
   },
   "worker": {
-    "provider": "openai",
-    "base_url": "https://api.openai.com/v1",
-    "model": "gpt-5-mini",
+    "provider": "claude",
+    "base_url": "https://api.anthropic.com/v1",
+    "model": "claude-sonnet-4-20250514",
     "timeout_seconds": 300,
     "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
-    "api_key_env": "OPENAI_API_KEY"
+    "api_key_env": "ANTHROPIC_API_KEY"
   },
   "model_router": {
     "enabled": true,
@@ -38,88 +38,88 @@
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "qa_check": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "briefing": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "final_review": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "proposal": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "phd_analysis": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "grant": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
       "scheduler": {
         "prefer": "online",
         "fallback": "none",
         "online": {
-          "provider": "openai",
-          "base_url": "https://api.openai.com/v1",
-          "model": "gpt-5-mini",
+          "provider": "claude",
+          "base_url": "https://api.anthropic.com/v1",
+          "model": "claude-sonnet-4-20250514",
           "timeout_seconds": 300,
-          "api_key_env": "OPENAI_API_KEY"
+          "api_key_env": "ANTHROPIC_API_KEY"
         }
       }
     }

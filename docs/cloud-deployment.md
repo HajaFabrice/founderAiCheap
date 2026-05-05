@@ -110,7 +110,7 @@ For Anthropic Claude (recommended):
 ```
 FOUNDERAI_PROVIDER=claude
 FOUNDERAI_BASE_URL=https://api.anthropic.com/v1
-FOUNDERAI_MODEL=claude-sonnet-4-6
+FOUNDERAI_MODEL=claude-sonnet-4-20250514
 FOUNDERAI_API_KEY_ENV=ANTHROPIC_API_KEY
 ANTHROPIC_API_KEY=sk-ant-...your-key-here...
 CLOUDFLARE_TUNNEL_TOKEN=...fill-in-step-6...
@@ -120,7 +120,7 @@ For OpenAI:
 ```
 FOUNDERAI_PROVIDER=openai
 FOUNDERAI_BASE_URL=https://api.openai.com/v1
-FOUNDERAI_MODEL=gpt-4o-mini
+FOUNDERAI_MODEL=gpt-5-mini
 FOUNDERAI_API_KEY_ENV=OPENAI_API_KEY
 OPENAI_API_KEY=sk-...your-key-here...
 CLOUDFLARE_TUNNEL_TOKEN=...fill-in-step-6...

@@ -22,12 +22,12 @@
     "timeout_seconds": 2.0
   },
   "worker": {
-    "provider": "ollama",
-    "base_url": "http://localhost:11434",
-    "model": "qwen2.5:7b-instruct",
-    "timeout_seconds": 1800,
+    "provider": "claude",
+    "base_url": "https://api.anthropic.com/v1",
+    "model": "claude-sonnet-4-20250514",
+    "timeout_seconds": 600,
     "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
-    "api_key_env": "OPENAI_API_KEY"
+    "api_key_env": "ANTHROPIC_API_KEY"
   },
   "strategic_validation": {
     "always_require_tags": [
@@ -47,15 +47,15 @@
   "model_router": {
     "task_types": {
       "draft": {
-        "prefer": "offline",
-        "fallback": "online"
+        "prefer": "online",
+        "fallback": "offline"
       },
       "qa_check": {
-        "prefer": "offline",
+        "prefer": "online",
         "fallback": "offline"
       },
       "briefing": {
-        "prefer": "offline",
+        "prefer": "online",
         "fallback": "offline"
       },
       "final_review": {
@@ -75,7 +75,7 @@
         "fallback": "offline"
       },
       "scheduler": {
-        "prefer": "offline",
+        "prefer": "online",
         "fallback": "offline"
       }
     },

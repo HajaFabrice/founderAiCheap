@@ -44,15 +44,15 @@ impl Default for InternetCheckConfig {
 }
 
 fn default_worker_provider() -> String {
-    "ollama".to_string()
+    "claude".to_string()
 }
 
 fn default_worker_base_url() -> String {
-    "http://localhost:11434".to_string()
+    "https://api.anthropic.com/v1".to_string()
 }
 
 fn default_worker_model() -> String {
-    "qwen2.5:7b-instruct".to_string()
+    "claude-sonnet-4-20250514".to_string()
 }
 
 fn default_worker_timeout() -> u64 {
@@ -64,7 +64,7 @@ fn default_worker_system_prompt() -> String {
 }
 
 fn default_worker_api_key_env() -> String {
-    "OPENAI_API_KEY".to_string()
+    "ANTHROPIC_API_KEY".to_string()
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -543,6 +543,7 @@ pub fn apply_worker_env_overrides(mut worker: WorkerConfig) -> WorkerConfig {
     worker
 }
 
+#[allow(dead_code)]
 fn default_openai_override() -> WorkerOverride {
     WorkerOverride {
         provider: Some("openai".to_string()),
@@ -570,7 +571,7 @@ pub fn default_claude_override() -> WorkerOverride {
     WorkerOverride {
         provider: Some("claude".to_string()),
         base_url: Some("https://api.anthropic.com/v1".to_string()),
-        model: Some("claude-sonnet-4-6".to_string()),
+        model: Some("claude-sonnet-4-20250514".to_string()),
         timeout_seconds: Some(300),
         system_prompt: None,
         api_key_env: Some("ANTHROPIC_API_KEY".to_string()),
@@ -585,27 +586,27 @@ fn inject_default_routes(router: &mut ModelRouterConfig) {
     router.task_types.insert(
         "draft".to_string(),
         TaskTypeRouteConfig {
-            prefer: "offline".to_string(),
-            fallback: "online".to_string(),
-            online: Some(default_openai_override()),
+            prefer: "online".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
     router.task_types.insert(
         "qa_check".to_string(),
         TaskTypeRouteConfig {
-            prefer: "offline".to_string(),
+            prefer: "online".to_string(),
             fallback: "offline".to_string(),
-            online: Some(default_openai_override()),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
     router.task_types.insert(
         "briefing".to_string(),
         TaskTypeRouteConfig {
-            prefer: "offline".to_string(),
-            fallback: "online".to_string(),
-            online: Some(default_openai_override()),
+            prefer: "online".to_string(),
+            fallback: "offline".to_string(),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
@@ -614,7 +615,7 @@ fn inject_default_routes(router: &mut ModelRouterConfig) {
         TaskTypeRouteConfig {
             prefer: "online".to_string(),
             fallback: "offline".to_string(),
-            online: Some(default_openai_override()),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
@@ -623,7 +624,7 @@ fn inject_default_routes(router: &mut ModelRouterConfig) {
         TaskTypeRouteConfig {
             prefer: "online".to_string(),
             fallback: "offline".to_string(),
-            online: Some(default_openai_override()),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
@@ -632,7 +633,7 @@ fn inject_default_routes(router: &mut ModelRouterConfig) {
         TaskTypeRouteConfig {
             prefer: "online".to_string(),
             fallback: "offline".to_string(),
-            online: Some(default_openai_override()),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
@@ -641,16 +642,16 @@ fn inject_default_routes(router: &mut ModelRouterConfig) {
         TaskTypeRouteConfig {
             prefer: "online".to_string(),
             fallback: "offline".to_string(),
-            online: Some(default_openai_override()),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
     router.task_types.insert(
         "scheduler".to_string(),
         TaskTypeRouteConfig {
-            prefer: "offline".to_string(),
+            prefer: "online".to_string(),
             fallback: "offline".to_string(),
-            online: Some(default_openai_override()),
+            online: Some(default_claude_override()),
             offline: Some(default_ollama_override()),
         },
     );
@@ -671,7 +672,7 @@ fn expand_task_type_routes(router: &mut ModelRouterConfig) {
             online: route
                 .online
                 .clone()
-                .or_else(|| Some(default_openai_override())),
+                .or_else(|| Some(default_claude_override())),
             offline: route
                 .offline
                 .clone()

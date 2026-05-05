@@ -3,7 +3,7 @@
 FounderAI-Ollama-Rust is a practical Rust rebuild of the FounderAI autonomy
 layer. It keeps the founder-brain identity, approvals, inbox and outbox
 workflow, team routing, audit-friendly artifacts, and background daemon model
-while making the provider switchable between Ollama and OpenAI and the runtime
+while making the provider switchable between Ollama, Claude, and OpenAI and the runtime
 portable across Windows and Linux.
 
 ## Mission
@@ -15,7 +15,7 @@ Build a durable, low-cost FounderAI that:
 - preserves file-based runs, outputs, logs, and approvals
 - supports the current Techni-Drones Madagascar and ERIS operating reality
 - runs on Windows or Linux
-- can use Ollama now and OpenAI later without changing the product shape
+- can use Claude now, with Ollama fallback and OpenAI still available when needed, without changing the product shape
 
 ## Scope And Non-Goals
 
@@ -25,7 +25,7 @@ Scope:
 - file-based runtime structure
 - 3 teams and 6 role lanes
 - workflow overlays for grants, scheduling, lead response, nurture, QA, and review
-- provider switching between Ollama and OpenAI
+- provider switching between Ollama, Claude, and OpenAI
 - Windows scripts, Linux scripts, Docker, and CI
 - contributor-ready docs and governance
 
@@ -77,9 +77,10 @@ Non-goals:
 
 - The autonomy engine now lives in Rust under `src/`.
 - The worker backend is provider-driven:
+  - `claude` over `https://api.anthropic.com/v1`
   - `ollama` over `http://localhost:11434`
   - `openai` over `https://api.openai.com/v1`
-- The default Ollama model is `qwen2.5:7b-instruct`.
+- The default hosted model is `claude-sonnet-4-20250514`.
 - Provider settings can be overridden by environment variables for cloud deployment.
 - Linux launch scripts, Docker assets, and GitHub Actions build verification are included.
 - A private browser control surface is available through `serve` for cloud use.
@@ -95,6 +96,7 @@ Non-goals:
 - GitHub for source, issues, pull requests, Actions, and Pages
 - Markdown docs in `docs/` for zero-cost hosting
 - Docker compose files for low-cost Linux deployment
+- Claude for the default hosted provider path
 - Ollama for self-hosted local inference when compute is available
 - OpenAI for simpler hosted inference when local models are impractical
 
@@ -156,30 +158,26 @@ Non-goals:
 
 ## Provider Config
 
-Ollama mode in `config/founderai.json`:
+Claude-first mode in `config/founderai.json`:
 
 ```json
 "worker": {
-  "provider": "ollama",
-  "base_url": "http://localhost:11434",
-  "model": "qwen2.5:7b-instruct",
-  "timeout_seconds": 900,
+  "provider": "claude",
+  "base_url": "https://api.anthropic.com/v1",
+  "model": "claude-sonnet-4-20250514",
+  "timeout_seconds": 600,
   "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
-  "api_key_env": "OPENAI_API_KEY"
+  "api_key_env": "ANTHROPIC_API_KEY"
 }
 ```
 
-OpenAI mode:
+Temporary Ollama mode via environment override:
 
-```json
-"worker": {
-  "provider": "openai",
-  "base_url": "https://api.openai.com/v1",
-  "model": "gpt-5-mini",
-  "timeout_seconds": 900,
-  "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
-  "api_key_env": "OPENAI_API_KEY"
-}
+```powershell
+$env:FOUNDERAI_PROVIDER="ollama"
+$env:FOUNDERAI_BASE_URL="http://localhost:11434"
+$env:FOUNDERAI_MODEL="qwen2.5:7b-instruct"
+$env:FOUNDERAI_TIMEOUT_SECONDS="900"
 ```
 
 Supported environment overrides:
@@ -191,7 +189,7 @@ Supported environment overrides:
 - `FOUNDERAI_SYSTEM_PROMPT`
 - `FOUNDERAI_API_KEY_ENV`
 
-Use `.env.example` as a starting point for local overrides. Keep real API keys out of committed files.
+FounderAI now auto-loads `.env` and `.env.local` from the repo root at process startup. Use `.env.example` as a starting point and keep real API keys out of committed files.
 
 Pio reads deadline state from `config/pio_deadlines.json` and turns due alerts
 into inspectable inbox items instead of silent reminders.
@@ -294,6 +292,26 @@ Linux isolated smoke run:
 ./scripts/run-smoke-test.sh
 ```
 
+Claude path for local runs:
+
+Windows:
+
+```powershell
+$env:FOUNDERAI_PROVIDER="claude"
+$env:FOUNDERAI_BASE_URL="https://api.anthropic.com/v1"
+$env:FOUNDERAI_MODEL="claude-sonnet-4-20250514"
+$env:ANTHROPIC_API_KEY="your-key"
+```
+
+Linux:
+
+```bash
+export FOUNDERAI_PROVIDER="claude"
+export FOUNDERAI_BASE_URL="https://api.anthropic.com/v1"
+export FOUNDERAI_MODEL="claude-sonnet-4-20250514"
+export ANTHROPIC_API_KEY="your-key"
+```
+
 If you want the OpenAI path instead, set:
 
 Windows:
@@ -329,10 +347,16 @@ The smoke wrapper scripts:
 - print the paths to `prompt.md`, `output.md`, `stdout.txt`, and `stderr.txt`
 
 If Ollama remains too slow during acceptance, keep the committed config on
-`ollama` and run the same smoke script with environment overrides for
-`FOUNDERAI_PROVIDER=openai`.
+`claude` and switch only the provider env vars for a bounded fallback test.
 
 ## Docker Deployment
+
+Claude-backed container:
+
+```bash
+export ANTHROPIC_API_KEY="your-key"
+docker compose -f docker-compose.claude.yml up -d --build
+```
 
 OpenAI-backed container:
 
@@ -363,7 +387,7 @@ Cloud deployment uses:
 - `config/founderai.cloud.json`
 - `serve` for the browser-only control surface
 - Cloudflare Tunnel plus Cloudflare Access for private ingress
-- OpenAI as the default cloud provider
+- Claude as the default cloud provider
 - the same file-based inbox, outbox, runtime, and approval artifacts
 
 ## Suggested Smoke Test

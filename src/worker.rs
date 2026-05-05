@@ -1267,6 +1267,17 @@ fn api_key_from_env(worker: &WorkerConfig) -> Result<String> {
     if trimmed.is_empty() {
         anyhow::bail!("environment variable {} is empty", worker.api_key_env);
     }
+    let lowered = trimmed.to_ascii_lowercase();
+    if lowered.contains("replace_with")
+        || lowered.contains("your-key")
+        || lowered.contains("paste")
+        || trimmed.contains("...")
+    {
+        anyhow::bail!(
+            "environment variable {} still contains a placeholder value",
+            worker.api_key_env
+        );
+    }
     Ok(trimmed.to_string())
 }
 

@@ -15,15 +15,19 @@ Recent hardening added two things worth checking first:
 ## Quick Checks
 
 1. Run `status` and confirm the intended provider and model.
-2. If using Ollama, run `ollama list` and confirm `qwen2.5:7b-instruct` is installed.
-3. If using OpenAI, confirm `OPENAI_API_KEY` is loaded in the environment.
-4. Inspect the latest run folder:
+2. If using Claude, confirm `ANTHROPIC_API_KEY` is loaded in the environment.
+3. If using Ollama, run `ollama list` and confirm `qwen2.5:7b-instruct` is installed.
+4. If using OpenAI, confirm `OPENAI_API_KEY` is loaded in the environment.
+5. Inspect the latest run folder:
    - `stderr.txt`
    - `stdout.txt`
    - `output.md`
    - `metadata.json`
 
-5. If you are using a runtime override such as `FOUNDERAI_TIMEOUT_SECONDS`,
+6. FounderAI auto-loads `.env` and `.env.local` from the repo root for local
+   runs. If you expected a local key to load, confirm the file exists and the
+   variable name matches `api_key_env`.
+7. If you are using a runtime override such as `FOUNDERAI_TIMEOUT_SECONDS`,
    confirm it is visible in `stdout.txt` as `Primary timeout seconds` or
    `Fallback timeout seconds`.
 
@@ -35,13 +39,13 @@ Recent hardening added two things worth checking first:
 - Retry with the isolated smoke config
 - Confirm the machine has enough RAM for the chosen model
 - Try a direct local prompt with `ollama run qwen2.5:7b-instruct`
-- If the host is too slow, switch temporarily to the OpenAI provider
+- If the host is too slow, switch temporarily to Claude or OpenAI
 
 ## Recommended Timeout Baselines
 
-- normal local runtime: `900`
-- isolated smoke workspace: `1800`
-- remote OpenAI provider: `300` to `900`, depending on network conditions
+- normal Claude-first local runtime: `600`
+- isolated smoke workspace: `600`
+- remote hosted provider: `300` to `900`, depending on network conditions
 
 ## Smoke Workspace
 
@@ -66,7 +70,7 @@ Smoke wrapper scripts:
 
 Cloud mode uses `config/founderai.cloud.json` and assumes:
 
-- OpenAI is the primary provider
+- Claude is the primary provider
 - the private founder console is exposed through `serve`
 - Cloudflare Tunnel and Access protect the browser surface
 
@@ -79,7 +83,7 @@ Quick cloud checks:
 
 If cloud runs fail while the daemon stays healthy:
 
-- confirm `OPENAI_API_KEY` is present inside both `founderai-daemon` and `founderai-web`
-- confirm `FOUNDERAI_MODEL` matches a supported mini model in your account
+- confirm `ANTHROPIC_API_KEY` is present inside both `founderai-daemon` and `founderai-web`
+- confirm `FOUNDERAI_MODEL` matches a supported Claude model in your Anthropic account
 - check Cloudflare logs only for ingress problems; provider failures still show up in FounderAI run artifacts
 - use `scripts/cloud-weekly-review.sh` to spot growing prompt sizes before spend becomes the real problem
