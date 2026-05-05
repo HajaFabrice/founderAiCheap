@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_03_gear_and_equipment_concierge",
+  "public_name": "Gear & Equipment Concierge",
+  "suite_number": 3,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only",
+  "launch_decision": "defer",
+  "activation_priority": 6,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "hybrid",
+  "price": "$39",
+  "activation_gate": "Refresh equipment specs, pricing logic, and update workflow before public launch.",
+  "source_artifacts": [
+    "documents/oplurix-site/product3.html"
+  ],
+  "sellable_page": "docs/products/03-gear-equipment-concierge.html"
+}

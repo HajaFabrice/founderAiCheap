@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're in — OPLURIX</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    background: #0F1A14;
+    color: #FAFAF7;
+    font-family: 'IBM Plex Mono', monospace;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; text-align: center; padding: 2rem;
+  }
+  .wrap { max-width: 520px; }
+  .sigil { font-size: 3rem; margin-bottom: 1.5rem; }
+  .label {
+    font-size: 0.65rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #E8B84B;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .label::before, .label::after { content: ''; display: block; width: 24px; height: 1px; background: #E8B84B; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: #FAFAF7; margin-bottom: 1rem; line-height: 1.2;
+  }
+  h1 em { font-style: italic; color: #E8B84B; }
+  p { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 2rem; }
+  .items {
+    list-style: none; text-align: left;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px; padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .items li { font-size: 0.8rem; color: rgba(255,255,255,0.6); display: flex; gap: 10px; }
+  .items li::before { content: '→'; color: #E8B84B; flex-shrink: 0; }
+  a {
+    display: inline-block; background: #B87A1A; color: #fff;
+    text-decoration: none; padding: 12px 28px; border-radius: 4px;
+    font-size: 0.8rem; letter-spacing: 0.06em;
+    transition: background 0.2s;
+  }
+  a:hover { background: #D4921F; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="sigil">◉</div>
+    <div class="label">OPLURIX</div>
+    <h1>You're in. <em>Welcome to the mission.</em></h1>
+    <p>Check your inbox — your free starter kit is on its way. You'll be the first to know when new OPLURIX tools launch, at founding member pricing.</p>
+    <ul class="items">
+      <li>3 core content frameworks to turn field notes into LinkedIn posts</li>
+      <li>5 AI prompts ready to use immediately</li>
+      <li>Field data quality checklist — 5 mistakes to eliminate now</li>
+      <li>Early bird access to every product launch</li>
+    </ul>
+    <a href="/">← Back to OPLURIX</a>
+  </div>
+</body>
+</html>

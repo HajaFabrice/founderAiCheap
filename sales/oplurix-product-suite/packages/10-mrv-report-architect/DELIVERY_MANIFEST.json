@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_10_mrv_report_architect",
+  "public_name": "MRV Report Architect",
+  "suite_number": 10,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only",
+  "launch_decision": "future_flagship_service",
+  "activation_priority": 9,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "hybrid_high_ticket",
+  "price": "$499-$999",
+  "activation_gate": "Reframe as a flagship service or institutional offer, not a normal lightweight download.",
+  "source_artifacts": [
+    "documents/oplurix-site/product10.html"
+  ],
+  "sellable_page": "docs/products/10-mrv-report-architect.html"
+}

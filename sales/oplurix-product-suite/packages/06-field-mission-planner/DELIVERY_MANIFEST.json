@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_06_field_mission_planner",
+  "public_name": "Field Mission Planner",
+  "suite_number": 6,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only",
+  "launch_decision": "package_later",
+  "activation_priority": 4,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "pdf_plus_checklists",
+  "price": "$49",
+  "activation_gate": "Extract editable checklists, timelines, and team planning sheets.",
+  "source_artifacts": [
+    "documents/oplurix-site/product6.html"
+  ],
+  "sellable_page": "docs/products/06-field-mission-planner.html"
+}

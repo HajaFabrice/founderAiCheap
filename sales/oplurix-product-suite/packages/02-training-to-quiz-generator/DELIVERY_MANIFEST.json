@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_02_training_to_quiz_generator",
+  "public_name": "Training-to-Quiz Generator",
+  "suite_number": 2,
+  "current_state": "coming_soon",
+  "recommended_public_state": "waitlist_now",
+  "launch_decision": "sellable_next",
+  "activation_priority": 1,
+  "delivery_state": "packaged_waitlist_candidate",
+  "recommended_client_format": "pdf_plus_templates",
+  "price": "$29",
+  "activation_gate": "Package the templates, test payment confirmation, and verify the delivery path end to end.",
+  "source_artifacts": [
+    "documents/oplurix-site/OPLURIX_Product2_Training_to_Quiz_Generator.pdf"
+  ],
+  "sellable_page": "docs/products/02-training-to-quiz-generator.html"
+}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27",
+  "generated_at": "2026-05-05",
   "selection_rule": [
     "User-attached text exports override older mirrors when they cover the same document family.",
     "Otherwise, the highest explicit version number wins.",
@@ -408,6 +408,21 @@
       ]
     },
     {
+      "id": "oplurix-agent-mission-map",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/99_Agent_Ready/references/oplurix_agent_mission_map.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/oplurix_agent_mission_map.md",
+      "supersedes": [
+        "ad hoc agent-specific assumptions about which products can be sold, waitlisted, packaged, or used as proof"
+      ],
+      "agent_uses": [
+        "product to agent mission routing",
+        "product versus service decisions",
+        "live versus waitlist discipline",
+        "delivery truthfulness"
+      ]
+    },
+    {
       "id": "expert-to-influencer-blueprint",
       "category": "digital-product-strategy",
       "canonical_path": "documents/oplurix-site/ExpertToInfluencer.txt",
@@ -450,6 +465,66 @@
         "checkout truthfulness",
         "PayPal fallback behavior",
         "sales-page grounding"
+      ]
+    },
+    {
+      "id": "oplurix-product-suite-final",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/oplurix_full_product_suite.md",
+      "supersedes": [
+        "ad hoc summaries of the wider OPLURIX product ladder"
+      ],
+      "agent_uses": [
+        "10-product ladder explanation",
+        "public-safe product sequencing",
+        "live vs coming-soon distinction",
+        "client format decisions"
+      ]
+    },
+    {
+      "id": "oplurix-product-suite-database",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/99_Agent_Ready/databases/oplurix_product_suite.json",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/oplurix_product_suite.json",
+      "supersedes": [
+        "scattered per-product interpretations across storefront drafts and source notes"
+      ],
+      "agent_uses": [
+        "product lookup",
+        "format recommendation lookup",
+        "checkout status truthfulness",
+        "full suite comparison"
+      ]
+    },
+    {
+      "id": "oplurix-launch-matrix",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/99_Agent_Ready/references/oplurix_launch_matrix.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/oplurix_launch_matrix.md",
+      "supersedes": [
+        "informal judgments about which OPLURIX product should launch next"
+      ],
+      "agent_uses": [
+        "launch order",
+        "sellable-next decisions",
+        "waitlist sequencing",
+        "source-only discipline"
+      ]
+    },
+    {
+      "id": "oplurix-launch-matrix-database",
+      "category": "digital-product-strategy",
+      "canonical_path": "documents/99_Agent_Ready/databases/oplurix_launch_matrix.json",
+      "repo_mirror_path": "documents/99_Agent_Ready/databases/oplurix_launch_matrix.json",
+      "supersedes": [
+        "ad hoc product-priority notes"
+      ],
+      "agent_uses": [
+        "product launch lookup",
+        "activation gates",
+        "priority sequencing",
+        "sales-safe status lookup"
       ]
     },
     {

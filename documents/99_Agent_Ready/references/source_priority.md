@@ -1,6 +1,6 @@
 # Source Priority
 
-Updated: 2026-04-27
+Updated: 2026-05-05
 
 The attached text exports are the canonical strategy sources for this sync.
 They should override older repo mirrors if a conflict appears.
@@ -31,6 +31,7 @@ They should override older repo mirrors if a conflict appears.
 6. Supporting business heuristics:
    - `documents/02_Business_And_Wealth/Roadmaps_And_Blueprints/The Billion-Scale Business Blueprint.txt`
 7. Digital product storefront and product documents:
+   - `documents/oplurix-site/OPLURIX_Product_Suite_Final.md`
    - `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
    - `documents/oplurix-site/ExpertToInfluencer.txt`
    - `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
@@ -58,6 +59,9 @@ They should override older repo mirrors if a conflict appears.
 | NGO outreach copy | `Outreach Emails.docx` | Generic cold email patterns | Use for concrete biodiversity NGO outreach phrasing and cadence. |
 | Service positioning | `service statement alternatives.docx` plus `Freelance Services_ Biodiversity Fieldwork & Data Analysis (Madagascar).docx` | `Service statement v1.docx` | Use the newer concise offer language first, then the longer service sheet for rates and deliverables. |
 | OPLURIX brand and storefront logic | `documents/oplurix-site/OPLURIX_Master_Context_Brief.md` | scattered brand notes and older storefront drafts | Use for OPLURIX identity, bilingual storefront rules, mission lock, and product-ladder framing. |
+| OPLURIX product-to-agent usage | `documents/99_Agent_Ready/references/oplurix_agent_mission_map.md` | ad hoc assumptions about which agents should sell, package, waitlist, or stay out | Use for role-specific product application, product-vs-service decisions, and live/waitlist/source-only discipline. |
+| Full OPLURIX 10-product suite | `documents/oplurix-site/OPLURIX_Product_Suite_Final.md` plus the per-product files in `documents/oplurix-site/` | older fragmented product notes or ad hoc interpretations of the product ladder | Use for the complete 10-product map, product status, public-safe sequencing, and format decisions. |
+| OPLURIX launch prioritization | `documents/99_Agent_Ready/references/oplurix_launch_matrix.md` plus `documents/99_Agent_Ready/databases/oplurix_launch_matrix.json` | improvised assumptions about which product should launch next | Use for activation order, waitlist decisions, source-only discipline, and next-launch sequencing. |
 | Expert-to-Influencer product | `documents/oplurix-site/ExpertToInfluencer.txt` | older generic content-engine snippets | Use for promise, pain points, product structure, and landing-page copy for the content product. |
 | EcoR toolkit main offer | `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md` plus `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md` | generic R-toolkit fragments and marketplace-specific draft language | Use for EcoR positioning, main-offer scope, and truthful product outcomes while keeping the first launch on Netlify plus PayPal. |
 | Live delivery proof | `sales/oplurix-first-sale/delivery_log.csv` | unlogged verbal recollection of launch outcomes | Use for buyer-payment, delivery, access, and download confirmation before claiming product traction. |

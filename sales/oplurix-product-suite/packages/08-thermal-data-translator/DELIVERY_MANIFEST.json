@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_08_thermal_data_translator",
+  "public_name": "Thermal Data Translator",
+  "suite_number": 8,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only",
+  "launch_decision": "defer_until_proof",
+  "activation_priority": 7,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "pdf_plus_code",
+  "price": "$149",
+  "activation_gate": "Prepare a stronger technical proof bundle with code, schema, and example outputs.",
+  "source_artifacts": [
+    "documents/oplurix-site/product8.html"
+  ],
+  "sellable_page": "docs/products/08-thermal-data-translator.html"
+}

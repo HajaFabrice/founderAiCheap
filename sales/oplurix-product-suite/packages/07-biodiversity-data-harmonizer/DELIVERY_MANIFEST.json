@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_07_biodiversity_data_harmonizer",
+  "public_name": "Biodiversity Data Harmonizer",
+  "suite_number": 7,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only",
+  "launch_decision": "package_later",
+  "activation_priority": 5,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "pdf_plus_templates",
+  "price": "$99",
+  "activation_gate": "Add data schemas, templates, and sample harmonization assets.",
+  "source_artifacts": [
+    "documents/oplurix-site/product7.html"
+  ],
+  "sellable_page": "docs/products/07-biodiversity-data-harmonizer.html"
+}

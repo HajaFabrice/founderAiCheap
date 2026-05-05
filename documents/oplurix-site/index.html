@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OPLURIX source hub</title>
+  <style>
+    :root {
+      --ink: #102017;
+      --forest: #183525;
+      --forest-soft: #244a34;
+      --gold: #b8872f;
+      --gold-soft: #e0c48e;
+      --cream: #f4efe4;
+      --paper: #fffdf8;
+      --line: #d8cebb;
+      --muted: #5d665f;
+      --live: #1f7a4d;
+      --soon: #946200;
+      --source: #5a5f9b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--ink), var(--forest));
+      color: #fff;
+      padding: 56px 24px 44px;
+    }
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      max-width: 760px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0 0 24px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .button-primary {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    .button-secondary {
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .section {
+      padding: 40px 24px;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 6px 20px rgba(16, 32, 23, 0.05);
+    }
+
+    .status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .status-live {
+      background: rgba(31, 122, 77, 0.12);
+      color: var(--live);
+    }
+
+    .status-soon {
+      background: rgba(148, 98, 0, 0.12);
+      color: var(--soon);
+    }
+
+    .status-source {
+      background: rgba(90, 95, 155, 0.12);
+      color: var(--source);
+    }
+
+    .price {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 10px;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 14px 0 0;
+      color: var(--muted);
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .link-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .link-tile {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      text-decoration: none;
+    }
+
+    .link-tile strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .link-tile span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .note {
+      background: #fff7e7;
+      border: 1px solid #ead39b;
+      border-radius: 16px;
+      padding: 18px;
+      color: #6f5315;
+    }
+
+    footer {
+      padding: 32px 24px 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell">
+      <div class="eyebrow">OPLURIX source hub</div>
+      <h1>Finalized product suite source folder for the current OPLURIX launch.</h1>
+      <p>
+        This page is the source-side front door for the OPLURIX product library.
+        It separates what is live now, what is coming next, and what remains
+        source-only. The public storefront lives in the repo docs site.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="../../docs/index.html">Open live storefront</a>
+        <a class="button button-secondary" href="../../docs/products/index.html">Open full hybrid suite</a>
+        <a class="button button-secondary" href="OPLURIX_Product_Suite_Final.md">Open product suite brief</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-head">
+        <h2>Live now</h2>
+        <p>These are the products that the project can publicly support today without making untruthful delivery or support claims.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="status status-live">Live</span>
+          <h3>Expert-to-Influencer Content Engine</h3>
+          <div class="price">USD 39</div>
+          <p>Turns real field notes, research context, and conservation work into clear LinkedIn content that feels credible.</p>
+          <ul>
+            <li>Source: <a href="OPLURIX_Product1_Expert_to_Influencer_Content_Engine.pdf">Product PDF</a></li>
+            <li>Source: <a href="ExpertToInfluencer.txt">Text source</a></li>
+            <li>Reference page: <a href="product.html">HTML source document</a></li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <span class="status status-live">Live</span>
+          <h3>EcoR Toolkit</h3>
+          <div class="price">USD 29 / 97 / 149</div>
+          <p>EcoR Starter and Complete are live. Pro Bundle is kept visible as an anchor tier but checkout stays off until the promised walkthrough assets are real.</p>
+          <ul>
+            <li>Starter: USD 29</li>
+            <li>Complete: USD 97</li>
+            <li>Pro Bundle: USD 149, request-access only</li>
+            <li>Source: <a href="../RDigitalProduct/EcoR_Toolkit_Product_Strategy.md">Strategy file</a></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-head">
+        <h2>Coming next</h2>
+        <p>These products are productized enough to stay visible in the suite, but checkout must remain off until packaging and delivery are tested end to end.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="status status-soon">Coming soon</span>
+          <h3>Training-to-Quiz Generator</h3>
+          <div class="price">USD 29</div>
+          <p>Converts SOPs, field manuals, and workshop materials into validated quizzes that test protocol understanding.</p>
+          <ul>
+            <li>Source: <a href="OPLURIX_Product2_Training_to_Quiz_Generator.pdf">Product PDF</a></li>
+            <li>Checkout status: waitlist only</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <span class="status status-soon">Coming soon</span>
+          <h3>Biodiversity Pitch Deck Builder</h3>
+          <div class="price">USD 69</div>
+          <p>Turns biodiversity data, field findings, and project results into donor-ready and funder-ready pitch decks.</p>
+          <ul>
+            <li>Source: <a href="OPLURIX_Product4_Biodiversity_Pitch_Deck_Builder.pdf">Product PDF</a></li>
+            <li>Checkout status: waitlist only</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="section-head">
+        <h2>Source-only pipeline documents</h2>
+        <p>These product documents remain valuable prototypes and research assets, but they are not part of the current public checkout surface.</p>
+      </div>
+      <div class="link-list">
+        <a class="link-tile" href="product3.html">
+          <strong>Gear &amp; Equipment Concierge</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+        <a class="link-tile" href="product5.html">
+          <strong>Handwritten Log Digitizer</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+        <a class="link-tile" href="product6.html">
+          <strong>Field Mission Planner</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+        <a class="link-tile" href="product7.html">
+          <strong>Biodiversity Data Harmonizer</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+        <a class="link-tile" href="product8.html">
+          <strong>Thermal Data Translator</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+        <a class="link-tile" href="product9.html">
+          <strong>Grant Writing Co-Pilot</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+        <a class="link-tile" href="product10.html">
+          <strong>MRV Report Architect</strong>
+          <span>Planning-stage product source document.</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="note">
+        Trust order for pricing, status, and delivery claims:
+        <strong>OPLURIX_Product_Suite_Final.md</strong>,
+        <strong>digital_products_catalog.json</strong>,
+        then the live storefront in <strong>docs/index.html</strong>.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="shell">
+      OPLURIX source hub · updated 2026-05-04 · public contact:
+      hajafabriceeris@gmail.com · +261349414112
+    </div>
+  </footer>
+</body>
+</html>

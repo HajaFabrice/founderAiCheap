@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0D4A44;
+  --purple:  #3D1C6E;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Biodiversity Data Harmonizer  ·  OPLURIX  ·  " counter(page);
+    font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+/* COVER */
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: var(--forest); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; }
+.cover-brand { font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:32mm; }
+.cover-eyebrow { font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-size:28pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-author { font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+/* CONTENT */
+.content-pages { page: content; }
+h1 { font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-size:13pt; font-weight:700; color:var(--forest2); margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-size:10pt; font-weight:700; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:700; color:var(--forest); }
+em { font-style:italic; color:var(--forest2); }
+code { font-family: monospace; font-size:9pt; background:var(--parch); padding:1pt 3pt; color:var(--forest2); }
+
+.section-label { font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+/* CALLOUTS */
+.callout  { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.ca { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.cr { background:#FDF0EE; border-left:3pt solid var(--red); }
+.cb { background:#EEF3FA; border-left:3pt solid var(--blue); }
+.ct { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.cp { background:#F3EEF9; border-left:3pt solid var(--purple); }
+.cl { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.cl-a { color:var(--amber); } .cl-f { color:var(--forest); } .cl-r { color:var(--red); }
+.cl-b { color:var(--blue); } .cl-t { color:var(--teal); } .cl-p { color:var(--purple); }
+
+/* DARK BOX */
+.dark-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.dark-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.dark-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.dark-box p:last-child { margin-bottom:0; }
+
+/* NUMBERED CARD */
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-size:8pt; font-weight:700; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:700; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+/* LISTS */
+ul { margin:3mm 0 3mm 6mm; list-style:none; padding:0; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+/* STEP BLOCK */
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+/* PROMPT BOX */
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+/* CODE BLOCK */
+.code-block { background:#1A2A1F; border:0.5pt solid #2D5A3D; padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:#A8D8A8; page-break-inside:avoid; }
+.code-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:#4A7A55; margin-bottom:2mm; }
+.code-comment { color:#4A7A55; }
+.code-keyword { color:#D4921F; }
+.code-string { color:#7EC8A0; }
+
+/* TEMPLATE BOX */
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:var(--forest); page-break-inside:avoid; }
+
+/* CHECKLIST */
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+/* BEFORE/AFTER DATA */
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:3mm; margin:4mm 0; page-break-inside:avoid; }
+.ba-box { padding:4mm 5mm; }
+.ba-bad { background:#FDF0EE; border:0.5pt solid #E8B0A0; }
+.ba-good { background:#EEF6EF; border:0.5pt solid #B2CEB5; }
+.ba-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.ba-bad .ba-label { color:var(--red); }
+.ba-good .ba-label { color:var(--sage); }
+.ba-text { font-family:monospace; font-size:8pt; line-height:1.7; }
+.ba-bad .ba-text { color:#6B2A1A; }
+.ba-good .ba-text { color:var(--forest2); }
+
+/* PROBLEM TABLE */
+.prob-row { display:grid; grid-template-columns:1fr 80pt 1fr; gap:3mm; padding:2.5mm 0; border-bottom:0.5pt solid var(--sand); font-size:9pt; align-items:start; page-break-inside:avoid; }
+.prob-raw { font-family:monospace; color:#6B2A1A; background:#FDF0EE; padding:2mm 4mm; font-size:8pt; }
+.prob-arrow { text-align:center; color:var(--amber); font-weight:700; padding-top:2mm; }
+.prob-clean { font-family:monospace; color:var(--forest2); background:#EEF6EF; padding:2mm 4mm; font-size:8pt; }
+
+/* SCHEMA BLOCK */
+.schema-block { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 6mm; margin:4mm 0; page-break-inside:avoid; }
+.schema-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--teal); margin-bottom:2mm; }
+.schema-row { display:grid; grid-template-columns:120pt 70pt 1fr; gap:4mm; padding:2mm 0; border-bottom:0.5pt solid rgba(0,0,0,0.06); font-size:8.5pt; }
+.schema-col { font-family:monospace; color:var(--forest); font-weight:700; }
+.schema-type { font-family:monospace; color:var(--teal); }
+.schema-desc { color:var(--muted); }
+
+/* VALIDATION RULE */
+.val-rule { background:white; border:0.5pt solid var(--sand); border-left:2.5pt solid var(--teal); padding:3mm 5mm; margin:2mm 0; font-size:9pt; page-break-inside:avoid; }
+.val-name { font-weight:700; color:var(--forest); margin-bottom:1mm; }
+.val-logic { font-family:monospace; font-size:8pt; color:var(--teal); margin-bottom:1mm; }
+.val-action { font-size:8.5pt; color:var(--muted); }
+
+/* PIPELINE STEP */
+.pipeline { display:flex; flex-direction:column; gap:1mm; margin:4mm 0; page-break-inside:avoid; }
+.pipe-step { display:flex; align-items:stretch; gap:3mm; }
+.pipe-num { background:var(--forest); color:white; font-family:monospace; font-size:7.5pt; font-weight:700; width:22pt; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pipe-content { background:var(--cream); border:0.5pt solid var(--sand); padding:3mm 5mm; flex:1; font-size:9pt; }
+.pipe-content strong { font-size:9.5pt; }
+.pipe-arrow { text-align:left; padding-left:25pt; font-size:9pt; color:var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">Biodiversity Data<br><em>Harmonizer</em></div>
+    <div class="cover-subtitle">Merge, clean, standardise, and validate biodiversity datasets from multiple sites, seasons, methods, and observers into a single, analysis-ready, MRV-compatible data structure.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Multi-Site Research Projects</span>
+      <span class="cover-tag">Conservation NGO Data Officers</span>
+      <span class="cover-tag">Long-Term Monitoring Programmes</span>
+      <span class="cover-tag">REDD+ and MRV Data Managers</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I have data from six sites, four observers, three seasons, and two methods — in five different formats — that I cannot combine for any analysis" to "I have one unified, validated, documented dataset that any analyst, funder, or MRV auditor can work with."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Field Biologist · Conservation Technologist · Founder, OPLURIX
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $99</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="cl cl-f">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once to understand the problem and the system. Then work through Section 4 (the 8-Step Pipeline) with your actual datasets. The Schema Library (Section 6), Cleaning Rules (Section 7), and AI Prompt Pack (Section 8) are your working references throughout. The Validation Framework (Section 9) runs at the end of every harmonization cycle.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 8-Step Harmonization Pipeline · Master Schema Design · Schema Library (6 data types) · 40 Cleaning Rules · AI Prompt Pack · Validation Framework · R and Python Code Templates · GBIF/Darwin Core Alignment · MRV Compatibility Guide · Worked Examples · Quick Start</p>
+</div>
+
+<!-- S1 CORE PROMISE -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>Multi-site, multi-season, multi-method biodiversity data is the most powerful kind of conservation data — and the hardest to use. A single-site, single-season camera trap dataset is clean by default: one observer, one format, one set of conditions. Add a second site with a different team, a second season with updated protocols, and a third method with its own file structure, and you have created a data integration problem that routinely takes researchers weeks or months to resolve.</p>
+
+<p>The integration problem is not analytical. You do not need a more sophisticated model. You need the data in a consistent structure first. Species names spelled differently across datasets, dates in different formats, GPS coordinates in different datums, count data mixed with presence-absence data, observer codes that are not in any shared codebook — these are data quality problems, not statistical problems. They must be solved before any analysis begins.</p>
+
+<p>This guide gives you a repeatable, documented pipeline for solving them. It is built on the actual integration challenges that arise when combining mammal transect data, herpetofauna visual encounter surveys, camera trap records, and acoustic monitoring outputs into a single harmonised dataset — the exact data types used in the ERIS biodiversity scoring system.</p>
+
+<div class="callout ca">
+  <div class="cl cl-a">The Transformation</div>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:2mm;"><strong>Before:</strong> "I have data from six sites, four observers, three seasons, and two methods — in five different formats — that I cannot combine for any analysis."</p>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:0;"><strong>After:</strong> "I have one unified, validated, documented dataset with full provenance that any analyst, funder, or MRV auditor can work with."</p>
+</div>
+
+<!-- S2 PAIN POINTS -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>The same species is spelled differently across datasets.</strong><p>"Lemur catta", "L. catta", "Lc", "Ring-tailed lemur", "LEMURCATTA" — five records of the same species that a join query treats as five different species. Resolving this across 3,000 records without a systematic approach takes days and introduces errors.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>Date and time formats are inconsistent across sites and seasons.</strong><p>Site 1 uses DD/MM/YYYY. Site 2 uses MM-DD-YY. Season 3 has times in 12-hour format. Season 1 has no times at all. A merged dataset with mixed date formats will produce silent errors in any temporal analysis — the wrong records will be sorted, filtered, and grouped.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>GPS coordinates are in different formats or datums.</strong><p>Degrees-minutes-seconds from one GPS unit. Decimal degrees from a mobile app. A third observer using UTM. Some coordinates entered without hemisphere (assuming local context). Spatial analysis on a merged dataset with mixed coordinate systems produces nonsense results with no error message.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>Count data and presence-absence data are mixed.</strong><p>A camera trap record says "1 individual detected." A transect record says "species present." An acoustic record says "7 calls recorded." These are different types of data that require different analytical treatments — but in a merged spreadsheet, they sit in the same "count" column and look identical.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>Observer codes are not in any shared codebook.</strong><p>"HFR", "Haja", "H. Fabrice", "Observer 1", and "HajaF" may all be the same person — or they may not. Without a shared observer registry, observer effects cannot be modelled and data cannot be attributed to a specific person for quality control purposes.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>Detection distance data is missing or inconsistent.</strong><p>Line transect distance sampling requires perpendicular distances to each detection. One observer estimated distances in metres. Another used categories (0-5m, 5-25m, 25-50m). A third did not record distances at all. These cannot be merged into a single distance-sampling analysis without imputation or exclusion — both of which require explicit decisions that must be documented.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>Effort data is recorded at different spatial and temporal scales.</strong><p>Camera trap effort is in trap-nights per station. Transect effort is in kilometres walked. Acoustic effort is in recording-hours per unit. These are not convertible to a single effort metric — but they must all be attached to their respective detection records for detection probability modelling to work.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>Sensitive location data is mixed with shareable data in the same file.</strong><p>Threatened species nest sites and exact den locations in the same dataset as standard vegetation plot coordinates. Before sharing the dataset with any external party, every sensitive location must be identified, flagged, and either removed or offset. This is not a data cleaning step — it is an ethical obligation.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>The merge produces duplicate records that are hard to detect.</strong><p>When the same observation is entered twice — once in a field app and once in a paper datasheet that was then digitised — the duplicate does not look like a duplicate. It has slightly different times, slightly different coordinates, and slightly different observer entries. Automated duplicate detection misses it. Visual inspection across thousands of records misses it too.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>The merged dataset is undocumented — nobody knows how it was created.</strong><p>Six months after the merge, the researcher who did it has moved on. The dataset exists but its provenance — which source files were merged, what cleaning decisions were made, what was excluded and why — exists only in one person's memory. An auditor, a new team member, or a journal reviewer cannot verify anything. This guide ends that problem by building documentation into every step.</p></div>
+</div>
+
+<!-- S3 DESIRED OUTCOMES -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">01</td><td>Merge datasets from multiple sites, seasons, methods, and observers into a single, analysis-ready file.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">02</td><td>Resolve species name inconsistencies systematically using a controlled vocabulary and a species registry.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">03</td><td>Standardise all dates, times, coordinates, and numeric fields to a single, consistent format.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">04</td><td>Distinguish between count data, presence-absence data, and index data in the same unified dataset.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">05</td><td>Flag and handle sensitive location data before any external sharing.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">06</td><td>Detect and resolve duplicate records, both exact and near-duplicate.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">07</td><td>Attach survey effort to every detection record in a form suitable for detection probability modelling.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">08</td><td>Produce a harmonization log that documents every cleaning decision made.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">09</td><td>Align the harmonized dataset with Darwin Core standards for GBIF submission or MRV reporting.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">10</td><td>Pass a six-point validation framework that confirms the dataset is ready for analysis and external sharing.</td></tr>
+</table>
+
+<!-- S4 THE 8-STEP PIPELINE -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 8-Step Harmonization Pipeline</h1>
+<p>Every step produces a documented output and feeds into the next. Do not skip steps. The sequence is designed so that errors are caught at the lowest possible cost — before they are baked into an analysis that takes weeks to run.</p>
+
+<div class="pipeline">
+  <div class="pipe-step">
+    <div class="pipe-num">01</div>
+    <div class="pipe-content"><strong>Dataset Inventory</strong> — Catalogue every source file before touching any data.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">02</div>
+    <div class="pipe-content"><strong>Master Schema Design</strong> — Define the unified column structure before any merge.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">03</div>
+    <div class="pipe-content"><strong>Registry Building</strong> — Build shared species, observer, and site registries.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">04</div>
+    <div class="pipe-content"><strong>Individual Dataset Cleaning</strong> — Clean each source dataset against the master schema before merging.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">05</div>
+    <div class="pipe-content"><strong>Merge</strong> — Combine the cleaned datasets. Preserve provenance columns throughout.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">06</div>
+    <div class="pipe-content"><strong>Cross-Dataset Cleaning</strong> — Resolve inconsistencies that only appear after the merge.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">07</div>
+    <div class="pipe-content"><strong>Sensitive Data Handling</strong> — Flag, offset, or remove sensitive location data.</div>
+  </div>
+  <div class="pipe-arrow">↓</div>
+  <div class="pipe-step">
+    <div class="pipe-num">08</div>
+    <div class="pipe-content"><strong>Validation and Documentation</strong> — Run the six-point validation framework. Write the harmonization log.</div>
+  </div>
+</div>
+
+<div class="step-block" style="margin-top:5mm;">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>DATASET INVENTORY</h3>
+    <p>Before touching any data, document every source file. This step takes 30–60 minutes and prevents the most common integration mistake: starting to clean data before understanding what you have.</p>
+    <div class="callout">
+      <div class="cl cl-f">Inventory Template — one row per source file</div>
+      <ul style="margin:0;">
+        <li><strong>file_id:</strong> Short unique ID (e.g., "CT_IHOFA_2024")</li>
+        <li><strong>filename:</strong> Exact filename including extension</li>
+        <li><strong>survey_method:</strong> camera_trap / transect / acoustic / vegetation / other</li>
+        <li><strong>site:</strong> Site name as it appears in the file</li>
+        <li><strong>date_range:</strong> First and last observation date</li>
+        <li><strong>observer(s):</strong> Names or codes as they appear in the file</li>
+        <li><strong>n_records:</strong> Row count</li>
+        <li><strong>known_issues:</strong> Any formatting problems, missing columns, or data quality issues already known</li>
+        <li><strong>column_names:</strong> List of column headers exactly as they appear</li>
+        <li><strong>date_format:</strong> How dates are recorded in this file</li>
+        <li><strong>coord_format:</strong> GPS format used (decimal degrees / DMS / UTM / none)</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: A dataset inventory CSV. This becomes part of the harmonization log.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>MASTER SCHEMA DESIGN</h3>
+    <p>Define the unified column structure that all source datasets will be mapped to. Every column has a name, a data type, a format, and a description. Columns not present in every source dataset are included with a defined NA handling rule.</p>
+    <p>Use the Schema Library in Section 6 to select and adapt the schema for your data types. Use Prompt 1 in the AI Prompt Pack to help draft the schema from your dataset inventory.</p>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: A master schema document listing every column name, type, format, and NA rule. This is the reference against which all cleaning work is done.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>REGISTRY BUILDING</h3>
+    <p>Build three shared registries before cleaning any dataset. These registries are the controlled vocabularies that ensure consistency across all source files.</p>
+    <div class="callout">
+      <div class="cl cl-f">Three Required Registries</div>
+      <ul style="margin:0;">
+        <li><strong>Species Registry:</strong> Every species name that appears in any source dataset, mapped to: canonical Latin name, species code, taxonomic group, IUCN status, endemism status, sensitivity flag (sensitive location data required?)</li>
+        <li><strong>Site Registry:</strong> Every site name that appears in any source dataset, mapped to: canonical site name, site code, region, GPS coordinates of site centroid, habitat type, protection status</li>
+        <li><strong>Observer Registry:</strong> Every observer name or code that appears in any source dataset, mapped to: canonical observer code, full name, affiliation, experience level, seasons active</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: Three registry CSV files. These are used throughout the cleaning steps and become part of the dataset documentation.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>INDIVIDUAL DATASET CLEANING</h3>
+    <p>Clean each source dataset separately before merging. The cleaning applies the Cleaning Rules from Section 7 and maps each source column to its master schema equivalent. Work through each dataset in isolation — do not try to clean and merge simultaneously.</p>
+    <p>For each source dataset, produce:</p>
+    <ul>
+      <li>A cleaned version with all columns renamed to match the master schema</li>
+      <li>A source-specific cleaning log listing every change made and why</li>
+      <li>A column mapping table: source column name → master schema column name</li>
+    </ul>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: One cleaned CSV per source dataset + one cleaning log per source dataset.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <h3>MERGE</h3>
+    <p>Combine all cleaned source datasets into a single file using a vertical merge (append rows). Do not join on columns at this stage — joins come after the merge is validated. Preserve provenance columns throughout: <code>source_file_id</code>, <code>source_row</code>, and <code>merge_date</code> on every record.</p>
+    <div class="callout cr">
+      <div class="cl cl-r">The provenance rule — non-negotiable</div>
+      <p style="margin:0;">Every row in the merged dataset must be traceable back to a specific row in a specific source file. Never delete the provenance columns. An auditor must be able to look at any record in the harmonized dataset and verify it against the original source. Without provenance, the dataset cannot be audited.</p>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: A single merged CSV with all records from all source datasets. Unchecked — cleaning continues in Step 6.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">6</div>
+  <div class="step-content">
+    <h3>CROSS-DATASET CLEANING</h3>
+    <p>Some inconsistencies only appear after the merge — species name variants that exist in different source files, site names that overlap or conflict across seasons, observer codes that collide. Run the cross-dataset cleaning rules from Section 7 Part B.</p>
+    <p>The three most common cross-dataset problems and how to handle them:</p>
+    <ul>
+      <li><strong>Near-duplicate records:</strong> Same species, same site, similar time, slightly different coordinates. Use Prompt 6 to detect these. Do not automatically delete — flag for expert review.</li>
+      <li><strong>Taxonomic name conflicts:</strong> Species coded differently in two sites because different identification guides were used. Resolve using the Species Registry. Document every resolution in the harmonization log.</li>
+      <li><strong>Site boundary overlap:</strong> Records at a coordinate that falls within two different site polygons. Assign to the site with the smaller area (most specific) and flag as SITE_AMBIGUOUS.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">7</div>
+  <div class="step-content">
+    <h3>SENSITIVE DATA HANDLING</h3>
+    <p>Before the dataset is shared with any external party — collaborator, funder, journal, data repository — sensitive location data must be handled. This is an ethical obligation, not a data cleaning step.</p>
+    <div class="callout cr">
+      <div class="cl cl-r">Sensitive data categories for conservation datasets</div>
+      <ul style="margin:0;">
+        <li><strong>IUCN Critically Endangered or Endangered species:</strong> Precise coordinates must be offset by ≥1 km in any public dataset</li>
+        <li><strong>Known nest, roost, or den sites:</strong> Remove coordinates entirely from shared versions</li>
+        <li><strong>Poaching-sensitive species:</strong> Any species with known commercial demand — orchids, reptiles, primates — apply coordinate generalisation regardless of IUCN status</li>
+        <li><strong>Community-sensitive locations:</strong> Coordinates that would identify specific community members, farms, or settlements require consent before sharing</li>
+      </ul>
+    </div>
+    <p>Maintain two versions of the dataset: the full internal version (all coordinates) and the shareable public version (sensitive coordinates offset or removed). Document which records were modified and why in the harmonization log.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">8</div>
+  <div class="step-content">
+    <h3>VALIDATION AND DOCUMENTATION</h3>
+    <p>Run the six-point Validation Framework from Section 9. Write the Harmonization Log from the template in Section 10. The dataset is not ready for analysis or sharing until both are complete.</p>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: Validated harmonized dataset + harmonization log + metadata file. This package is the deliverable.</p>
+  </div>
+</div>
+
+<!-- S5 MASTER SCHEMA DESIGN -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>Master Schema Design Principles</h1>
+
+<p>The master schema is the single most important document in the harmonization process. If it is wrong, every subsequent step produces a wrong result. Take the time to design it carefully before writing a single line of cleaning code.</p>
+
+<h2>Schema Design Rules</h2>
+<ul>
+  <li><strong>One column, one meaning.</strong> A column called <code>notes</code> that contains observer comments, data quality flags, and behavioural observations is three columns poorly stored as one. Split it.</li>
+  <li><strong>Controlled vocabulary for all categorical fields.</strong> Every field that has a finite set of valid values must list those values in the schema. No free-text in categorical columns.</li>
+  <li><strong>NA is not the same as 0 or empty.</strong> Missing data, zero count, and not applicable are three different states. Your schema must handle all three explicitly.</li>
+  <li><strong>Separate raw from interpreted.</strong> Where a field contains a value that required human interpretation (species ID from a blurred camera trap image), maintain both the raw value and the interpreted value in separate columns.</li>
+  <li><strong>Effort must be attached to detections.</strong> Every detection record must be linkable to its corresponding effort record — the transect it was observed on, the camera trap station it was detected at, the acoustic unit that recorded it.</li>
+  <li><strong>Timestamps must be timezone-aware.</strong> If data comes from multiple countries or significant longitude ranges, include timezone offset in the timestamp format.</li>
+</ul>
+
+<h2>Column Type Definitions</h2>
+<table>
+  <tr><th>Type code</th><th>Definition</th><th>Example values</th><th>Format</th></tr>
+  <tr><td><code>TEXT</code></td><td>Free text — use sparingly, only for notes and provenance fields</td><td>"Equipment slightly displaced on retrieval"</td><td>No length limit, UTF-8</td></tr>
+  <tr><td><code>CODE</code></td><td>Controlled vocabulary — must match registry</td><td>"LEMURCATTA", "HFR", "IHOFA_NE"</td><td>ALLCAPS, underscores, no spaces, no special chars</td></tr>
+  <tr><td><code>DATE</code></td><td>Calendar date</td><td>"2024-03-06"</td><td>ISO 8601: YYYY-MM-DD</td></tr>
+  <tr><td><code>TIME</code></td><td>Time of day</td><td>"07:42"</td><td>HH:MM, 24-hour, local time</td></tr>
+  <tr><td><code>DATETIME</code></td><td>Combined date and time</td><td>"2024-03-06T07:42:00"</td><td>ISO 8601 with T separator</td></tr>
+  <tr><td><code>LAT</code></td><td>Latitude in decimal degrees, WGS84</td><td>-18.45760</td><td>Negative for South, 5 decimal places</td></tr>
+  <tr><td><code>LON</code></td><td>Longitude in decimal degrees, WGS84</td><td>47.18723</td><td>Positive for East, 5 decimal places</td></tr>
+  <tr><td><code>INT</code></td><td>Integer — for counts, trap-nights, page numbers</td><td>3, 47, 0</td><td>No decimals, no negatives for counts</td></tr>
+  <tr><td><code>FLOAT</code></td><td>Decimal number — for measurements, distances, percentages</td><td>4.5, 87.3, 0.92</td><td>Up to 4 decimal places</td></tr>
+  <tr><td><code>BOOL</code></td><td>Binary flag</td><td>TRUE / FALSE</td><td>Only these two values; not 1/0 or Y/N</td></tr>
+  <tr><td><code>FLAG</code></td><td>Status or quality flag from controlled vocabulary</td><td>"HIGH", "ILLEGIBLE", "SPATIAL_OUTLIER"</td><td>From defined flag vocabulary</td></tr>
+</table>
+
+<!-- S6 SCHEMA LIBRARY -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>Schema Library — 6 Biodiversity Data Types</h1>
+<p>Complete master schemas for the six most common conservation field data types. Use these directly or adapt them for your specific project. Every schema includes provenance columns and is Darwin Core compatible.</p>
+
+<h2>Schema 1 — Wildlife Detection (Camera Trap, Transect, Opportunistic)</h2>
+<div class="schema-block">
+  <div class="schema-label">Master schema — wildlife detection records</div>
+  <div class="schema-row" style="font-weight:700;background:var(--cream);font-size:8pt;"><div>Column name</div><div>Type</div><div>Description / valid values</div></div>
+  <div class="schema-row"><div class="schema-col">record_id</div><div class="schema-type">TEXT</div><div class="schema-desc">Globally unique. Format: [source_id]_[row]. e.g. CT_IHOFA_2024_0042</div></div>
+  <div class="schema-row"><div class="schema-col">source_file_id</div><div class="schema-type">CODE</div><div class="schema-desc">From dataset inventory. Links record to source file.</div></div>
+  <div class="schema-row"><div class="schema-col">survey_method</div><div class="schema-type">CODE</div><div class="schema-desc">CAMERA_TRAP / LINE_TRANSECT / POINT_COUNT / OPPORTUNISTIC / FOCAL_FOLLOW</div></div>
+  <div class="schema-row"><div class="schema-col">detection_date</div><div class="schema-type">DATE</div><div class="schema-desc">YYYY-MM-DD. ILLEGIBLE if unreadable.</div></div>
+  <div class="schema-row"><div class="schema-col">detection_time</div><div class="schema-type">TIME</div><div class="schema-desc">HH:MM 24h. MISSING if not recorded.</div></div>
+  <div class="schema-row"><div class="schema-col">site_code</div><div class="schema-type">CODE</div><div class="schema-desc">From Site Registry. Canonical site code.</div></div>
+  <div class="schema-row"><div class="schema-col">station_id</div><div class="schema-type">CODE</div><div class="schema-desc">Camera station, transect, or plot ID within the site.</div></div>
+  <div class="schema-row"><div class="schema-col">latitude</div><div class="schema-type">LAT</div><div class="schema-desc">Decimal degrees WGS84. ILLEGIBLE / MISSING as applicable.</div></div>
+  <div class="schema-row"><div class="schema-col">longitude</div><div class="schema-type">LON</div><div class="schema-desc">Decimal degrees WGS84.</div></div>
+  <div class="schema-row"><div class="schema-col">coord_original</div><div class="schema-type">TEXT</div><div class="schema-desc">GPS entry as written in original record.</div></div>
+  <div class="schema-row"><div class="schema-col">species_code</div><div class="schema-type">CODE</div><div class="schema-desc">From Species Registry. UNID_[TAXON] if unidentified.</div></div>
+  <div class="schema-row"><div class="schema-col">species_latin</div><div class="schema-type">TEXT</div><div class="schema-desc">Full binomial. "cf." prefix for uncertain ID.</div></div>
+  <div class="schema-row"><div class="schema-col">species_raw</div><div class="schema-type">TEXT</div><div class="schema-desc">Exactly as written in source record.</div></div>
+  <div class="schema-row"><div class="schema-col">count</div><div class="schema-type">INT</div><div class="schema-desc">Number of individuals. ILLEGIBLE if unreadable.</div></div>
+  <div class="schema-row"><div class="schema-col">count_min</div><div class="schema-type">INT</div><div class="schema-desc">For range counts. NA if exact count recorded.</div></div>
+  <div class="schema-row"><div class="schema-col">count_max</div><div class="schema-type">INT</div><div class="schema-desc">For range counts. NA if exact count recorded.</div></div>
+  <div class="schema-row"><div class="schema-col">detection_type</div><div class="schema-type">CODE</div><div class="schema-desc">COUNT / PRESENCE_ABSENCE / INDEX / TRACK / CALL / SCAT</div></div>
+  <div class="schema-row"><div class="schema-col">age_class</div><div class="schema-type">CODE</div><div class="schema-desc">AD / JUV / INF / UNKNOWN</div></div>
+  <div class="schema-row"><div class="schema-col">sex</div><div class="schema-type">CODE</div><div class="schema-desc">M / F / UNKNOWN</div></div>
+  <div class="schema-row"><div class="schema-col">distance_m</div><div class="schema-type">FLOAT</div><div class="schema-desc">Perpendicular distance in metres (transects only). NA for other methods.</div></div>
+  <div class="schema-row"><div class="schema-col">observer_code</div><div class="schema-type">CODE</div><div class="schema-desc">From Observer Registry. Canonical observer code.</div></div>
+  <div class="schema-row"><div class="schema-col">effort_link_id</div><div class="schema-type">TEXT</div><div class="schema-desc">Links to effort record in the effort table.</div></div>
+  <div class="schema-row"><div class="schema-col">sensitivity_flag</div><div class="schema-type">FLAG</div><div class="schema-desc">PUBLIC / RESTRICTED / OFFSET_APPLIED. Set per species from Species Registry.</div></div>
+  <div class="schema-row"><div class="schema-col">confidence</div><div class="schema-type">FLAG</div><div class="schema-desc">HIGH / MEDIUM / LOW / ILLEGIBLE</div></div>
+  <div class="schema-row"><div class="schema-col">notes</div><div class="schema-type">TEXT</div><div class="schema-desc">Free text. Transcriber notes, observer comments, QC flags.</div></div>
+  <div class="schema-row"><div class="schema-col">merge_date</div><div class="schema-type">DATE</div><div class="schema-desc">Date this record entered the harmonized dataset.</div></div>
+</div>
+
+<h2>Schema 2 — Survey Effort Table</h2>
+<div class="schema-block">
+  <div class="schema-label">Effort records — one row per survey unit per day</div>
+  <div class="schema-row" style="font-weight:700;background:var(--cream);font-size:8pt;"><div>Column name</div><div>Type</div><div>Description</div></div>
+  <div class="schema-row"><div class="schema-col">effort_id</div><div class="schema-type">TEXT</div><div class="schema-desc">Unique ID. Links to detection records via effort_link_id.</div></div>
+  <div class="schema-row"><div class="schema-col">survey_method</div><div class="schema-type">CODE</div><div class="schema-desc">Same controlled vocabulary as detection table.</div></div>
+  <div class="schema-row"><div class="schema-col">site_code</div><div class="schema-type">CODE</div><div class="schema-desc">From Site Registry.</div></div>
+  <div class="schema-row"><div class="schema-col">station_id</div><div class="schema-type">CODE</div><div class="schema-desc">Camera station, transect ID, or acoustic unit ID.</div></div>
+  <div class="schema-row"><div class="schema-col">effort_date</div><div class="schema-type">DATE</div><div class="schema-desc">Date of survey effort.</div></div>
+  <div class="schema-row"><div class="schema-col">effort_start</div><div class="schema-type">TIME</div><div class="schema-desc">Survey start time. MISSING if not recorded.</div></div>
+  <div class="schema-row"><div class="schema-col">effort_end</div><div class="schema-type">TIME</div><div class="schema-desc">Survey end time. MISSING if not recorded.</div></div>
+  <div class="schema-row"><div class="schema-col">effort_unit</div><div class="schema-type">CODE</div><div class="schema-desc">TRAP_NIGHT / KM_WALKED / RECORDING_HOUR / OBSERVER_HOUR</div></div>
+  <div class="schema-row"><div class="schema-col">effort_value</div><div class="schema-type">FLOAT</div><div class="schema-desc">Quantity of effort in the specified unit.</div></div>
+  <div class="schema-row"><div class="schema-col">observer_code</div><div class="schema-type">CODE</div><div class="schema-desc">From Observer Registry.</div></div>
+  <div class="schema-row"><div class="schema-col">conditions</div><div class="schema-type">CODE</div><div class="schema-desc">GOOD / FAIR / POOR. Standardised weather/visibility assessment.</div></div>
+</div>
+
+<h2>Schemas 3–6 — Quick Reference</h2>
+<table>
+  <tr><th>Schema</th><th>Data type</th><th>Key additional columns vs. Schema 1</th></tr>
+  <tr><td><strong>Schema 3</strong></td><td>Acoustic monitoring records</td><td><code>unit_id</code>, <code>recording_file</code>, <code>freq_range_hz</code>, <code>call_type</code>, <code>n_calls</code>, <code>species_id_method</code> (MANUAL/BIRDNET/KALEIDOSCOPE), <code>id_confidence</code></td></tr>
+  <tr><td><strong>Schema 4</strong></td><td>Vegetation plots</td><td><code>plot_id</code>, <code>plot_size_m2</code>, <code>species_latin</code> (plant), <code>dbh_cm</code>, <code>height_m</code>, <code>cover_pct</code>, <code>stratum</code> (canopy/understorey/ground), <code>alive</code> (BOOL)</td></tr>
+  <tr><td><strong>Schema 5</strong></td><td>Herpetofauna VES records</td><td><code>microhabitat</code>, <code>substrate</code>, <code>snout_vent_mm</code>, <code>tail_mm</code>, <code>mass_g</code>, <code>tissue_sample_id</code>, <code>photo_id</code>, <code>released_alive</code> (BOOL)</td></tr>
+  <tr><td><strong>Schema 6</strong></td><td>Drone survey detections</td><td><code>flight_id</code>, <code>altitude_m</code>, <code>sensor_type</code> (THERMAL/RGB/MULTISPECTRAL), <code>image_file</code>, <code>detection_method</code> (MANUAL/YOLO_V8/OTHER), <code>bbox_confidence</code>, <code>ground_verified</code> (BOOL)</td></tr>
+</table>
+
+<!-- S7 CLEANING RULES -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>40 Cleaning Rules</h1>
+<p>Organised by field category. Every rule has a trigger condition, the correct action, and a documentation requirement. Log every application of every rule in the cleaning log.</p>
+
+<h2>Part A — Within-Dataset Rules (apply before merge)</h2>
+
+<h3>Date and Time Fields</h3>
+<div class="val-rule no-break">
+  <div class="val-name">D1 — Standardise date to ISO 8601</div>
+  <div class="val-logic">IF date field != YYYY-MM-DD → convert to YYYY-MM-DD</div>
+  <div class="val-action">Action: Convert. Log: original format, converted value, conversion method.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">D2 — Separate combined date-time fields</div>
+  <div class="val-logic">IF field contains both date and time → split into date and time columns</div>
+  <div class="val-action">Action: Split using the delimiter (space, T, comma). Log: original format.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">D3 — Standardise time to 24-hour format</div>
+  <div class="val-logic">IF time field uses 12-hour with AM/PM → convert to HH:MM 24h</div>
+  <div class="val-action">Action: Convert. Log ambiguous cases (no AM/PM indicator).</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">D4 — Flag date outside survey period</div>
+  <div class="val-logic">IF detection_date outside [survey_start, survey_end] → flag TEMPORAL_OUTLIER</div>
+  <div class="val-action">Action: Flag. Do not delete. Log: flagged date and reason.</div>
+</div>
+
+<h3>GPS and Coordinate Fields</h3>
+<div class="val-rule no-break">
+  <div class="val-name">G1 — Convert DMS to decimal degrees</div>
+  <div class="val-logic">IF coordinate in D°M'S" format → convert to DD.DDDDD</div>
+  <div class="val-action">Action: Convert using formula. Preserve original in coord_original. Log conversion.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">G2 — Convert DDM to decimal degrees</div>
+  <div class="val-logic">IF coordinate in D°M.mmm' format → convert: DD = D + M.mmm/60</div>
+  <div class="val-action">Action: Convert. Preserve original. Log.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">G3 — Infer hemisphere from study area</div>
+  <div class="val-logic">IF latitude positive but study area is Southern Hemisphere → check for sign error</div>
+  <div class="val-action">Action: Flag as HEMISPHERE_CHECK. Do not automatically negate. Requires human confirmation.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">G4 — Flag coordinate outside study area bounding box</div>
+  <div class="val-logic">IF lat/lon outside [lat_min, lat_max, lon_min, lon_max] → flag SPATIAL_OUTLIER</div>
+  <div class="val-action">Action: Flag. Do not delete. Log: coordinates, bounding box, reason.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">G5 — Flag coordinate precision below minimum</div>
+  <div class="val-logic">IF decimal degrees has fewer than 4 decimal places → flag LOW_PRECISION</div>
+  <div class="val-action">Action: Flag. Retain value. Note that position accuracy is ±~10m minimum at 4 d.p.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">G6 — Detect transposed coordinates</div>
+  <div class="val-logic">IF latitude value is in longitude range AND longitude value is in latitude range → flag TRANSPOSED</div>
+  <div class="val-action">Action: Flag TRANSPOSED. Do not auto-swap — requires human confirmation. Log both values.</div>
+</div>
+
+<h3>Species Name Fields</h3>
+<div class="val-rule no-break">
+  <div class="val-name">S1 — Map raw species name to Species Registry</div>
+  <div class="val-logic">IF species_raw not in Species Registry → look up canonical name. If found: map. If not found: flag SPECIES_UNKNOWN.</div>
+  <div class="val-action">Action: Populate species_code and species_latin from registry. Preserve species_raw.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">S2 — Handle "cf." identifications</div>
+  <div class="val-logic">IF species name contains "cf.", "aff.", "?", or "probably" → prefix species_latin with "cf."</div>
+  <div class="val-action">Action: Set species_latin = "cf. [name]". Set confidence = MEDIUM or LOW depending on context.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">S3 — Standardise unidentified records</div>
+  <div class="val-logic">IF species not identified to species level → use UNID_[TAXON] format</div>
+  <div class="val-action">Example: UNID_LEMUR, UNID_FROG, UNID_SNAKE. Never leave species_code blank for unidentified records.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">S4 — Flag taxonomic name changes</div>
+  <div class="val-logic">IF species recorded under a synonym that has since changed → map to current accepted name</div>
+  <div class="val-action">Action: Use current accepted Latin name. Note old name in notes column. Log: original name, current name, source of change (e.g., ITIS, Catalogue of Life update).</div>
+</div>
+
+<h3>Count and Numeric Fields</h3>
+<div class="val-rule no-break">
+  <div class="val-name">N1 — Separate count ranges into min and max</div>
+  <div class="val-logic">IF count field contains a range (e.g., "8-12", "~10", "10+") → split to count_min and count_max</div>
+  <div class="val-action">Action: Parse range. "10+" = count_min:10, count_max:NA. "~10" = count_min:8, count_max:12 with note "estimated".</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">N2 — Flag negative count values</div>
+  <div class="val-logic">IF count &lt; 0 → flag COUNT_NEGATIVE</div>
+  <div class="val-action">Action: Flag. Do not change value. Log: value and source row. Likely a data entry error.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">N3 — Flag biologically implausible counts</div>
+  <div class="val-logic">IF count &gt; [species_max_group_size from registry] → flag COUNT_OUTLIER</div>
+  <div class="val-action">Action: Flag. Do not delete. Log: count value, species, expected maximum.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">N4 — Distinguish zero-count from missing count</div>
+  <div class="val-logic">IF count field is blank → enter MISSING, not 0. IF survey was conducted and species was not detected → enter 0.</div>
+  <div class="val-action">These are analytically different. A zero means surveyed and absent. MISSING means data not recorded. Never substitute one for the other.</div>
+</div>
+
+<h3>Observer and Effort Fields</h3>
+<div class="val-rule no-break">
+  <div class="val-name">O1 — Map raw observer to Observer Registry</div>
+  <div class="val-logic">IF observer_raw not in Observer Registry → flag OBSERVER_UNKNOWN</div>
+  <div class="val-action">Action: Populate observer_code from registry where possible. Preserve observer_raw. Flag unknowns for manual resolution.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">O2 — Standardise effort units within dataset</div>
+  <div class="val-logic">IF effort recorded in inconsistent units within one dataset → standardise to primary unit</div>
+  <div class="val-action">Action: Convert. Log conversion factor. Do not mix effort units in the same effort_unit column.</div>
+</div>
+
+<h2>Part B — Cross-Dataset Rules (apply after merge)</h2>
+
+<div class="val-rule no-break">
+  <div class="val-name">X1 — Detect exact duplicates</div>
+  <div class="val-logic">IF two rows have identical values in: species_code, detection_date, detection_time, site_code, count → flag EXACT_DUPLICATE</div>
+  <div class="val-action">Action: Flag both rows. Do not delete. Requires human decision to retain one or both.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">X2 — Detect near-duplicates</div>
+  <div class="val-logic">IF two rows match on: species_code, detection_date, site_code AND differ by &lt;30 min in time AND &lt;50m in GPS → flag NEAR_DUPLICATE</div>
+  <div class="val-action">Action: Flag both. Log: the two record IDs and the fields that differ. Do not auto-resolve.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">X3 — Detect cross-dataset species name conflicts</div>
+  <div class="val-logic">IF same species appears under different codes in different source datasets → verify against Species Registry. Both codes must map to same canonical species.</div>
+  <div class="val-action">Action: Standardise to registry code. Log: all variant codes found, source files, resolution.</div>
+</div>
+<div class="val-rule no-break">
+  <div class="val-name">X4 — Detect site name conflicts across seasons</div>
+  <div class="val-logic">IF same geographic area is referred to by different names in different source files → resolve to canonical site code from Site Registry</div>
+  <div class="val-action">Action: Standardise to registry code. Log: all variant names, source files, resolution.</div>
+</div>
+
+<h2>Worked Cleaning Examples — Before and After</h2>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad">
+    <div class="ba-label">Raw — species column</div>
+    <div class="ba-text">
+      Lc<br>
+      L. catta<br>
+      Ring-tailed lemur<br>
+      Lemur catta (juv?)<br>
+      LEMURCATTA<br>
+      lm ct
+    </div>
+  </div>
+  <div class="ba-box ba-good">
+    <div class="ba-label">Harmonized — species_code / species_latin</div>
+    <div class="ba-text">
+      LEMURCATTA / Lemur catta<br>
+      LEMURCATTA / Lemur catta<br>
+      LEMURCATTA / Lemur catta<br>
+      LEMURCATTA / cf. Lemur catta<br>
+      LEMURCATTA / Lemur catta<br>
+      LEMURCATTA / Lemur catta
+    </div>
+  </div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad">
+    <div class="ba-label">Raw — date column (mixed formats)</div>
+    <div class="ba-text">
+      06/03/24<br>
+      2024-03-07<br>
+      March 8, 2024<br>
+      3/9/24<br>
+      10.03.2024<br>
+      11-Mar-24
+    </div>
+  </div>
+  <div class="ba-box ba-good">
+    <div class="ba-label">Harmonized — detection_date (ISO 8601)</div>
+    <div class="ba-text">
+      2024-03-06<br>
+      2024-03-07<br>
+      2024-03-08<br>
+      2024-03-09<br>
+      2024-03-10<br>
+      2024-03-11
+    </div>
+  </div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad">
+    <div class="ba-label">Raw — GPS (mixed formats)</div>
+    <div class="ba-text">
+      S18°27.456 E47°11.234<br>
+      -18.457, 47.187<br>
+      18 27 27 S / 47 11 14 E<br>
+      18.45, 47.12<br>
+      UTM 38S 519234 7960123
+    </div>
+  </div>
+  <div class="ba-box ba-good">
+    <div class="ba-label">Harmonized — latitude / longitude / flag</div>
+    <div class="ba-text">
+      -18.45760 / 47.18723 / VERIFIED<br>
+      -18.45700 / 47.18700 / VERIFIED<br>
+      -18.45750 / 47.18722 / VERIFIED<br>
+      -18.45000 / 47.12000 / LOW_PRECISION<br>
+      -18.45821 / 47.18734 / VERIFIED
+    </div>
+  </div>
+</div>
+
+<!-- S8 AI PROMPT PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>AI Prompt Pack — 12 Prompts</h1>
+<p>Use with Claude, ChatGPT, or any capable AI assistant. These prompts assist at each stage of the harmonization pipeline. Always verify AI output against your data — AI can produce plausible but wrong suggestions, especially for taxonomic name resolution and coordinate conversion.</p>
+
+<h2>Prompt 1 — Master Schema Designer</h2>
+<div class="prompt-box">
+I am harmonizing biodiversity datasets from multiple sources. From my dataset inventory below, design a master schema for the unified dataset.
+
+Inventory summary:
+[Paste your dataset inventory — list of source files with column names, data types, survey methods]
+
+For each column in the master schema:
+- Column name (snake_case, no spaces)
+- Data type (TEXT / CODE / DATE / TIME / LAT / LON / INT / FLOAT / BOOL / FLAG)
+- Format specification
+- Valid values if categorical (controlled vocabulary)
+- NA handling rule (how to represent missing, illegible, and not-applicable separately)
+- Whether this column is required or optional
+
+Flag any column that will need a controlled vocabulary registry (species, sites, observers).
+</div>
+
+<h2>Prompt 2 — Species Name Resolver</h2>
+<div class="prompt-box">
+I have the following species name variants from multiple datasets. For each variant, identify the current accepted Latin binomial, the likely intended species, and any taxonomic notes.
+
+Context:
+- Study region: [country and habitat type]
+- Target taxa: [mammals / amphibians / reptiles / birds / plants]
+- Survey period: [date range]
+
+For each variant:
+1. Most likely intended species (current accepted Latin binomial)
+2. Confidence: HIGH / MEDIUM / LOW
+3. Alternative interpretation if ambiguous
+4. Taxonomic note if name has changed since survey period
+5. Recommended species_code (ALLCAPS, underscores, genus+species, max 15 chars)
+
+Species variants to resolve:
+[LIST ONE PER LINE — paste exactly as they appear in your raw data]
+</div>
+
+<h2>Prompt 3 — Observer Registry Builder</h2>
+<div class="prompt-box">
+I need to build an Observer Registry for my harmonized dataset. I have the following observer name variants from multiple source files. Help me consolidate them.
+
+For each unique observer:
+1. List all name variants that appear to refer to the same person
+2. Suggest a canonical observer code (initials format — 2-3 capital letters)
+3. Flag any ambiguous cases where two variants might be different people
+4. Note where the same code might refer to different people in different datasets
+
+Observer variants (one per line, with source file):
+[LIST VARIANTS — e.g., "HFR (file CT_2024)", "Haja (file TRX_2023)", "H.F.Razafindrabe (file VEG_2022)"]
+</div>
+
+<h2>Prompt 4 — Coordinate Batch Converter</h2>
+<div class="prompt-box">
+Convert the following GPS coordinates to decimal degrees format (DD.DDDDD), WGS84.
+
+Study area bounding box:
+Latitude: [min_lat] to [max_lat] (Southern Hemisphere: values should be negative)
+Longitude: [min_lon] to [max_lon]
+
+For each coordinate:
+1. Convert to decimal degrees
+2. Flag any coordinate outside the study area bounding box as SPATIAL_OUTLIER
+3. Flag any coordinate with fewer than 4 decimal places as LOW_PRECISION
+4. Flag any coordinate where latitude and longitude appear transposed as TRANSPOSED
+5. Return: original_value, latitude_dd, longitude_dd, spatial_flag, conversion_notes
+
+Coordinates to convert (one per line):
+[LIST COORDINATES — paste exactly as they appear in your raw data]
+</div>
+
+<h2>Prompt 5 — Cleaning Log Generator</h2>
+<div class="prompt-box">
+I have applied the following cleaning operations to my dataset. Generate a structured cleaning log entry for each operation.
+
+Dataset ID: [source file ID]
+Cleaning date: [date]
+Cleaned by: [name]
+
+Operations performed:
+[Describe each operation, e.g., "Converted 47 date values from DD/MM/YY to YYYY-MM-DD", "Resolved 12 species name variants to 4 canonical species", "Flagged 3 records as SPATIAL_OUTLIER"]
+
+For each operation, generate a log entry with:
+- Operation type
+- Field(s) affected
+- Number of records affected
+- Rule applied (from the cleaning rule library)
+- Before value example
+- After value example
+- Reversibility (can this be reversed from the original data?)
+- Any records requiring expert review
+</div>
+
+<h2>Prompt 6 — Near-Duplicate Detector</h2>
+<div class="prompt-box">
+I have merged biodiversity datasets from multiple sources. Help me identify near-duplicate records.
+
+Near-duplicate definition for this project: Two records are near-duplicates if they share:
+- Same species_code
+- Same detection_date (or within [X] days if date uncertainty exists)
+- Same site_code
+- Detection time within [30] minutes of each other
+- GPS coordinates within [50] metres of each other
+
+From the merged dataset below, identify all candidate near-duplicate pairs.
+
+For each candidate pair:
+1. Record IDs of both records
+2. Fields that match exactly
+3. Fields that differ and by how much
+4. Recommended action: RETAIN_BOTH / RETAIN_FIRST / RETAIN_SECOND / EXPERT_REVIEW
+5. Reasoning
+
+Dataset to check (paste as CSV):
+[PASTE RELEVANT COLUMNS — species_code, detection_date, detection_time, site_code, latitude, longitude, source_file_id, record_id]
+</div>
+
+<h2>Prompt 7 — Sensitive Data Flagging</h2>
+<div class="prompt-box">
+I need to apply sensitivity flags to records in my harmonized dataset before sharing externally.
+
+Sensitivity rules:
+1. Species flagged as IUCN CR or EN in the Species Registry → flag RESTRICTED, offset coordinates by ≥1km in public version
+2. Any record with habitat type = [specify sensitive habitat types] → flag RESTRICTED
+3. Species in the following list (known poaching targets in this region): [list species] → flag RESTRICTED regardless of IUCN status
+4. Records within [distance] of any community settlement → flag COMMUNITY_SENSITIVE, review before sharing
+
+For each record in the dataset below:
+- Apply the appropriate sensitivity flag (PUBLIC / RESTRICTED / COMMUNITY_SENSITIVE / OFFSET_APPLIED)
+- For RESTRICTED records: calculate an offset coordinate that moves the point ≥1km in a random direction within the same habitat type
+- Generate a separate "offset log" that maps original to offset coordinates (for internal use only)
+
+Dataset to flag (paste as CSV):
+[PASTE DATASET]
+</div>
+
+<h2>Prompt 8 — Darwin Core Mapping</h2>
+<div class="prompt-box">
+Map my harmonized dataset schema to Darwin Core terms for GBIF submission or MRV reporting.
+
+My master schema columns:
+[LIST YOUR COLUMN NAMES AND TYPES]
+
+For each column:
+1. The equivalent Darwin Core term (or "no direct equivalent")
+2. Any format conversion needed for Darwin Core compliance
+3. Whether this field is required, recommended, or optional in Darwin Core
+4. Any Darwin Core terms I should add to my dataset that are missing from my current schema
+
+Also generate:
+- A meta.xml file template for GBIF submission
+- A list of the 10 most important Darwin Core terms I should ensure are populated before submission
+</div>
+
+<h2>Prompt 9 — Validation Report Generator</h2>
+<div class="prompt-box">
+Generate a data quality validation report for my harmonized biodiversity dataset.
+
+Dataset summary:
+- Total records: [number]
+- Source datasets: [number and types]
+- Date range: [earliest] to [latest]
+- Sites: [number]
+- Species recorded: [number]
+
+Validation results:
+- Records failing date validation: [number]
+- Records flagged SPATIAL_OUTLIER: [number]
+- Records flagged SPECIES_UNKNOWN: [number]
+- Records flagged NEAR_DUPLICATE: [number]
+- Records with ILLEGIBLE fields: [number and which fields]
+- Records flagged RESTRICTED: [number]
+- Overall data completeness: [% of required fields populated]
+
+Generate:
+1. A plain-language data quality summary (150 words)
+2. A table of issues sorted by severity (High / Medium / Low)
+3. Recommendations for which analyses are appropriate at current data quality vs. which require resolving specific issues first
+4. A list of issues that can be resolved computationally vs. those requiring expert field knowledge
+</div>
+
+<h2>Prompt 10 — R Cleaning Script Generator</h2>
+<div class="prompt-box">
+Generate an R script using tidyverse (dplyr, tidyr, lubridate, sf) that applies the following cleaning operations to my biodiversity dataset.
+
+Operations needed:
+1. Standardise all dates in column [col_name] from [format] to YYYY-MM-DD
+2. Convert GPS coordinates in columns [lat_col, lon_col] from [DMS/DDM] to decimal degrees
+3. Map species names in [col_name] to canonical names using a lookup table [describe lookup table structure]
+4. Flag records where [col_name] is outside [min, max] as [flag_value]
+5. Detect and flag near-duplicates based on [specify criteria]
+
+Dataset structure:
+[Describe column names, types, and a few example rows]
+
+The script must:
+- Include comments explaining each operation
+- Preserve the original values in separate columns (do not overwrite)
+- Generate a cleaning log as a dataframe that can be exported as CSV
+- Be reproducible — the same script on the same input must always produce the same output
+</div>
+
+<h2>Prompt 11 — Python Cleaning Script Generator</h2>
+<div class="prompt-box">
+Generate a Python script using pandas, numpy, and pyproj that applies the following cleaning operations to my biodiversity dataset.
+
+[Same parameters as Prompt 10 — adapted for Python/pandas syntax]
+
+Additional requirements:
+- Use type annotations throughout
+- Include a function for each cleaning operation (modular design)
+- Generate a validation report as a pandas DataFrame at the end
+- Export the cleaned dataset, the cleaning log, and the validation report as separate CSV files
+- Include a requirements.txt listing all dependencies
+</div>
+
+<h2>Prompt 12 — Harmonization Log Writer</h2>
+<div class="prompt-box">
+Write the harmonization log for a biodiversity data harmonization project based on the following information.
+
+Project details:
+- Project name: [name]
+- Data manager: [name]
+- Harmonization date: [date]
+- Source datasets: [list with file IDs, record counts, date ranges]
+- Master schema version: [version]
+- Total records in harmonized dataset: [number]
+- Records excluded and why: [describe]
+
+Cleaning operations summary:
+[Describe each category of cleaning applied — species names, dates, coordinates, observer codes, etc., with record counts]
+
+Outstanding issues (not resolved in this harmonization cycle):
+[Describe any issues flagged for expert review or requiring additional data]
+
+Format: a formal data harmonization log suitable for institutional filing, publication as supplementary material, or MRV audit. Include a version history table at the start.
+</div>
+
+<!-- S9 VALIDATION FRAMEWORK -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Six-Point Validation Framework</h1>
+<p>Run all six checks before the dataset is used in any analysis or shared with any external party. A dataset that fails any check is not ready. Document the results of every check in the harmonization log.</p>
+
+<h2>Check 1 — Structural Completeness</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">Are all required columns present? Are all required fields populated? Are all column types correct?</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: 0 blank values in required columns. 0 type violations. 0 missing required columns.</p>
+</div>
+<ul>
+  <li>List every required column from the master schema.</li>
+  <li>Count blank values in each required column. Blank is a fail — ILLEGIBLE and MISSING are acceptable.</li>
+  <li>Verify that each column contains the correct data type (no text in numeric columns, no numeric values in FLAG columns).</li>
+</ul>
+
+<h2>Check 2 — Controlled Vocabulary Compliance</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">Do all CODE and FLAG fields contain only values from the defined controlled vocabularies?</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: 0 values in any CODE or FLAG column that are not in the defined vocabulary.</p>
+</div>
+<ul>
+  <li>For each CODE column: check that every value appears in its registry (species, site, observer).</li>
+  <li>For each FLAG column: check that every value is from the defined flag vocabulary.</li>
+  <li>A value of SPECIES_UNKNOWN is compliant — an undefined species abbreviation is not.</li>
+</ul>
+
+<h2>Check 3 — Spatial Validity</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">Are all GPS coordinates within the study area bounding box? Are they in the correct format and range?</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: 0 unresolved SPATIAL_OUTLIER flags. 0 coordinates outside valid range (lat -90 to 90, lon -180 to 180).</p>
+</div>
+<ul>
+  <li>Verify every coordinate is within the study area bounding box or is explicitly flagged as SPATIAL_OUTLIER.</li>
+  <li>Check for transposed coordinates (latitude in longitude range).</li>
+  <li>Verify all coordinates are decimal degrees — no DMS, no UTM in the final dataset.</li>
+</ul>
+
+<h2>Check 4 — Temporal Validity</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">Are all dates within the known survey period? Are date formats consistent?</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: 0 dates outside the overall survey period (or all outliers explicitly flagged). 100% of dates in YYYY-MM-DD format.</p>
+</div>
+<ul>
+  <li>Verify all dates fall within [earliest survey start] and [latest survey end], or are flagged TEMPORAL_OUTLIER.</li>
+  <li>Check for common conversion errors: dates that read correctly in one format but mean a different day in another (e.g., 03/04 = April 3 or March 4).</li>
+</ul>
+
+<h2>Check 5 — Effort Coverage</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">Does every detection record have a corresponding effort record? Is the effort table complete?</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: 0 detection records with a NULL effort_link_id. Effort coverage ≥95% of expected survey days/stations.</p>
+</div>
+<ul>
+  <li>Join the detection table to the effort table on effort_link_id. Flag any detections with no matching effort record.</li>
+  <li>Calculate effort coverage: (actual survey days or stations) ÷ (planned survey days or stations). Flag if below 95%.</li>
+  <li>Verify that effort units are consistent within each survey method.</li>
+</ul>
+
+<h2>Check 6 — Sensitivity Compliance</h2>
+<div class="callout cr">
+  <div class="cl cl-r">What it tests</div>
+  <p style="margin-bottom:2mm;">Have all sensitive records been correctly identified and handled before any external sharing?</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: 0 IUCN CR or EN species records with PUBLIC sensitivity flag in the shareable version. 0 sensitive coordinates in the shareable version without OFFSET_APPLIED flag.</p>
+</div>
+<ul>
+  <li>Join the Species Registry to the dataset. Verify that every CR and EN species has sensitivity_flag = RESTRICTED or OFFSET_APPLIED.</li>
+  <li>Verify that the shareable (public) version of the dataset does not contain exact coordinates for any RESTRICTED record.</li>
+  <li>Verify that the offset log is maintained separately and is not included in the shareable dataset.</li>
+</ul>
+
+<!-- S10 HARMONIZATION LOG -->
+<div class="section-label" style="margin-top:6mm;">Section 10</div>
+<h1>Harmonization Log Template</h1>
+
+<div class="template-box">
+BIODIVERSITY DATA HARMONIZATION LOG
+Version: 1.0   |   Date: [YYYY-MM-DD]   |   Data Manager: [name]
+Project: [project name]   |   Institution: [institution]
+
+━━━ SOURCE DATASETS ━━━
+Dataset ID      | Method        | Records | Date Range       | Known Issues
+[CT_IHOFA_2024] | Camera trap   | [1,247] | 2024-03-01–05-31 | [GPS format mixed]
+[TRX_IHOFA_2024]| Transect      |   [487] | 2024-03-05–04-20 | [Observer codes unclear]
+[ACU_IHOFA_2024]| Acoustic      |   [892] | 2024-03-01–05-15 | [Date format DD/MM/YY]
+
+━━━ MASTER SCHEMA ━━━
+Schema version: [1.0]   |   Schema file: [filename]
+Total columns in master schema: [N]   |   Required columns: [N]
+
+━━━ REGISTRIES USED ━━━
+Species Registry: [filename]   |   Species count: [N]   |   Unresolved species: [N]
+Site Registry: [filename]   |   Sites: [N]
+Observer Registry: [filename]   |   Observers: [N]   |   Unresolved observers: [N]
+
+━━━ CLEANING OPERATIONS APPLIED ━━━
+Rule  | Records affected | Action taken | Log file
+D1    | [47 records]     | Date format standardised from DD/MM/YY to YYYY-MM-DD | [file]
+G1    | [23 records]     | DMS coordinates converted to decimal degrees | [file]
+S1    | [156 records]    | Species names resolved via Species Registry | [file]
+S4    | [3 records]      | Taxonomic name updated to current accepted name | [file]
+N1    | [8 records]      | Count ranges split to count_min / count_max | [file]
+X1    | [4 records]      | Exact duplicates flagged — expert review pending | [file]
+X2    | [11 records]     | Near-duplicates flagged — expert review pending | [file]
+
+━━━ RECORDS EXCLUDED ━━━
+Reason                           | Records excluded | Source file
+Survey outside project area      | [5]              | [CT_IHOFA_2024]
+Date pre-dates survey start      | [2]              | [TRX_IHOFA_2024]
+
+━━━ OUTSTANDING ISSUES (EXPERT REVIEW REQUIRED) ━━━
+Issue                            | Records | Priority | Assigned to
+Exact duplicate resolution       | 4       | HIGH     | [name]
+SPECIES_UNKNOWN resolution       | 7       | MEDIUM   | [taxon expert name]
+Near-duplicate resolution        | 11      | MEDIUM   | [name]
+
+━━━ VALIDATION RESULTS ━━━
+Check 1 (Structural completeness): PASS — 0 blank required fields
+Check 2 (Vocabulary compliance):   PASS — 0 invalid codes
+Check 3 (Spatial validity):        PASS — 3 SPATIAL_OUTLIER records retained+flagged
+Check 4 (Temporal validity):       PASS
+Check 5 (Effort coverage):         PASS — 97.3% effort coverage
+Check 6 (Sensitivity compliance):  PASS — 47 records flagged RESTRICTED in public version
+
+━━━ FINAL DATASET ━━━
+Harmonized records: [2,619]   |   Excluded: [7]   |   Flagged for review: [22]
+Public (shareable) version: [filename]   |   Internal (full) version: [filename]
+Sensitivity offset log: [filename — INTERNAL ONLY — never share]
+</div>
+
+<!-- S11 CODE TEMPLATES -->
+<div class="page-break"></div>
+<div class="section-label">Section 11</div>
+<h1>R and Python Code Templates</h1>
+<p>Ready-to-adapt code for the most common harmonization operations. Replace the placeholder column names and values with your actual schema.</p>
+
+<h2>R Template — Date Standardisation</h2>
+<div class="code-block">
+<div class="code-label">R · tidyverse · date standardisation</div>
+<span class="code-comment"># Date standardisation — multiple input formats to YYYY-MM-DD</span>
+<span class="code-keyword">library</span>(tidyverse)
+<span class="code-keyword">library</span>(lubridate)
+
+standardise_date <span class="code-keyword">&lt;-</span> function(date_col) {
+  <span class="code-comment"># Try multiple formats in order of likelihood</span>
+  formats <span class="code-keyword">&lt;-</span> c(<span class="code-string">"%Y-%m-%d"</span>, <span class="code-string">"%d/%m/%Y"</span>, <span class="code-string">"%m/%d/%Y"</span>,
+                <span class="code-string">"%d/%m/%y"</span>, <span class="code-string">"%d.%m.%Y"</span>, <span class="code-string">"%B %d, %Y"</span>)
+  parsed <span class="code-keyword">&lt;-</span> parse_date_time(date_col, orders = formats, quiet = TRUE)
+  format(parsed, <span class="code-string">"%Y-%m-%d"</span>)  <span class="code-comment"># Return as character ISO 8601</span>
+}
+
+df <span class="code-keyword">&lt;-</span> df |>
+  mutate(
+    detection_date_raw = detection_date,   <span class="code-comment"># Preserve original</span>
+    detection_date     = standardise_date(detection_date),
+    date_flag = if_else(is.na(detection_date), <span class="code-string">"DATE_PARSE_FAIL"</span>, <span class="code-string">"OK"</span>)
+  )
+</div>
+
+<h2>R Template — Coordinate Validation and Flagging</h2>
+<div class="code-block">
+<div class="code-label">R · spatial validation · study area bounding box</div>
+<span class="code-comment"># Define study area bounding box</span>
+lat_min <span class="code-keyword">&lt;-</span> -20.0 ; lat_max <span class="code-keyword">&lt;-</span> -14.0
+lon_min <span class="code-keyword">&lt;-</span>  44.0 ; lon_max <span class="code-keyword">&lt;-</span>  50.5
+
+df <span class="code-keyword">&lt;-</span> df |>
+  mutate(
+    lat_raw = latitude, lon_raw = longitude,     <span class="code-comment"># Preserve originals</span>
+    latitude  = as.numeric(latitude),
+    longitude = as.numeric(longitude),
+    spatial_flag = case_when(
+      is.na(latitude) | is.na(longitude)          ~ <span class="code-string">"MISSING"</span>,
+      latitude  < lat_min | latitude  > lat_max   ~ <span class="code-string">"SPATIAL_OUTLIER"</span>,
+      longitude < lon_min | longitude > lon_max   ~ <span class="code-string">"SPATIAL_OUTLIER"</span>,
+      nchar(sub(<span class="code-string">".*\\."</span>, <span class="code-string">""</span>, as.character(latitude))) < 4 ~ <span class="code-string">"LOW_PRECISION"</span>,
+      TRUE ~ <span class="code-string">"VERIFIED"</span>
+    )
+  )
+</div>
+
+<h2>Python Template — Species Name Resolution</h2>
+<div class="code-block">
+<div class="code-label">Python · pandas · species name lookup against registry</div>
+<span class="code-keyword">import</span> pandas as pd
+
+<span class="code-comment"># Load species registry</span>
+registry = pd.read_csv(<span class="code-string">'species_registry.csv'</span>)
+lookup = dict(zip(registry[<span class="code-string">'species_raw_variant'</span>], registry[<span class="code-string">'species_code'</span>]))
+latin_lookup = dict(zip(registry[<span class="code-string">'species_raw_variant'</span>], registry[<span class="code-string">'species_latin'</span>]))
+
+<span class="code-comment"># Apply lookup to dataset</span>
+df[<span class="code-string">'species_raw'</span>] = df[<span class="code-string">'species'</span>].copy()   <span class="code-comment"># Preserve original</span>
+df[<span class="code-string">'species_code'</span>] = df[<span class="code-string">'species'</span>].map(lookup)
+df[<span class="code-string">'species_latin'</span>] = df[<span class="code-string">'species'</span>].map(latin_lookup)
+
+<span class="code-comment"># Flag unresolved names</span>
+df[<span class="code-string">'species_flag'</span>] = df[<span class="code-string">'species_code'</span>].apply(
+    lambda x: <span class="code-string">'SPECIES_UNKNOWN'</span> if pd.isna(x) else <span class="code-string">'RESOLVED'</span>
+)
+
+<span class="code-comment"># Log unresolved for manual review</span>
+unresolved = df[df[<span class="code-string">'species_flag'</span>] == <span class="code-string">'SPECIES_UNKNOWN'</span>][<span class="code-string">'species_raw'</span>].unique()
+pd.DataFrame({<span class="code-string">'unresolved_species'</span>: unresolved}).to_csv(<span class="code-string">'unresolved_species_log.csv'</span>, index=False)
+</div>
+
+<h2>Python Template — Duplicate Detection</h2>
+<div class="code-block">
+<div class="code-label">Python · pandas · near-duplicate detection</div>
+<span class="code-keyword">from</span> itertools <span class="code-keyword">import</span> combinations
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-keyword">def</span> haversine_m(lat1, lon1, lat2, lon2):
+    <span class="code-comment">"""Distance in metres between two GPS points."""</span>
+    R = 6371000
+    phi1, phi2 = np.radians(lat1), np.radians(lat2)
+    dphi = np.radians(lat2 - lat1)
+    dlam = np.radians(lon2 - lon1)
+    a = np.sin(dphi/2)**2 + np.cos(phi1)*np.cos(phi2)*np.sin(dlam/2)**2
+    return R * 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
+
+near_dupes = []
+<span class="code-keyword">for</span> i, j <span class="code-keyword">in</span> combinations(df.index, 2):
+    r1, r2 = df.loc[i], df.loc[j]
+    <span class="code-keyword">if</span> (r1[<span class="code-string">'species_code'</span>] == r2[<span class="code-string">'species_code'</span>] and
+        r1[<span class="code-string">'detection_date'</span>] == r2[<span class="code-string">'detection_date'</span>] and
+        abs((r1[<span class="code-string">'detection_time'</span>] - r2[<span class="code-string">'detection_time'</span>]).total_seconds()) < 1800):
+        dist = haversine_m(r1.latitude, r1.longitude, r2.latitude, r2.longitude)
+        <span class="code-keyword">if</span> dist < 50:
+            near_dupes.append({<span class="code-string">'record_1'</span>: r1.record_id,
+                               <span class="code-string">'record_2'</span>: r2.record_id, <span class="code-string">'dist_m'</span>: round(dist, 1)})
+</div>
+
+<!-- QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 12</div>
+<h1>Quick Start — Harmonize Your First Dataset Pair</h1>
+
+<h2>Before You Begin</h2>
+<ul class="checklist">
+  <li>Identify your two or more source datasets. Start with the simplest pair — same method, same site, two different seasons.</li>
+  <li>Complete the Dataset Inventory template for each source file (Step 1).</li>
+  <li>Open a new spreadsheet. Create three tabs: Species Registry, Site Registry, Observer Registry.</li>
+</ul>
+
+<h2>Hours 1–2 — Schema and Registries</h2>
+<ul class="checklist">
+  <li>Use Prompt 1 to draft the master schema from your inventory. Review and adjust.</li>
+  <li>Use Prompt 2 to help resolve species name variants. Verify every suggestion against a regional taxonomy reference.</li>
+  <li>Use Prompt 3 to build the Observer Registry.</li>
+  <li>Save all three registries as CSV files.</li>
+</ul>
+
+<h2>Hours 3–5 — Individual Dataset Cleaning</h2>
+<ul class="checklist">
+  <li>Open the first source dataset. Create a copy — never clean the original.</li>
+  <li>Apply the date cleaning rules (D1–D4) using the R or Python templates from Section 11.</li>
+  <li>Apply the coordinate cleaning rules (G1–G6). Use Prompt 4 for batch conversion.</li>
+  <li>Apply the species name rules (S1–S4) using the Python template.</li>
+  <li>Rename all columns to match the master schema. Log every rename in the column mapping table.</li>
+  <li>Repeat for the second source dataset.</li>
+</ul>
+
+<h2>Hours 6–7 — Merge and Cross-Dataset Cleaning</h2>
+<ul class="checklist">
+  <li>Merge the two cleaned datasets (append rows). Add source_file_id, source_row, and merge_date columns.</li>
+  <li>Use Prompt 6 to detect near-duplicates. Flag them — do not delete.</li>
+  <li>Run the cross-dataset species and site conflict checks (Rules X3, X4).</li>
+  <li>Apply sensitivity flags using the Species Registry (Step 7 / Prompt 7).</li>
+</ul>
+
+<h2>Hour 8 — Validation and Documentation</h2>
+<ul class="checklist">
+  <li>Run all six validation checks from Section 9. Document results for each check.</li>
+  <li>Use Prompt 9 to generate the validation report.</li>
+  <li>Use Prompt 12 to write the harmonization log.</li>
+  <li>Export: harmonized dataset (internal version), public (sensitivity-offset) version, and the harmonization log.</li>
+</ul>
+
+<!-- MVP vs PREMIUM -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>8-step harmonization pipeline</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Master schema design guide</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Schema library (6 data types)</td><td>✓</td><td>✓ Expanded to 10 types</td></tr>
+  <tr><td>40 cleaning rules</td><td>✓</td><td>✓ 60 rules</td></tr>
+  <tr><td>12 AI prompts</td><td>✓</td><td>✓ 20 prompts</td></tr>
+  <tr><td>Six-point validation framework</td><td>✓</td><td>✓</td></tr>
+  <tr><td>R and Python code templates (5)</td><td>✓</td><td>✓ 15 templates</td></tr>
+  <tr><td>Harmonization log template</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Darwin Core mapping guide</td><td>Prompt only</td><td>Full mapping table + meta.xml template</td></tr>
+  <tr><td>Pre-built Google Sheets template with validation rules</td><td>—</td><td>Planned</td></tr>
+  <tr><td>GBIF submission walkthrough</td><td>—</td><td>Planned</td></tr>
+  <tr><td>MRV-grade data package builder</td><td>—</td><td>Planned (bridges to ERIS)</td></tr>
+  <tr><td>French version (full translation)</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:30mm 0;">
+  <div style="font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8mm;">OPLURIX</div>
+  <div style="font-size:22pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    Unharmonized data is not data.<br><em>It is potential — waiting for<br>a decision to be made.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:120mm;margin:0 auto 12mm;line-height:1.7;">
+    Every dataset integration decision is a scientific decision. When you document those decisions — what was merged, what was cleaned, what was excluded and why — you transform a dataset into evidence. Evidence that can be verified, audited, shared, and built upon. That is what conservation finance infrastructure requires. That is what ERIS is built on.
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-size:8pt;color:var(--faint);line-height:2;">
+    Biodiversity Data Harmonizer v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div>
+</body>
+</html>

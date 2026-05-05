@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0D4A44;
+  --purple:  #3D1C6E;
+  --gold2:   #7A5C00;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "MRV Report Architect  ·  OPLURIX  ·  " counter(page);
+    font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+/* COVER */
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: #0F1A14; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-stripe { position:absolute; top:0; right:0; width:60mm; height:100%; background:linear-gradient(135deg, transparent 0%, rgba(22,51,31,0.6) 100%); }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; position:relative; z-index:2; }
+.cover-brand { font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:30mm; }
+.cover-flag { display:inline-block; background:rgba(232,184,75,0.15); border:0.5pt solid rgba(232,184,75,0.4); font-size:7pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); padding:3pt 12pt; margin-bottom:8mm; }
+.cover-eyebrow { font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-size:29pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; position:relative; z-index:2; }
+.cover-author { font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+/* CONTENT */
+.content-pages { page: content; }
+h1 { font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-size:13pt; font-weight:700; color:var(--forest2); margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-size:10pt; font-weight:700; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:700; color:var(--forest); }
+em { font-style:italic; color:var(--forest2); }
+code { font-family:monospace; font-size:9pt; background:var(--parch); padding:1pt 3pt; color:var(--forest2); }
+
+.section-label { font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+/* CALLOUTS */
+.callout  { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.ca { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.cr { background:#FDF0EE; border-left:3pt solid var(--red); }
+.cb { background:#EEF3FA; border-left:3pt solid var(--blue); }
+.ct { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.cp { background:#F3EEF9; border-left:3pt solid var(--purple); }
+.cg { background:#FFFBEA; border-left:3pt solid var(--gold2); }
+.cl { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.cl-a { color:var(--amber); } .cl-f { color:var(--forest); } .cl-r { color:var(--red); }
+.cl-b { color:var(--blue); } .cl-t { color:var(--teal); } .cl-p { color:var(--purple); }
+.cl-g { color:var(--gold2); }
+
+/* DARK BOX */
+.dark-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.dark-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.dark-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.dark-box p:last-child { margin-bottom:0; }
+
+/* NUMBERED CARD */
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-size:8pt; font-weight:700; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:700; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+/* LISTS */
+ul { margin:3mm 0 3mm 6mm; list-style:none; padding:0; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+/* STEP BLOCK */
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+/* PROMPT BOX */
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+/* TEMPLATE BOX */
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:var(--forest); page-break-inside:avoid; }
+
+/* CHECKLIST */
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+/* ERIS SCORE DISPLAY */
+.eris-display { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.eris-display-title { font-size:7pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:4mm; }
+.eris-score-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:3mm; }
+.eris-indicator-name { font-size:9pt; color:rgba(255,255,255,0.7); flex:1; }
+.eris-bar { flex:2; height:6pt; background:rgba(255,255,255,0.1); margin:0 4mm; position:relative; }
+.eris-fill { height:100%; background:var(--gold); }
+.eris-score-val { font-family:monospace; font-size:9pt; color:var(--gold); width:40pt; text-align:right; }
+.eris-total { border-top:0.5pt solid rgba(255,255,255,0.2); padding-top:3mm; margin-top:3mm; display:flex; justify-content:space-between; }
+.eris-total-label { font-size:10pt; font-weight:700; color:white; }
+.eris-total-val { font-family:monospace; font-size:14pt; font-weight:700; color:var(--gold); }
+
+/* REPORT SECTION CARD */
+.report-card { border:0.5pt solid var(--sand); margin-bottom:5mm; page-break-inside:avoid; }
+.rc-header { background:var(--teal); padding:3mm 6mm; display:flex; justify-content:space-between; align-items:center; }
+.rc-title { font-size:11pt; font-weight:700; color:white; }
+.rc-section { font-family:monospace; font-size:8pt; color:rgba(255,255,255,0.6); }
+.rc-body { padding:5mm 6mm; background:white; }
+.rc-purpose { font-size:6.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--teal); margin-bottom:2mm; }
+.rc-desc { font-size:9pt; color:var(--muted); margin-bottom:3mm; }
+.rc-include { font-size:8.5pt; color:var(--ink); }
+
+/* INDICATOR DETAIL */
+.indicator-card { background:var(--cream); border:0.5pt solid var(--sand); border-left:3pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; page-break-inside:avoid; }
+.ind-num { font-family:monospace; font-size:7pt; color:var(--amber); text-transform:uppercase; margin-bottom:2mm; }
+.ind-name { font-size:11pt; font-weight:700; color:var(--forest); margin-bottom:2mm; }
+.ind-grid { display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin-top:3mm; }
+.ind-item { font-size:8.5pt; }
+.ind-item-label { font-weight:700; color:var(--forest2); margin-bottom:1mm; font-size:7.5pt; text-transform:uppercase; letter-spacing:0.04em; }
+.ind-item-val { color:var(--muted); }
+
+/* TIER TABLE */
+.tier-row { display:grid; grid-template-columns:80pt 1fr 80pt; gap:4mm; padding:3mm 5mm; border-bottom:0.5pt solid var(--sand); font-size:9pt; page-break-inside:avoid; }
+.tier-header { background:var(--forest); color:white; font-weight:700; font-size:8.5pt; }
+.score-high { color:#166534; font-weight:700; text-align:center; }
+.score-mid { color:#92400E; font-weight:700; text-align:center; }
+.score-low { color:var(--red); font-weight:700; text-align:center; }
+
+/* PIPELINE */
+.pipe-item { display:flex; gap:5mm; margin-bottom:3mm; page-break-inside:avoid; }
+.pipe-icon { width:18pt; height:18pt; background:var(--amber); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pipe-content { flex:1; }
+.pipe-title { font-weight:700; font-size:10pt; color:var(--forest); margin-bottom:1mm; }
+.pipe-desc { font-size:9pt; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-stripe"></div>
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-flag">FLAGSHIP PRODUCT</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">MRV Report<br><em>Architect</em></div>
+    <div class="cover-subtitle">Build regulatory-grade Measurement, Reporting, and Verification packages for conservation projects — from field data to auditable biodiversity score to conservation finance-ready documentation.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Conservation NGOs with MRV obligations</span>
+      <span class="cover-tag">REDD+ Project Managers</span>
+      <span class="cover-tag">Biodiversity Credit Developers</span>
+      <span class="cover-tag">Protected Area Authorities</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I have two years of biodiversity field data and no idea how to turn it into a conservation finance-ready MRV document" to "I have an auditable, standards-aligned MRV report with a verified ERIS ecological integrity score — ready for biodiversity credit evaluation or REDD+ submission."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Conservation Technology Lead · Founder, OPLURIX · Architect, ERIS
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $499–$999</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="cl cl-f">How to use this product</div>
+  <p style="margin-bottom:2mm;">This is the most advanced OPLURIX product. It assumes you have completed data collection using the methods in Products 5–8, or equivalent field data from other sources. Read Sections 1–4 to understand the MRV landscape and the ERIS system. Then use the Report Architecture (Section 5), the ERIS Scoring Framework (Section 6), and the AI Prompt Pack (Section 7) to build your report. The Standards Alignment Guide (Section 9) ensures compliance with VERRA, Gold Standard, or REDD+ requirements.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · The MRV Landscape · ERIS Scoring Framework · MRV Report Architecture (12 sections) · AI Prompt Pack · Indicator Calculation Guides · Standards Alignment (VERRA, Gold Standard, REDD+) · Auditor Preparation Guide · Data Package Requirements · 2 Full Worked Examples · Quick Start</p>
+</div>
+
+<!-- S1 CORE PROMISE -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>Conservation finance — biodiversity credits, REDD+ payments, ecosystem service markets — cannot function without credible, verifiable evidence that the ecological value being traded actually exists and is being maintained. This evidence must meet specific standards: it must be measured using documented methodologies, reported in structured formats that auditors can review, and independently verifiable against the underlying field data.</p>
+
+<p>Most conservation projects produce excellent field data and inadequate documentation. The data exists. The ecological value is real. But the data has not been assembled into a format that conservation finance instruments recognise. A camera trap dataset, a vegetation plot survey, and a thermal drone detection record are not an MRV package. An MRV package is a structured, standards-aligned document that connects those datasets through a validated scoring methodology to a certified ecological integrity claim.</p>
+
+<p>This guide is the system for building that package. It is built on the ERIS ecological integrity scoring framework — OPLURIX's open-methodology biodiversity scoring infrastructure — and on the standards used by the three most relevant conservation finance frameworks for Madagascar and the Global South: VERRA's Biodiversity Protocol, the Gold Standard for the Global Goals, and the UNFCCC REDD+ framework.</p>
+
+<div class="callout ca">
+  <div class="cl cl-a">The Transformation</div>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:2mm;"><strong>Before:</strong> "I have two years of biodiversity field data and no idea how to turn it into a conservation finance-ready MRV document."</p>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:0;"><strong>After:</strong> "I have an auditable, standards-aligned MRV report with a verified ERIS ecological integrity score — ready for biodiversity credit evaluation, REDD+ submission, or institutional funder reporting."</p>
+</div>
+
+<div class="callout cb">
+  <div class="cl cl-b">Who needs this product</div>
+  <p style="margin-bottom:2mm;">This product is designed for three types of user at different stages:</p>
+  <ul style="margin:0;">
+    <li><strong>Conservation NGOs</strong> with field data who need to report to institutional funders, government authorities, or conservation finance actors in a structured, credible format.</li>
+    <li><strong>REDD+ project developers</strong> who need to demonstrate biodiversity co-benefits alongside carbon accounting — and need a methodology for doing so that meets VERRA or Gold Standard requirements.</li>
+    <li><strong>Protected area managers</strong> who need to demonstrate the ecological integrity of their site to access conservation finance instruments or to satisfy government reporting obligations under the Convention on Biological Diversity.</li>
+  </ul>
+</div>
+
+<!-- S2 PAIN POINTS -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>Your field data is excellent and your MRV documentation does not exist.</strong><p>Years of species surveys, camera trap records, and vegetation plots sit in spreadsheets and hard drives. They are scientifically valid. They are not in a form that any conservation finance actor, auditor, or funder can evaluate without significant additional work from their side. Most will not do that work — they will move to the next project.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>You do not know which MRV standard applies to your project.</strong><p>VERRA, Gold Standard, REDD+, Taskforce on Nature Markets, Biodiversity Net Gain — the conservation finance certification landscape is complex, rapidly evolving, and jargon-heavy. Applying the wrong standard is not just a documentation problem — it means your report will be rejected at the first review.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>You cannot calculate a defensible ecological baseline.</strong><p>MRV requires you to show: what the ecological condition was at a defined starting point (the baseline), what it is now (the current state), and what the project's contribution to any change has been. Establishing an ecological baseline from field data — in a way that is reproducible and auditable — is technically demanding and rarely documented in standard field survey protocols.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>Your methodology is not documented at the level required for external audit.</strong><p>A conservation finance auditor will ask: exactly how was each indicator measured? Who collected the data? What was the survey design? How were the results calculated? Can someone else replicate this score using your documentation? If any of these questions cannot be answered from your existing documentation, the MRV package is incomplete.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>You do not know how to convert biodiversity field data into a single composite score.</strong><p>Biodiversity credit markets and conservation finance instruments need a number — or a score band — that represents the ecological condition of a site. Raw species lists, camera trap detection rates, and acoustic indices are not that number. The ERIS scoring framework provides the calculation pathway from raw data to a verified composite score.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>You have no system for annual monitoring and additionality reporting.</strong><p>Conservation finance is not a one-time transaction. Biodiversity credits require ongoing monitoring to prove that the ecological value is being maintained. REDD+ requires annual monitoring of carbon stocks and biodiversity co-benefits. Without a systematic annual monitoring and reporting protocol, a one-time MRV package does not produce recurring conservation finance access.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>You cannot demonstrate additionality.</strong><p>Conservation finance requires proof that the conservation outcome would not have occurred without the financial intervention — "additionality." Demonstrating additionality requires a credible counterfactual: what would have happened to this site without the project? This is a methodological challenge that this guide addresses directly.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>Sensitive location data conflicts with transparency requirements.</strong><p>MRV standards require transparent, auditable data. Conservation ethics require protecting sensitive species locations. These requirements conflict — and the conflict must be managed explicitly. Publishing exact nest site coordinates in a public MRV report is not acceptable. But providing no location data at all fails the transparency requirement. The resolution requires a documented spatial offset protocol.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>You have no relationship with a third-party auditor or verification body.</strong><p>Conservation finance certification requires third-party verification. Finding, engaging, and briefing a qualified auditor — and preparing your documentation to survive their review — is a process that takes months and requires specific preparation. This guide tells you exactly what auditors look for and how to prepare.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>You are trying to build conservation finance access for a site in the Global South without the institutional infrastructure that is assumed by most MRV standards.</strong><p>VERRA, Gold Standard, and most biodiversity credit standards were designed primarily by and for institutions in the Global North. The documentation requirements, legal frameworks, and institutional structures they assume may not exist in Madagascar or across much of Francophone Africa. This guide addresses this gap directly — including alternative documentation pathways where standard templates do not apply.</p></div>
+</div>
+
+<!-- S3 DESIRED OUTCOMES -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">01</td><td>Produce a structured, auditable MRV report from existing field biodiversity data.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">02</td><td>Calculate a verified ERIS ecological integrity score for your site using the open ERIS methodology.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">03</td><td>Establish a defensible ecological baseline against which future monitoring will be measured.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">04</td><td>Document your survey methodology at the level required for external audit.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">05</td><td>Demonstrate additionality — the counterfactual case for why conservation finance matters here.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">06</td><td>Handle sensitive species location data in a way that satisfies both transparency and conservation ethics requirements.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">07</td><td>Align the MRV package with the relevant standard (VERRA, Gold Standard, REDD+, or institutional equivalent).</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">08</td><td>Build an annual monitoring protocol that maintains MRV-grade data quality after the initial report.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">09</td><td>Prepare all documentation for third-party auditor review.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">10</td><td>Submit a complete MRV data package to a conservation finance actor, certification body, or institutional funder.</td></tr>
+</table>
+
+<!-- S4 THE MRV LANDSCAPE -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The MRV Landscape — What You Need to Know</h1>
+
+<h2>What MRV Means in Conservation Finance</h2>
+<p>MRV — Measurement, Reporting, and Verification — is the three-part process by which conservation finance actors confirm that the ecological value they are paying for actually exists, is being maintained, and can be independently confirmed.</p>
+<ul>
+  <li><strong>Measurement:</strong> The systematic, documented collection of field data on the ecological indicators that define the conservation value of a site.</li>
+  <li><strong>Reporting:</strong> The structured presentation of that data — in a standardised format that allows comparison across sites and over time — connected to a defensible interpretation of what the data means for ecological integrity.</li>
+  <li><strong>Verification:</strong> Third-party confirmation that the measurement and reporting were conducted in accordance with the documented methodology and that the reported values are consistent with the underlying field data.</li>
+</ul>
+
+<h2>The Four Major Conservation Finance Frameworks</h2>
+<table>
+  <tr><th>Framework</th><th>Primary purpose</th><th>Biodiversity requirement</th><th>MRV rigor level</th></tr>
+  <tr><td><strong>VERRA Verified Carbon Standard (VCS) + CCB</strong></td><td>Carbon credits with community and biodiversity co-benefits</td><td>Climate, Community and Biodiversity Standards — required for CCB certification. Biodiversity co-benefits documented but not separately traded.</td><td>High — full methodology documentation, third-party audit, public registry</td></tr>
+  <tr><td><strong>Gold Standard for the Global Goals</strong></td><td>Carbon and SDG credits with verified co-benefits</td><td>Biodiversity indicators required at Activity level. No separate biodiversity credit.</td><td>High — similar to VCS/CCB</td></tr>
+  <tr><td><strong>UNFCCC REDD+</strong></td><td>National/subnational forest carbon conservation payments</td><td>Multiple benefit safeguards include biodiversity. Safeguard information systems required.</td><td>National — variable. Subnational projects vary by host country capacity.</td></tr>
+  <tr><td><strong>Emerging biodiversity credit markets (Wallacea, South Pole, NatureFinance)</strong></td><td>Standalone biodiversity credits (species, habitat, ecosystem)</td><td>Primary purpose — biodiversity is the traded commodity. Require robust, site-specific biodiversity scoring.</td><td>Evolving — ERIS designed for this tier</td></tr>
+</table>
+
+<h2>Where ERIS Fits</h2>
+<div class="dark-box">
+  <div class="dark-label">ERIS positioning in the conservation finance landscape</div>
+  <p>ERIS is designed primarily for the emerging biodiversity credit market tier — where biodiversity is the traded commodity and robust site-specific scoring is the core requirement. It is also designed to generate the biodiversity co-benefit data required for VCS/CCB and Gold Standard certification as a supplementary documentation pathway.</p>
+  <p>ERIS does not replace the full VCS/CCB or Gold Standard methodology. It provides the biodiversity measurement and scoring component that these standards require — in a format that is compatible with third-party verification and that uses open, reproducible methods that any qualified ecologist can evaluate.</p>
+  <p>For REDD+ purposes, ERIS provides the biodiversity safeguard monitoring data — demonstrating that forest carbon conservation is also producing biodiversity integrity outcomes — and contributing to national Safeguard Information Systems where required.</p>
+</div>
+
+<!-- S5 THE MRV REPORT ARCHITECTURE -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>MRV Report Architecture — 12 Sections</h1>
+<p>The complete structure of a conservation finance-ready MRV report. Each section has a specific purpose, specific content requirements, and specific audit criteria. Use the templates provided and the AI Prompt Pack to draft each section.</p>
+
+<!-- SECTION 1 -->
+<div class="report-card">
+  <div class="rc-header">
+    <div class="rc-title">Section 1 — Project Description and Context</div>
+    <div class="rc-section">MRV-01</div>
+  </div>
+  <div class="rc-body">
+    <div class="rc-purpose">Purpose</div>
+    <div class="rc-desc">Establish the project's identity, location, legal status, and institutional context. This section answers: what is this project, where is it, who is responsible for it, and what legal framework governs it?</div>
+    <div class="rc-include">
+      <strong>Required content:</strong>
+      <ul style="margin:3mm 0 0 0;">
+        <li>Project name, unique identifier, and registration status (if applicable)</li>
+        <li>Geographic description: country, region, coordinates of project boundary polygon (GeoJSON or KML file as appendix)</li>
+        <li>Project area in hectares (GPS-verified)</li>
+        <li>Land tenure and protection status: what legal protection does the site have? Who owns or manages the land?</li>
+        <li>Institutional structure: who is the project proponent? Who are the implementing partners? What are the governance arrangements?</li>
+        <li>Project start date and reporting period</li>
+        <li>Applicable certification standard (VERRA VCS+CCB / Gold Standard / REDD+ / ERIS standalone / other)</li>
+        <li>Summary of community engagement and consent processes</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="report-card">
+  <div class="rc-header">
+    <div class="rc-title">Section 2 — Ecological Baseline</div>
+    <div class="rc-section">MRV-02</div>
+  </div>
+  <div class="rc-body">
+    <div class="rc-purpose">Purpose</div>
+    <div class="rc-desc">Document the ecological condition of the project area at the defined baseline date. This is the reference point against which all future monitoring will be compared. The baseline must be reproducible — a second team following the same protocol should produce a comparable result.</div>
+    <div class="rc-include">
+      <strong>Required content:</strong>
+      <ul style="margin:3mm 0 0 0;">
+        <li>Baseline date: the specific date or date range at which the ecological condition is being described</li>
+        <li>For each ERIS indicator: the baseline value, the data source, the methodology reference, and the uncertainty estimate</li>
+        <li>Pre-project species richness by taxonomic group (from prior surveys or from literature if no prior survey data exists)</li>
+        <li>Pre-project habitat condition: canopy cover, vegetation structure, human pressure index</li>
+        <li>Known threats at baseline: deforestation rate, encroachment evidence, hunting pressure</li>
+        <li>Baseline ERIS score (if calculated from pre-project data) or acknowledged absence of a pre-project score</li>
+        <li>Limitations of the baseline: any data gaps, survey effort constraints, or areas of the project site not included in the baseline assessment</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="report-card">
+  <div class="rc-header">
+    <div class="rc-title">Section 3 — Additionality Assessment</div>
+    <div class="rc-section">MRV-03</div>
+  </div>
+  <div class="rc-body">
+    <div class="rc-purpose">Purpose</div>
+    <div class="rc-desc">Demonstrate that the conservation outcomes reported would not have occurred without the project — and specifically, without the conservation finance that the MRV package is intended to access. This is the most conceptually difficult section of any MRV report.</div>
+    <div class="rc-include">
+      <strong>Additionality framework — three tests:</strong>
+      <ol style="margin:3mm 0 0 0;">
+        <li><strong>Regulatory surplus test:</strong> Is the conservation activity required by existing law or regulation? If the government already mandates this action, it is not additional. Document whether any legal obligation exists and why the project goes beyond it.</li>
+        <li><strong>Common practice test:</strong> Is this type of conservation activity common practice in similar sites in this region without external finance? If yes, additionality is harder to demonstrate. If no, the rarity of the activity supports the additionality claim.</li>
+        <li><strong>Investment barrier test:</strong> Would this project occur without the conservation finance? This requires a financial analysis showing that without external revenue (biodiversity credits, REDD+ payments), the project is not economically viable. This is the most persuasive test for most conservation finance actors.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- SECTIONS 4-12 condensed -->
+<div class="page-break"></div>
+<h2>Sections 4–12 — Quick Reference</h2>
+<table>
+  <tr><th>Section</th><th>Title</th><th>Core content</th><th>Key audit requirement</th></tr>
+  <tr><td><strong>MRV-04</strong></td><td>Survey Methodology Documentation</td><td>Complete protocol for every survey method used. Equipment specifications, spatial design, effort calculations, QA/QC protocol. Must be replicable by a second team.</td><td>Replicability — a qualified ecologist should be able to reproduce the survey using only this documentation.</td></tr>
+  <tr><td><strong>MRV-05</strong></td><td>Data Quality and Provenance</td><td>Source datasets listed with provenance. Data harmonization log. Validation framework results. Sensitive data handling protocol. Data access statement.</td><td>Auditability — every reported value must be traceable to a specific field record.</td></tr>
+  <tr><td><strong>MRV-06</strong></td><td>ERIS Indicator Calculation</td><td>For each of the 5 ERIS indicators: the raw data input, the calculation methodology, the resulting score, the confidence level, and the uncertainty range. Open calculation workbooks as appendix.</td><td>Transparency — the calculation must be reproducible by the auditor from the provided data.</td></tr>
+  <tr><td><strong>MRV-07</strong></td><td>ERIS Composite Score and Interpretation</td><td>The overall ERIS score with weighting methodology. Score interpretation against reference conditions. Comparison to regional or global benchmarks where available. Conservation significance of the score.</td><td>Defensibility — the composite score methodology must be documented and the weighting justified.</td></tr>
+  <tr><td><strong>MRV-08</strong></td><td>Threat and Leakage Assessment</td><td>Current threats to the project site and likelihood of ecological degradation. Leakage risk — could conservation actions at this site simply displace pressure to adjacent unprotected areas? Leakage monitoring protocol.</td><td>Completeness — the report must acknowledge and address leakage risk, not ignore it.</td></tr>
+  <tr><td><strong>MRV-09</strong></td><td>Community Safeguards and Benefits</td><td>Free, Prior and Informed Consent (FPIC) documentation. Community benefit-sharing arrangements. Grievance mechanism. Community monitoring participation. Gender equity measures.</td><td>Social safeguards — required by all major standards. Missing FPIC documentation is a disqualifying gap.</td></tr>
+  <tr><td><strong>MRV-10</strong></td><td>Annual Monitoring Plan</td><td>Monitoring protocol for each ERIS indicator. Survey frequency, effort, and cost per monitoring cycle. Trigger thresholds — at what ERIS score decline does intervention occur? Monitoring budget and institutional responsibility.</td><td>Sustainability — the report must demonstrate that monitoring will continue, not just that the baseline was measured.</td></tr>
+  <tr><td><strong>MRV-11</strong></td><td>Verification Preparation Package</td><td>Summary document for third-party auditor. Methodology evidence files. Conflict of interest declaration. Data access arrangements for auditor. Expected audit timeline and auditor qualifications required.</td><td>Readiness — the auditor must be able to begin immediately from this package.</td></tr>
+  <tr><td><strong>MRV-12</strong></td><td>Declarations and Signatures</td><td>Project proponent declaration. Methodology compliance statement. Data integrity declaration. Community consent confirmation. Submission checklist. Version history.</td><td>Accountability — named individuals take responsibility for the accuracy of reported values.</td></tr>
+</table>
+
+<!-- S6 ERIS SCORING FRAMEWORK -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>ERIS Scoring Framework — Version 1.0</h1>
+<p>The Ecological Integrity Scoring System. An open, field-verified, reproducible methodology for calculating a composite ecological integrity score from multi-method biodiversity survey data. All ERIS calculations are open-access and permanently auditable.</p>
+
+<h2>The Five ERIS Indicators</h2>
+
+<div class="indicator-card">
+  <div class="ind-num">ERIS INDICATOR 01</div>
+  <div class="ind-name">Species Richness and Rarity Index</div>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:3mm;">A weighted count of species detected in the project area, with higher weight for endemic and threatened species relative to widespread generalists. This indicator captures the taxonomic dimension of ecological integrity.</p>
+  <div class="ind-grid">
+    <div class="ind-item">
+      <div class="ind-item-label">Data sources</div>
+      <div class="ind-item-val">Camera trap records, line transect detections, herpetofauna VES, acoustic monitoring, vegetation plots</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Calculation</div>
+      <div class="ind-item-val">S_weighted = Σ(species_i × weight_i) where weight = 1.0 (widespread) / 2.0 (endemic) / 3.0 (IUCN Threatened)</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Score range</div>
+      <div class="ind-item-val">0–100, normalised against regional reference site maximum</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Minimum data requirement</div>
+      <div class="ind-item-val">≥3 survey methods, ≥2 seasons, ≥5 survey sites per 1,000 ha</div>
+    </div>
+  </div>
+</div>
+
+<div class="indicator-card">
+  <div class="ind-num">ERIS INDICATOR 02</div>
+  <div class="ind-name">Vegetation Integrity Index</div>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:3mm;">An assessment of the structural and compositional condition of the vegetation — the physical habitat that supports biodiversity. This indicator captures the habitat dimension of ecological integrity, independent of the species it currently supports.</p>
+  <div class="ind-grid">
+    <div class="ind-item">
+      <div class="ind-item-label">Data sources</div>
+      <div class="ind-item-val">Botanical plots (DBH, species composition, canopy cover, litter depth), drone multispectral (NDVI, canopy surface)</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Calculation</div>
+      <div class="ind-item-val">VII = 0.4(canopy_cover) + 0.3(native_species_pct) + 0.2(DBH_mean) + 0.1(litter_depth) — all normalised to 0-100</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Score range</div>
+      <div class="ind-item-val">0–100</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Minimum data requirement</div>
+      <div class="ind-item-val">≥1 botanical plot per 500 ha, systematic placement</div>
+    </div>
+  </div>
+</div>
+
+<div class="indicator-card">
+  <div class="ind-num">ERIS INDICATOR 03</div>
+  <div class="ind-name">Thermal Habitat Quality Index</div>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:3mm;">An assessment of habitat quality derived from drone thermal imagery — canopy cover, thermal heterogeneity, and edge density. This indicator is unique to ERIS and exploits the IPS Congress 2025 proof-of-concept methodology.</p>
+  <div class="ind-grid">
+    <div class="ind-item">
+      <div class="ind-item-label">Data sources</div>
+      <div class="ind-item-val">Thermal drone orthomosaic, thermal detection records, RGB drone imagery</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Calculation</div>
+      <div class="ind-item-val">THQI = 0.5(canopy_cover) + 0.3(thermal_heterogeneity) + 0.2(edge_density_inverse) — all normalised</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Score range</div>
+      <div class="ind-item-val">0–100</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Minimum data requirement</div>
+      <div class="ind-item-val">≥1 systematic thermal flight covering ≥80% of project area</div>
+    </div>
+  </div>
+</div>
+
+<div class="indicator-card">
+  <div class="ind-num">ERIS INDICATOR 04</div>
+  <div class="ind-name">Human Pressure Index (Inverse)</div>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:3mm;">An assessment of the human-induced pressures acting on the project site — encroachment, deforestation, hunting, and access pressure. High human pressure = low score. This indicator captures the threat dimension.</p>
+  <div class="ind-grid">
+    <div class="ind-item">
+      <div class="ind-item-label">Data sources</div>
+      <div class="ind-item-val">Satellite deforestation data (Hansen/GFC), field-observed encroachment evidence, camera trap human detection rate, road/settlement distance</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Calculation</div>
+      <div class="ind-item-val">HPI = 100 - [0.4(deforestation_rate_norm) + 0.3(encroachment_norm) + 0.2(human_detection_rate_norm) + 0.1(access_norm)]</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Score range</div>
+      <div class="ind-item-val">0–100 (100 = zero human pressure)</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Minimum data requirement</div>
+      <div class="ind-item-val">Annual deforestation data available, camera trap records with human detections</div>
+    </div>
+  </div>
+</div>
+
+<div class="indicator-card">
+  <div class="ind-num">ERIS INDICATOR 05</div>
+  <div class="ind-name">MRV Confidence Score</div>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:3mm;">A meta-indicator assessing the quality, completeness, and reproducibility of the underlying data. This indicator is unique to ERIS — it scores the MRV package itself, not just the ecology. A high MRV confidence score signals to conservation finance actors that the ecological values reported are reliable.</p>
+  <div class="ind-grid">
+    <div class="ind-item">
+      <div class="ind-item-label">Components assessed</div>
+      <div class="ind-item-val">Survey effort vs. minimum requirements, data validation pass rate, number of independent survey methods, number of survey seasons, methodology documentation completeness, auditor readiness</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Calculation</div>
+      <div class="ind-item-val">MRV_CS = average of 6 sub-scores (each 0-100), weighted equally</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Score range</div>
+      <div class="ind-item-val">0–100</div>
+    </div>
+    <div class="ind-item">
+      <div class="ind-item-label">Minimum for certification</div>
+      <div class="ind-item-val">≥70 for submission to conservation finance actors. ≥85 for premium credit tier.</div>
+    </div>
+  </div>
+</div>
+
+<h2>ERIS Composite Score Calculation</h2>
+<div class="callout cg">
+  <div class="cl cl-g">Composite Score Formula — ERIS v1.0</div>
+  <p style="font-family:monospace;font-size:10pt;color:var(--forest);margin-bottom:3mm;">ERIS_Score = 0.25×(I01) + 0.20×(I02) + 0.20×(I03) + 0.15×(I04) + 0.20×(I05)</p>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:2mm;">Weights reflect: (1) species data as primary conservation value signal, (2) equal weight for habitat and thermal quality, (3) human pressure as a risk modifier, (4) MRV confidence as a data quality gate. Weights may be adjusted in future versions based on validation against reference sites.</p>
+  <p style="font-size:9pt;color:var(--muted);margin-bottom:0;">All ERIS scores are reported with a 95% confidence interval derived from the input data uncertainty estimates. A score of 74 ± 8 (CI: 66–82) is the correct reporting format — not simply 74.</p>
+</div>
+
+<h2>ERIS Score Interpretation</h2>
+<div class="tier-row tier-header">
+  <div>Score range</div><div>Ecological integrity level</div><div>Conservation finance implication</div>
+</div>
+<div class="tier-row no-break">
+  <div class="score-high">85–100</div>
+  <div><strong>Exceptional:</strong> Near-pristine ecological condition. High diversity of endemic and threatened species. Minimal human pressure. High habitat integrity.</div>
+  <div>Premium biodiversity credit tier. Strong REDD+ biodiversity co-benefit claim. Immediate market access.</div>
+</div>
+<div class="tier-row no-break">
+  <div class="score-high">70–84</div>
+  <div><strong>High:</strong> Good ecological condition with moderate survey uncertainty or moderate human pressure. Most endemic species present.</div>
+  <div>Standard biodiversity credit tier. CCB/VCS biodiversity co-benefit documentation. Market access with standard pricing.</div>
+</div>
+<div class="tier-row no-break">
+  <div class="score-mid">55–69</div>
+  <div><strong>Moderate:</strong> Ecological condition shows human pressure impacts or significant survey data gaps. Core species present.</div>
+  <div>Biodiversity restoration credit potential. Requires improvement trajectory documentation. Below standard credit tier.</div>
+</div>
+<div class="tier-row no-break">
+  <div class="score-low">40–54</div>
+  <div><strong>Degraded:</strong> Significant ecological degradation. Generalist species dominant. Threatened species absent or rare.</div>
+  <div>Not eligible for conservation credit. Appropriate for restoration project framing. Requires baseline improvement before credit access.</div>
+</div>
+<div class="tier-row no-break">
+  <div class="score-low">0–39</div>
+  <div><strong>Severely degraded:</strong> Near-total loss of conservation value. May be appropriate for active restoration.</div>
+  <div>Not eligible for biodiversity credit. Active restoration credit schemes (under development) may apply.</div>
+</div>
+
+<h2>ERIS Score Example — Ihofa Forest Pilot</h2>
+<div class="eris-display">
+  <div class="eris-display-title">ERIS v1.0 Pilot Score · Ihofa Forest, Alaotra-Mangoro · Reporting period: 2024–2025</div>
+  <div class="eris-score-row">
+    <div class="eris-indicator-name">I01 — Species Richness and Rarity</div>
+    <div class="eris-bar"><div class="eris-fill" style="width:82%;"></div></div>
+    <div class="eris-score-val">82/100</div>
+  </div>
+  <div class="eris-score-row">
+    <div class="eris-indicator-name">I02 — Vegetation Integrity</div>
+    <div class="eris-bar"><div class="eris-fill" style="width:71%;"></div></div>
+    <div class="eris-score-val">71/100</div>
+  </div>
+  <div class="eris-score-row">
+    <div class="eris-indicator-name">I03 — Thermal Habitat Quality</div>
+    <div class="eris-bar"><div class="eris-fill" style="width:69%;"></div></div>
+    <div class="eris-score-val">69/100</div>
+  </div>
+  <div class="eris-score-row">
+    <div class="eris-indicator-name">I04 — Human Pressure (Inverse)</div>
+    <div class="eris-bar"><div class="eris-fill" style="width:61%;"></div></div>
+    <div class="eris-score-val">61/100</div>
+  </div>
+  <div class="eris-score-row">
+    <div class="eris-indicator-name">I05 — MRV Confidence</div>
+    <div class="eris-bar"><div class="eris-fill" style="width:88%;"></div></div>
+    <div class="eris-score-val">88/100</div>
+  </div>
+  <div class="eris-total">
+    <div class="eris-total-label">ERIS Composite Score (weighted)</div>
+    <div class="eris-total-val">74 ± 6</div>
+  </div>
+</div>
+<p style="font-size:8.5pt;color:var(--muted);font-style:italic;">Score interpretation: HIGH ecological integrity. Eligible for standard biodiversity credit tier and VCS/CCB co-benefit documentation. I04 (Human Pressure) is the primary limiting indicator — encroachment monitoring and community protection measures are the highest-value intervention to improve the score.</p>
+
+<!-- S7 AI PROMPT PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>AI Prompt Pack — 15 Prompts</h1>
+
+<h2>Prompt 1 — Project Description Draft (MRV-01)</h2>
+<div class="prompt-box">
+Write Section 1 (Project Description) of an MRV report for a conservation project.
+
+Project details:
+- Project name: [name]
+- Location: [country, region, GPS boundary coordinates or description]
+- Project area: [hectares]
+- Land tenure: [protection status, ownership, management authority]
+- Applicable standard: [VERRA VCS+CCB / Gold Standard / REDD+ / ERIS standalone]
+- Project proponent: [name and institutional affiliation]
+- Implementing partners: [list]
+- Project start date and reporting period: [dates]
+- Community governance: [describe FPIC process and community involvement structure]
+
+Generate a formal MRV section that:
+- Is factual and verifiable — every claim must be documentable
+- Uses language consistent with the applicable certification standard
+- Includes a geographic description that enables spatial verification
+- Lists all institutional relationships clearly
+- Is suitable for third-party auditor review
+</div>
+
+<h2>Prompt 2 — Ecological Baseline Documentation (MRV-02)</h2>
+<div class="prompt-box">
+Write Section 2 (Ecological Baseline) of an MRV report.
+
+Available baseline data:
+- Survey period: [dates]
+- Survey methods used: [list]
+- Species data: [number and list of species detected, IUCN status of each]
+- Vegetation data: [canopy cover, dominant species, plot-level data summary]
+- Thermal survey data: [if available — canopy cover from thermal, detection rates]
+- Human pressure data: [deforestation rate, encroachment observations]
+- Prior surveys at this site: [any published or institutional data]
+
+For each ERIS indicator (I01–I05):
+1. State the baseline value
+2. State the data source and methodology
+3. State the uncertainty level (high / medium / low) and why
+4. Note any data gaps and how they affect the baseline confidence
+
+Generate a formal baseline documentation section with:
+- An overall assessment of baseline data quality
+- The calculated baseline ERIS score (using the formula in Section 6)
+- A statement of the confidence interval
+- Limitations and how they will be addressed in future monitoring cycles
+</div>
+
+<h2>Prompt 3 — Additionality Assessment (MRV-03)</h2>
+<div class="prompt-box">
+Write Section 3 (Additionality Assessment) for an MRV report.
+
+Project context:
+- Country and legal jurisdiction: [Madagascar / other]
+- Relevant existing legislation: [describe any laws that mandate conservation at this site]
+- Site protection status: [unprotected / community-managed / national park / other]
+- Financial viability without external finance: [describe — could the project operate without conservation finance revenue?]
+- Prevalence of similar conservation activities in the region without external finance: [describe]
+- Threats that would occur without the project: [describe deforestation projections, encroachment trends]
+
+Apply the three-test additionality framework:
+1. Regulatory surplus test: result and documentation
+2. Common practice test: result and documentation
+3. Investment barrier test: result and financial evidence
+
+Generate a formal additionality section that:
+- Makes the additionality case clearly and defensibly
+- Acknowledges any weaknesses in the additionality argument
+- Cites the applicable sections of the certification standard being applied
+- Provides counterfactual scenario documentation
+</div>
+
+<h2>Prompt 4 — Survey Methodology Protocol (MRV-04)</h2>
+<div class="prompt-box">
+Write a complete survey methodology documentation section for an MRV report.
+
+Methods used in this project: [list all survey methods]
+
+For each method, document:
+1. Method name and reference (published protocol or methodology paper)
+2. Equipment used (model and specifications)
+3. Spatial design (transect layout, plot placement, station grid — with rationale)
+4. Survey effort (effort per unit, number of units, total effort)
+5. Quality assurance / quality control procedures
+6. Data recording format (field datasheet or digital form structure)
+7. Observer training requirements
+8. Analysis approach (software, statistical model, key parameters)
+
+Requirements:
+- Must be replicable: a qualified ecologist with no prior knowledge of this project should be able to repeat this survey using only this documentation
+- Must reference the relevant ERIS indicator each method contributes to
+- Must include the minimum effort required for each indicator to achieve MEDIUM or HIGH MRV confidence
+- Must acknowledge any deviations from standard protocols and their justification
+</div>
+
+<h2>Prompt 5 — ERIS Indicator I01 Calculation Report</h2>
+<div class="prompt-box">
+Generate the ERIS Indicator 01 (Species Richness and Rarity) calculation report for Section MRV-06.
+
+Input data:
+- Species detected (list with IUCN status and endemism status): [paste your species list]
+- Survey methods: [list]
+- Survey effort: [trap-nights, transect km, recording hours]
+- Detection confidence: [proportion of HIGH vs MEDIUM vs LOW confidence detections]
+
+Calculate:
+1. Raw species count by taxonomic group and by confidence level
+2. Weighted species richness score (applying ERIS I01 weighting: 1.0 widespread / 2.0 endemic / 3.0 threatened)
+3. Normalised score (0–100) against reference condition [specify reference — regional maximum or theoretical maximum]
+4. 95% confidence interval based on detection probability uncertainty
+5. Comparison to regional benchmarks where available
+
+Present as:
+- A formal calculation table showing every step
+- A species inventory table (suitable for appendix — all species, detection method, confidence, IUCN status, endemism)
+- A brief interpretive paragraph (3–4 sentences) for inclusion in the main report text
+</div>
+
+<h2>Prompt 6 — ERIS Indicator I04 (Human Pressure) Calculation</h2>
+<div class="prompt-box">
+Generate the ERIS Indicator 04 (Human Pressure Index — Inverse) calculation report.
+
+Input data:
+- Annual deforestation rate at project site: [% per year, source]
+- Encroachment observations from field surveys: [number of events, area affected, source]
+- Camera trap human detection rate: [detections per 100 trap-nights]
+- Distance to nearest settlement: [km, from which boundary]
+- Distance to nearest road: [km]
+- Any other relevant human pressure data: [describe]
+
+Calculate:
+1. Each sub-component on a 0–100 scale (higher = more pressure)
+2. Weighted composite human pressure value
+3. Inverse score: HPI = 100 − composite_pressure
+4. Interpretation relative to regional benchmarks
+5. Identification of the dominant pressure source
+
+Also generate:
+- A leakage risk assessment: given the human pressure at this site, is there risk that project activities displace encroachment to adjacent unprotected areas?
+- A leakage monitoring protocol recommendation
+</div>
+
+<h2>Prompt 7 — MRV Confidence Score (I05) Self-Assessment</h2>
+<div class="prompt-box">
+Calculate the ERIS MRV Confidence Score (Indicator 05) for my project.
+
+Assess each of the 6 sub-components (score each 0–100):
+
+1. Survey effort vs. minimum requirements:
+   - Species data: [actual effort] vs. [minimum required] = [% of minimum met]
+   - Vegetation data: [actual effort] vs. [minimum]
+   - Thermal data: [actual effort] vs. [minimum]
+
+2. Data validation pass rate: [% of records passing the 6-point validation framework]
+
+3. Number of independent survey methods: [count] out of maximum 6 for ERIS
+
+4. Number of survey seasons covered: [seasons] — minimum 2 required for HIGH confidence
+
+5. Methodology documentation completeness: [% of required methodology sections documented]
+
+6. Auditor readiness: [self-assessment — is the data package ready for third-party review?]
+
+Calculate:
+- Sub-score for each component
+- Overall MRV confidence score (average of 6)
+- Flag any sub-score below 60 as requiring attention before submission
+- Recommend specific actions to improve each low-scoring component
+</div>
+
+<h2>Prompt 8 — Community Safeguards Section (MRV-09)</h2>
+<div class="prompt-box">
+Write Section MRV-09 (Community Safeguards and Benefits) for an MRV report.
+
+Community engagement details:
+- Communities adjacent to or within the project area: [names, population, relationship to site]
+- FPIC process: [describe how free, prior and informed consent was obtained — who, when, what process]
+- Benefit-sharing arrangements: [describe how conservation finance revenues will be shared with communities]
+- Community employment in the project: [number of people, roles, payment]
+- Community monitoring involvement: [are community members trained as field monitors?]
+- Grievance mechanism: [how can communities raise concerns?]
+- Gender considerations: [how are women included in governance and benefits?]
+- Data sharing commitments: [what results will communities receive, in what format, in what language?]
+
+Generate a formal safeguards section that:
+- Demonstrates genuine FPIC (not just notification)
+- Shows community benefit that is proportionate to the value being generated
+- Is compliant with the safeguard requirements of [applicable certification standard]
+- Includes documentation references for each claim (FPIC meeting records, benefit-sharing agreement, etc.)
+</div>
+
+<h2>Prompt 9 — Annual Monitoring Plan (MRV-10)</h2>
+<div class="prompt-box">
+Write the Annual Monitoring Plan for an ERIS-based MRV project.
+
+Project details:
+- ERIS score at baseline: [score]
+- Primary limiting indicator: [which indicator scored lowest]
+- Annual monitoring budget: [estimated amount]
+- Field team capacity: [number of trained monitors, equipment available]
+
+For each ERIS indicator, specify the annual monitoring protocol:
+- Survey frequency (how often per year)
+- Survey effort (per monitoring cycle)
+- Responsible party (who conducts it)
+- Cost estimate (per cycle)
+- Reporting format (how results feed into the annual MRV update)
+
+Also specify:
+- Trigger thresholds: at what score decline does an emergency assessment occur?
+- Intervention protocol: what conservation action is triggered by a significant score decline?
+- Auditor reporting schedule: when is the annual monitoring data submitted to the certification body?
+- How does the annual monitoring data update the ERIS composite score?
+
+Generate a formal monitoring plan suitable for inclusion in the MRV report and for communication to a certification body.
+</div>
+
+<h2>Prompt 10 — Sensitive Data Management Protocol</h2>
+<div class="prompt-box">
+Write a sensitive data management protocol for the MRV data package.
+
+Sensitive data in this project:
+- IUCN Critically Endangered species with exact nest/den locations: [list species]
+- Community member identities in FPIC documentation: [describe]
+- Proprietary field data from partner organisations: [describe]
+- Pre-publication survey data: [describe]
+
+For each category:
+1. Describe the specific sensitivity and why it requires protection
+2. Define the handling rule: what is public / restricted / internal only
+3. Describe the spatial offset applied to sensitive coordinates (which species, what offset distance, how offset is calculated)
+4. Describe how the restricted data can be accessed by qualified auditors (without making it publicly available)
+5. Reference the applicable international standard or convention that supports this handling (CBD Article 8j, CITES, etc.)
+
+Generate:
+- A data classification table for all project datasets
+- A data access policy that satisfies both transparency requirements and conservation ethics
+- A summary statement suitable for inclusion in the public MRV report
+</div>
+
+<h2>Prompt 11 — Auditor Preparation Brief (MRV-11)</h2>
+<div class="prompt-box">
+Write the Auditor Preparation Package summary for an ERIS-based MRV project.
+
+This document is addressed to the third-party auditor. It must:
+1. Summarise the project and the MRV package in 2 paragraphs
+2. List every document in the MRV data package with filename, format, and what it contains
+3. Specify which sections of the MRV report correspond to which requirements of [applicable standard]
+4. Note any deviations from standard templates and their justification
+5. Describe the data access arrangements: how the auditor can access restricted datasets
+6. State the conflict of interest declarations for all project personnel
+7. Provide contact information for the responsible project person for each section
+
+Project data package contents:
+[List all documents — main MRV report, appendices, datasets, codebooks, FPIC records, etc.]
+
+Applicable certification standard: [VERRA VCS+CCB / Gold Standard / ERIS standalone]
+</div>
+
+<h2>Prompt 12 — Counterfactual Scenario Documentation</h2>
+<div class="prompt-box">
+Document the counterfactual scenario for the additionality assessment of this conservation project.
+
+The counterfactual describes what would happen to the project site without the project and its associated conservation finance.
+
+Project site: [site name and location]
+Current threats: [list with quantified evidence where available]
+Current protection: [what protection exists, if any]
+Historical deforestation rate: [% or ha per year, for how many years]
+Projected deforestation without project: [estimate for 5, 10, 20 years]
+Data sources for projections: [cite spatial data, government plans, regional trends]
+
+Generate:
+1. A narrative counterfactual scenario: what would the site look like in 5/10/20 years without the project?
+2. Quantified projections: habitat loss in hectares, projected species richness decline, projected ERIS score decline
+3. The evidence base for each projection
+4. Acknowledgment of uncertainty in the projections
+5. The conservation value at risk (total) — what is lost if the counterfactual occurs?
+
+This section must be honest, specific, and defensible under auditor scrutiny — not alarmist or unsupported.
+</div>
+
+<h2>Prompt 13 — Standards Alignment Checker</h2>
+<div class="prompt-box">
+Check the alignment of my MRV report against [VERRA VCS+CCB / Gold Standard / REDD+ requirements].
+
+My MRV report contains these sections:
+[List all sections with brief descriptions]
+
+For each requirement of [applicable standard], assess:
+1. Is this requirement addressed in my report? (YES / PARTIAL / NO)
+2. If PARTIAL or NO: what specifically is missing?
+3. What document or evidence would satisfy the requirement?
+4. Priority: is this a disqualifying gap (must fix before submission) or a minor gap (can address at next review)?
+
+Generate:
+- A compliance matrix: my section vs. standard requirement
+- A gap list prioritised by severity
+- A revision action list with specific changes needed
+</div>
+
+<h2>Prompt 14 — REDD+ Biodiversity Safeguard Report</h2>
+<div class="prompt-box">
+Write a biodiversity safeguard monitoring report for a REDD+ project, using ERIS as the biodiversity assessment methodology.
+
+REDD+ project context:
+- Country: [Madagascar]
+- REDD+ programme: [national programme reference if applicable]
+- Reporting period: [dates]
+- Carbon accounting summary: [brief — tonnes CO2e avoided or removed]
+
+For the REDD+ Cancun Safeguard (b) (biodiversity and natural forests):
+1. State the ERIS biodiversity monitoring methodology used
+2. Report the ERIS score for this period with the full indicator breakdown
+3. Compare to the baseline ERIS score (change from baseline)
+4. Assess whether biodiversity safeguards are being met (not compromised by REDD+ activities)
+5. Report on any biodiversity-negative outcomes and how they were addressed
+
+For the Cancun Safeguard (e) (natural forests and ecosystems not converted):
+1. Report canopy cover change from baseline (using drone multispectral or satellite data)
+2. Evidence that no natural forest has been converted to plantations or other land uses
+
+Format as a formal REDD+ safeguard monitoring report suitable for submission to the national REDD+ focal point.
+</div>
+
+<h2>Prompt 15 — French MRV Section Translation</h2>
+<div class="prompt-box">
+Translate the following MRV report section into French for submission to a Francophone funder, government authority, or regional certification body.
+
+Target audience: [Madagascar Ministry of Environment / Francophone institutional funder / COMIFAC / other]
+
+Translation requirements:
+- Use standard French environmental and biodiversity terminology
+- Preserve all technical terminology (species names remain in Latin, methodology acronyms remain in English with French translation provided on first use)
+- Maintain the formal register appropriate for a regulatory document
+- Adapt any examples or references that assume an English-language institutional context
+- Do not translate proper nouns: site names, organisation names, equipment models
+
+Section to translate:
+[PASTE ENGLISH SECTION HERE]
+</div>
+
+<!-- S8 INDICATOR CALCULATION GUIDES -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>Indicator Calculation Reference Guides</h1>
+
+<h2>Normalisation Protocol — Applying to All Indicators</h2>
+<p>All ERIS indicator scores are normalised to a 0–100 scale before weighting. The normalisation method depends on the indicator type.</p>
+
+<div class="callout">
+  <div class="cl cl-f">Three normalisation methods used in ERIS</div>
+  <ul style="margin:0;">
+    <li><strong>Reference-site normalisation (I01, I02):</strong> Score = (observed value / reference maximum) × 100. The reference maximum is the highest value observed at a comparable reference site in the same ecosystem type. For I01 in Madagascar humid forest: reference maximum is the weighted species richness of the most intact comparable forest in the region (typically a core protected area).</li>
+    <li><strong>Min-max normalisation (I03, I04):</strong> Score = [(observed - minimum) / (maximum - minimum)] × 100. Minimum and maximum are defined from the feasible range for the indicator in this ecosystem type.</li>
+    <li><strong>Rubric scoring (I05):</strong> Six sub-components scored against defined criteria (see Section 7, Prompt 7). Average of six scores = I05 value.</li>
+  </ul>
+</div>
+
+<h2>Uncertainty Quantification</h2>
+<p>Every ERIS score must report a 95% confidence interval. The uncertainty arises from three sources:</p>
+<ul>
+  <li><strong>Sampling uncertainty:</strong> The finite survey effort means the true species richness or indicator value is estimated, not observed with certainty. Quantify using bootstrapping or Bayesian credible intervals where possible.</li>
+  <li><strong>Detection uncertainty:</strong> Not all species present are detected. For detection-based indicators, correct using detection probability estimates from occupancy models or distance sampling. Report the corrected estimate with its confidence interval.</li>
+  <li><strong>Classification uncertainty:</strong> For thermal detections and acoustic identifications, some proportion of records have LOW or MEDIUM confidence. Conduct sensitivity analysis: what is the ERIS score if all LOW confidence records are excluded? If it changes by more than 5 points, the LOW confidence records are driving the result and must be flagged.</li>
+</ul>
+
+<h2>Minimum Data Requirements by Indicator</h2>
+<table>
+  <tr><th>Indicator</th><th>HIGH confidence (≥85 MRV_CS)</th><th>MEDIUM confidence (70–84)</th><th>LOW confidence (below 70)</th></tr>
+  <tr><td><strong>I01 — Species Richness</strong></td><td>≥3 methods, ≥3 seasons, ≥10 sites/1,000 ha, ≥200 detection records</td><td>≥2 methods, ≥2 seasons, ≥5 sites/1,000 ha, ≥100 records</td><td>1 method, 1 season — valid but insufficient for certification</td></tr>
+  <tr><td><strong>I02 — Vegetation</strong></td><td>≥1 plot/300 ha, systematic placement, ≥2 seasons</td><td>≥1 plot/500 ha, ≥1 season</td><td>Fewer plots — high spatial uncertainty</td></tr>
+  <tr><td><strong>I03 — Thermal Quality</strong></td><td>≥80% area covered, ≥2 independent flights, RTK GPS</td><td>≥60% area, ≥1 flight, consumer GPS</td><td>Partial coverage — habitat quality extrapolated, not measured</td></tr>
+  <tr><td><strong>I04 — Human Pressure</strong></td><td>Satellite data + field validation + camera trap data, ≥2 seasons</td><td>Satellite data + ≥1 field season</td><td>Remote sensing only — field-validated pressure unknown</td></tr>
+  <tr><td><strong>I05 — MRV Confidence</strong></td><td>Calculated from above — all methods at HIGH threshold</td><td>Calculated from above</td><td>Calculated from above</td></tr>
+</table>
+
+<!-- S9 STANDARDS ALIGNMENT -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Standards Alignment Guide</h1>
+
+<h2>VERRA VCS + CCB Alignment</h2>
+<p>The Climate, Community and Biodiversity Standards (CCB) are the most widely used biodiversity co-benefit standard in voluntary carbon markets. ERIS data products map to CCB requirements as follows:</p>
+
+<table>
+  <tr><th>CCB Criterion</th><th>ERIS indicator or product</th><th>Documentation required</th></tr>
+  <tr><td>B1 — Net positive impact on biodiversity</td><td>I01 (Species Richness), I02 (Vegetation Integrity)</td><td>Baseline and monitoring species inventory, vegetation plot data, ERIS I01 and I02 calculation workbooks</td></tr>
+  <tr><td>B2 — Net negative impacts mitigated</td><td>I04 (Human Pressure), I08 (Threat Assessment)</td><td>Human pressure baseline, encroachment monitoring protocol, threat mitigation actions</td></tr>
+  <tr><td>B3 — Biodiversity monitoring</td><td>Annual monitoring plan (MRV-10)</td><td>Monitoring protocol, reporting schedule, trigger thresholds</td></tr>
+  <tr><td>C1 — Net positive community impact</td><td>MRV-09 (Community Safeguards)</td><td>FPIC documentation, benefit-sharing agreement, community employment records</td></tr>
+  <tr><td>G1 — Project governance</td><td>MRV-01 (Project Description)</td><td>Institutional structure, land tenure documentation, legal registration</td></tr>
+</table>
+
+<h2>Gold Standard Alignment</h2>
+<p>Gold Standard for the Global Goals requires biodiversity monitoring at Activity level. ERIS scores provide the biodiversity baseline and monitoring data required for the Land Use & Forests Activity type.</p>
+<ul>
+  <li>ERIS I01 → SDG 15 (Life on Land) indicator: species richness and endemism</li>
+  <li>ERIS I02 → SDG 15 indicator: forest area and condition</li>
+  <li>ERIS I04 → SDG 15 indicator: human pressure and protection effectiveness</li>
+  <li>ERIS MRV package → Gold Standard evidence for safeguard compliance and biodiversity monitoring commitment</li>
+</ul>
+
+<h2>REDD+ Safeguard Information System (SIS) Alignment</h2>
+<p>Madagascar's national REDD+ programme requires biodiversity safeguard monitoring as part of the SIS. ERIS provides the national REDD+ programme with site-level biodiversity integrity data in a standardised format that can be aggregated across multiple sites into national reporting.</p>
+<ul>
+  <li>ERIS scores for multiple sites → national biodiversity integrity monitoring network</li>
+  <li>ERIS open methodology → national methodology for SIS biodiversity indicator</li>
+  <li>Annual ERIS monitoring data → annual SIS biodiversity safeguard report</li>
+</ul>
+
+<!-- S10 WORKED EXAMPLES -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Two Worked MRV Examples</h1>
+
+<h2>Example 1 — Ihofa Forest ERIS Pilot (Madagascar)</h2>
+<div class="dark-box">
+  <div class="dark-label">Project context</div>
+  <p><strong>Site:</strong> Ihofa Forest, Alaotra-Mangoro, Madagascar. 12,000 ha. Unprotected but community-managed. Adjacent to Rice agriculture and logging pressure from the south.</p>
+  <p><strong>Data available:</strong> 2024–2025 multi-method inventory (UC Berkeley / Techni-Drones). Mammal transects, camera traps (20 units), AudioMoth acoustic monitoring (10 units), thermal drone surveys (Mavic 3T), botanical plots (15 plots), herpetofauna VES.</p>
+  <p><strong>Objective:</strong> Produce first ERIS pilot score. Demonstrate MRV readiness for biodiversity credit evaluation. Build the case for community forest protection financing.</p>
+  <p><strong>ERIS score:</strong> 74 ± 6 (HIGH ecological integrity tier). Limited by I04 (Human Pressure = 61) due to active encroachment from southern agricultural margin.</p>
+  <p><strong>Conservation finance pathway:</strong> ERIS score of 74 qualifies for standard biodiversity credit tier evaluation. Primary market target: emerging biodiversity credit buyers in the voluntary market seeking Madagascar forest credits. Secondary: VCS/CCB co-benefit documentation for any REDD+ activity in the region.</p>
+  <p><strong>Key next step:</strong> Commission a third-party auditor (RINA, Bureau Veritas, or SCS Global Services) to verify the ERIS methodology and score. Budget: USD 8,000–15,000 for an initial verification. Return: access to biodiversity credit market at USD 5–25 per hectare per year for 12,000 ha = USD 60,000–300,000 annual potential.</p>
+</div>
+
+<h2>Example 2 — Community Forest REDD+ Co-Benefit Reporting</h2>
+<div class="dark-box">
+  <div class="dark-label">Project context</div>
+  <p><strong>Site:</strong> Community-managed forest, 3,500 ha. Part of a national REDD+ programme. Carbon project already certified under VCS. Biodiversity co-benefits not yet formally documented.</p>
+  <p><strong>Data available:</strong> 3 years of camera trap data (10 units), annual transect surveys, vegetation plot data from project establishment. No thermal drone data. No acoustic monitoring.</p>
+  <p><strong>ERIS assessment:</strong> With available data: I01 = 68 (MEDIUM — limited survey methods), I02 = 73 (GOOD — vegetation data well documented), I03 = N/A (no thermal data — replaced with estimate from RGB canopy cover analysis), I04 = 72 (GOOD — low encroachment due to community management), I05 = 63 (MEDIUM — only 2 survey methods, no acoustic data).</p>
+  <p><strong>ERIS composite:</strong> 69 ± 10 (MEDIUM-HIGH — upper MEDIUM tier due to MRV confidence gap from limited survey methods).</p>
+  <p><strong>Recommendation:</strong> Add AudioMoth acoustic monitoring (10 units, USD 650 total) and one thermal drone flight (borrowed from Techni-Drones) in the next monitoring cycle. This would bring I05 from 63 to approximately 78, and the overall ERIS score to approximately 74 — qualifying for the HIGH tier and standard biodiversity credit eligibility.</p>
+  <p><strong>MRV package use:</strong> The ERIS score and the harmonized 3-year camera trap dataset are submitted as biodiversity co-benefit evidence to the CCB certification body, upgrading the existing VCS carbon credit to VCS+CCB status — which typically commands a 20–40% price premium in the voluntary carbon market.</p>
+</div>
+
+<!-- S11 QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 11</div>
+<h1>Quick Start — Build Your First MRV Package</h1>
+
+<h2>Before You Begin — Prerequisites</h2>
+<div class="callout cr">
+  <div class="cl cl-r">Minimum data requirements for an MRV package</div>
+  <p style="margin-bottom:2mm;">An MRV package is only as strong as the data it is built on. Before starting the report, confirm you have:</p>
+  <ul style="margin:0;">
+    <li>At least 2 independent survey methods (camera traps AND transects, OR transects AND acoustics, etc.)</li>
+    <li>At least 2 field seasons of data (minimum — 3+ is strongly preferred)</li>
+    <li>Vegetation plot data (at least 1 plot per 500 ha)</li>
+    <li>A validated, harmonized dataset (Products 5–7 or equivalent)</li>
+    <li>Documentation of the community consent process (FPIC)</li>
+    <li>Land tenure documentation for the project area</li>
+  </ul>
+  <p style="margin-bottom:0;margin-top:2mm;">If you are missing any of these: build the data first, then build the MRV package. A weak MRV package based on insufficient data will fail audit — and rebuilding it wastes more time than collecting the missing data properly.</p>
+</div>
+
+<h2>Week 1 — Assessment and Architecture</h2>
+<ul class="checklist">
+  <li>Run the funder/standard selection: which certification standard or funder framework applies to this project?</li>
+  <li>Run Prompt 7 (MRV Confidence Score) to assess your current data quality. This tells you what you have and what is missing.</li>
+  <li>Run Prompt 13 (Standards Alignment Checker) against your chosen standard. Identify disqualifying gaps before writing.</li>
+  <li>Assemble the data package inventory: every dataset, codebook, and document that will feed into the report.</li>
+</ul>
+
+<h2>Weeks 2–3 — Core Report Sections</h2>
+<ul class="checklist">
+  <li>Write MRV-01 (Project Description) using Prompt 1.</li>
+  <li>Write MRV-02 (Ecological Baseline) using Prompt 2.</li>
+  <li>Write MRV-03 (Additionality) using Prompt 3 and the counterfactual documentation (Prompt 12).</li>
+  <li>Write MRV-04 (Survey Methodology) using Prompt 4.</li>
+  <li>Write MRV-05 (Data Quality) using the harmonization log from Product 7.</li>
+</ul>
+
+<h2>Weeks 4–5 — ERIS Scoring and Calculations</h2>
+<ul class="checklist">
+  <li>Calculate ERIS I01 using Prompt 5. Build the species inventory appendix.</li>
+  <li>Calculate ERIS I02 from vegetation plot data. Normalise against reference site.</li>
+  <li>Calculate ERIS I03 from thermal drone data using Product 8 outputs (if available).</li>
+  <li>Calculate ERIS I04 using Prompt 6. Include leakage assessment.</li>
+  <li>Calculate ERIS I05 using Prompt 7.</li>
+  <li>Write MRV-06 and MRV-07 (Indicator calculations and composite score).</li>
+</ul>
+
+<h2>Week 6 — Safeguards, Monitoring, and Auditor Preparation</h2>
+<ul class="checklist">
+  <li>Write MRV-09 (Community Safeguards) using Prompt 8. Collect all FPIC documentation.</li>
+  <li>Write MRV-10 (Annual Monitoring Plan) using Prompt 9.</li>
+  <li>Apply sensitive data protocol (Prompt 10). Prepare the public and restricted versions of all datasets.</li>
+  <li>Write MRV-11 (Auditor Preparation Package) using Prompt 11.</li>
+  <li>Write MRV-12 (Declarations). Obtain all required signatures.</li>
+  <li>Translate key sections to French if required (Prompt 15).</li>
+</ul>
+
+<h2>Week 7 — External Review and Submission</h2>
+<ul class="checklist">
+  <li>Send the complete package to a qualified ecologist not on the project team for independent review.</li>
+  <li>Contact a third-party verification body (RINA, Bureau Veritas, SCS Global Services, or a qualified national auditor) and share the Auditor Preparation Package.</li>
+  <li>Respond to any pre-audit questions. Revise as needed.</li>
+  <li>Submit the complete MRV package to the certification body or conservation finance actor.</li>
+</ul>
+
+<!-- MVP vs PREMIUM -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>MVP ($499)</th><th>Premium ($999)</th></tr>
+  <tr><td>MRV Report Architecture (12 sections)</td><td>✓ Full framework</td><td>✓ + pre-filled templates per standard</td></tr>
+  <tr><td>ERIS Scoring Framework v1.0</td><td>✓</td><td>✓ + calculation workbooks (Excel/Sheets)</td></tr>
+  <tr><td>15 AI prompts</td><td>✓</td><td>✓ 25 prompts</td></tr>
+  <tr><td>Indicator calculation guides (5)</td><td>✓</td><td>✓ + automated calculator</td></tr>
+  <tr><td>Standards alignment (VERRA, Gold Standard, REDD+)</td><td>✓</td><td>✓ + full compliance matrix per standard</td></tr>
+  <tr><td>2 worked examples</td><td>✓</td><td>✓ 4 worked examples</td></tr>
+  <tr><td>Auditor preparation guide</td><td>✓</td><td>✓ + mock audit Q&A</td></tr>
+  <tr><td>Annual monitoring plan template</td><td>✓</td><td>✓ + monitoring calendar (Google Sheets)</td></tr>
+  <tr><td>French version</td><td>Prompt only</td><td>✓ Full French translation of all sections</td></tr>
+  <tr><td>ERIS calculation workbooks</td><td>—</td><td>✓ Excel/Sheets with automated formulas</td></tr>
+  <tr><td>Pre-built MRV report template (Word/Google Docs)</td><td>—</td><td>✓ Branded ERIS MRV template</td></tr>
+  <tr><td>Third-party auditor contact list (Global South)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>ERIS v2.0 update (as released)</td><td>—</td><td>✓ Included for 3 years</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:28mm 0;">
+  <div style="font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6mm;">OPLURIX · ERIS</div>
+  <div style="font-size:21pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    Conservation science has always produced<br>the data. ERIS produces the infrastructure<br><em>that makes that data fundable.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:130mm;margin:0 auto 12mm;line-height:1.7;">
+    An ERIS score is not a report. It is a credential — a field-verified, open-methodology, auditable statement that a specific forest has a specific ecological value. That credential is what connects the work of a field biologist in Alaotra-Mangoro to the capital that conservation finance can mobilise for protection. Everything in this product suite — from the content engine to the data harmonizer to the thermal translator — was built to make that credential possible.
+  </div>
+  <div style="background:var(--forest);padding:6mm 12mm;display:inline-block;margin-bottom:12mm;">
+    <div style="font-family:monospace;font-size:7pt;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:3mm;">ERIS Principles — Immutable</div>
+    <div style="font-size:9pt;color:rgba(255,255,255,0.75);line-height:1.8;text-align:left;">
+      Open methodology · Field-verified · Permanently auditable<br>
+      Never sold to extractive industries · Steward-owned at Year 5<br>
+      Mission before money · Always
+    </div>
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-size:8pt;color:var(--faint);line-height:2;">
+    MRV Report Architect v1.0 · ERIS v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    hajafabrice.r@gmail.com<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina<br>
+    Antananarivo, Madagascar
+  </div>
+</div>
+
+</div>
+</body>
+</html>

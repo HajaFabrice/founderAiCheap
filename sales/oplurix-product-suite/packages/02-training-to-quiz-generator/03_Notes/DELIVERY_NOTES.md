@@ -1,0 +1,10 @@
+﻿# Delivery Notes
+
+- Recommended client format: $( @{id=oplurix_02_training_to_quiz_generator; suite_number=2; public_name=Training-to-Quiz Generator; status=coming_soon; price_usd=29; primary_audience=System.Object[]; core_promise=Turn SOPs and field training materials into validated quizzes that test protocol understanding.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=waitlist_only; checkout_enabled=False; recommended_client_format=pdf_plus_templates; format_reason=The client needs a stable guide plus editable quiz assets more than a dynamic app.; agent_uses=System.Object[]}.recommended_client_format )
+- Format reason: The client needs a stable guide plus editable quiz assets more than a dynamic app.
+- Public state: $( @{id=oplurix_02_training_to_quiz_generator; suite_number=2; public_name=Training-to-Quiz Generator; status=coming_soon; price_usd=29; primary_audience=System.Object[]; core_promise=Turn SOPs and field training materials into validated quizzes that test protocol understanding.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=waitlist_only; checkout_enabled=False; recommended_client_format=pdf_plus_templates; format_reason=The client needs a stable guide plus editable quiz assets more than a dynamic app.; agent_uses=System.Object[]}.status )
+- Recommended public state: $( @{product_id=oplurix_02_training_to_quiz_generator; public_name=Training-to-Quiz Generator; current_state=coming_soon; recommended_public_state=waitlist_now; launch_decision=sellable_next; activation_priority=1; minimum_activation_gate=Package the templates, test payment confirmation, and verify the delivery path end to end.; main_blocker=Packaging and delivery are not yet verified.; recommended_client_format=pdf_plus_templates; agent_rule=Mention as the first next sellable product, but do not imply active checkout yet.}.recommended_public_state )
+- Main blocker: Packaging and delivery are not yet verified.
+
+If this product moves to checkout later, keep the sellable surface in HTML and
+the delivered bundle in a bounded package.

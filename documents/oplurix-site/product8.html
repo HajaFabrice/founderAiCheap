@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0D4A44;
+  --heat:    #8B1A00;
+  --warm:    #7A3A00;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Thermal Data Translator  ·  OPLURIX  ·  " counter(page);
+    font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: var(--forest); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; }
+.cover-brand { font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:32mm; }
+.cover-eyebrow { font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-size:28pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-author { font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+.content-pages { page: content; }
+h1 { font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-size:13pt; font-weight:700; color:var(--forest2); margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-size:10pt; font-weight:700; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:700; color:var(--forest); }
+em { font-style:italic; color:var(--forest2); }
+code { font-family:monospace; font-size:9pt; background:var(--parch); padding:1pt 3pt; color:var(--forest2); }
+
+.section-label { font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+.callout  { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.ca { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.cr { background:#FDF0EE; border-left:3pt solid var(--red); }
+.cb { background:#EEF3FA; border-left:3pt solid var(--blue); }
+.ct { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.ch { background:#FEF0EA; border-left:3pt solid var(--heat); }
+.cl { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.cl-a { color:var(--amber); } .cl-f { color:var(--forest); } .cl-r { color:var(--red); }
+.cl-b { color:var(--blue); } .cl-t { color:var(--teal); } .cl-h { color:var(--heat); }
+
+.dark-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.dark-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.dark-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.dark-box p:last-child { margin-bottom:0; }
+
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-size:8pt; font-weight:700; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:700; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+ul { margin:3mm 0 3mm 6mm; list-style:none; padding:0; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+.code-block { background:#1A2A1F; border:0.5pt solid #2D5A3D; padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:#A8D8A8; page-break-inside:avoid; }
+.code-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:#4A7A55; margin-bottom:2mm; }
+.code-comment { color:#4A7A55; }
+.code-keyword { color:#D4921F; }
+.code-string { color:#7EC8A0; }
+.code-num { color:#E8B84B; }
+
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:var(--forest); page-break-inside:avoid; }
+
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+/* THERMAL-SPECIFIC */
+.thermal-palette { display:flex; height:12pt; margin:3mm 0 1.5mm 0; border:0.5pt solid var(--sand); }
+.tp-iron { background:linear-gradient(to right, #000000, #7B0000, #FF4500, #FFA500, #FFE066, #FFFFFF); flex:1; }
+.tp-rainbow { background:linear-gradient(to right, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000); flex:1; }
+.tp-gray { background:linear-gradient(to right, #000000, #888888, #FFFFFF); flex:1; }
+.tp-cool { background:linear-gradient(to right, #000040, #0000FF, #00BFFF, #FFFFFF); flex:1; }
+.palette-label { font-size:7pt; color:var(--muted); margin-bottom:3mm; display:flex; justify-content:space-between; }
+.palette-label span { font-size:7pt; }
+
+.detection-card { border:0.5pt solid var(--sand); margin-bottom:4mm; page-break-inside:avoid; }
+.dc-header { background:var(--teal); padding:3mm 5mm; display:flex; justify-content:space-between; }
+.dc-title { font-size:10pt; font-weight:700; color:white; }
+.dc-meta { font-family:monospace; font-size:7.5pt; color:rgba(255,255,255,0.6); }
+.dc-body { padding:4mm 5mm; }
+.dc-row { display:grid; grid-template-columns:110pt 1fr; gap:4mm; margin-bottom:2mm; font-size:9pt; border-bottom:0.5pt solid var(--parch); padding-bottom:2mm; }
+.dc-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.dc-key { font-weight:700; color:var(--forest2); }
+
+.workflow-step { background:var(--cream); border:0.5pt solid var(--sand); border-left:3pt solid var(--teal); padding:4mm 6mm; margin:3mm 0; page-break-inside:avoid; }
+.ws-num { font-family:monospace; font-size:7pt; color:var(--teal); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:1.5mm; }
+.ws-title { font-weight:700; font-size:10pt; color:var(--forest); margin-bottom:2mm; }
+.ws-desc { font-size:9pt; color:var(--muted); }
+
+.spec-row { display:grid; grid-template-columns:120pt 1fr 80pt; gap:4mm; padding:2mm 4mm; border-bottom:0.5pt solid var(--sand); font-size:9pt; }
+.spec-good { color:#166534; font-weight:700; }
+.spec-bad { color:var(--red); font-weight:700; }
+.spec-mid { color:#92400E; font-weight:700; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">Thermal Data<br><em>Translator</em></div>
+    <div class="cover-subtitle">Convert drone thermal imagery into validated wildlife detection records, habitat quality maps, and analysis-ready files — from raw RJPEG output to MRV-compatible biodiversity data.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Drone-Equipped Research Teams</span>
+      <span class="cover-tag">Wildlife Survey Coordinators</span>
+      <span class="cover-tag">Conservation NGO Tech Leads</span>
+      <span class="cover-tag">ERIS / MRV Data Managers</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I have 800 thermal image files and no idea how to turn them into detection records" to "I have a validated wildlife detection dataset with GPS, species confidence flags, and habitat quality metrics — ready for occupancy modelling or biodiversity scoring."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      IPS Congress 2025 — Thermal Drone Lemur Surveys · Founder, OPLURIX
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $149</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="cl cl-f">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once. This is the most technical OPLURIX product — it assumes you have flown a thermal drone survey and have the image files. Sections 4–6 are the working workflow. The AI Prompt Pack (Section 7) and Code Templates (Section 9) are your day-to-day tools. The Species Detection Guide (Section 8) is your field-specific reference for Madagascar and tropical forest contexts.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 7-Step Processing Pipeline · Thermal Image Interpretation Guide · Flight Planning for Data Quality · AI Prompt Pack · Species Detection Guide (Madagascar) · Python/R Code Templates · Detection Record Schema · Habitat Quality Scoring · ERIS Integration · QC Framework · Quick Start</p>
+</div>
+
+<!-- S1 CORE PROMISE -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>Thermal drone surveys produce data at a rate that quickly overwhelms manual processing. A single 25-minute thermal flight at Ihofa Forest generates between 300 and 800 image files, depending on flight speed and trigger interval. Each image must be reviewed, detections must be validated, false positives must be removed, GPS coordinates must be extracted and verified, and the results must be entered into a structured detection dataset. Multiply this by a week of field surveys and you have a data processing challenge that can take longer than the survey itself — if you do not have a system.</p>
+
+<p>This guide gives you that system. It is built on the actual workflow used for the thermal drone lemur surveys presented at IPS Congress 2025 — the proof-of-concept that underpins the ERIS methodology. It covers the full pipeline from raw <code>.RJPEG</code> or <code>.TIFF</code> thermal output to a validated, GPS-tagged, confidence-flagged wildlife detection dataset that is directly compatible with the OPLURIX Biodiversity Data Harmonizer and the ERIS scoring framework.</p>
+
+<div class="callout ca">
+  <div class="cl cl-a">The Transformation</div>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:2mm;"><strong>Before:</strong> "I have 800 thermal image files from last week's survey and no idea how to turn them into detection records."</p>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:0;"><strong>After:</strong> "I have a validated wildlife detection dataset with GPS coordinates, species confidence flags, thermal signature metadata, and habitat quality metrics — ready for occupancy modelling, biodiversity scoring, or ERIS input."</p>
+</div>
+
+<p><strong>What this guide covers:</strong> Thermal image file formats and extraction, flight parameters affecting data quality, manual and AI-assisted detection workflows, false positive identification and removal, species confidence classification, GPS coordinate extraction and validation, habitat quality assessment from thermal data, detection record schema, YOLO-based detection model guidance, and integration with the ERIS biodiversity scoring system.</p>
+
+<p><strong>This guide does not cover:</strong> How to fly a drone, how to obtain flight permits, basic drone operation, or the physics of thermography. It assumes you have a completed thermal survey dataset and want to extract scientific value from it.</p>
+
+<!-- S2 PAIN POINTS -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>You cannot tell a warm animal from a warm rock.</strong><p>Thermal signatures are temperature differentials, not species identifications. Sun-warmed rocks, decomposing vegetation, and reflective surfaces all produce warm signatures that look like animals in thermal imagery. Without a systematic false positive protocol, your detection count is inflated and your dataset is scientifically unusable.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>The same individual appears in multiple consecutive frames.</strong><p>A thermal drone flying at 5 m/s with a 1-second image trigger interval takes a new image every 5 metres. A 2-metre animal can appear in 3–5 consecutive frames. Without a frame-merging protocol, you count one animal five times.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>You cannot identify species from thermal imagery alone.</strong><p>Thermal cameras detect heat, not morphology. A small lemur and a large gecko at the same distance produce different-sized signatures — but size alone cannot reliably distinguish species in dense canopy. Species classification requires a combination of thermal signature shape, size estimation, behaviour, habitat context, and cross-validation with concurrent audio or RGB data.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>Dense canopy blocks thermal signatures completely.</strong><p>Under a closed forest canopy, the thermal camera sees canopy surface temperature — not the animals underneath. Detection rates in closed canopy are dramatically lower than in open canopy or edge habitats, but this difference is a detection artefact, not a real ecological signal. It must be accounted for in any analysis.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>GPS metadata in thermal image files is often inaccurate or missing.</strong><p>Consumer-grade drones (including the Mavic 3T) embed GPS coordinates in image EXIF data from the aircraft's onboard GPS — not RTK-grade positioning. The typical accuracy is ±2–5 metres in open sky, degrading to ±10–20 metres in forested terrain where satellite acquisition is poor. Understanding and documenting this uncertainty is essential for spatial analysis.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>You have no system for consistent image review across multiple observers.</strong><p>When two people review the same thermal image sequence, they will flag different detections. Without a standardised review protocol and inter-observer calibration, your detection dataset reflects the reviewer as much as the actual wildlife.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>The thermal image file format is not directly importable into standard analysis tools.</strong><p>DJI thermal cameras produce <code>.RJPEG</code> files — a proprietary format that contains both a standard JPEG preview and raw radiometric temperature data. Standard image viewers show the JPEG. The radiometric data, which is required for temperature-based analysis, requires specific extraction tools. Most researchers never access the raw temperature data at all.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>Time of survey profoundly affects detection probability — but nobody documents it systematically.</strong><p>Thermal contrast between an endothermic animal and the environment is highest in the hours before dawn, when the environment is coldest. At midday in a tropical forest, thermal contrast may be so low that detection is near-impossible. This is not a equipment failure — it is a survey design issue. But without systematic documentation of survey time and ambient temperature, the detection probability varies dramatically across a dataset with no way to model it.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>YOLO models trained on other ecosystems perform poorly on your species.</strong><p>A YOLO model trained on African savanna wildlife will not reliably detect Malagasy forest lemurs in dense canopy thermal imagery. Models must be trained or fine-tuned on imagery from your specific ecosystem, your specific species, and your specific flight parameters. This guide explains what you need to build and validate a context-specific model.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>You cannot connect thermal detections to the ERIS scoring framework without a structured output format.</strong><p>The ERIS ecological integrity scoring system requires detection data in a specific schema — with confidence flags, GPS coordinates, species classification confidence, canopy cover estimates, and effort metadata all attached to each record. Raw thermal imagery does not produce this format. This guide ends with the exact output schema needed for ERIS integration.</p></div>
+</div>
+
+<!-- S3 DESIRED OUTCOMES -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">01</td><td>Process a full day's thermal survey imagery into a validated detection dataset in one working session.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">02</td><td>Distinguish genuine animal thermal signatures from false positives systematically — with documented criteria.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">03</td><td>Merge consecutive-frame detections of the same individual into single validated records.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">04</td><td>Classify detections by species confidence level (HIGH / MEDIUM / LOW / UNIDENTIFIED) with documented criteria.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">05</td><td>Extract and validate GPS coordinates from thermal image EXIF data.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">06</td><td>Document detection effort — survey time, altitude, canopy cover, ambient temperature — as a covariable for detection probability modelling.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">07</td><td>Build or fine-tune a YOLO detection model appropriate for your target species and ecosystem.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">08</td><td>Generate habitat quality thermal maps that characterise canopy cover and thermal heterogeneity.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">09</td><td>Produce an output detection dataset directly compatible with the ERIS scoring schema.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">10</td><td>Validate the detection dataset through a three-check quality framework before any ecological analysis.</td></tr>
+</table>
+
+<!-- S4 THE 7-STEP PIPELINE -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 7-Step Thermal Processing Pipeline</h1>
+<p>From raw image files to validated detection records. Every step has a documented output. Steps 1–3 are image-level work. Steps 4–7 build the scientific dataset.</p>
+
+<div class="step-block">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>FILE ORGANISATION AND METADATA EXTRACTION</h3>
+    <p>Before reviewing a single image, organise the files and extract the metadata. This step defines the structure every subsequent step works within.</p>
+    <div class="callout">
+      <div class="cl cl-f">File organisation protocol</div>
+      <ul style="margin:0;">
+        <li>One folder per flight. Naming: <code>[SiteCode]_[Date]_[FlightNum]</code> — e.g., <code>IHOFA_20260315_F01</code></li>
+        <li>Do not rename individual image files. The original filename contains the sequence number used for consecutive-frame merging.</li>
+        <li>Copy all files to working storage before processing. Never work from the original memory card.</li>
+        <li>For each flight folder: create a <code>_metadata.csv</code> file with one row per image, extracting: filename, GPS latitude, GPS longitude, GPS altitude, image timestamp, camera model, thermal palette setting.</li>
+      </ul>
+    </div>
+    <p>Use the Python EXIF extraction template in Section 9 (Prompt 10) to batch-extract metadata from all files in a flight folder. The <code>exiftool</code> command-line tool is the most reliable option for DJI thermal files.</p>
+    <div class="callout cr">
+      <div class="cl cl-r">Critical: RJPEG vs. TIFF file handling</div>
+      <p style="margin-bottom:2mm;">DJI thermal cameras (Mavic 3T, H30T, XT2) produce <code>.RJPEG</code> files. These contain a standard JPEG preview (visible to any image viewer) and embedded radiometric data (temperature per pixel). For wildlife detection, the JPEG preview is usually sufficient. For temperature-based analysis (habitat thermal mapping, thermal habitat quality scoring for ERIS), the radiometric data must be extracted separately using DJI's <code>dji_thermal_sdk</code> or the open-source <code>thermal_parser</code> Python library.</p>
+      <p style="margin-bottom:0;">Never delete RJPEG files after extracting the JPEG preview — the radiometric data is embedded in the original file and cannot be recovered once the file is deleted.</p>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: Organised flight folders + metadata CSV per flight.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>THERMAL PALETTE NORMALISATION</h3>
+    <p>Before reviewing images for detections, ensure all images in a flight use the same visual presentation. Mixed palettes (some images in Ironbow, some in Rainbow) make cross-image comparison impossible and dramatically increase reviewer error rates.</p>
+    <div class="callout">
+      <div class="cl cl-f">Recommended palette for wildlife detection</div>
+      <p style="margin-bottom:2mm;"><strong>Ironbow (Iron/Hot):</strong> Warm objects appear orange-white, cold objects appear dark blue-black. High contrast between endothermic animals and cool vegetation. This is the standard palette for wildlife detection in forested environments.</p>
+      <div class="thermal-palette">
+        <div class="tp-iron"></div>
+      </div>
+      <div class="palette-label"><span>Cold (dark)</span><span>→ Ironbow palette →</span><span>Hot (white/yellow)</span></div>
+      <p style="margin-bottom:0;font-size:9pt;"><strong>For habitat mapping:</strong> Rainbow palette provides more gradation across the temperature range. Use for thermal heterogeneity analysis, not for detection review.</p>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: All images in consistent Ironbow palette. Note the temperature range displayed (e.g., 15°C–40°C) in the flight metadata — this affects how detections appear.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>INITIAL DETECTION REVIEW — FLAGGING</h3>
+    <p>Review every image in the flight sequence and flag images containing candidate detections. Do not attempt species identification at this stage. You are answering one question only: "Is there a thermal signature in this image that warrants closer review?"</p>
+    <div class="callout">
+      <div class="cl cl-f">Detection flagging criteria</div>
+      <ul style="margin:0;">
+        <li>A blob-shaped warm signature distinctly warmer than the surrounding canopy surface — not a gradual warm area</li>
+        <li>A signature with a shape consistent with a vertebrate body (elongated, roughly symmetrical, with a definable edge)</li>
+        <li>A signature that changes position across consecutive frames (moving animals)</li>
+        <li>A signature that appears and disappears across frames (animal emerging from and returning to canopy cover)</li>
+      </ul>
+    </div>
+    <p>Record the image filename of every flagged frame. The fastest review method is fast-scroll through images at 4–6 frames per second, pausing to flag anything that meets the criteria. A 500-image flight can be reviewed for flagging in 20–30 minutes at this pace.</p>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: A flagged image list — filenames of all images containing candidate detections. Typically 5–15% of total images in a forested tropical survey.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>FALSE POSITIVE REMOVAL</h3>
+    <p>For every flagged image, apply the false positive decision framework. This is the most important step for data quality. A detection dataset with 30% false positives is not usable for any rigorous analysis.</p>
+    <div class="callout cr">
+      <div class="cl cl-r">The six most common false positives in tropical forest thermal surveys</div>
+      <ul style="margin:0;">
+        <li><strong>Sun-warmed rock or boulder:</strong> Appears very bright (hotter than expected ambient). Diagnostic: present in same frame across multiple consecutive flights; does not move; edges are sharp geometric shapes.</li>
+        <li><strong>Decomposing vegetation:</strong> Mounds of decaying organic matter produce significant heat. Diagnostic: diffuse warm area, irregular edges, no movement, typically on the ground.</li>
+        <li><strong>Termite mounds:</strong> Extremely hot signatures. Diagnostic: stationary, very high temperature relative to surroundings, spherical or conical shape, consistent across multiple days.</li>
+        <li><strong>Reflective surfaces:</strong> Metal objects, water, and wet leaves can reflect solar radiation and appear warm. Diagnostic: signature too bright (clipping the temperature scale), sharp geometric edges.</li>
+        <li><strong>Thermal bleed from canopy gap:</strong> Solar heating of the ground visible through a gap in the canopy creates a warm patch that looks like an animal on the ground. Diagnostic: signature corresponds to a canopy gap visible in simultaneous RGB image; stationary; uniform warming pattern.</li>
+        <li><strong>Aircraft thermal artefacts:</strong> Hot pixels or banding from camera sensor artefacts. Diagnostic: same pixel position in every image of the same flight; not correlated with ground features.</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: Flagged image list with false positives removed. Each removal documented with the false positive category applied.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <h3>CONSECUTIVE-FRAME MERGING</h3>
+    <p>Merge all consecutive-frame observations of the same individual into a single detection record. This is the most common counting error in thermal drone surveys.</p>
+    <div class="callout">
+      <div class="cl cl-f">Consecutive-frame merging rules</div>
+      <ul style="margin:0;">
+        <li>Group flagged images that are sequential in frame number (no gap larger than 3 frames between them)</li>
+        <li>For each group: verify that the signature position is consistent with the drone's flight path (the signature moves through the frame as the aircraft passes)</li>
+        <li>For each group: count one individual, not one image</li>
+        <li>The detection GPS coordinate is taken from the image where the animal is closest to the nadir (directly below the aircraft) — the most accurate GPS estimate for the animal's position</li>
+        <li>If two separate signatures appear in the same frame sequence and maintain consistent separation: count as two individuals</li>
+      </ul>
+    </div>
+    <div class="callout ca">
+      <div class="cl cl-a">Frame gap rule</div>
+      <p style="margin:0;">A gap of 1–3 frames (1–3 seconds at standard trigger rate) between observations of what appears to be the same animal can occur when the animal briefly moves under canopy between images. A gap larger than 5 frames should be treated as a potential second individual unless the GPS positions are consistent with continuous movement.</p>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: One row per unique individual detection. Frame group documented in the <code>source_frames</code> column.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">6</div>
+  <div class="step-content">
+    <h3>SPECIES CLASSIFICATION AND CONFIDENCE ASSIGNMENT</h3>
+    <p>Classify each validated detection to the highest taxonomic level that the data supports with confidence. Do not overstate species identification from thermal data alone.</p>
+    <table>
+      <tr><th>Confidence level</th><th>Criteria</th><th>Taxonomic resolution</th></tr>
+      <tr><td><strong>HIGH</strong></td><td>Signature size, shape, and behaviour clearly diagnostic. Simultaneous audio or visual confirmation available. OR YOLO model confidence ≥0.85 on a validated model.</td><td>Species level: e.g., Indri indri</td></tr>
+      <tr><td><strong>MEDIUM</strong></td><td>Signature size and habitat consistent with one species. No alternative species equally plausible. No simultaneous confirmation.</td><td>Species level with "cf." flag: e.g., cf. Indri indri</td></tr>
+      <tr><td><strong>LOW</strong></td><td>Signature consistent with a taxonomic group but size or behaviour ambiguous. Multiple species equally plausible.</td><td>Genus or family: e.g., Hapalemur sp. or LEMUR_INDET</td></tr>
+      <tr><td><strong>UNIDENTIFIED</strong></td><td>Warm signature clearly biological but no identification possible — canopy obstruction, too small, too brief.</td><td>Thermal detection: e.g., WARM_SIG_MAMMAL or WARM_SIG_REPTILE</td></tr>
+    </table>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: Species code, species confidence level, and classification basis documented for each detection.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">7</div>
+  <div class="step-content">
+    <h3>GPS EXTRACTION, VALIDATION, AND EFFORT DOCUMENTATION</h3>
+    <p>Extract GPS coordinates from image EXIF data. Validate against the study area. Document all flight parameters as survey effort covariables.</p>
+    <div class="callout">
+      <div class="cl cl-f">Effort covariables — record for every flight</div>
+      <ul style="margin:0;">
+        <li><strong>Flight time:</strong> Start and end time (UTC). Used to calculate ambient temperature differential.</li>
+        <li><strong>Flight altitude AGL:</strong> Above-ground level in metres. Affects sensor footprint size and detection distance.</li>
+        <li><strong>Flight speed:</strong> m/s. Affects consecutive-frame overlap and detection probability.</li>
+        <li><strong>Image trigger interval:</strong> Seconds between frames.</li>
+        <li><strong>Ambient temperature:</strong> °C at survey time. The single most important covariable for thermal detection probability.</li>
+        <li><strong>Canopy cover:</strong> Estimated percentage for each transect pass. Can be derived from RGB imagery or from the thermal image itself (proportion of frame with warm canopy surface).</li>
+        <li><strong>Wind speed:</strong> m/s. Above 10 m/s, detection probability drops significantly as animals shelter.</li>
+        <li><strong>GPS accuracy estimate:</strong> From EXIF or DJI flight log. Typical Mavic 3T: ±2–5m in open, ±10–20m under canopy.</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: Detection dataset with validated GPS + flight effort table. Ready for analysis.</p>
+  </div>
+</div>
+
+<!-- S5 THERMAL IMAGE INTERPRETATION GUIDE -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>Thermal Image Interpretation Guide</h1>
+<p>How to read thermal imagery for wildlife detection. Built from the Mavic 3T field experience at Ihofa Forest, but applicable to any wildlife thermal drone survey in tropical forest.</p>
+
+<h2>Understanding What the Camera Sees</h2>
+<p>A thermal camera measures the radiant temperature of the surface it can see — not the air temperature and not the temperature of objects obscured by other objects. In a forest survey, this means:</p>
+<ul>
+  <li>The camera primarily sees the <strong>canopy surface</strong> when flying above a closed forest.</li>
+  <li>Animals are only visible when they are <strong>at or above the canopy surface</strong>, or in a <strong>gap in the canopy</strong> that allows a sightline to the animal.</li>
+  <li>The canopy surface temperature varies across the image — sun-facing leaves are warmer than shaded leaves, creating a background thermal "texture" that can mask animal signatures.</li>
+  <li>The best detection conditions are <strong>early morning (1–3 hours after sunrise)</strong> when the canopy surface is still cool from the night and animals are warm relative to their environment.</li>
+</ul>
+
+<h2>The Optimal Survey Window</h2>
+<table>
+  <tr><th>Time of day</th><th>Detection conditions</th><th>Reason</th></tr>
+  <tr><td>Pre-dawn (04:00–06:00)</td><td class="spec-good">Excellent</td><td>Maximum thermal contrast — animals are warmest relative to near-freezing ambient at altitude</td></tr>
+  <tr><td>Early morning (06:00–09:00)</td><td class="spec-good">Good</td><td>High contrast. Canopy still cool. Most diurnal species active and exposed.</td></tr>
+  <tr><td>Late morning (09:00–11:00)</td><td class="spec-mid">Acceptable</td><td>Solar heating reduces contrast. Still detectable for medium-large endotherms.</td></tr>
+  <tr><td>Midday (11:00–14:00)</td><td class="spec-bad">Poor</td><td>Canopy surface approaches animal body temperature. Detection probability severely reduced.</td></tr>
+  <tr><td>Afternoon (14:00–17:00)</td><td class="spec-mid">Variable</td><td>Shaded areas cool; sun-facing canopy still warm. Depends heavily on cloud cover.</td></tr>
+  <tr><td>Post-sunset (18:00–20:00)</td><td class="spec-good">Good for nocturnal species</td><td>Rapid canopy cooling restores contrast. Best for nocturnal primates and reptiles.</td></tr>
+</table>
+
+<h2>Altitude and Sensor Footprint</h2>
+<table>
+  <tr><th>Altitude AGL</th><th>Footprint (Mavic 3T)</th><th>Pixel size (GSD)</th><th>Detection range</th></tr>
+  <tr><td>30 m</td><td>~18 × 13 m</td><td>~1.6 cm</td><td>Small mammals, large reptiles detectable</td></tr>
+  <tr><td>50 m</td><td>~30 × 22 m</td><td>~2.7 cm</td><td>Medium mammals reliably detectable</td></tr>
+  <tr><td>80 m</td><td>~48 × 35 m</td><td>~4.3 cm</td><td>Large mammals reliable. Small mammals borderline.</td></tr>
+  <tr><td>120 m</td><td>~73 × 53 m</td><td>~6.5 cm</td><td>Only large mammals (Indri, fosa) reliable</td></tr>
+</table>
+<p style="font-size:8.5pt;color:var(--muted);margin-top:1mm;">GSD = Ground Sampling Distance. Footprint values are approximate for Mavic 3T FLIR Boson 640 sensor. Altitude choice is a tradeoff between area coverage rate and detection probability for target species.</p>
+
+<h2>Canopy Cover and Detection Probability</h2>
+<p>Canopy cover is the single strongest predictor of detection probability in forested thermal surveys. The relationship is roughly linear: each 10% increase in canopy cover reduces detection probability by approximately 15–25%, depending on canopy structure and species size.</p>
+
+<div class="callout ch">
+  <div class="cl cl-h">The canopy cover correction — critical for ERIS scoring</div>
+  <p style="margin-bottom:2mm;">A detection rate of 5 animals per km² in open canopy (20% cover) is not comparable to a detection rate of 5 animals per km² in dense canopy (80% cover). The dense canopy site almost certainly has a higher true density — the lower detection rate reflects lower detectability, not lower abundance.</p>
+  <p style="margin-bottom:0;">ERIS thermal habitat quality scoring accounts for this by converting raw detection rates into corrected density estimates using canopy cover as a detection probability covariate. The detection data and the canopy cover estimate must both be recorded for this correction to be applied.</p>
+</div>
+
+<!-- S6 FLIGHT PLANNING FOR DATA QUALITY -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>Flight Planning for Data Quality</h1>
+<p>Flight parameters directly determine data quality. These decisions must be made before departure — not adjusted in the field without documentation.</p>
+
+<h2>Systematic vs. Targeted Survey Design</h2>
+<table>
+  <tr><th>Design</th><th>Description</th><th>Best for</th><th>Limitation</th></tr>
+  <tr><td><strong>Systematic transect grid</strong></td><td>Parallel flight lines at fixed spacing covering the study area</td><td>Abundance estimation, detection probability modelling, ERIS habitat quality scoring</td><td>Time-intensive. Large areas require multiple flights.</td></tr>
+  <tr><td><strong>Habitat-targeted transects</strong></td><td>Flight lines placed over specific habitat types (stream edges, fruiting trees, ridge lines)</td><td>Species-specific surveys. Maximises detection rate for known habitat associations.</td><td>Not suitable for unbiased abundance estimation. Requires prior habitat knowledge.</td></tr>
+  <tr><td><strong>Fixed-point hovering</strong></td><td>Aircraft hovers at fixed points for 2–3 minutes watching for animal movement</td><td>Group size estimation at known aggregation sites (e.g., known lemur home ranges)</td><td>Very small area coverage. Not scalable for biodiversity surveys.</td></tr>
+</table>
+
+<h2>Recommended Flight Parameters — Mavic 3T (ERIS standard)</h2>
+<div class="detection-card">
+  <div class="dc-header">
+    <div class="dc-title">Mavic 3T — Standard ERIS Survey Protocol</div>
+    <div class="dc-meta">Validated at Ihofa Forest, 2024–2025</div>
+  </div>
+  <div class="dc-body">
+    <div class="dc-row"><div class="dc-key">Altitude AGL</div><div>60–80 m (70 m recommended for mixed forest). Reduces to 40 m over open canopy areas for small mammal detection.</div></div>
+    <div class="dc-row"><div class="dc-key">Flight speed</div><div>3–4 m/s. At 4 m/s with 1-second trigger: ~4m between frames. At 3 m/s: ~3m between frames. Slower = more consecutive frames per detection = easier merging.</div></div>
+    <div class="dc-row"><div class="dc-key">Image trigger</div><div>Time-triggered: 1 image per second. Distance-triggered at 3m intervals is also acceptable but requires flight speed control.</div></div>
+    <div class="dc-row"><div class="dc-key">Transect spacing</div><div>For ≥80% coverage: transect spacing = 0.8 × sensor footprint width at survey altitude. At 70m altitude: footprint ~38m → spacing ~30m.</div></div>
+    <div class="dc-row"><div class="dc-key">Survey window</div><div>05:30–09:00 local time for diurnal species. 19:30–22:00 for nocturnal species. Document start and end time for every flight.</div></div>
+    <div class="dc-row"><div class="dc-key">Thermal palette</div><div>Ironbow for all detection review. Temperature range: manual setting 15°C–40°C for tropical morning surveys. Auto-range acceptable for habitat mapping only.</div></div>
+    <div class="dc-row"><div class="dc-key">Simultaneous capture</div><div>Enable RGB camera simultaneous capture where possible. RGB images provide canopy cover estimation and help resolve false positives.</div></div>
+    <div class="dc-row"><div class="dc-key">Pre-flight records</div><div>Record: ambient temperature (°C), wind speed estimate (m/s), cloud cover (%), battery charge (%), flight start time (UTC and local). These become effort covariables.</div></div>
+  </div>
+</div>
+
+<!-- S7 AI PROMPT PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>AI Prompt Pack — 12 Prompts</h1>
+
+<h2>Prompt 1 — Flight Metadata Extraction Plan</h2>
+<div class="prompt-box">
+I have [number] thermal image files from a drone survey using [camera model]. Help me design a batch metadata extraction workflow.
+
+Camera model: [e.g., DJI Mavic 3T / DJI XT2 / FLIR Vue Pro]
+File format: [RJPEG / TIFF / JPG]
+Operating system: [Windows / Mac / Linux]
+Available tools: [exiftool / Python / R / none yet]
+
+Generate:
+1. The exiftool command to extract GPS, timestamp, altitude, and camera settings from all files in a folder into a CSV
+2. The Python code equivalent using the Pillow or piexif library
+3. A list of which EXIF tags contain the GPS coordinates for this specific camera model
+4. Any known issues with metadata extraction for this camera model (e.g., DJI RJPEG proprietary encoding)
+5. How to verify the extracted GPS coordinates against the DJI flight log (the .DAT or .SRT file)
+</div>
+
+<h2>Prompt 2 — False Positive Classification Guidance</h2>
+<div class="prompt-box">
+I am reviewing thermal drone imagery from a survey over [habitat type] in [region]. I have flagged [number] candidate detections and need to systematically classify them as genuine wildlife signatures or false positives.
+
+Study context:
+- Target taxa: [species or groups]
+- Survey time: [time of day and ambient temperature]
+- Altitude: [metres AGL]
+- Habitat: [forest type and canopy cover estimate]
+- Platform: [drone model]
+
+For each of the following candidate signatures I am uncertain about, provide:
+1. The most likely explanation (genuine detection or specific false positive type)
+2. The diagnostic features I should look for to confirm
+3. The action to take: RETAIN as detection / REJECT as false positive / FLAG for second review
+
+Signatures to classify:
+[Describe each uncertain signature — shape, size, temperature relative to background, behaviour across frames, habitat context]
+</div>
+
+<h2>Prompt 3 — Consecutive-Frame Merge Script</h2>
+<div class="prompt-box">
+Generate a Python script to identify consecutive-frame detection groups from my thermal review log.
+
+Input: A CSV file with columns: frame_filename, frame_number, detection_flagged (TRUE/FALSE), GPS_lat, GPS_lon
+
+Logic:
+- Group consecutive flagged frames where the gap between frame numbers is ≤ [3] frames
+- For each group: calculate the GPS centroid of all frames in the group
+- For each group: identify the frame closest to the group GPS centroid as the "representative frame"
+- Assign a unique detection_id to each group
+- Output: one row per detection group with: detection_id, start_frame, end_frame, n_frames, centroid_lat, centroid_lon, representative_frame, GPS_uncertainty_m
+
+GPS uncertainty estimation: for Mavic 3T at [altitude]m altitude with [n] frames per detection, estimate positional uncertainty as [formula based on altitude and GPS accuracy].
+
+Output format: CSV with one row per merged detection.
+</div>
+
+<h2>Prompt 4 — Species Identification from Thermal Signature</h2>
+<div class="prompt-box">
+I am trying to classify a thermal detection from a drone survey in [region] at [altitude]m altitude. Help me narrow down the species identification.
+
+Detection characteristics:
+- Estimated body length (from pixel count × GSD): [cm]
+- Estimated body width: [cm]
+- Shape: [elongated / compact / irregular]
+- Behaviour across frames: [stationary / slow movement / fast movement / climbing / in canopy / on ground]
+- Location in frame: [canopy / edge / ground / branch / tree trunk]
+- Time of survey: [time and ambient temperature]
+- Number of individuals in same frame: [number]
+
+Known species for this habitat:
+[List likely species with approximate body sizes]
+
+Classify the detection as:
+1. Most likely species, with reasoning
+2. Alternative species to consider
+3. Recommended confidence level (HIGH / MEDIUM / LOW / UNIDENTIFIED)
+4. What additional data (audio, RGB image, movement pattern) would upgrade the confidence level
+</div>
+
+<h2>Prompt 5 — YOLO Training Data Preparation</h2>
+<div class="prompt-box">
+I want to train or fine-tune a YOLO wildlife detection model on my thermal drone imagery. Help me plan the training data preparation.
+
+My dataset:
+- Total thermal images: [number]
+- Validated detections (manual review): [number]
+- Target species: [list]
+- Image format: [RJPEG / TIFF / PNG]
+- Image dimensions: [pixels]
+- Platform used for annotation: [CVAT / LabelImg / Roboflow / none yet]
+
+Generate:
+1. Minimum training dataset requirements for the target species and detection frequency
+2. Recommended train/validation/test split for this dataset size
+3. Annotation format required for YOLO (YOLOv8 / v9) — bounding box format and class labels
+4. Data augmentation strategies specifically appropriate for thermal wildlife imagery
+5. Transfer learning recommendation: which base model to fine-tune from (FLIR dataset / COCO / custom)
+6. Evaluation metrics to use: mAP threshold, per-class recall, false positive rate target for wildlife detection
+</div>
+
+<h2>Prompt 6 — Detection Confidence Scoring Rules</h2>
+<div class="prompt-box">
+Help me write a species classification confidence scoring guide for thermal drone detections in my study area.
+
+Study area: [region and habitat type]
+Target species list: [list species with approximate body mass and thermal characteristics]
+Survey platform: [drone model and altitude]
+Survey time window: [time and ambient temperature range]
+
+For each species on my target list, define:
+1. The specific criteria that would justify HIGH confidence classification from thermal data alone
+2. The criteria for MEDIUM confidence (consistent with species but not diagnostic)
+3. What additional data (audio call, RGB image, behaviour) would upgrade from MEDIUM to HIGH
+4. The minimum body temperature differential from background that enables detection at survey altitude
+5. A simple decision tree: what to look for first, second, third when classifying a detection as this species
+
+Format: a reference card I can print and use during image review sessions.
+</div>
+
+<h2>Prompt 7 — Habitat Quality Thermal Map Interpretation</h2>
+<div class="prompt-box">
+I want to extract habitat quality metrics from the thermal imagery of my survey area (not just detections — the thermal profile of the habitat itself).
+
+Survey context:
+- Study area size: [hectares]
+- Survey time: [time and season]
+- Platform: [drone model and altitude]
+- Target habitat metrics: [canopy cover / thermal heterogeneity / heat island detection / water feature mapping / etc.]
+
+For the thermal mosaic of my survey area, help me:
+1. Define canopy cover estimation from thermal imagery (proportion of frame below a threshold temperature)
+2. Define a thermal heterogeneity index (variance in pixel temperature across the mosaic)
+3. Identify water features (streams, wetlands) from thermal signatures
+4. Identify edge habitats where thermal contrast is highest (and detection probability is highest)
+5. Generate a scoring rubric for "thermal habitat quality" that could contribute to an ERIS biodiversity score
+
+Provide Python code using OpenCV or rasterio to calculate each metric from a thermal GeoTIFF.
+</div>
+
+<h2>Prompt 8 — ERIS Detection Record Schema Converter</h2>
+<div class="prompt-box">
+I have a thermal wildlife detection dataset from my drone survey. Convert it to the ERIS detection record schema.
+
+My current dataset columns:
+[List your current column names and types]
+
+ERIS target schema (from the OPLURIX Biodiversity Data Harmonizer):
+- record_id, survey_method (THERMAL_DRONE), detection_date, detection_time, site_code, station_id, latitude, longitude, species_code, species_latin, count, detection_type (COUNT), confidence, thermal_signature_id, source_frames, flight_id, altitude_m, ambient_temp_c, canopy_cover_pct, gps_accuracy_m, sensitivity_flag
+
+Generate:
+1. A column mapping table: my column → ERIS column
+2. Any ERIS columns that are missing from my dataset and how to derive or estimate them
+3. Python code to perform the conversion
+4. Validation checks to run on the converted dataset before ERIS submission
+</div>
+
+<h2>Prompt 9 — Inter-Observer Calibration Protocol</h2>
+<div class="prompt-box">
+I need to calibrate two or more reviewers who will be reviewing thermal imagery independently. Design an inter-observer calibration protocol.
+
+Context:
+- Number of reviewers: [number]
+- Reviewer experience: [expert / intermediate / novice]
+- Target species: [list]
+- Estimated total images to review: [number]
+- Time available for calibration: [hours]
+
+Generate:
+1. A calibration image set size recommendation (number of images for training review)
+2. A standardised review protocol that all reviewers will follow
+3. A method for calculating inter-observer agreement (Cohen's kappa or simpler percentage agreement)
+4. A threshold for acceptable agreement before full dataset review begins
+5. A procedure for resolving disagreements on disputed detections
+6. A form for tracking reviewer performance across the review session
+</div>
+
+<h2>Prompt 10 — EXIF Batch Extraction Script</h2>
+<div class="prompt-box">
+Generate a Python script to batch-extract GPS and flight metadata from DJI thermal image files.
+
+Input: A folder of DJI [Mavic 3T / XT2 / H30T] thermal image files in [RJPEG / TIFF / JPG] format.
+
+Extract for each file:
+- Filename
+- GPS latitude (decimal degrees, WGS84)
+- GPS longitude (decimal degrees, WGS84)
+- GPS altitude (metres above sea level, from EXIF)
+- Relative altitude AGL (from DJI EXIF if available)
+- Image timestamp (UTC)
+- Camera model
+- Any DJI-specific flight telemetry fields available in the EXIF
+
+Output: A CSV file with one row per image.
+
+Requirements:
+- Use exiftool via subprocess (most reliable for DJI RJPEG files) OR use the exifread Python library
+- Handle missing EXIF fields gracefully (output NA rather than crashing)
+- Flag any images where GPS coordinates are (0,0) or clearly invalid
+- Include a summary: total images processed, images with valid GPS, images with missing GPS
+</div>
+
+<h2>Prompt 11 — Thermal Mosaicking and Georeferencing Guide</h2>
+<div class="prompt-box">
+I need to create a georeferenced thermal mosaic from my drone survey images for habitat quality mapping.
+
+Survey details:
+- Platform: [drone model]
+- Total images: [number]
+- Overlap: [forward overlap %] × [side overlap %]
+- GPS accuracy: [estimate in metres]
+- GCP (Ground Control Points) available: [yes/no]
+- Software available: [Agisoft Metashape / WebODM / Pix4D / none]
+
+Generate:
+1. Recommended software and settings for processing thermal drone imagery into an orthomosaic
+2. Key differences between processing thermal and RGB imagery (important — settings differ significantly)
+3. Whether GCPs are necessary at this GPS accuracy level for the intended analysis
+4. Output format recommendations for raster analysis in QGIS or Python (GeoTIFF with temperature values preserved)
+5. Validation checks to verify the mosaic quality before using it for analysis
+</div>
+
+<h2>Prompt 12 — Detection Report Generator</h2>
+<div class="prompt-box">
+Generate a flight-level detection summary report for my thermal survey.
+
+Flight details:
+- Flight ID: [ID]
+- Date and time: [datetime]
+- Site: [site name]
+- Area covered: [hectares]
+- Survey duration: [minutes]
+- Altitude: [metres]
+- Ambient temperature: [°C]
+- Canopy cover estimate: [%]
+
+Detection results:
+- Total images reviewed: [number]
+- Images with candidate detections: [number]
+- False positives removed: [number] (breakdown by type if available)
+- Validated detections: [number]
+- Unique individuals (after consecutive-frame merging): [number]
+- By species/confidence level: [list]
+
+Generate:
+1. A one-page flight report suitable for the mission debrief
+2. A raw detection rate and effort-corrected detection rate (detections per km² surveyed)
+3. Notes on detection conditions (good / fair / poor) based on time and temperature
+4. Flags for any methodological issues encountered (equipment problems, flight deviations, weather)
+5. Recommended follow-up surveys if detection rate was below expected
+</div>
+
+<!-- S8 SPECIES DETECTION GUIDE MADAGASCAR -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>Species Detection Guide — Madagascar Thermal Surveys</h1>
+<p>Thermal signature characteristics and detection criteria for the most commonly encountered species in Madagascar forest thermal drone surveys. Based on fieldwork at Ihofa, Kirindy, and Beza Mahafaly. All size estimates are at 70m altitude using Mavic 3T FLIR Boson sensor (GSD ~4 cm/pixel).</p>
+
+<h2>Primates</h2>
+<table>
+  <tr><th>Species</th><th>Body mass</th><th>Pixel size at 70m</th><th>Thermal signature</th><th>Detection criteria</th><th>Confidence achievable</th></tr>
+  <tr><td><em>Indri indri</em></td><td>6–9 kg</td><td>~15×10 px</td><td>Bright, compact, bilobed (head + body). One of the most detectable species. Often calling — audio confirmation easy.</td><td>Size + shape + habitat (upper canopy). Audio confirmation raises to HIGH.</td><td>HIGH with audio; MEDIUM thermal only</td></tr>
+  <tr><td><em>Propithecus</em> spp.</td><td>3–6 kg</td><td>~12×8 px</td><td>Similar to Indri but smaller and more elongated during clinging posture. Vertical tree trunks.</td><td>Size + vertical position. Species-level ID requires size comparison against Indri if both present.</td><td>MEDIUM (genus level often more honest)</td></tr>
+  <tr><td><em>Hapalemur</em> spp.</td><td>0.7–2.5 kg</td><td>~6×4 px</td><td>Small, compact, near bamboo or grass edge. Easily confused with birds at 70m altitude.</td><td>Detection difficult at 70m. Reduce to 40m for reliable detection. Bamboo habitat context helps.</td><td>LOW at 70m; MEDIUM at 40m</td></tr>
+  <tr><td><em>Lemur catta</em></td><td>2–3 kg</td><td>~8×6 px</td><td>Compact, often in groups. Ground-foraging detectable in open areas. Long tail sometimes visible as trailing warm streak.</td><td>Group behaviour + semi-open habitat + correct size range.</td><td>MEDIUM–HIGH in open habitat</td></tr>
+  <tr><td><em>Eulemur</em> spp.</td><td>2–3.5 kg</td><td>~9×6 px</td><td>Medium, often in pairs or small groups. Mid-canopy to upper canopy. Active at dawn.</td><td>Size + group size + time of detection. Species-level requires additional evidence.</td><td>LOW–MEDIUM (genus level)</td></tr>
+  <tr><td><em>Microcebus</em> spp.</td><td>40–80 g</td><td>~2×2 px</td><td>Near limit of detection at 70m. 1–2 pixel warm dots. Not reliably detectable above 40m altitude.</td><td>Only detect below 40m AGL. Cannot distinguish from large insects at altitude.</td><td>UNIDENTIFIED above 40m</td></tr>
+</table>
+
+<h2>Carnivores</h2>
+<table>
+  <tr><th>Species</th><th>Body mass</th><th>Thermal signature</th><th>Detection notes</th></tr>
+  <tr><td><em>Cryptoprocta ferox</em> (fosa)</td><td>5–10 kg</td><td>Large, elongated, single bright signature. Most often ground-level or low branches at dawn/dusk. Moves steadily along trails.</td><td>Most detectable carnivore in thermal surveys. Track or road following behaviour makes detection easier. HIGH confidence achievable if size + habitat + behaviour consistent.</td></tr>
+  <tr><td><em>Fossa fossana</em></td><td>1.5–2 kg</td><td>Small elongated signature. Ground level. Nocturnal.</td><td>Detectable at 40–50m. Easily confused with small lemurs at 70m. LOW confidence at high altitude.</td></tr>
+</table>
+
+<h2>Common False Positives at This Study Site</h2>
+<table>
+  <tr><th>Source</th><th>Thermal appearance</th><th>Distinguishing feature</th></tr>
+  <tr><td>Termite mounds (Macrotermes)</td><td>Very bright, circular, much hotter than background</td><td>Temperature clipping in Ironbow palette (solid white centre). Stationary across days. Common in dry forest.</td></tr>
+  <tr><td>Exposed rock outcrops</td><td>Warm, irregular shape, large area</td><td>Matches topography visible in RGB. No movement. Consistent across reflights.</td></tr>
+  <tr><td>Large birds (raptors, ground birds)</td><td>Small compact signature with rapid movement</td><td>Movement speed too fast for a mammal. Often airborne — appears in one frame only. No consistent flight path correlation with transect direction.</td></tr>
+  <tr><td>Chameleons (on exposed branch)</td><td>Very small, elongated, on branch surface</td><td>Extremely slow movement or stationary. Ectotherm — temperature tracks ambient closely, reducing contrast by midday. Good contrast at dawn if recently emerged from cool roost.</td></tr>
+</table>
+
+<!-- S9 CODE TEMPLATES -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Code Templates</h1>
+
+<h2>Python — EXIF Batch Extraction from DJI Thermal Files</h2>
+<div class="code-block">
+<div class="code-label">Python · exiftool subprocess · DJI thermal EXIF extraction</div>
+<span class="code-keyword">import</span> subprocess, csv, os, json
+
+<span class="code-keyword">def</span> extract_thermal_exif(folder_path: str, output_csv: str) -> None:
+    <span class="code-comment">"""Extract GPS and flight metadata from all thermal files in folder."""</span>
+    cmd = [
+        <span class="code-string">'exiftool'</span>, <span class="code-string">'-r'</span>, <span class="code-string">'-json'</span>,
+        <span class="code-string">'-GPSLatitude#'</span>, <span class="code-string">'-GPSLongitude#'</span>, <span class="code-string">'-GPSAltitude#'</span>,
+        <span class="code-string">'-DateTimeOriginal'</span>, <span class="code-string">'-RelativeAltitude'</span>,
+        <span class="code-string">'-Model'</span>, <span class="code-string">'-FileName'</span>,
+        folder_path
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    records = json.loads(result.stdout)
+
+    fields = [<span class="code-string">'FileName'</span>,<span class="code-string">'DateTimeOriginal'</span>,<span class="code-string">'GPSLatitude'</span>,
+              <span class="code-string">'GPSLongitude'</span>,<span class="code-string">'GPSAltitude'</span>,<span class="code-string">'RelativeAltitude'</span>,<span class="code-string">'Model'</span>]
+    <span class="code-keyword">with</span> open(output_csv, <span class="code-string">'w'</span>, newline=<span class="code-string">''</span>) as f:
+        writer = csv.DictWriter(f, fieldnames=fields + [<span class="code-string">'gps_flag'</span>])
+        writer.writeheader()
+        <span class="code-keyword">for</span> r <span class="code-keyword">in</span> records:
+            lat = r.get(<span class="code-string">'GPSLatitude'</span>)
+            lon = r.get(<span class="code-string">'GPSLongitude'</span>)
+            flag = <span class="code-string">'VALID'</span>
+            <span class="code-keyword">if</span> lat <span class="code-keyword">is</span> None <span class="code-keyword">or</span> lon <span class="code_keyword">is</span> None: flag = <span class="code-string">'MISSING_GPS'</span>
+            <span class="code-keyword">elif</span> abs(lat) < 0.001 <span class="code-keyword">and</span> abs(lon) < 0.001: flag = <span class="code-string">'NULL_ISLAND'</span>
+            row = {k: r.get(k, <span class="code-string">'NA'</span>) <span class="code-keyword">for</span> k <span class="code-keyword">in</span> fields}
+            row[<span class="code-string">'gps_flag'</span>] = flag
+            writer.writerow(row)
+    print(f<span class="code-string">"Extracted {len(records)} records → {output_csv}"</span>)
+</div>
+
+<h2>Python — Consecutive-Frame Detection Merger</h2>
+<div class="code-block">
+<div class="code-label">Python · pandas · merge consecutive flagged frames into single detections</div>
+<span class="code-keyword">import</span> pandas as pd
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-keyword">def</span> merge_detections(df: pd.DataFrame, max_gap: int = <span class="code-num">3</span>) -> pd.DataFrame:
+    <span class="code-comment">"""Group consecutive flagged frames into single detection records."""</span>
+    flagged = df[df[<span class="code-string">'detection_flagged'</span>]].sort_values(<span class="code-string">'frame_number'</span>).copy()
+    flagged[<span class="code-string">'group'</span>] = (flagged[<span class="code-string">'frame_number'</span>].diff() > max_gap).cumsum()
+
+    groups = []
+    <span class="code-keyword">for</span> gid, grp <span class="code-keyword">in</span> flagged.groupby(<span class="code-string">'group'</span>):
+        best_idx = ((grp[<span class="code-string">'GPS_lat'</span>] - grp[<span class="code-string">'GPS_lat'</span>].mean())**<span class="code-num">2</span> +
+                    (grp[<span class="code-string">'GPS_lon'</span>] - grp[<span class="code-string">'GPS_lon'</span>].mean())**<span class="code-num">2</span>).idxmin()
+        groups.append({
+            <span class="code-string">'detection_id'</span>: f<span class="code-string">"DET_{gid:04d}"</span>,
+            <span class="code-string">'start_frame'</span>:  grp[<span class="code-string">'frame_number'</span>].min(),
+            <span class="code-string">'end_frame'</span>:    grp[<span class="code-string">'frame_number'</span>].max(),
+            <span class="code-string">'n_frames'</span>:     len(grp),
+            <span class="code-string">'latitude'</span>:     round(grp.loc[best_idx, <span class="code-string">'GPS_lat'</span>], <span class="code-num">5</span>),
+            <span class="code-string">'longitude'</span>:    round(grp.loc[best_idx, <span class="code-string">'GPS_lon'</span>], <span class="code-num">5</span>),
+            <span class="code-string">'source_frames'</span>: <span class="code-string">';'</span>.join(grp[<span class="code-string">'frame_filename'</span>].tolist())
+        })
+    <span class="code-keyword">return</span> pd.DataFrame(groups)
+</div>
+
+<h2>R — Canopy Cover Estimation from Thermal Orthomosaic</h2>
+<div class="code-block">
+<div class="code-label">R · terra · canopy cover from thermal temperature raster</div>
+<span class="code-keyword">library</span>(terra)
+
+<span class="code-comment"># Load thermal orthomosaic (temperature values in Kelvin or Celsius)</span>
+thermal <- rast(<span class="code-string">"IHOFA_20260315_thermal_ortho.tif"</span>)
+
+<span class="code-comment"># Canopy surface temperature threshold:
+# Below this = canopy (shaded/cool leaves)
+# Above this = gap / ground / animal
+# Calibrate from your specific survey conditions</span>
+ambient_temp_c <- <span class="code-num">22</span>  <span class="code-comment"># measured before flight</span>
+canopy_threshold <- ambient_temp_c + <span class="code-num">2</span>  <span class="code-comment"># 2°C above ambient = canopy surface</span>
+
+<span class="code-comment"># Binary canopy mask: 1 = canopy, 0 = gap or warm surface</span>
+canopy_mask <- ifel(thermal <= canopy_threshold, <span class="code-num">1</span>, <span class="code-num">0</span>)
+
+<span class="code-comment"># Canopy cover per 100m grid cell</span>
+grid_100m <- aggregate(canopy_mask, fact = <span class="code-num">100</span>, fun = <span class="code-string">"mean"</span>)
+names(grid_100m) <- <span class="code-string">"canopy_cover_pct"</span>
+grid_100m[<span class="code-string">"canopy_cover_pct"</span>] <- grid_100m[<span class="code-string">"canopy_cover_pct"</span>] * <span class="code-num">100</span>
+
+writeRaster(grid_100m, <span class="code-string">"canopy_cover_100m.tif"</span>, overwrite = TRUE)
+</div>
+
+<!-- S10 DETECTION RECORD SCHEMA -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Thermal Detection Record Schema</h1>
+<p>The complete output schema for a thermal wildlife detection dataset. This schema is compatible with the OPLURIX Biodiversity Data Harmonizer (Product 7) and the ERIS biodiversity scoring input format.</p>
+
+<div class="template-box">
+THERMAL DETECTION RECORD — MASTER SCHEMA v1.0
+Compatible with: OPLURIX Data Harmonizer · ERIS Scoring Input · Darwin Core
+
+PROVENANCE COLUMNS (required in all records)
+record_id          TEXT     Unique. Format: [SITE]_[DATE]_[FLIGHT]_[DET_NUM]
+survey_method      CODE     THERMAL_DRONE (always for this schema)
+source_file_id     TEXT     Flight folder ID from dataset inventory
+flight_id          TEXT     Unique flight identifier
+merge_date         DATE     Date this record entered the dataset
+
+DETECTION COLUMNS
+detection_date     DATE     YYYY-MM-DD
+detection_time     TIME     HH:MM (local time)
+site_code          CODE     From Site Registry
+station_id         TEXT     Transect pass ID (e.g., T01_PASS2)
+latitude           LAT      Decimal degrees WGS84, 5 d.p.
+longitude          LON      Decimal degrees WGS84, 5 d.p.
+gps_accuracy_m     FLOAT    Estimated GPS accuracy in metres
+coord_original     TEXT     Raw GPS from EXIF (preserve original)
+spatial_flag       FLAG     VALID / SPATIAL_OUTLIER / LOW_PRECISION / MISSING
+
+SPECIES COLUMNS
+species_code       CODE     From Species Registry. WARM_SIG_MAMMAL if unidentified.
+species_latin      TEXT     Full binomial or "cf." or family
+species_raw        TEXT     Reviewer's original annotation
+confidence         FLAG     HIGH / MEDIUM / LOW / UNIDENTIFIED
+classification_basis TEXT   THERMAL_SIZE / THERMAL_BEHAVIOUR / AUDIO / RGB / YOLO_MODEL
+
+DETECTION METADATA
+count              INT      Number of individuals (after consecutive-frame merging)
+source_frames      TEXT     Semicolon-separated list of source image filenames
+n_source_frames    INT      Number of frames this detection spans
+detection_type     CODE     COUNT (always for thermal detections)
+false_positive_check FLAG   VERIFIED / FP_REMOVED (for records removed from main dataset)
+
+EFFORT COVARIABLES (required for detection probability modelling)
+altitude_m         FLOAT    Flight altitude above ground level in metres
+ambient_temp_c     FLOAT    Ambient temperature at survey time in °C
+canopy_cover_pct   FLOAT    Estimated canopy cover at detection location (0-100)
+wind_speed_ms      FLOAT    Wind speed in m/s (estimate acceptable)
+survey_start_time  TIME     HH:MM UTC
+thermal_palette    CODE     IRONBOW / RAINBOW / GRAYSCALE / AUTO
+
+SENSITIVITY
+sensitivity_flag   FLAG     PUBLIC / RESTRICTED / OFFSET_APPLIED
+
+QUALITY
+reviewer_code      CODE     Observer code of image reviewer
+review_date        DATE     Date of image review
+qc_pass            BOOL     TRUE if passed three-check QC framework
+notes              TEXT     Free text for any record-level issues
+</div>
+
+<!-- S11 ERIS INTEGRATION -->
+<div class="section-label" style="margin-top:6mm;">Section 11</div>
+<h1>ERIS Integration — Thermal Habitat Quality Scoring</h1>
+<p>How thermal drone data contributes to the ERIS ecological integrity score. The thermal survey produces two ERIS indicator inputs: detection-based species richness data and thermal habitat quality metrics.</p>
+
+<h2>ERIS Indicator 3 — Thermal Habitat Quality</h2>
+<p>This indicator characterises the thermal structure of the survey area — the distribution of microhabitat temperatures, canopy cover, and thermal heterogeneity that determine habitat suitability for target species.</p>
+
+<div class="dark-box">
+  <div class="dark-label">ERIS Thermal Habitat Quality — four sub-metrics</div>
+  <p><strong>3a. Canopy cover index:</strong> Mean canopy cover across the survey area from the thermal orthomosaic (%). Higher closed-canopy cover = higher forest integrity score for forest-dependent species.</p>
+  <p><strong>3b. Thermal heterogeneity index:</strong> Variance in canopy surface temperature across the survey area. High heterogeneity = greater microhabitat diversity = higher habitat quality for thermally sensitive species (amphibians, reptiles).</p>
+  <p><strong>3c. Thermal edge density:</strong> Linear metres of thermal contrast edge (forest-to-gap boundaries) per hectare. High edge density can indicate fragmentation or degradation.</p>
+  <p><strong>3d. Detection-corrected wildlife density:</strong> Detections per km² of thermal survey area, corrected for canopy cover using the detection probability model. This connects the thermal detection data to the ERIS species richness indicator.</p>
+</div>
+
+<h2>From Thermal Data to ERIS Score — the Calculation Path</h2>
+<ol>
+  <li><strong>Complete the 7-step processing pipeline</strong> → validated detection dataset + flight effort table</li>
+  <li><strong>Generate the thermal orthomosaic</strong> (if multiple overlapping passes) or use individual images for single-pass surveys → thermal habitat raster</li>
+  <li><strong>Calculate canopy cover, thermal heterogeneity, and edge density</strong> from the raster using the R code template (Section 9)</li>
+  <li><strong>Calculate detection-corrected wildlife density</strong> using canopy cover as a detection probability covariate (distance sampling or N-mixture model)</li>
+  <li><strong>Input all four sub-metrics into the ERIS scoring framework</strong> using the Data Harmonizer output schema</li>
+</ol>
+
+<!-- QC FRAMEWORK -->
+<div class="section-label" style="margin-top:6mm;">Section 12</div>
+<h1>Three-Check Quality Framework</h1>
+
+<h2>Check 1 — False Positive Rate Audit</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">What percentage of initial detections were removed as false positives? A rate above 40% indicates systematic problems with survey conditions or review protocol.</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: False positive rate documented and below 40%. Each false positive category is logged.</p>
+</div>
+
+<h2>Check 2 — Inter-Observer Agreement</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">If two reviewers independently reviewed the same image subset, how closely do their detections agree? Below 70% agreement indicates that the review protocol needs clarification before full dataset review.</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: ≥70% agreement on detection presence/absence. ≥60% agreement on species confidence classification.</p>
+</div>
+
+<h2>Check 3 — GPS Validity and Coverage</h2>
+<div class="callout ct">
+  <div class="cl cl-t">What it tests</div>
+  <p style="margin-bottom:2mm;">Are all detection GPS coordinates within the study area? Does the spatial distribution of detections match the flight path? (Detections that cluster far from the flight path indicate GPS error.)</p>
+  <p style="margin-bottom:0;font-family:monospace;font-size:8.5pt;color:var(--teal);">Pass criteria: ≥95% of detections within study area bounding box. Detection spatial distribution consistent with flight path within GPS accuracy estimate.</p>
+</div>
+
+<!-- QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 13</div>
+<h1>Quick Start — Process Your First Flight</h1>
+
+<h2>Before You Begin</h2>
+<ul class="checklist">
+  <li>Confirm all thermal image files are copied from the memory card to working storage. Do not process from the card.</li>
+  <li>Record the flight metadata: site, date, time, altitude, ambient temperature, canopy cover estimate, pilot.</li>
+  <li>Install <code>exiftool</code> (command-line) and Python with <code>pandas</code>, <code>pillow</code>.</li>
+</ul>
+
+<h2>Hours 1–2 — File Organisation and Extraction</h2>
+<ul class="checklist">
+  <li>Create a flight folder with the correct naming convention.</li>
+  <li>Run the EXIF extraction script (Section 9, Prompt 10). Verify GPS coordinates for a sample of images on a map.</li>
+  <li>Set all images to Ironbow palette with consistent temperature range. Note the range used.</li>
+</ul>
+
+<h2>Hours 3–4 — Detection Review and False Positive Removal</h2>
+<ul class="checklist">
+  <li>Fast-scroll through all images at 4–6 fps. Flag images with candidate detections.</li>
+  <li>For each flagged image: apply the false positive decision framework (Section 5). Log every removal.</li>
+  <li>Record: total images, images flagged, false positives removed, false positive rate.</li>
+</ul>
+
+<h2>Hour 5 — Consecutive-Frame Merging and Classification</h2>
+<ul class="checklist">
+  <li>Run the consecutive-frame merge script (Section 9) on the validated flagged list.</li>
+  <li>For each merged detection: classify species and assign confidence level using Species Detection Guide (Section 8).</li>
+  <li>Populate all required columns of the detection record schema (Section 10).</li>
+</ul>
+
+<h2>Hour 6 — Validation and Documentation</h2>
+<ul class="checklist">
+  <li>Run the three-check QC framework (Section 12). Document results.</li>
+  <li>Use Prompt 12 to generate the flight detection report.</li>
+  <li>Run the ERIS schema converter (Prompt 8) if submitting to ERIS.</li>
+  <li>Back up the processed dataset to two locations.</li>
+</ul>
+
+<!-- MVP vs PREMIUM -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>7-step processing pipeline</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Thermal image interpretation guide</td><td>✓</td><td>✓ + visual examples</td></tr>
+  <tr><td>Flight planning for data quality</td><td>✓</td><td>✓</td></tr>
+  <tr><td>12 AI prompts</td><td>✓</td><td>✓ 20 prompts</td></tr>
+  <tr><td>Species detection guide (Madagascar)</td><td>✓</td><td>✓ + East/West Africa</td></tr>
+  <tr><td>Python/R code templates (5)</td><td>✓</td><td>✓ 12 templates</td></tr>
+  <tr><td>Detection record schema</td><td>✓</td><td>✓ ERIS v2 compatible</td></tr>
+  <tr><td>ERIS thermal habitat scoring guide</td><td>✓</td><td>✓ + scoring calculator</td></tr>
+  <tr><td>Three-check QC framework</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Pre-trained YOLO model (Madagascar lemurs)</td><td>—</td><td>Planned (requires dataset)</td></tr>
+  <tr><td>Automated false positive classifier</td><td>—</td><td>Planned</td></tr>
+  <tr><td>DJI Matrice 350 RTK + H30T specific guide</td><td>—</td><td>Planned (grant-dependent)</td></tr>
+  <tr><td>French version</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:30mm 0;">
+  <div style="font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8mm;">OPLURIX</div>
+  <div style="font-size:22pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    A thermal image is not a detection.<br>A processed, validated, documented<br><em>thermal detection record is.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:120mm;margin:0 auto 12mm;line-height:1.7;">
+    The gap between raw thermal footage and publishable biodiversity data is a workflow problem, not a technology problem. This guide closes that gap — and in doing so, connects every thermal survey you run to the ERIS ecological integrity infrastructure that will make conservation finance accessible to the forests you work in.
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-size:8pt;color:var(--faint);line-height:2;">
+    Thermal Data Translator v1.0<br>
+    An OPLURIX Product · 2026<br>
+    Proof of concept: IPS Congress 2025 — Thermal Drone Lemur Surveys<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div>
+</body>
+</html>

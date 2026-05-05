@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-03",
+  "generated_at": "2026-05-04",
   "brand": {
     "name": "OPLURIX",
     "tagline": "Ecological Intelligence for Conservation Finance",
@@ -51,8 +51,9 @@
         "more consistent visibility for real expertise"
       ],
       "source_documents": [
-        "documents/oplurix-site/OPLURIX_Master_Context_Brief.md",
-        "documents/oplurix-site/ExpertToInfluencer.txt"
+        "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
+        "documents/oplurix-site/ExpertToInfluencer.txt",
+        "documents/oplurix-site/OPLURIX_Product1_Expert_to_Influencer_Content_Engine.pdf"
       ],
       "delivery_assets": [
         "PDF or document bundle",
@@ -73,6 +74,7 @@
           "legacy_package_name": "EcoR_Toolkit_Tier_1_Starter_19USD",
           "public_label": "EcoR Toolkit Starter",
           "status": "live",
+          "checkout_enabled": true,
           "role": "entry",
           "price_usd": 29,
           "headline": "The core R and AI workflow for biodiversity data.",
@@ -84,6 +86,7 @@
           "legacy_package_name": "EcoR_Toolkit_Tier_2_Complete_Toolkit_39USD",
           "public_label": "EcoR Toolkit Complete",
           "status": "live",
+          "checkout_enabled": true,
           "role": "target",
           "price_usd": 97,
           "headline": "The full workflow from field notes to cleaner tables, figures, and Results-ready drafts.",
@@ -126,6 +129,7 @@
       "future_pricing_strategy_note": "Future price increases should be tied to added proof, new assets, or stronger support rather than arbitrary repositioning.",
       "first_sale_delivery_rule": "Verify payment in PayPal first, then send the Google Drive delivery link manually by email and log the fulfillment event.",
       "source_documents": [
+        "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
         "documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md",
         "documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md"
       ],
@@ -135,8 +139,7 @@
         "template files",
         "workflow guide"
       ]
-    }
-  ],
+    },
     {
       "id": "training_to_quiz_generator",
       "status": "coming_soon",
@@ -166,6 +169,7 @@
         "more consistent competency assessment across training cohorts"
       ],
       "source_documents": [
+        "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
         "documents/oplurix-site/OPLURIX_Product2_Training_to_Quiz_Generator.pdf"
       ],
       "delivery_assets": [
@@ -204,6 +208,7 @@
         "more fundable presentation of field and research results"
       ],
       "source_documents": [
+        "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
         "documents/oplurix-site/OPLURIX_Product4_Biodiversity_Pitch_Deck_Builder.pdf"
       ],
       "delivery_assets": [

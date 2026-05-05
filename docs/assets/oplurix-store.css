@@ -706,6 +706,156 @@ a {
   color: rgba(255, 255, 255, 0.72);
 }
 
+.page-backlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.page-backlink:hover {
+  color: #fff;
+}
+
+.page-hero-copy {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--gold);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.status-chip.is-live {
+  background: rgba(35, 122, 67, 0.22);
+  color: #c9f0d6;
+}
+
+.status-chip.is-waitlist {
+  background: rgba(232, 184, 75, 0.14);
+  color: #f7dfab;
+}
+
+.status-chip.is-internal {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.hero-price {
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.meta-grid,
+.catalog-grid,
+.deliverable-grid,
+.source-grid,
+.next-step-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.meta-grid,
+.deliverable-grid,
+.source-grid,
+.next-step-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.catalog-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.meta-card,
+.deliverable-card,
+.source-card,
+.catalog-card,
+.callout-card {
+  border-radius: 24px;
+  background: rgba(251, 248, 242, 0.9);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.meta-card h3,
+.deliverable-card h3,
+.source-card h3,
+.catalog-card h3,
+.callout-card h3 {
+  margin: 0 0 10px;
+  color: var(--forest);
+  font-family: "Playfair Display", serif;
+  font-size: 1.2rem;
+}
+
+.meta-card p,
+.deliverable-card p,
+.source-card p,
+.catalog-card p,
+.callout-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.meta-list,
+.source-list,
+.deliverable-list,
+.catalog-list {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.meta-list li + li,
+.source-list li + li,
+.deliverable-list li + li,
+.catalog-list li + li {
+  margin-top: 8px;
+}
+
+.inline-note {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(232, 184, 75, 0.12);
+  border: 1px solid rgba(196, 136, 40, 0.16);
+  color: #8b5c15;
+}
+
+.catalog-card .product-status {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.catalog-card .product-price {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.catalog-card .product-actions {
+  margin-top: 18px;
+}
+
+.catalog-card .button,
+.callout-card .button {
+  width: 100%;
+}
+
 @media (max-width: 920px) {
   .topbar,
   .support-banner {

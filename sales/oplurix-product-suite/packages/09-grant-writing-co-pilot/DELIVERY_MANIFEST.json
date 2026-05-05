@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_09_grant_writing_co_pilot",
+  "public_name": "Grant Writing Co-Pilot",
+  "suite_number": 9,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only",
+  "launch_decision": "defer_until_proof",
+  "activation_priority": 8,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "pdf_plus_templates",
+  "price": "$199",
+  "activation_gate": "Show stronger proof and define support boundaries before public sale.",
+  "source_artifacts": [
+    "documents/oplurix-site/product9.html"
+  ],
+  "sellable_page": "docs/products/09-grant-writing-co-pilot.html"
+}

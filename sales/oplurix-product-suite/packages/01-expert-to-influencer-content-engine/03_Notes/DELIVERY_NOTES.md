@@ -1,0 +1,10 @@
+﻿# Delivery Notes
+
+- Recommended client format: $( @{id=oplurix_01_expert_to_influencer_content_engine; suite_number=1; public_name=Expert-to-Influencer Content Engine; status=live; price_usd=39; primary_audience=System.Object[]; core_promise=Turn real field notes, research, and conservation work into credible, specific professional content.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=live; checkout_enabled=True; recommended_client_format=hybrid; format_reason=HTML is best for browsing and checkout; PDF or ZIP is best for a bounded delivered bundle.; agent_uses=System.Object[]}.recommended_client_format )
+- Format reason: HTML is best for browsing and checkout; PDF or ZIP is best for a bounded delivered bundle.
+- Public state: $( @{id=oplurix_01_expert_to_influencer_content_engine; suite_number=1; public_name=Expert-to-Influencer Content Engine; status=live; price_usd=39; primary_audience=System.Object[]; core_promise=Turn real field notes, research, and conservation work into credible, specific professional content.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=live; checkout_enabled=True; recommended_client_format=hybrid; format_reason=HTML is best for browsing and checkout; PDF or ZIP is best for a bounded delivered bundle.; agent_uses=System.Object[]}.status )
+- Recommended public state: $( @{product_id=oplurix_01_expert_to_influencer_content_engine; public_name=Expert-to-Influencer Content Engine; current_state=live; recommended_public_state=live; launch_decision=keep_live; activation_priority=0; minimum_activation_gate=Keep the current manual delivery and buyer feedback loop clean.; main_blocker=; recommended_client_format=hybrid; agent_rule=Can be sold and discussed openly as a live product.}.recommended_public_state )
+- Main blocker: none
+
+If this product moves to checkout later, keep the sellable surface in HTML and
+the delivered bundle in a bounded package.

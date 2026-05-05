@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0F4C4C;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Gear & Equipment Concierge  ·  OPLURIX  ·  " counter(page);
+    font-family: 'IBM Plex Mono', monospace; font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: var(--forest); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; }
+.cover-brand { font-family:'IBM Plex Mono',monospace; font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:32mm; }
+.cover-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-family:'Lora',Georgia,serif; font-size:30pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-family:'IBM Plex Sans',Arial,sans-serif; font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-family:'IBM Plex Mono',monospace; font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-family:'IBM Plex Mono',monospace; font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-author { font-family:'IBM Plex Mono',monospace; font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-family:'IBM Plex Mono',monospace; font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+.content-pages { page: content; }
+
+h1 { font-family:'Lora',Georgia,serif; font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-family:'Lora',Georgia,serif; font-size:13pt; font-weight:700; color:var(--forest2); letter-spacing:-0.01em; margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-family:'IBM Plex Sans',Arial,sans-serif; font-size:10pt; font-weight:500; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:500; color:var(--forest); }
+em { font-style:italic; color:var(--forest2); }
+
+.section-label { font-family:'IBM Plex Mono',monospace; font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+.callout { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.callout-amber { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.callout-red { background:#FDF0EE; border-left:3pt solid var(--red); }
+.callout-teal { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.callout-label { font-family:'IBM Plex Mono',monospace; font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; }
+.cl-forest { color:var(--forest); }
+.cl-red { color:var(--red); }
+.cl-teal { color:var(--teal); }
+
+.example-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.example-label { font-family:'IBM Plex Mono',monospace; font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.example-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.example-box p:last-child { margin-bottom:0; }
+
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:'IBM Plex Mono',monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:'IBM Plex Mono',monospace; font-size:8.5pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-family:'IBM Plex Mono',monospace; font-size:8pt; font-weight:500; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:500; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+ul { margin:3mm 0 3mm 6mm; padding:0; list-style:none; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-family:'IBM Plex Mono',monospace; font-size:8pt; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+/* GEAR CARD */
+.gear-card { border:0.5pt solid var(--sand); margin-bottom:6mm; page-break-inside:avoid; }
+.gear-header { background:var(--forest); padding:4mm 6mm; display:flex; align-items:baseline; justify-content:space-between; }
+.gear-title { font-family:'Lora',Georgia,serif; font-size:12pt; font-weight:700; color:white; }
+.gear-price-range { font-family:'IBM Plex Mono',monospace; font-size:8pt; color:var(--gold); }
+.gear-body { padding:5mm 6mm; background:white; }
+.gear-section-head { font-family:'IBM Plex Mono',monospace; font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin:3mm 0 1.5mm 0; }
+.gear-body p { font-size:9pt; color:var(--muted); margin-bottom:2mm; }
+
+/* COMPARISON TABLE */
+.comp-good { color:#166534; font-weight:500; }
+.comp-bad { color:var(--red); }
+.comp-mid { color:#92400E; }
+
+/* BUDGET BLOCK */
+.budget-row { display:flex; justify-content:space-between; padding:2mm 0; border-bottom:0.5pt solid var(--parch); font-size:9pt; }
+.budget-item { color:var(--ink); }
+.budget-val { font-family:'IBM Plex Mono',monospace; color:var(--forest); font-weight:500; }
+.budget-total { display:flex; justify-content:space-between; padding:3mm 0 0 0; font-size:10pt; }
+.budget-total-label { font-weight:500; color:var(--forest); }
+.budget-total-val { font-family:'IBM Plex Mono',monospace; color:var(--amber); font-weight:500; font-size:11pt; }
+
+/* DECISION MATRIX */
+.matrix-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; page-break-inside:avoid; }
+.matrix-head { font-family:'IBM Plex Mono',monospace; font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:3mm; }
+.criteria-row { display:flex; gap:3mm; margin-bottom:2mm; align-items:flex-start; }
+.criteria-num { font-family:'IBM Plex Mono',monospace; font-size:7.5pt; color:var(--amber); width:16pt; flex-shrink:0; text-align:right; }
+.criteria-text { font-size:9pt; color:var(--ink); }
+.criteria-weight { font-family:'IBM Plex Mono',monospace; font-size:7.5pt; color:var(--sage); margin-left:auto; flex-shrink:0; }
+
+.tag-budget { background:#DCFCE7; color:#166534; font-family:'IBM Plex Mono',monospace; font-size:6.5pt; padding:2pt 7pt; border-radius:3pt; }
+.tag-mid { background:#FEF3C7; color:#92400E; font-family:'IBM Plex Mono',monospace; font-size:6.5pt; padding:2pt 7pt; border-radius:3pt; }
+.tag-premium { background:#EDE9FE; color:#5B21B6; font-family:'IBM Plex Mono',monospace; font-size:6.5pt; padding:2pt 7pt; border-radius:3pt; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">Gear &amp; Equipment<br><em>Concierge</em></div>
+    <div class="cover-subtitle">Select, compare, budget, and justify every piece of field equipment — from camera traps to drones to acoustic monitors — without wasting money on the wrong tool.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Early-Career Field Biologists</span>
+      <span class="cover-tag">Graduate Researchers</span>
+      <span class="cover-tag">Conservation NGO Field Teams</span>
+      <span class="cover-tag">Research Assistants</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I don't know what to buy, I can't afford a mistake, and I have no idea how to justify the cost in a grant" to "I can confidently select, compare, and budget for any field equipment need."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Field Biologist · Conservation Technologist · Founder, OPLURIX
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $39</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="callout-label cl-forest">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once. Then use the Equipment Guides (Section 5) as reference material whenever you are evaluating a purchase. The Grant Justification Pack (Section 8) and AI Prompts (Section 7) are the most immediately practical sections.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 5-Step Decision System · 6 Equipment Category Guides · AI Prompt Pack · Budget Templates · Grant Justification Pack · 5 Real Decision Scenarios · Maintenance Checklists · Quick Start</p>
+</div>
+
+<!-- S1 -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+<p>Every field biologist eventually stands in front of a spreadsheet, a product website, or a grant budget section and faces the same problem: there are too many options, the specifications are confusing, the prices vary wildly, and a wrong decision means wasted money, missed data, or a failed field season.</p>
+<p>Camera traps alone have dozens of models across six price tiers. Acoustic monitors range from $50 open-source units to $3,000 specialist devices. Drones legally require permits, have payload restrictions, and need accessories that cost as much as the aircraft. A GPS unit that works perfectly in open savanna might be useless under a closed forest canopy.</p>
+<p>Nobody teaches this in a biology degree. You learn it the expensive way, or you learn it from this guide.</p>
+<div class="callout callout-amber">
+  <div class="callout-label">The Transformation</div>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:2mm;"><strong>Before:</strong> "I don't know what to buy, I can't afford a mistake, and I have no idea how to justify the cost in a grant."</p>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:0;"><strong>After:</strong> "I can select the right tool for my specific survey context, compare it against alternatives, budget for the full cost of ownership, and write a compelling justification for any funder."</p>
+</div>
+<p><strong>What this guide covers:</strong> Camera traps, passive acoustic monitors, drones, GPS devices, data loggers, and field data collection systems. Decision frameworks, comparison tables, budget templates, grant justification language, and AI prompts for every stage of the equipment decision process.</p>
+
+<!-- S2 -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>Too many options, no framework for choosing.</strong><p>You find twelve camera trap models, read twelve sets of specifications, and still cannot tell which one fits your survey context. Specifications without context are useless.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>The cheapest option fails in the field. The best option exceeds your budget.</strong><p>Field conditions are harsh. Budget cameras often fail in humidity, fail to trigger in low-contrast conditions, or produce images that are useless for species identification. But premium gear requires budget justification you have never had to write before.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>You buy the equipment but not the accessories it needs to work.</strong><p>A drone without extra batteries, a camera trap without a quality memory card, an AudioMoth without weatherproofing — these are common first-season mistakes that double the real cost of a purchase.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>You do not know what "good enough" looks like for your specific survey.</strong><p>A 20-megapixel camera trap is not better than a 12-megapixel one if the trigger speed is slower. A thermal drone is not more useful than a standard drone if the canopy blocks thermal signatures. Fitness for purpose matters more than specifications.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>Grant budgets require detailed equipment justifications you have never written.</strong><p>Funders want to see exactly why a particular model was chosen, what it costs, and what it will produce. Vague "field equipment" line items get questioned or cut.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>Equipment recommendations from colleagues do not fit your context.</strong><p>The camera trap that works perfectly in East African savanna may be the wrong choice for dense Malagasy rainforest. The drone that works in temperate Europe needs different settings at tropical altitude and humidity. Context is everything.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>You do not know what maintenance the equipment needs or what it will cost over time.</strong><p>A $400 camera trap that needs $80 in batteries and a $150 repair every season costs more than a $600 model that runs on standard AA cells and has a 3-year warranty. Total cost of ownership is rarely in the product description.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>Import and customs costs in your country are unpredictable.</strong><p>In Madagascar and across much of the Global South, importing specialist field equipment involves customs duties, import permits, potential confiscation, and long delays. These costs are almost never included in budget templates from researchers based in Europe or North America.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>You are not sure whether to buy, borrow, or rent.</strong><p>For equipment used once or twice, ownership may not be the right choice. But knowing when renting or institutional partnerships are better requires understanding the full cost calculation — which most guides skip.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>You have no system for evaluating new equipment released after this guide was written.</strong><p>Technology moves fast. The frameworks in this guide are designed to work on any equipment — past, present, and future — by focusing on the questions that matter for conservation fieldwork, not on current model numbers.</p></div>
+</div>
+
+<!-- S3 -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">01</td><td>Select the right equipment for your specific survey context — not the most popular or the most expensive.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">02</td><td>Build a complete, accurate equipment budget including accessories, maintenance, import costs, and contingency.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">03</td><td>Write a compelling equipment justification for any grant application — specific, defensible, and funder-friendly.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">04</td><td>Avoid the most common and costly first-season equipment mistakes.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">05</td><td>Understand the total cost of ownership — not just the purchase price.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">06</td><td>Make a confident buy/borrow/rent decision for any equipment need.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">07</td><td>Know which specifications actually matter for conservation fieldwork and which are marketing noise.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">08</td><td>Build and maintain an equipment inventory that survives multiple field seasons.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">09</td><td>Evaluate any new equipment — even models released after this guide — using the frameworks provided.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">10</td><td>Make equipment decisions that serve your data quality, not your fear of spending too much or too little.</td></tr>
+</table>
+
+<!-- S4 -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 5-Step Equipment Decision System</h1>
+<p>Use this process for every significant equipment purchase. It takes 30–60 minutes and will save you multiples of that time and money in the field.</p>
+
+<div class="step-block">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>DEFINE THE SURVEY NEED — NOT THE EQUIPMENT</h3>
+    <p>Start with what you need to measure or detect, not with the equipment category. The need determines the specification. The specification determines the shortlist.</p>
+    <div class="callout">
+      <div class="callout-label cl-forest">Need Definition Questions</div>
+      <ul style="margin:0;">
+        <li>What exactly am I trying to detect or measure? (species presence, behaviour, habitat condition, sound, movement)</li>
+        <li>What is the spatial scale? (single site, multiple sites, landscape level)</li>
+        <li>What is the temporal scale? (one season, continuous monitoring, multi-year)</li>
+        <li>What is the habitat? (open, dense canopy, aquatic, rocky, wet season)</li>
+        <li>What precision does my research question require? (presence/absence, count, individual ID, behaviour)</li>
+        <li>Who will operate this equipment? (experienced researcher, trained field technician, community monitor)</li>
+        <li>What are the field conditions? (humidity, temperature range, remote access, power availability)</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Rule: If you cannot answer these questions before looking at equipment options, do not start shopping yet. Define the need first.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>IDENTIFY THE SPECIFICATIONS THAT MATTER</h3>
+    <p>Every equipment category has 3–5 specifications that genuinely affect field performance. The rest are marketing details. The Equipment Guides in Section 5 identify the critical specifications for each category.</p>
+    <div class="callout callout-amber">
+      <div class="callout-label">Universal principle</div>
+      <p style="margin:0;">More is not always better. A faster trigger speed matters more than more megapixels for camera traps. Battery life matters more than sensor quality for AudioMoths deployed in remote sites. Match the specification to the need, not to a general idea of quality.</p>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>BUILD YOUR SHORTLIST AND COMPARE</h3>
+    <p>Identify 2–4 options that meet your specification requirements. Use the comparison framework from Section 5 for your equipment category. Do not compare more than 4 options — decision paralysis is real and costly.</p>
+    <p>For each option on your shortlist, find:</p>
+    <ul>
+      <li>At least two published field reviews or peer-reviewed methods papers using that model</li>
+      <li>At least one user report from a similar ecosystem or climate to yours</li>
+      <li>The total accessory list required for field operation (not just the base unit cost)</li>
+      <li>The warranty, repair, and parts availability in your region</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>CALCULATE THE TOTAL COST OF OWNERSHIP</h3>
+    <p>The purchase price is never the full cost. Use the Budget Template in Section 6 for every significant purchase.</p>
+    <table style="margin:3mm 0;">
+      <tr><th>Cost category</th><th>Examples</th><th>Commonly missed?</th></tr>
+      <tr><td><strong>Purchase price</strong></td><td>Base unit</td><td>No</td></tr>
+      <tr><td><strong>Accessories</strong></td><td>Batteries, memory cards, mounts, cases, cables</td><td>Often</td></tr>
+      <tr><td><strong>Import &amp; shipping</strong></td><td>Customs duties, freight, import permit fees</td><td>Frequently</td></tr>
+      <tr><td><strong>Software / licensing</strong></td><td>Analysis software, firmware updates, cloud storage</td><td>Often</td></tr>
+      <tr><td><strong>Training</strong></td><td>Time to train team members, course fees</td><td>Almost always</td></tr>
+      <tr><td><strong>Maintenance (annual)</strong></td><td>Battery replacement cycles, sensor cleaning, calibration</td><td>Almost always</td></tr>
+      <tr><td><strong>Repair / replacement</strong></td><td>Expected failure rate × replacement cost</td><td>Almost always</td></tr>
+      <tr><td><strong>Contingency (10–15%)</strong></td><td>Unexpected costs — always occur</td><td>Almost always</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <h3>DECIDE: BUY, BORROW, OR RENT</h3>
+    <div class="callout">
+      <div class="callout-label cl-forest">Decision rules</div>
+      <ul style="margin:0;">
+        <li><strong>Buy</strong> if: you will use the equipment for 3+ field seasons, it is essential to your core methodology, and no borrowing option exists within your network.</li>
+        <li><strong>Borrow / partner</strong> if: a university, NGO, or research centre near you has the equipment and can loan it. Always worth asking. Most institutions under-utilise expensive gear between field seasons.</li>
+        <li><strong>Rent</strong> if: you need the equipment for one season only, the rental cost is less than 30% of the purchase price, and a reliable rental source exists.</li>
+        <li><strong>Do not acquire</strong> if: the total cost of ownership exceeds what your data quality gain justifies. A good field protocol with available equipment beats an aspirational protocol with equipment you cannot afford to maintain.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>6 Equipment Category Guides</h1>
+<p>Each guide covers: what matters in specifications, what does not, a tiered comparison table, critical accessories, and the most common first-season mistakes.</p>
+
+<!-- CAMERA TRAPS -->
+<div class="gear-card">
+  <div class="gear-header">
+    <div class="gear-title">Camera Traps</div>
+    <div class="gear-price-range">Budget: $60–120 · Mid: $150–300 · Premium: $350–700+</div>
+  </div>
+  <div class="gear-body">
+    <div class="gear-section-head">Specifications that matter for conservation fieldwork</div>
+    <table>
+      <tr><th>Specification</th><th>Why it matters</th><th>Minimum for conservation use</th></tr>
+      <tr><td><strong>Trigger speed</strong></td><td>How fast the camera fires after detecting motion. Fast-moving animals are missed by slow triggers.</td><td>≤0.3 seconds for medium/large mammals</td></tr>
+      <tr><td><strong>Detection zone</strong></td><td>The actual distance and angle at which the PIR sensor reliably triggers. Often smaller than advertised.</td><td>≥10 m in cool ambient conditions</td></tr>
+      <tr><td><strong>Night IR range</strong></td><td>How far the infrared illumination reaches in darkness. Determines image quality at distance.</td><td>≥15 m for usable nighttime images</td></tr>
+      <tr><td><strong>Battery life</strong></td><td>How many images/videos before battery replacement. Critical for remote sites.</td><td>≥6 months at 20 triggers/day</td></tr>
+      <tr><td><strong>Operating temperature</strong></td><td>Must cover your field site temperature range including extremes.</td><td>−20°C to +50°C for tropical deployment</td></tr>
+      <tr><td><strong>IP rating</strong></td><td>Dust and water resistance. IP54 is the minimum for field use in wet environments.</td><td>IP54 minimum; IP66 for high-humidity sites</td></tr>
+    </table>
+
+    <div class="gear-section-head">Specifications that are mostly marketing</div>
+    <p>Megapixel count above 12 MP (beyond this, night image quality depends on IR, not pixels). Burst mode speed (useful for some studies, irrelevant for standard occupancy surveys). Number of "modes" or built-in features (you will use 2–3 of them).</p>
+
+    <div class="gear-section-head">Tiered comparison</div>
+    <table>
+      <tr><th>Tier</th><th>Typical models</th><th>Best for</th><th>Avoid if</th></tr>
+      <tr><td><span class="tag-budget">BUDGET</span></td><td>Campark T80, Victure HC200</td><td>Pilot surveys, high-theft-risk sites, student projects with no budget</td><td class="comp-bad">Dense forest, species requiring individual ID, multi-season deployment</td></tr>
+      <tr><td><span class="tag-mid">MID</span></td><td>Bushnell Core, Browning Strike Force, Reconyx HyperFire Lite</td><td>Standard mammal occupancy surveys, multi-site biodiversity inventories</td><td class="comp-mid">Very remote sites where battery access is difficult (opt for premium then)</td></tr>
+      <tr><td><span class="tag-premium">PREMIUM</span></td><td>Reconyx HyperFire 2, Bushnell CelluCore, Cuddeback</td><td>Long-term monitoring, individual ID studies, institutional deployments, grant-funded research</td><td class="comp-bad">Theft-prone sites without security housing</td></tr>
+    </table>
+
+    <div class="gear-section-head">Critical accessories — always budget for these</div>
+    <ul style="margin:0;">
+      <li>Memory cards: Class 10 SDHC, 32 GB. Budget $12–18 per card. Buy 20–30% more than you think you need.</li>
+      <li>Batteries: Name-brand AA alkaline or lithium. Lithium required below 10°C. Budget $4–8 per deployment per unit.</li>
+      <li>Python security cable and padlock: Essential in any community-adjacent site. Budget $15–25 per unit.</li>
+      <li>Security housing (optional but recommended): Metal housing for high-theft-risk sites. $30–80 per unit.</li>
+      <li>Desiccant packs: Silica gel sachets. Extend camera lifespan significantly in humid environments. $0.30/pack.</li>
+    </ul>
+
+    <div class="gear-section-head">Most common first-season mistakes</div>
+    <ul style="margin:0;">
+      <li>Buying budget cameras for the primary data collection and mid-range for the "check sites." Reverse this. Put your best cameras at your most important sites.</li>
+      <li>Not testing every camera before deployment. Test at home: verify trigger speed, night mode, time/date stamp, and full battery-to-off-to-on cycle.</li>
+      <li>Using generic or no-name memory cards. Corrupt cards are the most common cause of data loss in camera trap surveys.</li>
+      <li>Not accounting for camera theft in the deployment plan. If you deploy 20 cameras and expect 10% theft, budget for 2 replacements.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ACOUSTIC MONITORS -->
+<div class="gear-card">
+  <div class="gear-header">
+    <div class="gear-title">Passive Acoustic Monitors</div>
+    <div class="gear-price-range">Budget: $50–80 · Mid: $300–700 · Premium: $1,500–4,000</div>
+  </div>
+  <div class="gear-body">
+    <div class="gear-section-head">Specifications that matter</div>
+    <table>
+      <tr><th>Specification</th><th>Why it matters</th><th>Notes</th></tr>
+      <tr><td><strong>Frequency range</strong></td><td>Determines which taxa can be detected. Bats require ultrasonic range (up to 192 kHz). Birds and frogs: 20 Hz–20 kHz is sufficient.</td><td>Do not pay for ultrasonic capability if you are not studying bats.</td></tr>
+      <tr><td><strong>Recording schedule flexibility</strong></td><td>Can the device record at set times, triggered by sound threshold, or continuously? Scheduling flexibility determines battery life and storage efficiency.</td><td>Continuous recording produces large files. Scheduled recording is more manageable.</td></tr>
+      <tr><td><strong>Battery life</strong></td><td>Critical for remote deployment. Days between battery changes determine feasibility at difficult sites.</td><td>AudioMoth on alkaline AAs: 3–5 days continuous. Some specialist units: weeks.</td></tr>
+      <tr><td><strong>Storage capacity</strong></td><td>Recording rate × hours per night × number of nights = storage needed. Calculate before buying cards.</td><td>At 48 kHz sample rate: ~330 MB/hour. At 192 kHz (ultrasonic): ~1.3 GB/hour.</td></tr>
+      <tr><td><strong>Weatherproofing</strong></td><td>The device is in the field, often in rain. Without adequate weatherproofing it will fail.</td><td>AudioMoth requires a separate case. Other units have built-in IP ratings.</td></tr>
+    </table>
+
+    <div class="gear-section-head">Tiered comparison</div>
+    <table>
+      <tr><th>Tier</th><th>Model</th><th>Best for</th><th>Key limitation</th></tr>
+      <tr><td><span class="tag-budget">BUDGET</span></td><td>AudioMoth (open-source, ~$65)</td><td>Bird and bat surveys, multi-unit deployments, student projects, research with tight budgets</td><td class="comp-mid">Requires separate weatherproof case. Less intuitive to configure. No internal clock backup.</td></tr>
+      <tr><td><span class="tag-mid">MID</span></td><td>Swift One (~$400), Audiomoth with Audiomoth App</td><td>Multi-night deployment, standard biodiversity surveys, NGO monitoring programmes</td><td class="comp-mid">Higher cost per unit limits replication.</td></tr>
+      <tr><td><span class="tag-premium">PREMIUM</span></td><td>SM4 (Wildlife Acoustics, ~$900), ANABAT Swift (~$700)</td><td>Long-term monitoring stations, species-specific bat studies, institutional research</td><td class="comp-bad">Cost limits number of simultaneous deployments. Overkill for presence/absence surveys.</td></tr>
+    </table>
+
+    <div class="gear-section-head">Critical accessories for AudioMoth (the most common choice)</div>
+    <ul style="margin:0;">
+      <li>Weatherproof case: Custom 3D-printed or commercial. Without it the unit will fail in rain. Budget $15–40.</li>
+      <li>Memory cards: 32 GB Class 10, FAT32 formatted. Budget $12–15 each. Always bring 50% more than planned.</li>
+      <li>AA batteries: Energizer Ultimate Lithium for remote sites, cold conditions. Budget $6–10 per deployment.</li>
+      <li>Deployment mount: Velcro strap + cable tie to tree. Cost near zero but needs to be planned.</li>
+      <li>Audiomoth App (free): Required for configuration. Load it before the field season, not on the first day.</li>
+    </ul>
+
+    <div class="gear-section-head">Most common first-season mistakes</div>
+    <ul style="margin:0;">
+      <li>Formatting memory cards in exFAT instead of FAT32. AudioMoth requires FAT32. This single error has ended entire survey seasons.</li>
+      <li>Not accounting for file storage on the analysis end. 20 units × 5 nights × 8 hours/night at 192 kHz = over 1 TB of data. Budget for storage and analysis time.</li>
+      <li>Deploying units without listening to test recordings first. A muffled microphone or a malfunctioning unit produces data that looks complete and is worthless.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- DRONES -->
+<div class="page-break"></div>
+<div class="gear-card">
+  <div class="gear-header">
+    <div class="gear-title">Drones for Conservation Surveys</div>
+    <div class="gear-price-range">Entry: $500–1,500 · Professional: $2,000–6,000 · Specialist: $8,000–30,000+</div>
+  </div>
+  <div class="gear-body">
+    <div class="gear-section-head">Before you buy: the legal and permit reality</div>
+    <p>In most countries including Madagascar, operating a drone for research requires: (1) a drone pilot licence or permit, (2) registration of the aircraft, (3) site-specific flight authorisation from the civil aviation authority, (4) permission from the protected area authority for any flight over a national park or reserve. Budget 2–4 months for permit acquisition. Budget $200–800 for permit costs in most African and Indian Ocean contexts.</p>
+
+    <div class="gear-section-head">Specifications that matter for conservation</div>
+    <table>
+      <tr><th>Specification</th><th>Conservation relevance</th></tr>
+      <tr><td><strong>Payload capacity</strong></td><td>Determines what sensor you can carry. Standard RGB cameras are built in. Thermal or multispectral sensors require payload capacity of 500 g+.</td></tr>
+      <tr><td><strong>Flight time</strong></td><td>Determines how much area you can cover per battery. 25–30 min is standard for consumer drones. Less in hot/humid conditions and at altitude.</td></tr>
+      <tr><td><strong>Wind resistance</strong></td><td>Rated in m/s. Forest edges and exposed ridges can exceed 10 m/s. Ensure the aircraft can handle your site conditions.</td></tr>
+      <tr><td><strong>GPS positioning</strong></td><td>Consumer GPS (±2–3 m) is sufficient for habitat mapping. RTK GPS (±2 cm) is required for MRV-grade surveys and precise repeat measurements.</td></tr>
+      <tr><td><strong>Thermal capability</strong></td><td>Wildlife detection under dense canopy requires thermal. Under open canopy, standard RGB may be sufficient for some species.</td></tr>
+      <tr><td><strong>Portability</strong></td><td>If carrying to remote sites on foot, weight and pack size matter as much as performance.</td></tr>
+    </table>
+
+    <div class="gear-section-head">Tiered comparison for conservation</div>
+    <table>
+      <tr><th>Tier</th><th>Model</th><th>Best conservation use</th><th>Key limitation</th></tr>
+      <tr><td><span class="tag-budget">ENTRY</span></td><td>DJI Mini 4 Pro</td><td>Habitat photography, vegetation documentation, educational use. Under 250 g — fewer permit requirements in some jurisdictions.</td><td class="comp-bad">No payload capacity. No thermal. Limited wind resistance. Not suitable for systematic wildlife surveys.</td></tr>
+      <tr><td><span class="tag-mid">PROFESSIONAL</span></td><td>DJI Mavic 3T (thermal), DJI Mavic 3 Multispectral</td><td>Wildlife thermal detection surveys (Mavic 3T), vegetation and forest health mapping (Mavic 3M). This is the current best conservation-survey value platform.</td><td class="comp-mid">Consumer GPS only — not RTK grade. Limited payload beyond built-in sensor.</td></tr>
+      <tr><td><span class="tag-premium">SPECIALIST</span></td><td>DJI Matrice 350 RTK + H30T + MicaSense Altum-PT</td><td>MRV-grade biodiversity scoring, precision repeat surveys, REDD+ reporting, multi-sensor simultaneous capture. The ERIS platform target.</td><td class="comp-bad">High cost (~$25,000–30,000 full system). Requires trained operator. Permit complexity increases with aircraft size.</td></tr>
+    </table>
+
+    <div class="gear-section-head">Critical accessories — always include in budget</div>
+    <ul style="margin:0;">
+      <li>Extra batteries: Plan 3 batteries per flight session minimum. Each battery: $80–200 depending on model.</li>
+      <li>Charging hub: Charge 4 batteries simultaneously. Essential for multi-day field sessions.</li>
+      <li>ND filter set: Improves image quality in bright tropical conditions. $40–120 depending on model.</li>
+      <li>Hard case: Pelican or equivalent. Essential for field transport. $80–200.</li>
+      <li>Generator or solar charging: For remote sites without grid power. Budget $150–400.</li>
+      <li>Screen hood: The tablet screen in the DJI controller is unreadable in direct tropical sunlight without one. $20–40.</li>
+      <li>Landing pad: Prevents dust/debris ingestion on takeoff. $15–30.</li>
+    </ul>
+
+    <div class="gear-section-head">Most common first-season mistakes</div>
+    <ul style="margin:0;">
+      <li>Not obtaining permits before the field season. Permit delays have ended entire drone survey seasons. Start the process 3 months before planned deployment.</li>
+      <li>Underestimating battery consumption in heat and humidity. Tropical conditions reduce battery life by 15–25% compared to manufacturer specs. Plan for 20–22 min flight time, not 30.</li>
+      <li>Not testing the drone at the survey altitude before the field season. Performance at 1,200 m altitude (Malagasy highlands) differs from sea level.</li>
+      <li>Forgetting to include data storage for raw files. 4K video fills memory cards faster than expected. Bring 3× the storage you think you need.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- GPS -->
+<div class="gear-card">
+  <div class="gear-header">
+    <div class="gear-title">GPS Devices</div>
+    <div class="gear-price-range">Consumer: $100–250 · Survey-grade: $400–1,200 · RTK: $3,000–15,000</div>
+  </div>
+  <div class="gear-body">
+    <div class="gear-section-head">Specifications that matter</div>
+    <table>
+      <tr><th>Specification</th><th>Notes for field biology</th></tr>
+      <tr><td><strong>Accuracy under canopy</strong></td><td>Consumer GPS (Garmin eTrex series): ±3–5 m in open; ±10–20 m under dense canopy. For transect endpoints and waypoints, this is usually acceptable. For nest locations or individual tree mapping, it is not.</td></tr>
+      <tr><td><strong>GNSS system support</strong></td><td>Units supporting GPS + GLONASS + Galileo acquire position faster and more accurately under canopy than GPS-only units.</td></tr>
+      <tr><td><strong>Battery life</strong></td><td>Field days are long. 25+ hours on AA batteries is the practical minimum for remote deployment.</td></tr>
+      <tr><td><strong>Durability rating</strong></td><td>IPX7 minimum for tropical forest use (submersible to 1 m). Many consumer GPS units meet this.</td></tr>
+      <tr><td><strong>Datalogging</strong></td><td>Can it record a track automatically? Track logging is essential for transect data and aerial survey ground-truthing.</td></tr>
+    </table>
+
+    <div class="gear-section-head">Most common first-season mistakes</div>
+    <ul style="margin:0;">
+      <li>Recording coordinates in the wrong datum (WGS84 vs. local datum). All field data should use WGS84 unless your project has a specific reason otherwise. Set this before the first day in the field.</li>
+      <li>Not checking coordinate format consistency across the team. Decimal degrees vs. degrees-minutes-seconds in the same dataset will destroy spatial analysis.</li>
+      <li>Trusting the first GPS reading. Under canopy, wait for the accuracy reading to stabilise (typically 30–90 seconds) before recording a waypoint.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FIELD DATA COLLECTION -->
+<div class="page-break"></div>
+<div class="gear-card">
+  <div class="gear-header">
+    <div class="gear-title">Field Data Collection Systems</div>
+    <div class="gear-price-range">Paper: $5–20 · ODK/KoboToolbox: Free · Tablets: $150–400</div>
+  </div>
+  <div class="gear-body">
+    <div class="gear-section-head">Paper vs. digital: honest comparison</div>
+    <table>
+      <tr><th>Factor</th><th>Paper datasheets</th><th>Digital (tablet + ODK/Kobo)</th></tr>
+      <tr><td>Upfront cost</td><td class="comp-good">Near zero</td><td class="comp-mid">$150–400/tablet + setup time</td></tr>
+      <tr><td>Field durability</td><td class="comp-mid">Fails in heavy rain without protection</td><td class="comp-mid">Tablets need waterproof cases</td></tr>
+      <tr><td>Data entry error rate</td><td class="comp-bad">High (manual transcription required)</td><td class="comp-good">Low (validation built into forms)</td></tr>
+      <tr><td>GPS integration</td><td class="comp-bad">Separate GPS device required</td><td class="comp-good">Built-in GPS logs coordinates directly</td></tr>
+      <tr><td>Funder perception</td><td class="comp-mid">Acceptable for most funders</td><td class="comp-good">Increasingly preferred for MRV-quality data</td></tr>
+      <tr><td>Team training time</td><td class="comp-good">Minutes</td><td class="comp-mid">1–2 days for ODK/Kobo setup and training</td></tr>
+      <tr><td>Power dependency</td><td class="comp-good">None</td><td class="comp-bad">Requires charging infrastructure in field</td></tr>
+    </table>
+
+    <div class="gear-section-head">Recommended digital stack (free or near-free)</div>
+    <ul style="margin:0;">
+      <li><strong>KoboToolbox</strong> (free for NGOs) — form design, data collection, cloud sync. Best for multi-team surveys.</li>
+      <li><strong>ODK Collect</strong> (free) — Android app for data collection. Works offline. Standard in conservation research.</li>
+      <li><strong>QGIS</strong> (free) — for spatial analysis and mapping of collected data.</li>
+      <li><strong>Recommended tablet</strong>: Samsung Galaxy Tab A series ($150–200). Durable, replaceable, runs Android apps.</li>
+      <li><strong>Waterproof case</strong>: Required. $20–40. Non-negotiable in tropical field conditions.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- DATA STORAGE -->
+<div class="gear-card">
+  <div class="gear-header">
+    <div class="gear-title">Field Data Storage &amp; Backup</div>
+    <div class="gear-price-range">External SSD: $60–120 · Portable NAS: $200–400 · Cloud: $0–15/month</div>
+  </div>
+  <div class="gear-body">
+    <div class="gear-section-head">The 3-2-1 backup rule — apply it in the field</div>
+    <p>3 copies of your data. 2 different storage types. 1 copy offsite (or at a different physical location from your field camp).</p>
+    <div class="callout callout-red">
+      <div class="callout-label cl-red">This is not optional</div>
+      <p style="margin:0;">Field data loss is permanent. A fire at camp, a flooded bag, or a stolen laptop destroys months of work. The 3-2-1 rule is the minimum acceptable standard. Most field teams apply zero backup discipline. Do not be that team.</p>
+    </div>
+
+    <div class="gear-section-head">Practical field backup system (budget version)</div>
+    <ul style="margin:0;">
+      <li><strong>Copy 1:</strong> Original memory cards / device storage. Kept in field.</li>
+      <li><strong>Copy 2:</strong> External SSD at field camp. Samsung T7 (1 TB, ~$80). Back up every evening.</li>
+      <li><strong>Copy 3:</strong> Second external SSD or USB drives stored at the team base / town accommodation — physically separate from the field camp.</li>
+    </ul>
+    <p style="font-size:9pt;color:var(--muted);margin-top:2mm;">Cloud backup (Google Drive, Dropbox) is ideal as Copy 3 when internet access allows. Do not rely on cloud backup if connectivity is unreliable — it creates a false sense of security.</p>
+  </div>
+</div>
+
+<!-- S6: BUDGET TEMPLATES -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>Budget Templates</h1>
+<p>Three ready-to-use budget templates for common equipment acquisition scenarios. Adapt the line items to your specific models and quantities.</p>
+
+<h2>Template A — Camera Trap Survey Setup (20 units)</h2>
+<div class="template-box" style="font-size:8pt;">
+CAMERA TRAP SURVEY BUDGET — 20 UNITS
+Project: _______________   Season: _______________   Currency: _______________
+
+EQUIPMENT
+Camera trap units (20 × $___/unit)           $________
+Security cables + padlocks (20 × $20)        $________
+Security housing (optional, 10 × $50)        $________
+Subtotal equipment                            $________
+
+CONSUMABLES (per season)
+Memory cards (30 × 32 GB @ $14)             $________
+AA batteries (20 units × 8 batteries × $0.80) $________
+Desiccant packs (200 packs × $0.30)         $________
+Subtotal consumables                          $________
+
+LOGISTICS
+Import duties + shipping (estimate 20–40%)   $________
+Transport to field sites                     $________
+Subtotal logistics                           $________
+
+CONTINGENCY (10% of subtotal)               $________
+
+TOTAL FIRST SEASON                           $________
+TOTAL SUBSEQUENT SEASONS (consumables only) $________
+</div>
+
+<h2>Template B — Acoustic Monitor Survey Setup (10 AudioMoths)</h2>
+<div class="template-box" style="font-size:8pt;">
+ACOUSTIC MONITORING BUDGET — 10 AUDIOMOTH UNITS
+Project: _______________   Season: _______________
+
+EQUIPMENT
+AudioMoth units (10 × $65)                   $650
+Weatherproof cases (10 × $25)               $250
+Deployment straps/mounts (10 × $5)          $50
+Subtotal equipment                           $950
+
+CONSUMABLES (per survey trip)
+Memory cards (15 × 32 GB @ $14)             $210
+AA Energizer Lithium batteries
+  (10 units × 3 batteries × $2.50)          $75
+Subtotal consumables per trip                $285
+
+DATA STORAGE
+External SSD 2 TB                           $120
+USB drives for backup (2 × $20)             $40
+Subtotal storage                             $160
+
+IMPORT + SHIPPING (estimate 25%)            $278
+
+CONTINGENCY (10%)                           $162
+
+TOTAL FIRST SEASON                          $1,835
+</div>
+
+<h2>Template C — Full ERIS Survey Season (Drone + Camera Traps + Acoustics)</h2>
+<div class="template-box" style="font-size:8pt;">
+FULL BIODIVERSITY SURVEY SEASON BUDGET
+Project: ERIS Pilot — Ihofa Forest   Season: 2027
+
+DRONE SURVEY (using Matrice 350 RTK — grant-funded, not purchased)
+Flight permits + authorisation fees          $300
+Extra batteries (4 × $200)                  $800
+ND filter sets                              $100
+Storage media (4 × 256 GB cards)            $100
+Drone transport + insurance                  $200
+Subtotal drone                              $1,500
+
+CAMERA TRAP SURVEY (20 units — existing)
+Consumables (batteries, cards, desiccant)    $600
+Replacement units (2 units × $200)          $400
+Security housing for high-risk sites         $300
+Subtotal camera traps                       $1,300
+
+ACOUSTIC MONITORING (10 AudioMoths — existing)
+Consumables (batteries, cards)              $360
+Case replacement (2 × $25)                  $50
+Subtotal acoustics                           $410
+
+DATA MANAGEMENT
+External SSDs (2 × $80)                     $160
+Cloud storage (1 year)                      $120
+Analysis software                           $0 (R, QGIS — free)
+Subtotal data                               $280
+
+CONTINGENCY (10%)                           $349
+
+TOTAL SURVEY SEASON BUDGET                  $3,839
+</div>
+
+<!-- S7: AI PROMPT PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>AI Prompt Pack</h1>
+<p>12 prompts for equipment research, comparison, justification, and budget building. Use with Claude, ChatGPT, or any AI assistant.</p>
+
+<h2>Prompt 1 — Equipment Shortlist Builder</h2>
+<div class="prompt-box">
+You are a conservation field equipment specialist. I need to build a shortlist of [equipment type] options for my survey.
+
+My survey context:
+- Target taxa: [species or group]
+- Habitat: [forest type, open, aquatic, etc.]
+- Climate: [tropical humid / dry / highland / etc.]
+- Survey duration: [days/months]
+- Team experience level: [novice / intermediate / expert]
+- Budget per unit (USD): [amount]
+- Number of units needed: [number]
+- Special requirements: [e.g., ultrasonic, RTK, IP67, etc.]
+
+Provide a shortlist of 3 options with: model name, approximate price, key specs, one strength, one limitation, and a recommendation for my context.
+</div>
+
+<h2>Prompt 2 — Full Cost of Ownership Calculator</h2>
+<div class="prompt-box">
+Help me calculate the true total cost of ownership for [equipment model] over [number] field seasons.
+
+Include:
+- Purchase price
+- Required accessories and their costs
+- Expected battery/consumable costs per season
+- Typical repair or replacement rate and cost
+- Import/shipping estimate for [country]
+- Software or data management costs if applicable
+- Depreciation over [X] seasons
+
+Present as a table with per-season and total costs clearly separated.
+</div>
+
+<h2>Prompt 3 — Grant Equipment Justification Writer</h2>
+<div class="prompt-box">
+Write a grant budget justification paragraph for the following equipment purchase.
+
+Equipment: [model name and quantity]
+Unit cost: [price]
+Total cost: [total]
+Survey purpose: [what the equipment will be used to measure/detect]
+Why this model specifically: [key reasons — performance, field-proven, best value for context]
+Alternative considered: [what you compared it to and why you chose this one instead]
+Expected outputs enabled by this equipment: [data collected, papers, reports]
+
+Format: 150–200 words, formal grant language, defensible to a reviewer who may not know this equipment category.
+</div>
+
+<h2>Prompt 4 — Specification Translator</h2>
+<div class="prompt-box">
+I am looking at the specifications for [equipment model]. Translate the following technical specifications into plain language that tells me whether this equipment is suitable for [my specific survey context].
+
+Specifications to translate:
+[PASTE THE SPEC LIST FROM THE PRODUCT PAGE]
+
+My survey context: [brief description]
+
+For each specification: explain what it means in practice, whether it matters for my context, and whether the value is good, acceptable, or concerning for conservation fieldwork.
+</div>
+
+<h2>Prompt 5 — Buy vs. Borrow vs. Rent Decision</h2>
+<div class="prompt-box">
+Help me decide whether to buy, borrow, or rent [equipment type] for my project.
+
+My situation:
+- Number of planned uses in the next 3 years: [number of field seasons]
+- Purchase price: [amount]
+- Rental cost if available: [amount per week/month]
+- Borrowing option: [yes, from [institution] / no known source]
+- Maintenance complexity: [simple / moderate / specialist]
+- Import or logistics difficulty in my country: [easy / difficult / very difficult]
+- Risk of theft or damage: [low / medium / high]
+
+Provide a clear recommendation with the financial calculation showing which option is most cost-effective, and flag any non-financial factors I should consider.
+</div>
+
+<h2>Prompt 6 — First-Season Equipment Checklist Generator</h2>
+<div class="prompt-box">
+Generate a complete pre-field-season equipment checklist for a [survey type] using [equipment list].
+
+The checklist should cover:
+1. Equipment testing before departure
+2. Consumables to bring (with quantities for [X] days and [Y] sites)
+3. Tools and repair items to carry
+4. Data storage and backup items
+5. Permit and documentation requirements
+6. Items specific to tropical/humid field conditions
+
+Format as a printable checklist with checkboxes.
+</div>
+
+<h2>Prompt 7 — Equipment Failure Troubleshooting Guide</h2>
+<div class="prompt-box">
+Create a field troubleshooting guide for [equipment model] covering the most common failures and their field-fixable solutions.
+
+Include for each problem:
+- Symptom: what the user observes
+- Most likely cause
+- Field fix (using only items likely available in a remote field camp)
+- Prevention: what protocol change would prevent this problem
+- When to abandon the unit and use the backup
+
+This guide will be used by field technicians who may not have engineering training.
+</div>
+
+<h2>Prompt 8 — Import and Logistics Cost Estimator</h2>
+<div class="prompt-box">
+I need to import [equipment] to [country] from [source country/distributor].
+
+Help me estimate the total import and logistics cost including:
+- Freight cost (air vs. sea)
+- Customs duty rate for this equipment category in [country]
+- Import permit requirements if any
+- Typical customs clearance timeline
+- Risk factors that could cause delays or additional costs
+- Whether a local distributor or regional supplier might reduce total cost
+
+Note: I understand you may not have exact current figures. Please provide ranges based on general knowledge and flag where I need to verify locally.
+</div>
+
+<h2>Prompt 9 — Sensor Comparison for Wildlife Detection</h2>
+<div class="prompt-box">
+Compare RGB cameras, thermal cameras, and multispectral sensors for detecting [target species or guild] in [habitat type].
+
+For each sensor type:
+- Detection mechanism
+- Detection range under [canopy/open] conditions
+- Identification capability (can you determine species from the data?)
+- Processing complexity
+- Approximate cost per unit
+- Best field conditions for this sensor type
+- Situations where this sensor would fail or underperform
+
+Conclude with a recommendation for my specific context: [describe your survey goal and budget].
+</div>
+
+<h2>Prompt 10 — Battery and Power Planning Calculator</h2>
+<div class="prompt-box">
+Help me plan battery and power logistics for a [X]-day field survey using:
+- [Equipment 1]: [number of units], [battery type], [expected runtime]
+- [Equipment 2]: [number of units], [battery type], [expected runtime]
+- [Equipment 3]: [number of units], [battery type], [expected runtime]
+
+Field conditions: no grid power, [solar available / generator available / none]
+
+Calculate:
+- Total batteries needed for full survey
+- Weight and volume of batteries (for packing)
+- Charging schedule if power source is available
+- Recommended battery buffer (%) for tropical conditions
+- Most cost-effective battery type for each piece of equipment
+</div>
+
+<h2>Prompt 11 — Equipment Inventory Template Builder</h2>
+<div class="prompt-box">
+Create a field equipment inventory template for a [project type] research project.
+
+The template should track for each item:
+- Item name, model, and serial number
+- Purchase date and cost
+- Assigned to (team member or site)
+- Condition at start and end of each field season
+- Maintenance performed and date
+- Consumables used per season
+- Location when not in field
+
+Format as a simple table I can maintain in Google Sheets or Excel. Include a summary tab showing total equipment value and replacement schedule.
+</div>
+
+<h2>Prompt 12 — French Equipment Justification Translation</h2>
+<div class="prompt-box">
+Translate the following equipment budget justification into French for a Francophone funder or institutional partner.
+
+Requirements:
+- Use standard French scientific and technical terminology
+- Adapt currency and cost references appropriately if the funder is in the Francophone region
+- Maintain the same level of technical detail and grant-appropriate formality
+- Do not translate equipment model names or brand names
+
+English justification to translate:
+[PASTE YOUR ENGLISH JUSTIFICATION HERE]
+</div>
+
+<!-- S8: GRANT JUSTIFICATION PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>Grant Justification Pack</h1>
+<p>Five ready-to-adapt justification paragraphs for the most commonly funded equipment categories. Replace the brackets with your specific details. These are written at the level of a Rufford, WWF Russell Train, or GEF Small Grants application.</p>
+
+<h2>Justification 1 — Camera Traps</h2>
+<div class="example-box">
+  <div class="example-label">Grant-ready language — camera traps</div>
+  <p>This project requests [X] camera trap units (model: [model], unit cost: [price]) for deployment across [Y] survey sites. Camera trapping is the standard non-invasive method for detecting cryptic and nocturnal mammals in [habitat type] (Burton et al. 2015, Karanth &amp; Nichols 2002). The [model] was selected on the basis of its [trigger speed], [battery life], and [IP rating] — specifications verified as appropriate for the humid tropical conditions at [site name]. Alternative models evaluated include [alternative], which was excluded on the basis of [specific reason — trigger speed, reliability record, or battery performance]. The requested [X] units enable simultaneous deployment across all survey grids, producing independent detection histories required for occupancy modelling. Expected outputs: [number] of trap-nights of data per field season, enabling detection probability estimation for [target species or guild].</p>
+</div>
+
+<h2>Justification 2 — AudioMoth Acoustic Monitors</h2>
+<div class="example-box">
+  <div class="example-label">Grant-ready language — passive acoustic monitoring</div>
+  <p>Passive acoustic monitoring using [X] AudioMoth units (Open Acoustic Devices, unit cost: approximately USD 65) is proposed as the primary method for surveying [bats / birds / amphibians] at [site name]. Acoustic monitoring provides detection data without disturbance to target taxa and enables simultaneous coverage of multiple survey points that would be impractical with observer-based surveys (Sugai et al. 2019). The AudioMoth was selected for its proven field performance in tropical forest environments (Hill et al. 2018), open-source firmware enabling custom recording schedules, and cost-effectiveness that allows [X] units to be deployed simultaneously — a replication level that significantly increases detection probability for rare taxa. The total acoustic monitoring budget includes weatherproofing cases, Class 10 SDHC memory cards, and Energizer Lithium batteries appropriate for [climate conditions]. Data will be analysed using [BirdNET / Kaleidoscope / ARBIMON / manual review] to produce species-level detection lists and occupancy estimates.</p>
+</div>
+
+<h2>Justification 3 — Drone (Mavic 3T, thermal survey)</h2>
+<div class="example-box">
+  <div class="example-label">Grant-ready language — thermal drone survey</div>
+  <p>Aerial thermal surveys using the DJI Mavic 3T (thermal + RGB camera system, unit cost: USD [price]) are proposed as a complementary method to ground transect surveys for detecting [target taxa] at [site name]. Thermal aerial surveys have demonstrated significantly higher detection rates than ground methods for medium and large mammals in forest habitats with intermittent canopy cover (Christiansen et al. 2014, Witczuk et al. 2018), and were successfully applied by the project team at [previous site] as reported at [IPS Congress 2025 / other reference]. The Mavic 3T integrates thermal and RGB imaging in a single flight, enabling both wildlife detection and habitat characterisation. All flights will be conducted under civil aviation permit [permit reference if available] in compliance with [country] drone regulations. The budget includes three additional batteries, ND filter sets, and rugged transport cases, enabling full-day survey sessions of approximately [X] hectares per season.</p>
+</div>
+
+<h2>Justification 4 — GPS Devices</h2>
+<div class="example-box">
+  <div class="example-label">Grant-ready language — GPS devices</div>
+  <p>Precise spatial recording of transect endpoints, survey plots, and species detection locations requires [X] handheld GPS units (model: [model], unit cost: [price]). The [model] supports GPS, GLONASS, and Galileo satellite systems simultaneously, providing position accuracy of ±[X] m under the closed-canopy conditions at [site] — a critical requirement for the spatial analysis and mapping outputs of this project. All coordinates will be recorded in WGS84 decimal degrees format, consistent with the project data management standard and compatible with the GIS analysis pipeline. The requested GPS units replace [existing units / are new acquisitions] and will remain institutional assets at [partner institution] at project close, serving long-term monitoring needs beyond the grant period.</p>
+</div>
+
+<h2>Justification 5 — Field Data Collection System (tablets + ODK)</h2>
+<div class="example-box">
+  <div class="example-label">Grant-ready language — digital data collection</div>
+  <p>Digital field data collection using [X] ruggedised tablets (model: [model], unit cost: [price]) with KoboToolbox forms (free NGO licence) is proposed as the primary data entry system for this project. Digital data collection with built-in validation rules reduces transcription errors compared to paper-based methods and produces datasets that are immediately compatible with the project's analytical pipeline without manual entry (van Es &amp; van Es 2019). The KoboToolbox platform integrates GPS coordinate capture directly into each data record, eliminating the manual step that is a common source of coordinate errors in multi-site surveys. Training for field technicians on the ODK Collect app requires approximately one day. All tablets will be fitted with IP67-rated protective cases appropriate for tropical wet conditions. Forms and datasets will be archived on the KoboToolbox server with project-level access controls, ensuring data security and long-term preservation.</p>
+</div>
+
+<!-- S9: DECISION SCENARIOS -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>5 Real Equipment Decision Scenarios</h1>
+<p>Each scenario shows the full decision process — need definition, shortlist, total cost calculation, and final recommendation.</p>
+
+<h2>Scenario 1 — First camera trap purchase, student project, $500 total budget</h2>
+<div class="callout">
+  <div class="callout-label cl-forest">The situation</div>
+  <p style="margin-bottom:0;">A Masters student needs to conduct a 3-month mammal occupancy survey at 15 sites in a dry deciduous forest. Budget is $500 total including all consumables. Team will check cameras monthly.</p>
+</div>
+<div class="example-box">
+  <div class="example-label">Decision process</div>
+  <p><strong>Step 1 — Need:</strong> Presence/absence detection of medium mammals. Standard occupancy design. Monthly checks possible. Dry conditions reduce IP rating concern.</p>
+  <p><strong>Step 2 — Critical specs:</strong> Trigger speed ≤0.5 s (acceptable for occupancy, not behaviour). Battery life ≥60 days. Memory: 32 GB sufficient for monthly checks.</p>
+  <p><strong>Step 3 — Shortlist:</strong> (a) 4× Campark T80 at $70 = $280. (b) 3× Bushnell Core at $120 = $360. Budget rules out 5+ units of anything better.</p>
+  <p><strong>Step 4 — TCO at 4 units:</strong> Campark: $280 units + $56 cards + $40 batteries + $40 cables = $416, leaving $84 contingency. Bushnell: $360 + $56 + $40 + $40 = $496, zero contingency.</p>
+  <p><strong>Recommendation:</strong> 4× Bushnell Core with zero contingency, or 4× Campark with $84 contingency. Given student project vulnerability to unexpected costs, choose Campark and keep the contingency. Accept the lower trigger performance — occupancy studies at 15 sites with 4 cameras require sequential deployment anyway, and slower trigger speed will not affect presence/absence results for medium mammals. Prioritise the contingency fund over marginal equipment improvement.</p>
+</div>
+
+<h2>Scenario 2 — AudioMoth vs. commercial unit for bat survey</h2>
+<div class="callout">
+  <div class="callout-label cl-forest">The situation</div>
+  <p style="margin-bottom:0;">An NGO wants to conduct a 2-week bat survey at 8 sites in Madagascar. Budget: $2,000 for the acoustic monitoring component. Team has basic technical skills. Sites are accessible by vehicle.</p>
+</div>
+<div class="example-box">
+  <div class="example-label">Decision process</div>
+  <p><strong>Step 1 — Need:</strong> Bat species richness and activity. Must record full ultrasonic range (up to 125 kHz minimum for Malagasy bats). 8 simultaneous sites for 2 weeks.</p>
+  <p><strong>Step 2 — Critical specs:</strong> Frequency range ≥125 kHz. Battery life ≥5 nights continuous. 8 units minimum for simultaneous deployment.</p>
+  <p><strong>Step 3 — Shortlist:</strong> (a) 8× AudioMoth at $65 = $520. (b) 4× Swift One at $400 = $1,600. (c) 3× Wildlife Acoustics SM4BAT at $900 = $2,700 (over budget).</p>
+  <p><strong>Step 4 — TCO:</strong> AudioMoth (8 units): $520 + $200 cases + $160 cards + $80 batteries + import = ~$1,100. Remaining $900 for analysis software and data management. Swift One (4 units): $1,600 + $120 cards + $80 batteries + import = ~$2,000. No budget remaining. Only 4 simultaneous sites possible.</p>
+  <p><strong>Recommendation:</strong> 8× AudioMoth. The spatial replication advantage (8 vs 4 sites simultaneously) outweighs the convenience advantage of the Swift One. The team's technical skills are sufficient for AudioMoth configuration. Allocate the $900 saved toward a BatDetective or Kaleidoscope license for automated species identification — this will provide far more analytical value than spending it on fewer, nicer units.</p>
+</div>
+
+<h2>Scenario 3 — Drone for vegetation mapping: buy or borrow?</h2>
+<div class="callout">
+  <div class="callout-label cl-forest">The situation</div>
+  <p style="margin-bottom:0;">A researcher needs a drone for one 3-week vegetation mapping mission. The DJI Mavic 3 Multispectral costs $3,800. A regional university has one available for loan at $0 cost but requires 6 weeks lead time.</p>
+</div>
+<div class="example-box">
+  <div class="example-label">Decision process</div>
+  <p><strong>Step 4 — Buy vs. borrow TCO:</strong> Buy: $3,800 + $400 accessories + import = ~$5,000. Used once per year for 3 years = $1,667/season. Borrow: $0 cash cost + 6 weeks planning lead time + coordination overhead.</p>
+  <p><strong>Recommendation:</strong> Borrow. The 6-week lead time is manageable with early planning. $5,000 committed to a drone used once per year is difficult to justify in a conservation budget. Use the borrowing relationship for 2–3 seasons while building the case (and the grant application) for institutional acquisition. Critically: start the borrowing conversation now, 6 weeks before the planned survey date — not the week before.</p>
+</div>
+
+<h2>Scenario 4 — Building a grant budget for the M350 RTK drone system</h2>
+<div class="callout">
+  <div class="callout-label cl-forest">The situation</div>
+  <p style="margin-bottom:0;">Haja is applying for the Rufford Small Grants (up to £18,000) to fund the DJI Matrice 350 RTK + H30T + MicaSense Altum-PT system for the ERIS pilot survey. The system costs approximately USD 25,000–30,000 — above the grant ceiling. He needs to build a fundable version of the budget.</p>
+</div>
+<div class="example-box">
+  <div class="example-label">Decision process — grant strategy</div>
+  <p><strong>Strategy:</strong> No single grant at this level will fund the full system. The fundable approach is: (1) Request only the most critical component for the Rufford application — the thermal sensor (H30T at ~$8,000) rather than the full platform. (2) Frame the M350 RTK airframe as the Techni-Drones institutional contribution (in-kind, already available). (3) Apply for the multispectral sensor (MicaSense Altum-PT, ~$10,000) in a separate GEF Small Grants application with NGO co-applicant.</p>
+  <p><strong>Rufford budget (fundable version):</strong></p>
+  <p>Zenmuse H30T thermal sensor: £6,200 · Survey permits and authorisations: £600 · Field consumables (batteries, cards, filters): £400 · Data storage and analysis: £300 · Field team transport: £500 · Total: £8,000 · Remaining for other project costs: £10,000.</p>
+  <p><strong>Justification anchor:</strong> IPS Congress 2025 presentation using Mavic 3T proves the methodology. This application upgrades the thermal capability from a consumer drone to a survey-grade platform — the incremental justification is the quality and precision of the data, not the existence of the method.</p>
+</div>
+
+<h2>Scenario 5 — Field data system upgrade: paper to digital</h2>
+<div class="callout">
+  <div class="callout-label cl-forest">The situation</div>
+  <p style="margin-bottom:0;">A 6-person field team currently uses paper datasheets. Data entry errors and transcription time are consuming 2+ hours per day after field work. The team leader wants to transition to digital but has no technology budget.</p>
+</div>
+<div class="example-box">
+  <div class="example-label">Decision process</div>
+  <p><strong>TCO comparison:</strong> Paper system: $30/season in printed sheets + 2 hours/day transcription for 30 days = 60 person-hours. At even $5/hour opportunity cost = $300/season in lost time. True cost: ~$330/season.</p>
+  <p>Digital system: 3× Samsung Tab A tablets ($180 each) = $540 + $60 waterproof cases + 1 day training = $600 upfront. KoboToolbox: free. Ongoing cost: ~$20/season (cases, cables). Break-even vs. paper: Season 2.</p>
+  <p><strong>Recommendation:</strong> Transition to digital. Include tablets in the next grant budget under "data quality management." The ROI is clear by Season 2. Use Prompt 3 to write the grant justification for the tablets. Prioritise tablet training at the start of the next field season, not midway through — transitioning mid-season creates confusion and hybrid datasets that are harder to clean than either pure paper or pure digital.</p>
+</div>
+
+<!-- S10: MAINTENANCE CHECKLISTS -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Field Maintenance Checklists</h1>
+
+<h2>Camera Trap — End of Field Season</h2>
+<ul class="checklist">
+  <li>Remove all batteries. Never store cameras with batteries installed.</li>
+  <li>Remove all memory cards. Backup data to at least 2 locations before formatting.</li>
+  <li>Clean lens with microfibre cloth. Check for condensation damage inside lens housing.</li>
+  <li>Check PIR sensor window for dirt, spider webs, or physical damage.</li>
+  <li>Test trigger by walking in front of unit. Verify images are captured and date/time is correct.</li>
+  <li>Inspect security cable attachment points for corrosion or wear.</li>
+  <li>Dry any moisture from housing interior before storage. Place fresh desiccant pack inside.</li>
+  <li>Log condition in equipment inventory (Good / Minor damage / Needs repair / Write off).</li>
+  <li>Store in a cool, dry location. Do not stack units directly on each other.</li>
+</ul>
+
+<h2>AudioMoth — End of Field Season</h2>
+<ul class="checklist">
+  <li>Remove batteries. Inspect battery contacts for corrosion. Clean with cotton swab + isopropyl alcohol if needed.</li>
+  <li>Remove and backup all memory cards before formatting.</li>
+  <li>Inspect microphone port for debris or moisture damage.</li>
+  <li>Test unit: insert fresh batteries and card, configure a 5-minute test recording, verify playback.</li>
+  <li>Inspect weatherproof case for cracks, failed seals, or worn closures. Replace if compromised.</li>
+  <li>Update firmware if new version is available. Test after update.</li>
+  <li>Log serial number, condition, and any known issues in equipment inventory.</li>
+</ul>
+
+<h2>Drone — Post-Season Storage</h2>
+<ul class="checklist">
+  <li>Clean all propellers. Inspect for cracks, chips, or deformation. Replace damaged propellers before next use.</li>
+  <li>Charge all batteries to 50–60% for storage. Never store at full charge or fully depleted.</li>
+  <li>Clean camera lens and gimbal. Inspect gimbal motors for stiffness or unusual movement.</li>
+  <li>Update firmware (aircraft + remote controller + batteries) while connected to internet.</li>
+  <li>Run a short hover test in a clear space. Verify all sensors and motors are functioning normally.</li>
+  <li>Verify all permits are still valid for next season. Begin renewal if expiring within 3 months.</li>
+  <li>Store aircraft in hard case at room temperature. Avoid leaving in vehicle or direct sun.</li>
+</ul>
+
+<!-- QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 11</div>
+<h1>Quick Start Checklist</h1>
+<p>Use this when you are facing an equipment decision right now.</p>
+<ul class="checklist">
+  <li>Answer the 7 Need Definition Questions from Step 1 before looking at any product.</li>
+  <li>Use Prompt 7 (AI) to identify what specifications matter most for your specific context.</li>
+  <li>Build a shortlist of 2–4 options using the relevant Equipment Category Guide (Section 5).</li>
+  <li>Use Template A, B, or C from Section 6 to calculate the total cost of ownership for each option.</li>
+  <li>Apply the Buy/Borrow/Rent decision rules from Step 5.</li>
+  <li>If applying for a grant: use the relevant Justification template from Section 8 and refine with Prompt 3.</li>
+  <li>Before the field season: run the relevant Maintenance Checklist from Section 10.</li>
+</ul>
+
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>5-step decision system</td><td>✓</td><td>✓</td></tr>
+  <tr><td>6 equipment category guides</td><td>✓</td><td>✓ Expanded to 12 categories</td></tr>
+  <tr><td>Budget templates (3)</td><td>✓</td><td>✓ 8 templates + auto-calculator</td></tr>
+  <tr><td>Grant justification paragraphs (5)</td><td>✓</td><td>✓ 12 justifications</td></tr>
+  <tr><td>AI prompt pack (12 prompts)</td><td>✓</td><td>✓ 20 prompts</td></tr>
+  <tr><td>Decision scenarios (5)</td><td>✓</td><td>✓ 10 scenarios</td></tr>
+  <tr><td>Maintenance checklists (3)</td><td>✓</td><td>✓ 8 checklists</td></tr>
+  <tr><td>Madagascar-specific import guide</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Regional supplier directory (Indian Ocean)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Equipment inventory Google Sheet template</td><td>—</td><td>Planned</td></tr>
+  <tr><td>French version (full translation)</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:30mm 0;">
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8mm;">OPLURIX</div>
+  <div style="font-family:'Lora',Georgia,serif;font-size:22pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    The right tool, correctly used,<br><em>is how good data happens.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:120mm;margin:0 auto 12mm;line-height:1.7;">
+    Equipment decisions compound. A wrong choice in your first field season costs money, time, and data. A right choice, maintained correctly, produces reliable data for years. The frameworks in this guide are designed to help you get to the right choice faster — and to understand why it is right.
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--faint);line-height:2;">
+    Gear &amp; Equipment Concierge v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div>
+</body>
+</html>

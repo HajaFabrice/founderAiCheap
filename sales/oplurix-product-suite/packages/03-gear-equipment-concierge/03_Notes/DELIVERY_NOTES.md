@@ -1,0 +1,10 @@
+﻿# Delivery Notes
+
+- Recommended client format: $( @{id=oplurix_03_gear_and_equipment_concierge; suite_number=3; public_name=Gear & Equipment Concierge; status=source_only; price_usd=39; primary_audience=System.Object[]; core_promise=Help buyers choose the right field equipment without wasting budget or buying the wrong tool.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=internal_only; checkout_enabled=False; recommended_client_format=hybrid; format_reason=Equipment specs and prices change often, so HTML ages better; PDF is acceptable only as a timestamped guide.; agent_uses=System.Object[]}.recommended_client_format )
+- Format reason: Equipment specs and prices change often, so HTML ages better; PDF is acceptable only as a timestamped guide.
+- Public state: $( @{id=oplurix_03_gear_and_equipment_concierge; suite_number=3; public_name=Gear & Equipment Concierge; status=source_only; price_usd=39; primary_audience=System.Object[]; core_promise=Help buyers choose the right field equipment without wasting budget or buying the wrong tool.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=internal_only; checkout_enabled=False; recommended_client_format=hybrid; format_reason=Equipment specs and prices change often, so HTML ages better; PDF is acceptable only as a timestamped guide.; agent_uses=System.Object[]}.status )
+- Recommended public state: $( @{product_id=oplurix_03_gear_and_equipment_concierge; public_name=Gear & Equipment Concierge; current_state=source_only; recommended_public_state=source_only; launch_decision=defer; activation_priority=6; minimum_activation_gate=Refresh equipment specs, pricing logic, and update workflow before public launch.; main_blocker=Fast-changing product facts make a static first launch risky.; recommended_client_format=hybrid; agent_rule=Keep as internal pipeline only for now.}.recommended_public_state )
+- Main blocker: Fast-changing product facts make a static first launch risky.
+
+If this product moves to checkout later, keep the sellable surface in HTML and
+the delivered bundle in a bounded package.

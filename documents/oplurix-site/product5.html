@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0D4A44;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Handwritten Log Digitizer  ·  OPLURIX  ·  " counter(page);
+    font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+/* ── COVER ── */
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: var(--forest); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; }
+.cover-brand { font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:32mm; }
+.cover-eyebrow { font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-size:29pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-author { font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+/* ── CONTENT ── */
+.content-pages { page: content; }
+h1 { font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-size:13pt; font-weight:700; color:var(--forest2); margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-size:10pt; font-weight:700; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:700; color:var(--forest); }
+
+.section-label { font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+/* ── CALLOUTS ── */
+.callout { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.ca { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.cr { background:#FDF0EE; border-left:3pt solid var(--red); }
+.ct { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.cb { background:#EEF3FA; border-left:3pt solid var(--blue); }
+.cl { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.cl-a { color:var(--amber); } .cl-f { color:var(--forest); }
+.cl-r { color:var(--red); } .cl-t { color:var(--teal); } .cl-b { color:var(--blue); }
+
+/* ── DARK BOX ── */
+.dark-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.dark-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.dark-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.dark-box p:last-child { margin-bottom:0; }
+
+/* ── BEFORE/AFTER ── */
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:3mm; margin:4mm 0; page-break-inside:avoid; }
+.ba-box { padding:4mm 5mm; }
+.ba-bad { background:#FDF0EE; border:0.5pt solid #E8B0A0; }
+.ba-good { background:#EEF6EF; border:0.5pt solid #B2CEB5; }
+.ba-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.ba-bad .ba-label { color:var(--red); }
+.ba-good .ba-label { color:var(--sage); }
+.ba-text { font-size:9pt; line-height:1.5; font-family:monospace; }
+.ba-bad .ba-text { color:#6B2A1A; }
+.ba-good .ba-text { color:var(--forest2); }
+
+/* ── NUMBERED CARD ── */
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-size:8pt; font-weight:700; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+/* ── TABLE ── */
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:700; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+/* ── LISTS ── */
+ul { margin:3mm 0 3mm 6mm; list-style:none; padding:0; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+/* ── STEP BLOCK ── */
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+/* ── PROMPT BOX ── */
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+/* ── TEMPLATE / CODE BOX ── */
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+.code-box { background:#1A2A1F; border:0.5pt solid #2D5A3D; padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:#A8D8A8; page-break-inside:avoid; }
+.code-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:#4A7A55; margin-bottom:2mm; }
+.code-comment { color:#4A7A55; }
+.code-key { color:#D4921F; }
+.code-val { color:#A8D8A8; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+/* ── NOTEBOOK MOCKUP ── */
+.notebook-raw { background:#FFFEF5; border:0.5pt solid #D9CFBC; border-left:3pt solid var(--amber); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8.5pt; line-height:1.8; color:#3A3020; page-break-inside:avoid; font-style:italic; }
+.notebook-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; font-style:normal; }
+
+/* ── CLEAN DATA TABLE ── */
+.data-table { background:#F0F8F0; border:0.5pt solid var(--sage-lt); page-break-inside:avoid; }
+.data-table th { background:var(--teal); font-size:8pt; }
+.data-table td { font-family:monospace; font-size:8.5pt; }
+
+/* ── FLOW DIAGRAM ── */
+.flow-row { display:flex; align-items:center; gap:3mm; margin:3mm 0; page-break-inside:avoid; }
+.flow-box { background:var(--cream); border:0.5pt solid var(--sand); padding:3mm 5mm; font-size:8.5pt; color:var(--forest); flex:1; text-align:center; }
+.flow-box-dark { background:var(--forest); border:0.5pt solid var(--sage); padding:3mm 5mm; font-size:8.5pt; color:white; flex:1; text-align:center; }
+.flow-arrow { font-size:10pt; color:var(--amber); flex-shrink:0; }
+
+/* ── TOOL CARD ── */
+.tool-card { border:0.5pt solid var(--sand); margin-bottom:4mm; page-break-inside:avoid; }
+.tool-header { background:var(--parch); padding:3mm 5mm; display:flex; justify-content:space-between; align-items:center; }
+.tool-name { font-weight:700; font-size:10pt; color:var(--forest); }
+.tool-cost { font-family:monospace; font-size:8pt; color:var(--amber); }
+.tool-body { padding:4mm 5mm; }
+.tool-row { display:grid; grid-template-columns:80pt 1fr; gap:3mm; margin-bottom:1.5mm; font-size:9pt; }
+.tool-key { color:var(--muted); font-weight:700; }
+.tool-val { color:var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- ══════════ COVER ══════════ -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">Handwritten Log<br><em>Digitizer</em></div>
+    <div class="cover-subtitle">A complete workflow for turning paper field notebooks, handwritten datasheets, and analog survey records into clean, structured, analysis-ready digital datasets — without losing a single observation.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Field Biologists</span>
+      <span class="cover-tag">Long-Term Monitoring Teams</span>
+      <span class="cover-tag">NGO Data Officers</span>
+      <span class="cover-tag">Graduate Researchers with Paper Records</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I have years of paper field notebooks that I cannot use in any analysis" to "My handwritten records are a clean, structured, searchable digital dataset ready for R, Python, or any GIS tool."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Field Biologist · Conservation Technologist · Founder, OPLURIX
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $39</div>
+  </div>
+</div>
+
+<!-- ══════════ CONTENT ══════════ -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="cl cl-f">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once. Then go directly to Section 4 (the 6-Step Workflow) and start with your oldest or most critical notebook. Use the AI Prompt Pack (Section 6) at every cleaning step. The Error Taxonomy (Section 8) is your reference when something unexpected appears in the data.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 6-Step Digitization Workflow · Tool Stack Guide · AI Prompt Pack · 5 Full Notebook-to-Dataset Transformations · Error Taxonomy & Fixes · Column Standardisation Library · Quality Control Checklist · Archive Protocol · Quick Start</p>
+</div>
+
+<!-- ── S1 CORE PROMISE ── -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>Somewhere, right now, there are field notebooks from surveys conducted in the 1990s, 2000s, or 2010s that contain irreplaceable biodiversity observations. Some are in institutional archives. Many are in the personal possession of researchers who never had the time or the system to digitize them. A significant portion will never be digitized at all.</p>
+
+<p>This is not a technology problem. Scanning, OCR, and AI tools are better than they have ever been. It is a workflow problem. There is no clear, repeatable process that takes a researcher from a stack of handwritten notebooks to a clean, documented, analysis-ready dataset — without making errors, losing data, or spending six months on what should take six days.</p>
+
+<p>This guide is that workflow. It works for a single notebook from last field season. It works for twenty years of handwritten lemur behavioural observations. It works for data in French, Malagasy, or English. It works whether your handwriting is neat or whether it is the kind of field shorthand only you can read.</p>
+
+<div class="callout ca">
+  <div class="cl cl-a">The Transformation</div>
+  <p style="margin-bottom:2mm;font-size:10.5pt;line-height:1.6;"><strong>Before:</strong> "I have years of paper field notebooks I cannot use in any analysis, and I do not know where to start."</p>
+  <p style="margin-bottom:0;font-size:10.5pt;line-height:1.6;"><strong>After:</strong> "My handwritten records are a clean, structured, searchable, and documented digital dataset ready for any analysis tool."</p>
+</div>
+
+<p><strong>What this system covers:</strong> The complete workflow from physical notebook to clean CSV or spreadsheet — including tool selection, scanning protocols, OCR application, AI-assisted transcription and error correction, column standardisation, data validation, quality control, and long-term archiving. Every step is documented, every common error is catalogued, and every stage can be replicated by a second person.</p>
+
+<!-- ── S2 PAIN POINTS ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>You do not know where to start.</strong><p>You have a stack of notebooks. Some are organised. Some are not. Some have species codes only you remember. You open the first one and immediately feel overwhelmed. The workflow in this guide removes that paralysis by giving you a decision at each step, not a blank page.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>OCR fails on field handwriting.</strong><p>Standard OCR software was trained on printed text. Field notebooks contain abbreviations, crossed-out entries, arrows, side notes, illegible species codes, smudged ink, and condition damage. OCR alone is insufficient — it must be combined with AI interpretation and manual verification. This guide specifies exactly when to use which.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>You introduce transcription errors while trying to fix the data.</strong><p>Manual transcription from paper to spreadsheet produces approximately 1 error per 300 keystrokes under normal conditions. Over a large dataset, this is hundreds of corrupted records. The workflow in this guide layers three independent validation steps to catch these before the data is used in any analysis.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>Your column names and data formats are inconsistent across notebooks.</strong><p>Season 1 uses "sp_code." Season 2 uses "Species." Season 3 uses "Spp." The date format changes three times. GPS format shifts from degrees-minutes-seconds to decimal degrees midway through a notebook. The Column Standardisation Library in Section 9 resolves all of these systematically.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>You cannot tell which records are certain and which are questionable.</strong><p>In the field, observations have varying levels of confidence. A confident species ID written clearly is not the same as a tentative ID written with a question mark and a note about poor light. Without a confidence flag in your dataset, these are indistinguishable from each other.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>The physical notebooks are deteriorating.</strong><p>Humidity, insects, mould, and light damage handwritten records faster than most researchers expect. Notebooks from 10–15 years ago in tropical storage conditions are often partially illegible. This guide includes an urgent-first triage system for deteriorating records.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>You have your own shorthand that nobody else can decode.</strong><p>Field shorthand is a legitimate and efficient system in the field. In a digital dataset, "lm cf juv 2x rt bank" is not a data record — it is an encoding problem. The workflow guides you through building a personal codebook that translates your shorthand into structured fields.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>You do not know how to handle genuinely illegible sections.</strong><p>Every notebook has sections that cannot be read with confidence. The correct response is not to guess and not to omit — it is to flag the record explicitly with an illegibility code, preserve what is readable, and document what is missing. The Error Taxonomy in Section 8 covers every category of illegibility.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>You have no plan for long-term preservation of the physical notebooks.</strong><p>Digitizing is not the same as archiving. The workflow in this guide produces both a verified digital dataset and a properly archived physical notebook — with a documented relationship between the two.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>You cannot verify the accuracy of your own transcription.</strong><p>Checking your own work is cognitively difficult — your brain reads what it expects to see. This guide includes structured cross-checking protocols that use a second person, an AI tool, or a systematic time-delayed re-read to catch the errors that the transcriber misses.</p></div>
+</div>
+
+<!-- ── S3 DESIRED OUTCOMES ── -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">01</td><td>Complete the digitization of one field notebook in a single focused work session of 3–6 hours.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">02</td><td>Produce a clean, column-standardised CSV or spreadsheet with full provenance documentation.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">03</td><td>Handle illegible, damaged, and ambiguous records systematically — with no data invented and no data silently lost.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">04</td><td>Build a personal codebook that translates field shorthand into structured data fields.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">05</td><td>Merge records from multiple notebooks and multiple seasons into a single, consistent, queryable dataset.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">06</td><td>Flag confidence levels for every observation so that analyses can filter by certainty.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">07</td><td>Validate the final dataset against three independent checks before any analysis is run.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">08</td><td>Archive the physical notebooks and the digital files with a documented, findable relationship between them.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">09</td><td>Use the digitized dataset in R, Python, QGIS, or any standard analysis tool without additional cleaning.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">10</td><td>Have a repeatable workflow you can apply to every future notebook — and teach to any team member.</td></tr>
+</table>
+
+<!-- ── S4 THE 6-STEP WORKFLOW ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 6-Step Digitization Workflow</h1>
+
+<p>This workflow applies to any handwritten field record — from a single survey form to thirty years of notebooks. Every step produces a documented output. Do not skip steps. The sequence is designed to catch errors at the cheapest possible point in the process.</p>
+
+<!-- WORKFLOW OVERVIEW -->
+<div style="margin:5mm 0;page-break-inside:avoid;">
+  <div class="flow-row">
+    <div class="flow-box-dark"><strong>Step 1</strong><br>Triage &amp; Assess</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box-dark"><strong>Step 2</strong><br>Build Codebook</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box-dark"><strong>Step 3</strong><br>Scan &amp; OCR</div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-box"><strong>Step 6</strong><br>Archive</div>
+    <div class="flow-arrow">←</div>
+    <div class="flow-box"><strong>Step 5</strong><br>Validate</div>
+    <div class="flow-arrow">←</div>
+    <div class="flow-box"><strong>Step 4</strong><br>Transcribe &amp; Clean</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>TRIAGE AND ASSESS</h3>
+    <p>Before digitizing anything, assess the full set of notebooks. This takes 30–60 minutes and determines the order of work and the tools required.</p>
+    <div class="callout">
+      <div class="cl cl-f">Triage Assessment Questions — for each notebook</div>
+      <ul style="margin:0;">
+        <li>Physical condition: Good / Fair (minor damage) / Poor (significant deterioration) / Critical (immediate risk of loss)</li>
+        <li>Handwriting legibility: Clear / Mixed / Difficult / Requires specialist knowledge of author's shorthand</li>
+        <li>Structure: Does the notebook use a consistent format page-to-page, or is it free-form?</li>
+        <li>Language: English / French / Malagasy / Mixed / Code-heavy</li>
+        <li>Data types present: Species observations / Transect data / GPS waypoints / Behavioural records / Environmental measurements / Mixed</li>
+        <li>Priority: Is this data already used in a publication, or is it unpublished baseline data?</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin-bottom:2mm;">Output of Step 1: A triage log. One row per notebook. Columns: notebook ID, date range, condition, legibility, priority, estimated digitization time.</p>
+    <div class="callout cr">
+      <div class="cl cl-r">Critical priority rule</div>
+      <p style="margin:0;">Digitize "Critical" condition notebooks FIRST, regardless of scientific priority. Physical deterioration is irreversible. A notebook you cannot read next year is more urgent than a legible notebook from last season.</p>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>BUILD THE CODEBOOK</h3>
+    <p>Before transcribing a single observation, document every abbreviation, symbol, and code used in the notebook. This is the most commonly skipped step — and the one that causes the most errors downstream.</p>
+    <div class="callout">
+      <div class="cl cl-f">Codebook Template</div>
+      <p style="margin-bottom:2mm;">For each code, abbreviation, or symbol in the notebook, create one row:</p>
+      <ul style="margin:0;">
+        <li><strong>Code as written:</strong> exactly as it appears in the notebook (e.g., "Lc", "juv", "rt bank", "x3", "?")</li>
+        <li><strong>Meaning:</strong> the full, unambiguous interpretation (e.g., "Lemur catta", "juvenile", "right river bank", "three individuals", "uncertain identification")</li>
+        <li><strong>Digital field:</strong> which column in the final dataset this maps to (e.g., "species_code", "age_class", "position", "count", "confidence_flag")</li>
+        <li><strong>Digital value:</strong> the standardised value to enter in that field (e.g., "LEMURCATTA", "JUV", "RIGHT_BANK", "3", "UNCERTAIN")</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin-bottom:2mm;">Output of Step 2: A codebook CSV or sheet. Keep it open throughout the entire transcription process.</p>
+    <p>Use Prompt 1 in the AI Prompt Pack (Section 6) to help build the codebook if you have access to a legible overview of the notebook's contents. The AI can suggest likely interpretations for common field abbreviations — but you must verify every entry against the actual notebook.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>SCAN AND OCR</h3>
+    <p>Create a high-resolution digital image of every page before any manual transcription. This is your archival copy and your OCR source. The scan comes before the transcription — always.</p>
+    <div class="callout">
+      <div class="cl cl-f">Scanning Specifications</div>
+      <ul style="margin:0;">
+        <li><strong>Resolution:</strong> 300 DPI minimum for OCR. 600 DPI for damaged or faded notebooks. 1200 DPI for notebooks with very small handwriting or fine detail.</li>
+        <li><strong>Format:</strong> Save as high-quality JPG (for storage efficiency) or TIFF (for maximum quality preservation).</li>
+        <li><strong>Colour mode:</strong> Colour scan, not greyscale — even for pencil notebooks. Colour captures ink degradation, water damage, and annotation colour-coding.</li>
+        <li><strong>Naming convention:</strong> NotebookID_PageNumber_Date.jpg (e.g., NB001_P042_2026-05-01.jpg). Never use spaces in filenames.</li>
+        <li><strong>Equipment:</strong> Flatbed scanner preferred. Document camera acceptable. Phone camera with a scanner app (Microsoft Lens, Adobe Scan) is usable for Good-condition notebooks.</li>
+      </ul>
+    </div>
+    <div class="callout ca">
+      <div class="cl cl-a">OCR tool selection</div>
+      <p style="margin-bottom:2mm;"><strong>For printed field forms with handwritten entries:</strong> Adobe Acrobat OCR, ABBYY FineReader. These handle structured documents with mixed print/handwriting reasonably well.</p>
+      <p style="margin-bottom:2mm;"><strong>For fully handwritten notebooks:</strong> Google Document AI, AWS Textract, or Microsoft Azure Document Intelligence. These are cloud-based services with free tiers adequate for most field notebook volumes.</p>
+      <p style="margin-bottom:0;"><strong>For any notebook:</strong> AI-assisted transcription (GPT-4 Vision, Claude) is often more accurate than pure OCR for field handwriting. See Prompt 2. Use this as a complement to OCR, not a replacement for verification.</p>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output of Step 3: (a) Complete scan archive, one folder per notebook. (b) OCR raw output text file for each page. Do not clean the OCR output yet — preserve it as a reference.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>TRANSCRIBE AND CLEAN</h3>
+    <p>The transcription phase produces the first version of the digital dataset. Work page by page, using the codebook (Step 2) and the scanned images (Step 3) simultaneously. Never transcribe from the physical notebook at this stage — always from the scan.</p>
+    <div class="callout">
+      <div class="cl cl-f">Transcription Rules</div>
+      <ul style="margin:0;">
+        <li>One row per observation. Never combine two observations in one row.</li>
+        <li>Use the standardised values from the codebook, not the original shorthand.</li>
+        <li>Add a <code>source_page</code> column: the scan filename or page number the record was taken from.</li>
+        <li>Add a <code>confidence</code> column: HIGH (clearly legible, certain identification) / MEDIUM (legible, uncertain ID) / LOW (partially illegible) / ILLEGIBLE (cannot be transcribed).</li>
+        <li>Add a <code>transcriber_note</code> column: for any record requiring explanation or flagging. Leave blank if no note needed.</li>
+        <li>For genuinely illegible records: enter "ILLEGIBLE" in every field that cannot be read. Do not leave blank — blank fields are ambiguous. ILLEGIBLE is unambiguous.</li>
+      </ul>
+    </div>
+    <p>Use Prompts 3 and 4 from the AI Prompt Pack to assist with difficult sections — species name disambiguation, date format correction, and contextual interpretation of ambiguous entries.</p>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output of Step 4: Raw transcription spreadsheet — unchecked but complete. One row per observation. All columns populated (with ILLEGIBLE where required).</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <h3>VALIDATE — THREE INDEPENDENT CHECKS</h3>
+    <p>Never skip validation. The three checks are designed to catch different categories of error and must be performed in sequence.</p>
+    <div class="callout">
+      <div class="cl cl-f">Check 1 — Automated structural validation</div>
+      <p style="margin:0;">Run the validation prompt (Prompt 7) or use Excel/Google Sheets data validation rules to check: (a) date formats are consistent, (b) GPS coordinates are in the correct range for your study area, (c) species codes are all in the master species list, (d) count fields contain only integers or ILLEGIBLE, (e) no required field is blank.</p>
+    </div>
+    <div class="callout">
+      <div class="cl cl-f">Check 2 — Cross-reference against original scan</div>
+      <p style="margin:0;">Take 10% of records at random. Open the scan for each record. Verify that every field in the dataset matches what is written on the page. If error rate exceeds 2%, re-check the entire dataset. If error rate is below 2%, document it and proceed.</p>
+    </div>
+    <div class="callout">
+      <div class="cl cl-f">Check 3 — Ecological plausibility review</div>
+      <p style="margin:0;">Review the dataset for records that are ecologically implausible: a species outside its known range, a count of 500 individuals for a solitary species, a time-of-day entry for a strictly nocturnal species observed at noon. These are not necessarily errors — they may be genuine rare records. Flag them for expert review rather than deleting them.</p>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output of Step 5: Validated dataset with a validation log documenting all errors found and how they were resolved.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">6</div>
+  <div class="step-content">
+    <h3>ARCHIVE — PHYSICAL AND DIGITAL</h3>
+    <p>Digitization is not archiving. Both the physical notebook and the digital files require systematic long-term storage with a documented link between them.</p>
+    <div class="callout">
+      <div class="cl cl-f">Physical notebook archiving</div>
+      <ul style="margin:0;">
+        <li>Store each notebook in an individual acid-free paper envelope or archival sleeve.</li>
+        <li>Label the envelope with: notebook ID, date range, survey area, name of field researcher, digitization date, digital file location.</li>
+        <li>Store in a cool, dry, dark location. Avoid cardboard boxes — use archival boxes where possible.</li>
+        <li>Do not store rubber-banded or under pressure. Pages must lay flat.</li>
+      </ul>
+    </div>
+    <div class="callout">
+      <div class="cl cl-f">Digital file archiving — the 3-2-1 rule</div>
+      <ul style="margin:0;">
+        <li><strong>3 copies:</strong> The working copy on your computer, a backup on an external drive, and a third copy in cloud storage (Google Drive, Zenodo, institutional repository).</li>
+        <li><strong>2 storage types:</strong> Computer hard drive + external SSD or USB drive.</li>
+        <li><strong>1 offsite:</strong> Cloud storage counts as offsite. An institutional server counts as offsite.</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output of Step 6: Archived physical notebook + archived digital package (scans, codebook, raw transcription, validated dataset, validation log, metadata file).</p>
+  </div>
+</div>
+
+<!-- ── S5 TOOL STACK ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>Tool Stack Guide</h1>
+<p>Every tool needed for the workflow, organised by function, with cost, platform, and field-specific notes. All free options are indicated.</p>
+
+<div class="tool-card">
+  <div class="tool-header"><div class="tool-name">Microsoft Lens / Adobe Scan</div><div class="tool-cost">FREE · iOS + Android</div></div>
+  <div class="tool-body">
+    <div class="tool-row"><div class="tool-key">Use for</div><div class="tool-val">Mobile scanning of Good-condition notebooks. Auto-crops, corrects perspective, adjusts contrast.</div></div>
+    <div class="tool-row"><div class="tool-key">Strengths</div><div class="tool-val">Fast, free, works offline, produces PDF or JPG. Microsoft Lens integrates with OneDrive.</div></div>
+    <div class="tool-row"><div class="tool-key">Limitations</div><div class="tool-val">Not sufficient for Critical-condition notebooks. Phone camera resolution varies. Lighting sensitivity.</div></div>
+    <div class="tool-row"><div class="tool-key">Field note</div><div class="tool-val">Use in landscape mode with the notebook flat. Natural light from a window is better than flash.</div></div>
+  </div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-header"><div class="tool-name">Google Document AI / AWS Textract</div><div class="tool-cost">Free tier available · Cloud-based</div></div>
+  <div class="tool-body">
+    <div class="tool-row"><div class="tool-key">Use for</div><div class="tool-val">OCR on field handwriting. Significantly more accurate than offline OCR on handwritten text.</div></div>
+    <div class="tool-row"><div class="tool-key">Strengths</div><div class="tool-val">Handles mixed print/handwriting. Returns structured JSON with confidence scores per word.</div></div>
+    <div class="tool-row"><div class="tool-key">Limitations</div><div class="tool-val">Requires internet. Data is sent to a cloud provider — check your data sharing agreements before using. Free tier: ~1,000 pages/month.</div></div>
+    <div class="tool-row"><div class="tool-key">Alternative</div><div class="tool-val">Tesseract OCR (free, offline, open-source) — lower accuracy on handwriting but no data sharing concern.</div></div>
+  </div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-header"><div class="tool-name">Claude / GPT-4 Vision (AI transcription assistant)</div><div class="tool-cost">Free tier / ~$20/month</div></div>
+  <div class="tool-body">
+    <div class="tool-row"><div class="tool-key">Use for</div><div class="tool-val">Interpreting difficult handwriting, resolving abbreviations, converting raw OCR output to structured fields.</div></div>
+    <div class="tool-row"><div class="tool-key">Strengths</div><div class="tool-val">Contextual interpretation. Can use the codebook as context. Handles mixed-language entries. Much better than OCR alone for field shorthand.</div></div>
+    <div class="tool-row"><div class="tool-key">Critical limitation</div><div class="tool-val">AI transcription must be verified. The AI will make plausible-sounding errors — especially for species names and numerical values. Never use AI output without cross-checking against the scan.</div></div>
+    <div class="tool-row"><div class="tool-key">Data privacy</div><div class="tool-val">Do not upload sensitive unpublished data (species locations, community partner details) to commercial AI services without consent.</div></div>
+  </div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-header"><div class="tool-name">Google Sheets / Microsoft Excel</div><div class="tool-cost">Free / included in Microsoft 365</div></div>
+  <div class="tool-body">
+    <div class="tool-row"><div class="tool-key">Use for</div><div class="tool-val">The transcription spreadsheet. Data validation rules. The codebook. The validation log.</div></div>
+    <div class="tool-row"><div class="tool-key">Key features</div><div class="tool-val">Data Validation (dropdown lists for standardised values), Conditional Formatting (flag outliers), VLOOKUP / XLOOKUP (check species codes against master list).</div></div>
+    <div class="tool-row"><div class="tool-key">Field note</div><div class="tool-val">Work in Google Sheets if multiple people are transcribing simultaneously. Excel is better for offline work in the field.</div></div>
+  </div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-header"><div class="tool-name">R / Python (pandas)</div><div class="tool-cost">FREE · Cross-platform</div></div>
+  <div class="tool-body">
+    <div class="tool-row"><div class="tool-key">Use for</div><div class="tool-val">Automated validation checks. Merging multiple notebook datasets. Detecting outliers. Generating the validation report.</div></div>
+    <div class="tool-row"><div class="tool-key">Key functions</div><div class="tool-val">R: readr, dplyr, validate package. Python: pandas, great_expectations library for data validation.</div></div>
+    <div class="tool-row"><div class="tool-key">When needed</div><div class="tool-val">For datasets larger than ~2,000 rows, or when merging 5+ notebooks, manual spreadsheet validation becomes impractical. Use R or Python at that scale.</div></div>
+  </div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-header"><div class="tool-name">Zenodo / Figshare</div><div class="tool-cost">FREE · Long-term data repository</div></div>
+  <div class="tool-body">
+    <div class="tool-row"><div class="tool-key">Use for</div><div class="tool-val">Permanent archiving of digitized datasets. Generates a DOI (digital object identifier) for citability. Required by many funders for data management plans.</div></div>
+    <div class="tool-row"><div class="tool-key">Strengths</div><div class="tool-val">Free. Persistent. Findable. Generates a DOI. CERN-maintained (Zenodo) — will not disappear.</div></div>
+    <div class="tool-row"><div class="tool-key">Access control</div><div class="tool-val">Can be set to open access, restricted access (requires permission request), or embargoed (access opens after a set date). Use restricted or embargoed for unpublished data.</div></div>
+  </div>
+</div>
+
+<!-- ── S6 AI PROMPT PACK ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>AI Prompt Pack — 12 Prompts</h1>
+<p>These prompts work with Claude, ChatGPT (GPT-4 Vision for image inputs), or any capable AI assistant. Always verify AI output against the original scan. Never use AI output as the final record without cross-checking.</p>
+
+<h2>Prompt 1 — Build the Codebook from a Notebook Overview</h2>
+<div class="prompt-box">
+I am digitizing a handwritten field notebook. I will describe the types of entries it contains. Help me build a codebook that maps field shorthand to standardised digital values.
+
+Notebook context:
+- Survey type: [transect / focal follow / point count / opportunistic observation]
+- Target taxa: [species or groups recorded]
+- Language: [English / French / Malagasy / mixed]
+- Time period: [dates of notebook]
+- I know the following abbreviations are used: [list any you recognise]
+
+For each code type in this notebook (species codes, behavioural codes, condition codes, habitat codes, equipment codes), suggest:
+1. Likely meanings based on context
+2. Recommended standardised column name
+3. Recommended standardised digital value (e.g., all caps, underscores, no spaces)
+
+I will verify every suggestion against the actual notebook.
+</div>
+
+<h2>Prompt 2 — Transcribe a Handwritten Page (Image Input)</h2>
+<div class="prompt-box">
+I am attaching a scan of a handwritten field notebook page. Please transcribe every entry on this page into a structured table.
+
+Context:
+- Survey type: [describe]
+- Target taxa: [describe]
+- Known abbreviations: [paste your codebook here]
+- Column structure expected: [date | time | species | count | age | sex | behaviour | GPS | habitat | observer | notes | confidence]
+
+For each entry:
+- Transcribe exactly what is written in the "raw" column
+- Interpret using the codebook in the "interpreted" column
+- Rate your confidence: HIGH (clearly legible) / MEDIUM (interpretable with context) / LOW (partially illegible) / ILLEGIBLE
+- Add a "transcriber_note" for any ambiguity
+
+Do NOT invent values. If you cannot read a field, write ILLEGIBLE.
+
+[ATTACH SCAN IMAGE]
+</div>
+
+<h2>Prompt 3 — Resolve Ambiguous Species Names</h2>
+<div class="prompt-box">
+I am transcribing a field notebook from [country/region] recording [target taxa]. I have the following ambiguous entries that may be species names or abbreviations:
+
+[LIST THE AMBIGUOUS ENTRIES, ONE PER LINE]
+
+For each entry:
+1. Suggest the most likely intended species, given the geographic context
+2. List alternative interpretations if more than one is plausible
+3. Recommend whether to flag as HIGH, MEDIUM, or LOW confidence
+4. Suggest a note for the transcriber_note column
+
+I will verify your suggestions against the original notebook and a regional species checklist.
+
+Geographic region: [country and habitat type]
+Survey period: [dates]
+Observer expertise level: [expert herpetologist / general field biologist / student]
+</div>
+
+<h2>Prompt 4 — Standardise Inconsistent Date Formats</h2>
+<div class="prompt-box">
+I have a column of dates from a digitized field notebook that contains multiple inconsistent formats. Please standardise all dates to ISO 8601 format (YYYY-MM-DD).
+
+Rules:
+- If the year is ambiguous (e.g., "15" could be 2015 or 1915), use [specify the likely year range based on notebook context]
+- If only month and day are present (no year), flag as INCOMPLETE_DATE and add the notebook year in a separate "assumed_year" column
+- If the date is completely illegible, return ILLEGIBLE
+- Do NOT invent dates — flag ambiguities, do not resolve them by guessing
+
+Date column to standardise:
+[PASTE YOUR DATE COLUMN HERE — one date per line]
+</div>
+
+<h2>Prompt 5 — Clean and Standardise GPS Coordinates</h2>
+<div class="prompt-box">
+I have GPS coordinates from a handwritten field notebook in inconsistent formats. Please standardise all coordinates to decimal degrees (DD.DDDDD format) in WGS84.
+
+Rules:
+- Convert degrees-minutes-seconds (DMS) to decimal degrees
+- Convert degrees-decimal minutes (DDM) to decimal degrees
+- If hemisphere is missing, infer from the study area context: [specify latitude and longitude ranges for your study area]
+- If coordinates are clearly outside the study area range [specify bounding box], flag as SPATIAL_OUTLIER — do not correct
+- If coordinates are illegible or missing, return ILLEGIBLE
+
+Coordinate column to clean:
+[PASTE YOUR COORDINATE COLUMN HERE — one coordinate per line]
+
+Study area bounding box:
+Latitude: [min] to [max]
+Longitude: [min] to [max]
+</div>
+
+<h2>Prompt 6 — Interpret Behavioural Observation Codes</h2>
+<div class="prompt-box">
+I am digitizing focal follow behavioural records for [species name]. The notebook uses behavioural codes I need to interpret. Below is a list of codes as they appear in the notebook.
+
+Known context:
+- Species: [name]
+- Ethogram used: [if known — e.g., standard lemur ethogram, custom ethogram]
+- Observer: [field researcher name or description]
+- Survey period: [dates]
+
+For each code:
+1. Suggest the most likely behavioural category (locomotion / feeding / social / rest / vigilance / other)
+2. Suggest the standardised behaviour description
+3. Flag confidence level
+
+Codes to interpret:
+[LIST CODES, ONE PER LINE]
+</div>
+
+<h2>Prompt 7 — Automated Structural Validation</h2>
+<div class="prompt-box">
+I have a digitized field dataset. Please validate it against the following rules and report all violations.
+
+Dataset structure: [describe columns and expected formats]
+
+Validation rules to apply:
+1. Date format: all dates must match YYYY-MM-DD
+2. GPS coordinates: latitude between [min] and [max], longitude between [min] and [max]
+3. Species codes: must appear in this master list: [paste species code list]
+4. Count field: must be a positive integer or ILLEGIBLE — no negatives, no decimals, no text
+5. Confidence field: must be one of: HIGH / MEDIUM / LOW / ILLEGIBLE
+6. No field in the following required columns may be blank: [list required columns]
+7. Observer codes must appear in this list: [paste observer code list]
+
+For each violation: row number, column, the value found, the rule violated, recommended action.
+
+Dataset to validate (paste as CSV):
+[PASTE DATASET HERE]
+</div>
+
+<h2>Prompt 8 — Merge Multiple Notebook Datasets</h2>
+<div class="prompt-box">
+I have [number] digitized notebook datasets from different field seasons that I need to merge into a single dataset. Each dataset has slightly different column names and formats.
+
+I will describe each dataset below. Please generate:
+1. A unified column schema (standardised name, format, description) that accommodates all datasets
+2. A mapping table showing how each original column name maps to the unified name
+3. A list of values that need to be standardised across datasets (e.g., "Lc" in dataset 1 = "LEMURCATTA" in dataset 3)
+4. Flags for any columns present in some datasets but not others — recommend whether to include with NAs or exclude
+
+Dataset descriptions:
+[Describe each dataset: column names, date range, survey type, any known inconsistencies]
+</div>
+
+<h2>Prompt 9 — Generate Dataset Metadata File</h2>
+<div class="prompt-box">
+I have completed digitizing a field notebook dataset. Please help me write a metadata file that documents this dataset.
+
+Dataset details:
+- Original notebook: [ID, date range, observer, survey site]
+- Data types: [species observations / transect data / behavioural records / etc.]
+- Geographic coverage: [study area name and bounding coordinates]
+- Taxonomic coverage: [taxa recorded]
+- Total records: [number]
+- Records flagged as ILLEGIBLE: [number and percentage]
+- Digitization date: [date]
+- Digitizer: [name]
+- Validation completed: [yes/no, validation method used]
+- Known gaps or limitations: [describe any sections not digitized, damaged pages, etc.]
+- Codebook reference: [filename]
+- Scan archive location: [folder path or URL]
+
+Format: Darwin Core compatible metadata, suitable for upload to GBIF or a data repository.
+</div>
+
+<h2>Prompt 10 — Prioritise Illegible Records for Expert Review</h2>
+<div class="prompt-box">
+I have a digitized dataset with [number] records flagged as LOW confidence or ILLEGIBLE. I need to prioritise which records to send for expert review.
+
+Please analyse the following illegible/uncertain records and rank them by:
+1. Scientific importance (rare species, unusual location, rare behaviour)
+2. Recoverability (how likely is it that an expert could interpret the original scan?)
+3. Impact on analysis (would this record significantly affect diversity counts, distribution maps, or population estimates?)
+
+For each record, recommend: PRIORITISE FOR EXPERT REVIEW / ACCEPT CURRENT TRANSCRIPTION / ACCEPT AS ILLEGIBLE
+
+Dataset of uncertain records (paste as CSV):
+[PASTE UNCERTAIN RECORDS HERE]
+
+Context:
+- Study area and target taxa: [describe]
+- Primary analysis objectives: [what the data will be used for]
+</div>
+
+<h2>Prompt 11 — Write a Data Quality Report</h2>
+<div class="prompt-box">
+I have completed digitizing and validating a field notebook dataset. Please write a short data quality report based on the following information.
+
+Dataset summary:
+- Total records: [number]
+- Records with HIGH confidence: [number / percentage]
+- Records with MEDIUM confidence: [number / percentage]
+- Records with LOW confidence: [number / percentage]
+- Records flagged ILLEGIBLE: [number / percentage]
+- Validation errors found and resolved: [describe types and counts]
+- Validation errors remaining (expert review pending): [number]
+- Temporal coverage: [date range]
+- Spatial coverage: [study area, number of sites]
+
+The report should:
+- State the overall usability of the dataset for analysis
+- Specify which record subsets are suitable for which types of analysis (e.g., HIGH confidence records only for species distribution modelling; all records for presence/absence summaries)
+- Note any known limitations that future users should understand
+- Recommend whether expert review of LOW confidence records should precede or follow the primary analysis
+- Format: 200–300 words, professional research data quality report tone
+</div>
+
+<h2>Prompt 12 — French Language Notebook Transcription</h2>
+<div class="prompt-box">
+I am digitizing a handwritten field notebook written primarily in French, with some Malagasy terms and standard Latin species names.
+
+Please transcribe the attached page and:
+- Transcribe French entries in their original form in the "raw_french" column
+- Provide an English translation in the "translated_english" column
+- Preserve all Latin species names unchanged
+- For Malagasy terms (habitat names, local species names, place names): transcribe as written, add a note that these require local expert verification
+- Flag any entry where the French is ambiguous or uses specialist terminology that affects meaning
+
+Known context:
+- Survey type: [describe]
+- Field researcher: [description — e.g., Malagasy biologist trained in French]
+- Survey region: [region of Madagascar]
+
+[ATTACH SCAN IMAGE]
+</div>
+
+<!-- ── S7 TRANSFORMATIONS ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>5 Full Notebook-to-Dataset Transformations</h1>
+<p>Complete worked examples from raw handwritten entry to clean digital record. Each shows the original notation, the interpretation process, and the final dataset row.</p>
+
+<h2>Transformation 1 — Lemur Focal Follow Record</h2>
+<div class="notebook-raw">
+  <div class="notebook-label">Raw notebook entry — as written</div>
+  06/03/24 0742 Lc ♀ad "Maya" rt bank fig tree ~4m feed figs 12min → mov W
+  0754 Lc juv x2 base same tree play 6min
+  0800 all 3 mov W out of sight alrt call bef dep
+</div>
+<div style="text-align:center;font-size:10pt;color:var(--sage);margin:2mm 0;">↓  Codebook applied + structured into rows  ↓</div>
+<table class="data-table">
+  <tr><th>date</th><th>time_start</th><th>species</th><th>age_sex</th><th>individual_id</th><th>count</th><th>behaviour</th><th>habitat</th><th>duration_min</th><th>notes</th><th>confidence</th></tr>
+  <tr><td>2024-03-06</td><td>07:42</td><td>LEMURCATTA</td><td>F_AD</td><td>Maya</td><td>1</td><td>FEED</td><td>FIG_TREE_4M</td><td>12</td><td>right river bank; moving W after</td><td>HIGH</td></tr>
+  <tr><td>2024-03-06</td><td>07:54</td><td>LEMURCATTA</td><td>JUV</td><td>UNKNOWN</td><td>2</td><td>PLAY</td><td>FIG_TREE_BASE</td><td>6</td><td>base of same tree as focal individual</td><td>HIGH</td></tr>
+  <tr><td>2024-03-06</td><td>08:00</td><td>LEMURCATTA</td><td>MIXED</td><td>UNKNOWN</td><td>3</td><td>MOVE</td><td>UNKNOWN</td><td>ILLEGIBLE</td><td>alert call before departure; direction W; lost from sight</td><td>HIGH</td></tr>
+</table>
+<div class="callout ct" style="margin-top:3mm;">
+  <div class="cl cl-t">Decisions made during this transformation</div>
+  <p style="margin-bottom:1.5mm;">The "~4m" was recorded as a habitat height estimate, not a precise measurement — placed in notes, not a numeric field. "alrt call bef dep" was decoded from context as alert call before departure. The approximate sign (~) was preserved in the notes column but the height estimate was not entered as a numeric value due to uncertainty. Duration for the third row was not stated in the notebook — entered as ILLEGIBLE, not inferred.</p>
+</div>
+
+<h2>Transformation 2 — Herpetofauna Transect Record</h2>
+<div class="notebook-raw">
+  <div class="notebook-label">Raw notebook entry — as written</div>
+  T3-N · 23:15 · stream edge · Mantellasp? small red · 1 · coord: S18°27.456 E47°11.234
+  tissue→vial7 · ill. light conditions · ID uncertain cf. aurantiaca
+</div>
+<div style="text-align:center;font-size:10pt;color:var(--sage);margin:2mm 0;">↓  Codebook + GPS conversion + uncertainty flagging  ↓</div>
+<table class="data-table">
+  <tr><th>transect_id</th><th>time</th><th>habitat</th><th>species_raw</th><th>species_interpreted</th><th>count</th><th>lat_dd</th><th>lon_dd</th><th>sample_id</th><th>confidence</th><th>notes</th></tr>
+  <tr><td>T3-N</td><td>23:15</td><td>STREAM_EDGE</td><td>Mantellasp? small red</td><td>Mantella cf. aurantiaca</td><td>1</td><td>-18.45760</td><td>47.18723</td><td>VIAL_007</td><td>LOW</td><td>poor light; observer uncertain; cf. aurantiaca noted; tissue collected for molecular confirmation</td></tr>
+</table>
+<div class="callout cr" style="margin-top:3mm;">
+  <div class="cl cl-r">GPS conversion note</div>
+  <p style="margin:0;">S18°27.456 / E47°11.234 is in degrees-decimal minutes format. Converted: latitude = -(18 + 27.456/60) = -18.45760. Longitude = 47 + 11.234/60 = 47.18723. This conversion must be shown in the validation log — do not silently convert without documenting the original format and the conversion formula applied.</p>
+</div>
+
+<h2>Transformation 3 — Camera Trap Check Log</h2>
+<div class="notebook-raw">
+  <div class="notebook-label">Raw notebook entry — as written</div>
+  CT-12 checked 15/4 · 847 triggers · card swapped (old→bag3/card12) · batt ok · 
+  images: fosa x3 noc, Lemcatta grp 7+ dawn, lots of birds daytime, 1 × human 0300(!)
+  camera slightly displaced — reset 45cm / perpendic path — locking cable intact
+</div>
+<div style="text-align:center;font-size:10pt;color:var(--sage);margin:2mm 0;">↓  Structured into camera trap check dataset  ↓</div>
+<table class="data-table">
+  <tr><th>camera_id</th><th>check_date</th><th>triggers_total</th><th>card_in</th><th>card_out</th><th>battery_status</th><th>species_detected</th><th>condition</th><th>notes</th><th>confidence</th></tr>
+  <tr><td>CT-12</td><td>2024-04-15</td><td>847</td><td>BAG3_CARD12</td><td>ILLEGIBLE</td><td>GOOD</td><td>Cryptoprocta ferox; Lemur catta; UNID_BIRD; UNID_HUMAN</td><td>DISPLACED_RESET</td><td>camera displaced — reset to 45cm height perpendicular to path; human detected 03:00 — flag for security review; fosa x3 nocturnal; L.catta group 7+ at dawn</td><td>HIGH</td></tr>
+</table>
+<div class="callout ca" style="margin-top:3mm;">
+  <div class="cl cl-a">Decisions made</div>
+  <p style="margin:0;">"Old" card identity was not recorded in the notebook — entered as ILLEGIBLE, not guessed. Human detection flagged separately in notes for security/ethics review. Species group count "7+" recorded as a text note, not a numeric field, because the "+" indicates the count was uncertain.</p>
+</div>
+
+<h2>Transformation 4 — Drone Survey Flight Log</h2>
+<div class="notebook-raw">
+  <div class="notebook-label">Raw notebook entry — as written</div>
+  26 Jul · Mavic3T · Ihofa NE · dep 0612 land 0637 · alt 80m · 3 thermal passes
+  wind ~15kph NW · humid · batt1=87% start 12% end · batt2=91% start 8% end
+  detections: thermal sig ×11 canopy level →3 confirmed Indri (calls heard sim.)
+  remaining 8 unconfirmed — too small for Indri, poss. bird or sm mammal
+  card: DJIM3T_2026-07-26_001 · pilot: HFR · conditions: acceptable
+</div>
+<div style="text-align:center;font-size:10pt;color:var(--sage);margin:2mm 0;">↓  Structured into drone survey log dataset  ↓</div>
+<table class="data-table">
+  <tr><th>flight_date</th><th>aircraft</th><th>site</th><th>depart</th><th>land</th><th>alt_m</th><th>passes</th><th>wind_kph</th><th>detections_total</th><th>detections_confirmed</th><th>detections_unconfirmed</th><th>confirmed_species</th><th>card_id</th><th>pilot</th><th>confidence</th></tr>
+  <tr><td>2026-07-26</td><td>DJI_MAVIC3T</td><td>IHOFA_NE</td><td>06:12</td><td>06:37</td><td>80</td><td>3</td><td>15</td><td>11</td><td>3</td><td>8</td><td>Indri indri</td><td>DJIM3T_2026-07-26_001</td><td>HFR</td><td>HIGH</td></tr>
+</table>
+
+<h2>Transformation 5 — Multi-season, Partially Illegible Vegetation Plot Record</h2>
+<div class="notebook-raw">
+  <div class="notebook-label">Raw notebook entry — as written (deteriorated notebook, 2009)</div>
+  Plot F[?]4 · [smudge] 2009 · 10×10m · canopy cov est [illegible]% · litter depth 4.5cm
+  Trees DBH>10: Dalb[illegible] sp ×3 (DBH 12,15,[?]cm) · Grewia sp ×1 (DBH 23cm)
+  understory: dense · access: diff
+</div>
+<div style="text-align:center;font-size:10pt;color:var(--sage);margin:2mm 0;">↓  Preserved illegibilities, no invented values  ↓</div>
+<table class="data-table">
+  <tr><th>plot_id</th><th>survey_date</th><th>plot_size_m2</th><th>canopy_cover_pct</th><th>litter_depth_cm</th><th>species</th><th>count</th><th>dbh_cm</th><th>understory_density</th><th>confidence</th><th>notes</th></tr>
+  <tr><td>F_ILLEGIBLE_4</td><td>ILLEGIBLE_2009</td><td>100</td><td>ILLEGIBLE</td><td>4.5</td><td>Dalbergia sp.</td><td>3</td><td>12; 15; ILLEGIBLE</td><td>DENSE</td><td>LOW</td><td>plot ID unclear — may be F4 or F14; date partially smudged — year 2009 legible; canopy cover completely illegible; Dalbergia genus legible, species illegible; third tree DBH illegible</td></tr>
+  <tr><td>F_ILLEGIBLE_4</td><td>ILLEGIBLE_2009</td><td>100</td><td>ILLEGIBLE</td><td>4.5</td><td>Grewia sp.</td><td>1</td><td>23</td><td>DENSE</td><td>MEDIUM</td><td>same plot and date as above row; access described as difficult</td></tr>
+</table>
+<div class="callout cr" style="margin-top:3mm;">
+  <div class="cl cl-r">Critical principle demonstrated here</div>
+  <p style="margin:0;">The plot ID was ambiguous between F4 and F14. The correct action was to enter "F_ILLEGIBLE_4" and document the ambiguity in notes — not to guess F4 or F14. If this data is later linked to spatial records, the ambiguity can potentially be resolved using GPS coordinates or cross-referencing with other notebooks from the same survey. A guessed value would destroy that possibility permanently.</p>
+</div>
+
+<!-- ── S8 ERROR TAXONOMY ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>Error Taxonomy and Fixes</h1>
+<p>Every category of error encountered in handwritten field data digitization, with the correct response for each. Use this as a reference when something unexpected appears during transcription or validation.</p>
+
+<table>
+  <tr><th>Error type</th><th>Example</th><th>Correct response</th><th>Do NOT do this</th></tr>
+  <tr><td><strong>Illegible field — complete</strong></td><td>Water damage makes an entire cell unreadable</td><td>Enter ILLEGIBLE in the field. Document in transcriber_note. Confidence = ILLEGIBLE.</td><td>Leave blank. Guess. Interpolate from surrounding records.</td></tr>
+  <tr><td><strong>Illegible field — partial</strong></td><td>"Grewia s[smudge]" — species partly visible</td><td>Enter what is legible + ILLEGIBLE for the rest: "Grewia sp. ILLEGIBLE". Note in transcriber_note.</td><td>Complete the name by guessing the missing characters.</td></tr>
+  <tr><td><strong>Ambiguous abbreviation</strong></td><td>"Lf" — could be Lemur fulvus or Leptosomus flavicans</td><td>Enter "LF_AMBIGUOUS" in the field. List both interpretations in transcriber_note. Confidence = LOW.</td><td>Choose one interpretation without documenting the ambiguity.</td></tr>
+  <tr><td><strong>Inconsistent date format</strong></td><td>3/4/24 vs 04.03.2024 in the same notebook</td><td>Standardise all dates to YYYY-MM-DD. Document both original formats in the codebook.</td><td>Leave dates in mixed formats in the final dataset.</td></tr>
+  <tr><td><strong>Missing required field</strong></td><td>Time of observation not recorded on a page</td><td>Enter MISSING (not blank). Document in notes. If time can be inferred from surrounding records, enter as INFERRED_HH:MM and note the inference basis.</td><td>Leave blank. Infer silently without flagging.</td></tr>
+  <tr><td><strong>Crossed-out entry</strong></td><td>An observation is struck through in the notebook</td><td>Include the record with a "VOIDED" confidence flag and a note: "crossed out in original notebook." Do not omit — voided records are evidence.</td><td>Silently exclude crossed-out entries.</td></tr>
+  <tr><td><strong>Contradictory entries</strong></td><td>Same animal recorded as adult on line 3 and juvenile on line 5</td><td>Include both records exactly as written. Add a transcriber_note flagging the contradiction. Do not resolve it — that is for the researcher.</td><td>Choose one value and discard the other.</td></tr>
+  <tr><td><strong>GPS outside study area</strong></td><td>A coordinate that falls in the ocean instead of the forest</td><td>Enter the coordinate as written with a SPATIAL_OUTLIER flag. Do not correct. Note likely causes: datum error, transposition, transcription error in the field.</td><td>Delete or "correct" the coordinate.</td></tr>
+  <tr><td><strong>Count as a range</strong></td><td>"8-12 individuals observed"</td><td>Enter min and max in separate columns: count_min = 8, count_max = 12. Note in transcriber_note.</td><td>Average the range and enter "10".</td></tr>
+  <tr><td><strong>Observer added a later annotation</strong></td><td>A later note in different ink adds "ID confirmed by X"</td><td>Include in a separate "post_survey_annotation" column with the content of the annotation verbatim.</td><td>Incorporate the annotation into the original record without distinguishing it.</td></tr>
+  <tr><td><strong>Record on wrong page</strong></td><td>An entry clearly belongs to a different date based on context</td><td>Transcribe as written. Add a note: "Record on date X page but context suggests date Y — do not correct." Flag for researcher review.</td><td>Silently move the record to what seems like the correct date.</td></tr>
+  <tr><td><strong>Duplicate record</strong></td><td>The same observation appears twice on different pages</td><td>Include both records. Add "POSSIBLE_DUPLICATE" flag to both. Note in transcriber_note: "identical/very similar record also on page X."</td><td>Silently delete one of the duplicates.</td></tr>
+</table>
+
+<!-- ── S9 COLUMN STANDARDISATION LIBRARY ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Column Standardisation Library</h1>
+<p>Standard column names and format specifications for the most common field biology data types. Use these consistently across all notebooks to enable dataset merging.</p>
+
+<h2>Universal Columns — Include in Every Dataset</h2>
+<table>
+  <tr><th>Column name</th><th>Format</th><th>Example</th><th>Notes</th></tr>
+  <tr><td><code>record_id</code></td><td>Text, unique</td><td>NB003_P042_R007</td><td>Notebook ID + page + row number. Must be globally unique across all notebooks.</td></tr>
+  <tr><td><code>source_notebook</code></td><td>Text</td><td>NB003</td><td>Notebook identifier from triage log.</td></tr>
+  <tr><td><code>source_page</code></td><td>Integer</td><td>42</td><td>Page number in the physical notebook.</td></tr>
+  <tr><td><code>scan_filename</code></td><td>Text</td><td>NB003_P042_2026-05-01.jpg</td><td>Exact filename of the scan used for transcription.</td></tr>
+  <tr><td><code>date</code></td><td>ISO 8601: YYYY-MM-DD</td><td>2024-03-06</td><td>Date of the observation. ILLEGIBLE if not readable.</td></tr>
+  <tr><td><code>time</code></td><td>24h: HH:MM</td><td>07:42</td><td>Time of observation start. MISSING if not recorded.</td></tr>
+  <tr><td><code>observer</code></td><td>Text code</td><td>HFR</td><td>Observer initials or code from codebook.</td></tr>
+  <tr><td><code>confidence</code></td><td>Controlled vocabulary</td><td>HIGH / MEDIUM / LOW / ILLEGIBLE</td><td>Transcription confidence for this record.</td></tr>
+  <tr><td><code>transcriber_note</code></td><td>Free text</td><td>Species ID uncertain — cf. only</td><td>Leave blank if no issues. Document every ambiguity.</td></tr>
+  <tr><td><code>digitization_date</code></td><td>ISO 8601: YYYY-MM-DD</td><td>2026-05-01</td><td>Date this record was transcribed.</td></tr>
+  <tr><td><code>digitizer</code></td><td>Text</td><td>HFR</td><td>Person who transcribed this record.</td></tr>
+</table>
+
+<h2>Species Observation Columns</h2>
+<table>
+  <tr><th>Column name</th><th>Format</th><th>Example</th><th>Notes</th></tr>
+  <tr><td><code>species_raw</code></td><td>Text — exact as written</td><td>Lc</td><td>The abbreviation or name exactly as written in the notebook.</td></tr>
+  <tr><td><code>species_code</code></td><td>Text — standardised</td><td>LEMURCATTA</td><td>From codebook. ALLCAPS, no spaces, no special characters.</td></tr>
+  <tr><td><code>species_latin</code></td><td>Text — binomial</td><td>Lemur catta</td><td>Full Latin name. "sp." if only genus known. "cf." if uncertain.</td></tr>
+  <tr><td><code>count</code></td><td>Integer or range</td><td>3</td><td>Number of individuals. Use count_min / count_max for ranges.</td></tr>
+  <tr><td><code>age_class</code></td><td>AD / JUV / INF / UNKNOWN</td><td>AD</td><td>Adult / Juvenile / Infant / Unknown.</td></tr>
+  <tr><td><code>sex</code></td><td>M / F / UNKNOWN</td><td>F</td><td>Male / Female / Unknown.</td></tr>
+  <tr><td><code>individual_id</code></td><td>Text or UNKNOWN</td><td>Maya</td><td>Named individual or collar ID if known.</td></tr>
+</table>
+
+<h2>Spatial Columns</h2>
+<table>
+  <tr><th>Column name</th><th>Format</th><th>Example</th><th>Notes</th></tr>
+  <tr><td><code>latitude</code></td><td>Decimal degrees, 5 d.p., WGS84</td><td>-18.45760</td><td>Negative for South. ILLEGIBLE if unreadable.</td></tr>
+  <tr><td><code>longitude</code></td><td>Decimal degrees, 5 d.p., WGS84</td><td>47.18723</td><td>Positive for East. ILLEGIBLE if unreadable.</td></tr>
+  <tr><td><code>coord_original</code></td><td>Text — exact as written</td><td>S18°27.456 E47°11.234</td><td>Always preserve the original format alongside converted decimal degrees.</td></tr>
+  <tr><td><code>spatial_flag</code></td><td>Controlled vocabulary</td><td>SPATIAL_OUTLIER</td><td>VERIFIED / SPATIAL_OUTLIER / INFERRED / MISSING / ILLEGIBLE</td></tr>
+  <tr><td><code>site_name</code></td><td>Text</td><td>IHOFA_NE</td><td>Named site from codebook. More stable than coordinates for filtering.</td></tr>
+  <tr><td><code>transect_id</code></td><td>Text</td><td>T3-N</td><td>Transect or plot identifier.</td></tr>
+</table>
+
+<!-- ── S10 QUALITY CONTROL CHECKLIST ── -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Quality Control Checklist</h1>
+<p>Run this checklist at the end of every notebook digitization before the dataset is used in any analysis.</p>
+
+<h2>Completeness</h2>
+<ul class="checklist">
+  <li>Every page of the notebook has been scanned. Page count in scan archive matches page count in physical notebook.</li>
+  <li>Every observation on every page has a corresponding row in the dataset. No observations have been silently omitted.</li>
+  <li>Every illegible or uncertain field is explicitly marked (ILLEGIBLE, MISSING, LOW confidence) — not left blank.</li>
+  <li>The codebook covers every abbreviation that appears in the notebook.</li>
+</ul>
+
+<h2>Structural Integrity</h2>
+<ul class="checklist">
+  <li>All date fields are in YYYY-MM-DD format.</li>
+  <li>All time fields are in HH:MM 24-hour format.</li>
+  <li>All GPS coordinates are in decimal degrees, WGS84, with 5 decimal places (or flagged as ILLEGIBLE/MISSING).</li>
+  <li>All species codes appear in the master species list or are flagged as AMBIGUOUS.</li>
+  <li>All confidence values are from the controlled vocabulary: HIGH / MEDIUM / LOW / ILLEGIBLE.</li>
+  <li>No required column contains a blank cell (ILLEGIBLE or MISSING are acceptable — blank is not).</li>
+  <li>record_id values are unique across the entire dataset.</li>
+</ul>
+
+<h2>Ecological Plausibility</h2>
+<ul class="checklist">
+  <li>All GPS coordinates fall within the bounding box of the study area (or are flagged as SPATIAL_OUTLIER).</li>
+  <li>Species recorded are within known ranges (or are flagged as RANGE_OUTLIER with a note).</li>
+  <li>Count values are plausible for the species and survey method (or are flagged and noted).</li>
+  <li>Time values are plausible for the species (nocturnal species at night, diurnal at day — outliers are flagged).</li>
+</ul>
+
+<h2>Cross-Reference Validation</h2>
+<ul class="checklist">
+  <li>10% random sample cross-checked against original scans. Error rate documented in validation log.</li>
+  <li>Any error rate above 2% triggers a full re-check of the entire dataset.</li>
+  <li>Validation log is complete: lists every error found, how it was classified, and how it was resolved.</li>
+</ul>
+
+<h2>Archive Readiness</h2>
+<ul class="checklist">
+  <li>Scan archive is complete and all files are named according to the naming convention.</li>
+  <li>Codebook file is finalised and saved alongside the dataset.</li>
+  <li>Metadata file is complete (see Prompt 9 in Section 6).</li>
+  <li>Physical notebook is ready for archival storage (acid-free envelope, labelled correctly).</li>
+  <li>3-2-1 backup completed for the digital package.</li>
+</ul>
+
+<!-- ── S11 ARCHIVE PROTOCOL ── -->
+<div class="section-label" style="margin-top:6mm;">Section 11</div>
+<h1>Archive Protocol</h1>
+
+<h2>Physical Notebook Archive Standard</h2>
+<div class="template-box">
+NOTEBOOK ARCHIVE LABEL — paste or write on the envelope/sleeve
+
+Notebook ID:           NB___
+Date range:            [DD/MM/YYYY] to [DD/MM/YYYY]
+Observer(s):           [names]
+Survey site(s):        [site names]
+Survey type:           [transect / focal follow / camera trap / mixed]
+Physical condition:    Good / Fair / Poor / Critical
+Digitization status:   COMPLETE / PARTIAL / NOT YET DIGITIZED
+Digitization date:     [YYYY-MM-DD]
+Digital file location: [folder path or URL]
+Dataset ID:            [dataset filename]
+Archived by:           [name]
+Archive date:          [YYYY-MM-DD]
+</div>
+
+<h2>Digital Archive Package — One Folder Per Notebook</h2>
+<div class="template-box">
+NB003_IHOFA_2024/
+  ├── scans/
+  │   ├── NB003_P001_2026-05-01.jpg
+  │   ├── NB003_P002_2026-05-01.jpg
+  │   └── ... (one file per page)
+  ├── NB003_codebook.csv
+  ├── NB003_raw_transcription.csv       (unvalidated — preserved for reference)
+  ├── NB003_validated_dataset.csv       (the final, validated dataset)
+  ├── NB003_validation_log.csv          (all errors found and resolutions)
+  ├── NB003_metadata.txt                (Darwin Core compatible metadata)
+  └── NB003_README.txt                  (plain language description for future users)
+</div>
+
+<!-- QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 12</div>
+<h1>Quick Start — Your First Notebook in 6 Hours</h1>
+
+<h2>Hour 1 — Triage and Setup</h2>
+<ul class="checklist">
+  <li>Lay out all notebooks. Complete a triage assessment row for each one.</li>
+  <li>Identify your most urgent notebook (Critical condition) or your highest-priority notebook (most needed for current analysis).</li>
+  <li>Set up your folder structure for the digital archive package.</li>
+  <li>Open a new spreadsheet. Create the column headers from the Column Standardisation Library (Section 9) for your data type.</li>
+</ul>
+
+<h2>Hour 2 — Scan and Codebook</h2>
+<ul class="checklist">
+  <li>Scan all pages of the selected notebook. Name files according to the naming convention.</li>
+  <li>Browse through the scans to identify all abbreviations, codes, and symbols.</li>
+  <li>Use Prompt 1 to help draft the codebook. Verify every suggestion against the scans.</li>
+  <li>Save the codebook as a separate CSV file.</li>
+</ul>
+
+<h2>Hours 3–4 — Transcription</h2>
+<ul class="checklist">
+  <li>Work page by page from the scans (not the physical notebook).</li>
+  <li>Use Prompt 2 for any difficult pages — attach the scan image to the AI.</li>
+  <li>Fill every field for every observation. Use ILLEGIBLE or MISSING — never blank.</li>
+  <li>Use Prompt 3 for ambiguous species names. Use Prompt 4 for date standardisation.</li>
+</ul>
+
+<h2>Hour 5 — Validation</h2>
+<ul class="checklist">
+  <li>Run Prompt 7 on the complete dataset for automated structural checks.</li>
+  <li>Cross-check 10% of records against scans. Document the error rate.</li>
+  <li>Review all LOW and ILLEGIBLE confidence records for ecological plausibility.</li>
+  <li>Complete the validation log.</li>
+</ul>
+
+<h2>Hour 6 — Archive</h2>
+<ul class="checklist">
+  <li>Generate the metadata file using Prompt 9.</li>
+  <li>Label the physical notebook envelope and store it correctly.</li>
+  <li>Complete the 3-2-1 digital backup.</li>
+  <li>Run the Quality Control Checklist from Section 10.</li>
+  <li>Add a row to your triage log: this notebook is now COMPLETE.</li>
+</ul>
+
+<!-- MVP vs PREMIUM -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>6-step digitization workflow</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Tool stack guide (6 tools)</td><td>✓</td><td>✓ Expanded to 12 tools</td></tr>
+  <tr><td>AI prompt pack (12 prompts)</td><td>✓</td><td>✓ 20 prompts</td></tr>
+  <tr><td>5 full notebook-to-dataset transformations</td><td>✓</td><td>✓ 10 transformations</td></tr>
+  <tr><td>Error taxonomy (12 categories)</td><td>✓</td><td>✓ 20 categories</td></tr>
+  <tr><td>Column standardisation library</td><td>✓</td><td>✓ Expanded to 8 data types</td></tr>
+  <tr><td>Quality control checklist</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Archive protocol + label templates</td><td>✓</td><td>✓</td></tr>
+  <tr><td>R/Python validation scripts</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Google Sheets pre-built template with validation rules</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Malagasy/French notebook transcription guide</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Batch processing workflow for 20+ notebooks</td><td>—</td><td>Planned</td></tr>
+  <tr><td>GBIF / Zenodo upload guide</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:30mm 0;">
+  <div style="font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8mm;">OPLURIX</div>
+  <div style="font-size:22pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    The data in your notebooks<br>already exists.<br><em>It just cannot be found yet.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:120mm;margin:0 auto 12mm;line-height:1.7;">
+    Every year of handwritten records you rescue from a deteriorating notebook is a year of biodiversity data that re-enters science. The workflow is not glamorous. The result — a clean, documented, citable dataset from work that would otherwise be lost — absolutely is.
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-size:8pt;color:var(--faint);line-height:2;">
+    Handwritten Log Digitizer v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div>
+</body>
+</html>

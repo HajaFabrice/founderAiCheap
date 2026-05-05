@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0D4A44;
+  --purple:  #3D1C6E;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Grant Writing Co-Pilot  ·  OPLURIX  ·  " counter(page);
+    font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: var(--forest); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; }
+.cover-brand { font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:32mm; }
+.cover-eyebrow { font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-size:30pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-author { font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+.content-pages { page: content; }
+h1 { font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-size:13pt; font-weight:700; color:var(--forest2); margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-size:10pt; font-weight:700; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:700; color:var(--forest); }
+em { font-style:italic; color:var(--forest2); }
+
+.section-label { font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+.callout  { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.ca { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.cr { background:#FDF0EE; border-left:3pt solid var(--red); }
+.cb { background:#EEF3FA; border-left:3pt solid var(--blue); }
+.ct { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.cp { background:#F3EEF9; border-left:3pt solid var(--purple); }
+.cl { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.cl-a { color:var(--amber); } .cl-f { color:var(--forest); } .cl-r { color:var(--red); }
+.cl-b { color:var(--blue); } .cl-t { color:var(--teal); } .cl-p { color:var(--purple); }
+
+.dark-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.dark-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.dark-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.dark-box p:last-child { margin-bottom:0; }
+
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-size:8pt; font-weight:700; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:700; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+ul { margin:3mm 0 3mm 6mm; list-style:none; padding:0; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:var(--forest); page-break-inside:avoid; }
+
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+/* GRANT CARD */
+.grant-card { border:0.5pt solid var(--sand); margin-bottom:6mm; page-break-inside:avoid; }
+.gc-header { background:var(--forest); padding:4mm 6mm; display:flex; justify-content:space-between; align-items:center; }
+.gc-name { font-size:12pt; font-weight:700; color:white; }
+.gc-amount { font-family:monospace; font-size:9pt; color:var(--gold); }
+.gc-body { padding:5mm 6mm; background:white; }
+.gc-row { display:grid; grid-template-columns:100pt 1fr; gap:4mm; margin-bottom:2mm; font-size:9pt; border-bottom:0.5pt solid var(--parch); padding-bottom:2mm; }
+.gc-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.gc-key { font-weight:700; color:var(--forest2); }
+.gc-tag { display:inline-block; font-size:7pt; padding:2pt 8pt; border-radius:3pt; margin-right:3pt; }
+.gc-open { background:#DCFCE7; color:#166534; }
+.gc-rolling { background:#FEF3C7; color:#92400E; }
+.gc-closed { background:#FEE2E2; color:#991B1B; }
+
+/* BA GRID */
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:3mm; margin:4mm 0; page-break-inside:avoid; }
+.ba-box { padding:4mm 5mm; }
+.ba-bad { background:#FDF0EE; border:0.5pt solid #E8B0A0; }
+.ba-good { background:#EEF6EF; border:0.5pt solid #B2CEB5; }
+.ba-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.ba-bad .ba-label { color:var(--red); }
+.ba-good .ba-label { color:var(--sage); }
+.ba-text { font-size:9pt; line-height:1.55; font-style:italic; }
+.ba-bad .ba-text { color:#6B2A1A; }
+.ba-good .ba-text { color:var(--forest2); }
+
+/* SECTION EXAMPLE */
+.section-example { background:var(--parch); border:0.5pt solid var(--sand); border-left:3pt solid var(--teal); padding:5mm 7mm; margin:4mm 0; page-break-inside:avoid; }
+.se-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--teal); margin-bottom:2mm; }
+.se-text { font-size:9.5pt; line-height:1.7; color:var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">Grant Writing<br><em>Co-Pilot</em></div>
+    <div class="cover-subtitle">Write stronger conservation grant applications — faster. Funder profiles, narrative frameworks, budget justifications, reviewer psychology, and AI prompt packs for Rufford, WWF, GEF, and beyond.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Conservation NGO Professionals</span>
+      <span class="cover-tag">Independent Field Researchers</span>
+      <span class="cover-tag">Graduate Students</span>
+      <span class="cover-tag">Protected Area Managers</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I have strong science and a deadline tomorrow and I do not know how to start" to "I have a compelling, funder-specific, reviewer-tested grant narrative ready to submit — built from a system I can reuse every cycle."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Pierre Castel Laureate 2025 · Rufford applicant · WCS Fonseca candidate
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $199</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="cl cl-f">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once. Then go directly to the Funder Profile that matches your next application (Section 5). Use the Narrative Frameworks (Section 6) and AI Prompt Pack (Section 7) to write each section. The Reviewer Psychology Guide (Section 8) and the Before/After Library (Section 9) will make the difference between a strong first draft and a submission-ready application.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 6-Step Application System · 5 Funder Profiles (Rufford, WWF, GEF, WCS, Pierre Castel) · Section-by-Section Narrative Frameworks · AI Prompt Pack (15 prompts) · Reviewer Psychology Guide · Before/After Language Library · Budget Narrative Templates · Rebuttal and Revision Guide · Application Calendar · Quick Start</p>
+</div>
+
+<!-- S1 -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>Grant writing is a skill. Like any skill, it can be learned, practiced, and systematised. Most conservation professionals write grant applications the wrong way: starting with their science, writing everything they know, and hoping the reviewer will find the funding case somewhere in the methodology section. Reviewers do not look for the funding case. They expect it to be made clearly, early, and with specific evidence.</p>
+
+<p>The difference between a funded and an unfunded application of equivalent scientific merit is almost always a communication difference, not a science difference. The funded application made a clear argument. The unfunded one described a project. The funded application told the reviewer exactly what problem was being solved, why existing approaches were insufficient, and what specifically would change as a result of this funding. The unfunded one started with the study site and never quite explained why this mattered.</p>
+
+<p>This guide gives you the system. It works for Rufford Small Grants. It works for the WWF Russell E. Train Fellowship. It works for GEF Small Grants and the WCS Fonseca Fund. It is built from the actual structures and reviewer criteria used by each funder — not from generic grant-writing advice.</p>
+
+<div class="callout ca">
+  <div class="cl cl-a">The Transformation</div>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:2mm;"><strong>Before:</strong> "I have strong science and a deadline tomorrow and I do not know how to start writing."</p>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:0;"><strong>After:</strong> "I have a compelling, funder-specific, reviewer-tested grant narrative — built from a system I can reuse every application cycle."</p>
+</div>
+
+<!-- S2 -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>You start writing without knowing what the funder actually values.</strong><p>Every major conservation funder has a specific theory of change, a specific geographic or thematic focus, and specific reviewer criteria that are publicly available. Most applicants never read them carefully. This guide does that work for you — for each major funder.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>Your project description is too long, too technical, and too methodology-heavy.</strong><p>Reviewers spend an average of 15–25 minutes on each application in a competitive round. If the first two paragraphs do not make a compelling case, the rest does not get read carefully. Scientists write for scientific peers. Grant applications are written for programme officers and reviewers who may not be specialists in your taxon.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>Your budget is vague, unjustified, or internally inconsistent.</strong><p>A budget line that says "field equipment: $5,000" without specification is a red flag. A budget that does not add up exactly is an immediate credibility problem. A budget that asks for costs without explaining what they enable is an incomplete application — even if the science is excellent.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>You do not know how to write about impact without overclaiming.</strong><p>Conservation funders want evidence of impact potential. Overstating it ("this project will save the species") destroys credibility with experienced reviewers. Understating it ("we hope to contribute to the conservation of this habitat") fails to motivate funding. The calibrated impact statement — specific, achievable, and consequential — is a learnable skill.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>You do not present your team compellingly.</strong><p>Most grant applications present the team as a list of names and degrees. Funders are investing in people as much as projects. The team section must answer: why are these specific people uniquely positioned to succeed with this specific project in this specific place?</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>You cannot write a project that is both scientifically rigorous and accessible to a non-specialist reviewer.</strong><p>The methodological rigour must be present — but it must not dominate. A well-structured grant application leads with the problem and the solution, then supports it with enough methodology to demonstrate credibility without losing a non-specialist reviewer in the details.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>You are applying to the wrong funders for your project type.</strong><p>A project seeking MRV-grade biodiversity data for conservation finance is not the same kind of project as a community conservation awareness programme. They require different funders, different narratives, and different evidence of impact. Applying with the wrong framing to the wrong funder wastes a cycle and wastes the application fee where applicable.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>You have no system for reusing application sections across multiple funders.</strong><p>The project description you write for Rufford can be adapted for WWF with 2 hours of work — not rewritten from scratch. The budget justification you write for GEF can anchor the Rufford equipment narrative. A modular writing system makes every application faster and every submission stronger because it is built on tested language.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>You do not know how to respond to reviewer feedback after a rejection.</strong><p>Most grant applications are rejected. Most can be improved and resubmitted. Reviewers almost always provide feedback — and that feedback, read carefully and responded to systematically, converts a rejected application into a funded one. This guide includes a rebuttal and revision framework.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>You write in a panic close to the deadline every time.</strong><p>Grant applications written in the final 48 hours are almost always worse than applications written over three weeks. The application calendar in Section 12 gives you a submission-ready timeline that starts 6 weeks before every deadline — not 2 days before.</p></div>
+</div>
+
+<!-- S3 -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">01</td><td>Match your project to the right funder before writing a single word of the application.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">02</td><td>Write a compelling project narrative in the structure that the specific funder rewards.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">03</td><td>Build a detailed, internally consistent budget with specific justification for every line item.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">04</td><td>Present your team as the specific people uniquely positioned for this specific project.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">05</td><td>Frame conservation impact with precision — specific, achievable, and consequential without overclaiming.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">06</td><td>Build a modular application library that speeds up every subsequent submission.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">07</td><td>Submit at least 6 weeks before the deadline, not 2 days before.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">08</td><td>Respond to reviewer feedback systematically and convert a rejection into a funded resubmission.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">09</td><td>Write grant application language that also strengthens your institutional proposals and donor pitches.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">10</td><td>Understand what reviewers are looking for — and give it to them in the first paragraph.</td></tr>
+</table>
+
+<!-- S4 THE 6-STEP APPLICATION SYSTEM -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 6-Step Application System</h1>
+
+<div class="step-block">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>FUNDER-PROJECT FIT ASSESSMENT</h3>
+    <p>Before writing anything, confirm that this funder is the right match for this project at this stage. A mismatched application wastes a review cycle and damages the relationship with the funder for future applications.</p>
+    <div class="callout">
+      <div class="cl cl-f">Fit Assessment Questions</div>
+      <ul style="margin:0;">
+        <li>Does the funder's geographic focus include your study area? (Some funders are explicitly regional.)</li>
+        <li>Does the funder's thematic priority match your project? (Species conservation vs. community-based vs. technology-focused vs. policy-focused)</li>
+        <li>Is the grant amount within the appropriate range for your project scale? (A $5,000 project competing against $18,000 ceiling grants looks underpowered.)</li>
+        <li>Is the project stage appropriate? (Some funders prefer pilot/proof-of-concept. Others prefer scaling proven approaches.)</li>
+        <li>Have you or your institution received funding from this funder before? (First-time applicants sometimes need to build a track record with smaller grants first.)</li>
+        <li>Can you meet all eligibility requirements? (Individual vs. institutional applicant, nationality restrictions, PhD student restrictions)</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Use Prompt 1 in the AI Prompt Pack to run a systematic funder-project fit assessment before committing to an application.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>READ THE FUNDER'S CURRENT PRIORITIES</h3>
+    <p>Every major funder publishes their current strategic priorities, recent funded project summaries, and reviewer criteria. Read all three before writing. The recent funded projects are the most valuable — they show you exactly what language, what scale, and what impact evidence the funder is currently rewarding.</p>
+    <ul>
+      <li>Download the current application guidelines — not the version from two years ago.</li>
+      <li>Read the funded project summaries from the last two cycles. Note the language used to describe impact.</li>
+      <li>Identify the specific reviewer criteria, if published. These are the scoring rubric — write to them explicitly.</li>
+      <li>Note the word/character limits for every section. Exceeding them disqualifies applications at some funders.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>BUILD THE ARGUMENT SPINE BEFORE WRITING</h3>
+    <p>Every successful grant application makes one coherent argument. The argument is not "here is my project." The argument is "here is a specific problem, here is why existing approaches have not solved it, here is what specifically we will do, and here is the evidence that it will work." Write this argument in six sentences before writing any section of the application.</p>
+    <div class="callout ca">
+      <div class="cl cl-a">The Six-Sentence Argument</div>
+      <ol style="margin:0;">
+        <li>The specific conservation problem at the specific place. (Not global biodiversity — this forest, this species, this threat.)</li>
+        <li>Why it matters — what is at stake if nothing changes. (Specific, not generic.)</li>
+        <li>Why the problem persists — what is missing that keeps it unsolved. (Data? Funding? Method? Infrastructure?)</li>
+        <li>What your project does — in one sentence a non-specialist understands. (The solution.)</li>
+        <li>Why you — the specific evidence that this team can deliver. (Not just credentials — field evidence.)</li>
+        <li>What specifically changes — the measurable outcome of this funding. (Not "improved conservation" — a specific, verifiable change.)</li>
+      </ol>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">If you cannot complete all six sentences before writing, your project concept is not ready. The six-sentence argument is the foundation every section is built on.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>WRITE SECTION BY SECTION — IN ORDER</h3>
+    <p>Write the sections of the application in the order listed in the framework for your specific funder (Section 6). Do not write the budget before the narrative — the narrative determines the budget. Do not write the timeline before the methodology — the methodology determines the timeline.</p>
+    <p>Use the AI Prompt Pack (Section 7) for every section. The prompts are designed to take your raw project notes and produce a first draft that you edit — not a final draft you submit unread. Every AI output requires review for scientific accuracy and for fit with your specific project.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <h3>APPLY THE REVIEWER PSYCHOLOGY CHECKLIST</h3>
+    <p>Before finalising any section, run it through the reviewer psychology framework in Section 8. Reviewers are reading 30–80 applications in a compressed review period. They are looking for specific things in specific places. Give them what they are looking for — do not make them search for it.</p>
+    <div class="callout">
+      <div class="cl cl-f">The five questions every reviewer asks</div>
+      <ul style="margin:0;">
+        <li>"Do I understand what this project does within the first paragraph?" If no: rewrite the opening.</li>
+        <li>"Do I believe this team can actually deliver this?" If no: strengthen the team section and evidence.</li>
+        <li>"Is this the right scale for this funder?" If no: adjust the scope or choose a different funder.</li>
+        <li>"Is the budget credible and justified?" If no: add specific justification to each line item.</li>
+        <li>"Does this fit what we are currently funding?" If no: reframe the narrative to align with current priorities.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">6</div>
+  <div class="step-content">
+    <h3>EXTERNAL REVIEW AND FINAL SUBMISSION</h3>
+    <p>Every application should be read by at least one person who is not familiar with the project before submission. Ask them three questions: (1) What does this project do? (2) Why does it matter? (3) Why should this team be funded? If their answers match your intent, the application is ready. If not, revise.</p>
+    <div class="callout cr">
+      <div class="cl cl-r">The single most common submission error</div>
+      <p style="margin:0;">Submitting without reading the application aloud. A single read-aloud takes 20–30 minutes. It catches: sentences that are too long to follow, jargon that is not explained, logical gaps between sections, and claims that sound confident internally but vague when spoken. Every submission-ready application has been read aloud at least once.</p>
+    </div>
+  </div>
+</div>
+
+<!-- S5 FUNDER PROFILES -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>5 Funder Profiles</h1>
+<p>Deep profiles of the five most relevant conservation grant funders for Madagascar-based and Global South conservation research. Each profile covers eligibility, what they fund, what they do not fund, the reviewer criteria, and the specific framing that recent successful applications have used.</p>
+
+<!-- RUFFORD -->
+<div class="grant-card">
+  <div class="gc-header">
+    <div class="gc-name">Rufford Small Grants Foundation</div>
+    <div class="gc-amount">£4,000–£18,000</div>
+  </div>
+  <div class="gc-body">
+    <div class="gc-row"><div class="gc-key">Status</div><div><span class="gc-tag gc-rolling">Rolling deadline</span> — apply anytime. Review cycles quarterly.</div></div>
+    <div class="gc-row"><div class="gc-key">Eligibility</div><div>Individual practitioners and small organisations in developing countries. Does not require institutional affiliation. Individual academics and independent researchers eligible.</div></div>
+    <div class="gc-row"><div class="gc-key">What they fund</div><div>Field-based conservation projects. Biodiversity surveys, community conservation, habitat protection, species-specific conservation. Equipment, field staff, community engagement, data collection costs. Proven field practitioners preferred over institutional proposals.</div></div>
+    <div class="gc-row"><div class="gc-key">What they do NOT fund</div><div>Pure academic research without conservation application. Conferences and travel to conferences. Overhead and institutional costs. Projects that are primarily publishing or scientific output focused without clear conservation action.</div></div>
+    <div class="gc-row"><div class="gc-key">Reviewer priorities</div><div>Applicant's field experience. Clarity of conservation problem. Feasibility of the plan. Evidence that the applicant understands the local context. Cost-effectiveness. Community engagement.</div></div>
+    <div class="gc-row"><div class="gc-key">Strategic framing</div><div>Lead with your field experience, not your academic credentials. Rufford funds practitioners who are in the field doing conservation. The application should feel written by someone who has walked the transects, not someone who manages someone who will walk them.</div></div>
+    <div class="gc-row"><div class="gc-key">Key sections</div><div>Project summary (critical — reviewers often decide here). Conservation issue. Objectives and methods. Benefit to conservation. Sustainability. Budget. Applicant background.</div></div>
+    <div class="gc-row"><div class="gc-key">Word limits</div><div>Project summary: 200 words. Conservation issue: 600 words. Objectives/methods: 600 words. Benefit: 400 words. Follow limits exactly — excess text is cut by the system.</div></div>
+    <div class="gc-row"><div class="gc-key">OPLURIX application note</div><div>The ERIS / thermal drone survey project is an excellent Rufford fit. Frame it as a conservation practitioner using technology to answer a specific conservation question at a specific site — not as a technology development project. Lead with the lemur/forest conservation need, support with the drone methodology. Budget for equipment (thermal sensor or M350 RTK component) as the primary cost.</div></div>
+  </div>
+</div>
+
+<!-- WWF RUSSELL TRAIN -->
+<div class="grant-card">
+  <div class="gc-header">
+    <div class="gc-name">WWF Russell E. Train Education for Nature</div>
+    <div class="gc-amount">USD 10,000–15,000</div>
+  </div>
+  <div class="gc-body">
+    <div class="gc-row"><div class="gc-key">Status</div><div><span class="gc-tag gc-closed">Annual deadline — April each year</span>. 2026 deadline passed. Plan for 2027.</div></div>
+    <div class="gc-row"><div class="gc-key">Eligibility</div><div>Nationals of developing countries pursuing graduate degrees (Master's or PhD) or early-career professionals within 5 years of graduate degree. Must be studying or working in the conservation field. Madagascar is eligible.</div></div>
+    <div class="gc-row"><div class="gc-key">What they fund</div><div>Education and training in conservation. Field research costs associated with a graduate degree or early-career professional development. Conservation science capacity building. Research that directly informs conservation practice.</div></div>
+    <div class="gc-row"><div class="gc-key">What they do NOT fund</div><div>Projects disconnected from a learning or capacity-building objective. Established researchers who are not in a graduate or early professional development phase. Purely institutional projects.</div></div>
+    <div class="gc-row"><div class="gc-key">Reviewer priorities</div><div>Applicant's career trajectory and how this funding advances it. The conservation impact of the research, not just its scientific merit. Madagascar national — strong fit for WWF Madagascar priorities. Mentorship and local capacity building.</div></div>
+    <div class="gc-row"><div class="gc-key">Strategic framing</div><div>Frame as professional development with conservation outcomes. The narrative should answer: "How does this funding advance a Malagasy conservation scientist's ability to protect Madagascar's biodiversity?" The ERIS project, framed as developing a conservation professional's capacity to build conservation finance infrastructure, fits this narrative strongly.</div></div>
+    <div class="gc-row"><div class="gc-key">OPLURIX application note</div><div>If applying as an early-career professional (within 5 years of Master's degree): frame ERIS development as professional capacity building with measurable conservation outcomes. Link to the Techni-Drones employment as proof of professional trajectory. Reference Flowers et al. (2023) and IPS Congress 2025 as evidence of growing scientific contribution.</div></div>
+  </div>
+</div>
+
+<!-- GEF SMALL GRANTS -->
+<div class="grant-card">
+  <div class="gc-header">
+    <div class="gc-name">GEF Small Grants Programme (UNDP Madagascar)</div>
+    <div class="gc-amount">USD 30,000–50,000</div>
+  </div>
+  <div class="gc-body">
+    <div class="gc-row"><div class="gc-key">Status</div><div><span class="gc-tag gc-rolling">Rolling</span> — but requires NGO co-applicant. Allow 3–4 months for concept note review and full application.</div></div>
+    <div class="gc-row"><div class="gc-key">Eligibility</div><div>Requires a registered civil society organisation (NGO, community organisation) as the primary applicant. Individuals cannot apply directly. A Malagasy conservation NGO (Fanamby, MBP, or equivalent) must be the lead applicant. Researcher can be co-applicant or technical lead.</div></div>
+    <div class="gc-row"><div class="gc-key">What they fund</div><div>Community-based conservation, biodiversity protection with community benefit, sustainable natural resource management, ecosystem services, climate change mitigation with community co-benefits. Conservation technology is fundable when it directly serves community conservation outcomes.</div></div>
+    <div class="gc-row"><div class="gc-key">Reviewer priorities</div><div>Community benefit and engagement. Alignment with CBD targets (Kunming-Montreal GBF). Sustainability beyond the grant period. National policy alignment. Gender equity in project design. Monitoring and evaluation plan.</div></div>
+    <div class="gc-row"><div class="gc-key">Strategic framing</div><div>The ERIS project must be framed as enabling community forest protection by providing the ecological data that makes biodiversity credit markets accessible to community forests. The technology serves the community conservation outcome — it is not the end in itself. NGO partner must be actively involved in project design, not just a letter of support.</div></div>
+    <div class="gc-row"><div class="gc-key">Process</div><div>Step 1: Concept note (2–4 pages) submitted to UNDP GEF SGP national coordinator. Step 2: If invited, full proposal submission. Step 3: Local review committee. Step 4: GEF Secretariat review. Budget for a 6-month process from concept note to approval.</div></div>
+    <div class="gc-row"><div class="gc-key">OPLURIX application note</div><div>Approach Fanamby or MBP as co-applicant. Frame the application around community forest protection in a specific community forest (Ihofa or equivalent). ERIS provides the monitoring infrastructure. The NGO provides the community relationships and governance. This partnership is the core of a strong GEF SGP application.</div></div>
+  </div>
+</div>
+
+<!-- WCS FONSECA -->
+<div class="grant-card">
+  <div class="gc-header">
+    <div class="gc-name">WCS Fonseca Fund for Conservation Leaders</div>
+    <div class="gc-amount">Full PhD funding (research costs + stipend)</div>
+  </div>
+  <div class="gc-body">
+    <div class="gc-row"><div class="gc-key">Status</div><div><span class="gc-tag gc-closed">Annual — February 2027 deadline</span>. Begin preparation now.</div></div>
+    <div class="gc-row"><div class="gc-key">Eligibility</div><div>Nationals of priority countries (Madagascar eligible) seeking PhD funding at a host institution. Requires a nominated supervisor at the host institution. Requires a nominator (prominent conservation scientist who endorses the candidate). Pr. Aristide Andrianarimisa is the nominated nominator.</div></div>
+    <div class="gc-row"><div class="gc-key">What they fund</div><div>Full PhD costs at a European or North American institution, plus living stipend, field research costs, and return travel. Focuses on developing the next generation of conservation leaders from the Global South.</div></div>
+    <div class="gc-row"><div class="gc-key">Reviewer priorities</div><div>Leadership potential and career trajectory. Conservation impact of the proposed research. Evidence of independent scientific contribution already achieved. Quality and commitment of the proposed supervisor. Commitment to return to and contribute to conservation in the home country.</div></div>
+    <div class="gc-row"><div class="gc-key">Statement of Purpose framing</div><div>The statement of purpose must weave three threads together: (1) your scientific trajectory and what it has already produced (Flowers et al. 2023, IPS Congress 2025, thermal drone methodology), (2) the specific conservation problem your PhD will address (ERIS / biodiversity MRV for conservation finance in Madagascar), (3) how you will return this capacity to Madagascar and the Global South conservation community.</div></div>
+    <div class="gc-row"><div class="gc-key">OPLURIX application note</div><div>The WCS Fonseca application is among the most competitive conservation funding awards available. Differentiation: you are not just a PhD candidate. You are a conservation technologist who has already developed a proof-of-concept (IPS Congress 2025), has an institutional base (Techni-Drones Madagascar), and has a clear post-PhD mission (ERIS). Most WCS Fonseca candidates have the science. Fewer have the infrastructure and the mission clarity. That is your competitive advantage.</div></div>
+  </div>
+</div>
+
+<!-- PIERRE CASTEL -->
+<div class="grant-card">
+  <div class="gc-header">
+    <div class="gc-name">Pierre Castel Foundation</div>
+    <div class="gc-amount">Varies — typically EUR 10,000–30,000</div>
+  </div>
+  <div class="gc-body">
+    <div class="gc-row"><div class="gc-key">Status</div><div><span class="gc-tag gc-rolling">Via Techni-Drones</span> — Techni-Drones Madagascar won in 2025. Second application viable via the same institutional channel.</div></div>
+    <div class="gc-row"><div class="gc-key">Eligibility</div><div>African enterprises and organisations with conservation and environmental impact. Access via Techni-Drones Madagascar as institutional host. Not a public call — relationship-based application.</div></div>
+    <div class="gc-row"><div class="gc-key">Strategic framing</div><div>The second Pierre Castel application should build on the 2025 award. Frame the drone equipment acquisition (M350 RTK + H30T) as the scaling of the proven Techni-Drones conservation technology approach that the 2025 award enabled. Show progress: IPS Congress 2025 presentation, conservation clients acquired, ERIS development initiated.</div></div>
+    <div class="gc-row"><div class="gc-key">OPLURIX application note</div><div>Coordinate with Techni-Drones director. The grant goes to the institution. Frame the conversation as: "The 2025 award established our conservation technology capability. This second award enables us to scale it to MRV-grade equipment that opens conservation finance markets." Include the ERIS concept as the downstream value of the equipment investment.</div></div>
+  </div>
+</div>
+
+<!-- S6 NARRATIVE FRAMEWORKS -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>Section-by-Section Narrative Frameworks</h1>
+<p>Detailed writing frameworks for each section of a conservation grant application. These work for all five funders above with the adaptations noted for each funder in Section 5.</p>
+
+<h2>Framework 1 — Project Summary / Executive Statement</h2>
+<p>The project summary is the most important section. Reviewers read it first and many form their impression before reading the rest. It must stand alone — a reader with no prior context should understand the project, its purpose, and its significance from the summary alone.</p>
+
+<div class="callout">
+  <div class="cl cl-f">Project Summary Structure — 150–200 words</div>
+  <ol style="margin:0;">
+    <li><strong>Sentence 1–2:</strong> The conservation problem at the specific site. Specific species, specific threat, specific geography. No generalisations.</li>
+    <li><strong>Sentence 3:</strong> Why this problem has not been solved — the gap.</li>
+    <li><strong>Sentence 4–5:</strong> What this project does — the solution in plain language.</li>
+    <li><strong>Sentence 6:</strong> The primary method — one sentence, accessible to a non-specialist.</li>
+    <li><strong>Sentence 7–8:</strong> The specific outputs — what the funding produces.</li>
+    <li><strong>Sentence 9:</strong> The conservation impact — what changes as a result.</li>
+  </ol>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad">
+    <div class="ba-label">Weak summary</div>
+    <div class="ba-text">"Madagascar is one of the most biodiverse countries in the world but faces severe threats from deforestation and habitat loss. This project will conduct a comprehensive biodiversity survey using multiple methods to assess the conservation status of the Ihofa forest and provide data to support conservation decision-making and management planning in the region."</div>
+  </div>
+  <div class="ba-box ba-good">
+    <div class="ba-label">Strong summary</div>
+    <div class="ba-text">"The Ihofa forest holds 23% of known Malagasy mammal species in 12,000 hectares of unprotected dry deciduous forest. At current encroachment rates, the forest will lose connectivity with the next viable block before 2032 — isolating three Critically Endangered lemur populations with no dispersal route. This project produces the first field-verified ecological integrity score for this forest, combining lemur transect surveys with thermal drone mapping and acoustic monitoring, in the specific format required for biodiversity credit certification. The output enables conservation finance access for Ihofa — a pathway to sustained forest protection not dependent on grant cycles."</div>
+  </div>
+</div>
+
+<h2>Framework 2 — Conservation Problem / Background</h2>
+<p>The background section builds the case that this problem is real, specific, and serious enough to warrant funding. It is not a literature review. It is an argument.</p>
+
+<div class="callout">
+  <div class="cl cl-f">Conservation Problem Structure — 400–600 words</div>
+  <ol style="margin:0;">
+    <li><strong>The site:</strong> Specific geography, habitat type, protection status. Where is this happening? One paragraph.</li>
+    <li><strong>The ecological significance:</strong> Why does this site matter for biodiversity conservation? What species, what endemism level, what ecosystem services? One paragraph.</li>
+    <li><strong>The threat:</strong> Specific, quantified, and localised. Deforestation rate (hectares per year or percentage). Threat timeline. Not "threats include deforestation and hunting" — one primary threat, described specifically. One paragraph.</li>
+    <li><strong>The gap:</strong> Why has this threat not been adequately addressed? What data, infrastructure, or funding is missing? This paragraph makes your project necessary — not just useful. One paragraph.</li>
+    <li><strong>The urgency:</strong> What happens if nothing changes in the next 5 years? Specific and honest. One or two sentences.</li>
+  </ol>
+</div>
+
+<div class="section-example">
+  <div class="se-label">Worked example — conservation problem (ERIS / Ihofa context)</div>
+  <div class="se-text">The Ihofa forest in Alaotra-Mangoro region covers approximately 12,000 hectares of mid-altitude humid forest in an unprotected landscape. A 2024–2025 multi-method biodiversity inventory documented 47 vertebrate species, of which 38 are Malagasy endemics and 6 are classified as Critically Endangered under IUCN criteria, including Indri indri — the world's largest lemur and a flagship species with no captive population.
+
+The primary threat is agricultural encroachment from the forest's southern and eastern margins. Remote sensing analysis shows a 3.2% annual reduction in forest cover along these edges over the 2015–2023 period. At this rate, the forest connectivity to the Angavo block — the next viable forest to the north — will be severed within 8 to 10 years. Once severed, the isolated lemur populations face long-term genetic degradation with no viable dispersal corridor.
+
+The most critical gap preventing effective protection is the absence of a verified, auditable ecological data product that conservation finance instruments can act on. Biodiversity credit markets and REDD+ instruments require standardised, independently verifiable ecological scores. No such score currently exists for Ihofa. Without it, the forest cannot access the recurring revenue streams that would make its protection economically viable — and conservation grant funding alone cannot sustain indefinite protection of 12,000 hectares.</div>
+</div>
+
+<h2>Framework 3 — Objectives and Methods</h2>
+<p>This section must satisfy two audiences simultaneously: the specialist reviewer who checks methodological rigour, and the non-specialist reviewer who must understand what is being done and why. Lead with the objectives — clear, numbered, achievable. Follow with the methods — detailed enough to demonstrate credibility, concise enough to remain readable.</p>
+
+<div class="callout">
+  <div class="cl cl-f">Objectives and Methods Structure</div>
+  <ul style="margin:0;">
+    <li><strong>Objectives:</strong> 3–4 numbered objectives. Each begins with an active verb (assess, establish, produce, develop, deploy). Each is specific enough to be verifiable as achieved or not achieved at project end.</li>
+    <li><strong>Methods per objective:</strong> For each objective, one paragraph describing: what you will do, how you will do it, who will do it, and how you will know it has succeeded.</li>
+    <li><strong>Sampling design:</strong> For field survey objectives — number of sites, transect length/spacing, trap-nights, survey duration. Numbers that demonstrate you have calculated what is needed for statistical validity.</li>
+    <li><strong>Analysis approach:</strong> One sentence per objective on how the data will be analysed. Use accessible language — "occupancy modelling" needs one sentence of explanation; "single-species maximum entropy modelling" does not.</li>
+    <li><strong>Limitations:</strong> Acknowledge one or two realistic limitations and how you will manage them. This builds reviewer trust — it shows you are thinking carefully, not overselling.</li>
+  </ul>
+</div>
+
+<h2>Framework 4 — Benefits to Conservation</h2>
+<p>This section answers: so what? A project that produces data produces conservation benefit only if the data is used. Reviewers need to see the pathway from data → decision → conservation outcome.</p>
+
+<div class="callout">
+  <div class="cl cl-f">Benefits to Conservation Structure</div>
+  <ul style="margin:0;">
+    <li><strong>Immediate outputs:</strong> What will physically exist at project end? Dataset, report, score, protocol, trained team, published methodology.</li>
+    <li><strong>Direct conservation benefits:</strong> How do those outputs change conservation decisions or actions? Be specific — who will use the output and how?</li>
+    <li><strong>Capacity building:</strong> What skills and knowledge remain after the project? In whom? How will they apply it?</li>
+    <li><strong>Wider applicability:</strong> Can the methodology be replicated at other sites? By other teams? This multiplies the funder's investment.</li>
+    <li><strong>Sustainability beyond the grant:</strong> How will the conservation benefit persist after the funding ends? A project that requires perpetual external funding to maintain its benefit is a weaker case than one that establishes sustainable local capacity or self-financing mechanisms.</li>
+  </ul>
+</div>
+
+<h2>Framework 5 — Budget Narrative</h2>
+<p>The budget is not a spreadsheet attached to the application. It is an argument. Every line item tells the reviewer: "This cost enables this specific output." An unjustified budget line is an unanswered question that weakens the entire application.</p>
+
+<div class="callout">
+  <div class="cl cl-f">Budget Narrative Rules</div>
+  <ul style="margin:0;">
+    <li>Every line item over $500 gets a justification sentence: what it buys, why it is needed for this specific project, and why this cost level is appropriate.</li>
+    <li>Equipment costs: specify model, quantity, unit cost, and total. Do not write "camera traps: $2,000" — write "10 × Bushnell Core camera traps at $180/unit = $1,800 for 30 camera stations × 30-night minimum deployment to achieve occupancy estimates."</li>
+    <li>Personnel costs: specify role, daily rate, and number of days. Explain why each person is essential to the specific project deliverables.</li>
+    <li>Contingency: 10–15% is standard and expected. Explain briefly that this covers currency fluctuation, equipment failure, and unexpected logistics costs.</li>
+    <li>Never round numbers too aggressively — "exactly $15,000" with no cents looks less credible than "$14,780 + $1,220 contingency = $16,000."</li>
+    <li>Show any co-funding or in-kind contribution explicitly. A $15,000 Rufford application with $5,000 in Techni-Drones in-kind (drone time, staff support) is effectively a $20,000 project at $15,000 cost — that is a strong value proposition.</li>
+  </ul>
+</div>
+
+<!-- S7 AI PROMPT PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>AI Prompt Pack — 15 Prompts</h1>
+<p>One prompt per grant application section plus prompts for cross-cutting tasks. Use with Claude, ChatGPT, or any capable AI. Review every output carefully — you are responsible for factual accuracy and you know your project better than any AI.</p>
+
+<h2>Prompt 1 — Funder-Project Fit Assessment</h2>
+<div class="prompt-box">
+I am considering applying to [funder name] for a conservation grant. Assess the fit between my project and this funder.
+
+My project summary:
+[Describe your project in 3–5 sentences — what it does, where, what it produces]
+
+My eligibility details:
+- Applicant type: [individual / NGO / university]
+- Country: [Madagascar]
+- Career stage: [early career / graduate student / established researcher]
+- Prior relationship with this funder: [first application / previous applicant]
+
+For this funder, assess:
+1. Eligibility — am I eligible based on the information above?
+2. Thematic fit — does my project match this funder's current priorities?
+3. Scale fit — is the project scope and budget appropriate for this grant level?
+4. Framing gap — what aspects of my project narrative need to be reframed to align with this funder's language?
+5. Competitive position — what makes this application strong vs. what could undermine it?
+6. Recommendation: STRONG FIT / MODERATE FIT / WEAK FIT — with reasoning
+
+Funder: [Rufford / WWF Russell Train / GEF SGP / WCS Fonseca / Pierre Castel]
+</div>
+
+<h2>Prompt 2 — Six-Sentence Argument Builder</h2>
+<div class="prompt-box">
+Help me build the six-sentence argument that will underpin my grant application.
+
+Project details:
+- Study site: [name, country, size, protection status]
+- Target species or ecosystem: [describe]
+- Primary threat: [specific threat with any quantitative data you have]
+- What your project does: [describe activities]
+- Your team's specific qualifications for this project: [key evidence]
+- Desired conservation outcome: [what changes as a result of this project]
+
+Generate:
+1. Six sentences, one per argument element (problem / significance / gap / solution / team credibility / impact)
+2. A quality check: is each sentence specific enough to be falsifiable? Does the sequence flow logically?
+3. Alternative framings for any sentence that is too vague or too technical
+4. The single strongest sentence in the set — this becomes the first sentence of the project summary
+</div>
+
+<h2>Prompt 3 — Project Summary Writer</h2>
+<div class="prompt-box">
+Write a project summary for a [funder name] grant application.
+
+Word limit: [150–200 words / follow the funder's specified limit]
+
+My six-sentence argument:
+[Paste the output from Prompt 2]
+
+Additional project details:
+- Primary methods: [list survey methods]
+- Specific outputs: [what will physically exist at project end]
+- Budget total: [amount]
+
+Requirements:
+- Must be understandable by a non-specialist reviewer
+- Must make the conservation funding case in the first two sentences
+- Cannot use jargon without a brief explanation
+- Must end with the conservation impact — not the methodology
+- Must fit within the word limit exactly
+
+Generate 2 alternative summaries with different opening sentences so I can choose the stronger hook.
+</div>
+
+<h2>Prompt 4 — Conservation Problem Section</h2>
+<div class="prompt-box">
+Write the conservation problem / background section for a [funder name] application.
+
+Word limit: [600 words / funder-specified limit]
+Target audience: [conservation specialist / mixed specialist-generalist / non-specialist programme officer]
+
+Project details:
+- Site: [name, region, country, area, protection status]
+- Ecological significance: [species counts, endemism, flagship species, ecosystem services]
+- Primary threat: [specific threat with data — deforestation rate, timeline, quantified impact]
+- Gap: [what is missing that prevents the threat from being addressed]
+- Urgency: [timeline to irreversible threshold]
+- Available data to cite: [any published data, reports, or prior surveys you can reference]
+
+Requirements:
+- Structure: site significance → threat → gap → urgency
+- Tone: factual and specific, not alarmist
+- No global statistics without local context
+- Urgency must be honest — use "if current trends continue" language
+- Every quantitative claim must be based on data I have or can reference
+</div>
+
+<h2>Prompt 5 — Objectives Section</h2>
+<div class="prompt-box">
+Write the objectives section for a conservation grant application.
+
+Project activities:
+[Describe what you will do — survey methods, sites, duration, outputs]
+
+Format requirements:
+- 3–4 numbered objectives
+- Each must begin with an active verb (assess, establish, produce, develop, deploy, validate)
+- Each must be specific enough to be evaluated as achieved or not achieved at project end
+- Each must be achievable within the grant period and budget
+
+For each objective, also generate:
+- The key method that achieves it (1–2 sentences)
+- The verifiable indicator of success (how will you know it is achieved?)
+- The timeline (which month of the project does this occur?)
+</div>
+
+<h2>Prompt 6 — Methods Section</h2>
+<div class="prompt-box">
+Write the methods section for a [funder name] grant application.
+
+Survey methods to describe: [list your methods — camera traps, transects, acoustic monitoring, drone surveys, vegetation plots]
+Target audience: [specialist reviewer / mixed audience]
+Word limit: [per funder guidelines]
+
+For each method:
+1. What it is — one sentence accessible to a non-specialist
+2. Why this method is appropriate for the research question at this site
+3. Specific design details: number of sites/stations/transects, survey effort, duration
+4. Analysis approach — accessible but scientifically defensible
+5. Any limitations and how you will address them
+
+Requirements:
+- Lead with the scientific objective, not the method. ("To estimate lemur occupancy across habitat types, we will deploy..." not "The survey will use camera traps...")
+- Show you have calculated the required sampling effort, not estimated it casually
+- Acknowledge at least one limitation
+</div>
+
+<h2>Prompt 7 — Benefits to Conservation Section</h2>
+<div class="prompt-box">
+Write the benefits to conservation section for a [funder name] application.
+
+Project outputs:
+[List what will physically exist at project end — datasets, reports, trained personnel, published protocols, ecological scores, etc.]
+
+Target funder priorities: [from funder profile — what this funder specifically values]
+
+Structure the section as:
+1. Immediate outputs (what exists at project end)
+2. Direct conservation benefits (how outputs change decisions or actions)
+3. Capacity building (who gains what skills, and how will they apply them)
+4. Replicability (can this be applied at other sites by other teams?)
+5. Sustainability beyond the grant period (what persists without continued external funding?)
+
+Requirements:
+- Be specific about who uses each output and how
+- Connect each output to a conservation decision or action — not just "improved understanding"
+- Avoid "will contribute to" — use "will enable [specific actor] to [specific action]"
+</div>
+
+<h2>Prompt 8 — Budget Narrative Writer</h2>
+<div class="prompt-box">
+Write a budget narrative for a conservation grant application.
+
+Total budget: [amount and currency]
+Funder: [name]
+
+Budget line items:
+[List each item with: category, item description, quantity, unit cost, total cost]
+
+For each line item over [threshold — e.g., $500]:
+1. Write a justification sentence: what it buys, why it is needed for this specific project, why this cost level is appropriate
+2. Flag any item that may need additional justification for this specific funder
+
+Also generate:
+- A co-funding statement if there is institutional in-kind support (Techni-Drones drone time, staff support, etc.)
+- A cost-effectiveness framing: "This budget enables X field-seasons of data producing Y outputs, at a cost of Z per [unit of output]"
+- A contingency justification (10–15% of total budget)
+</div>
+
+<h2>Prompt 9 — Team and Applicant Background Section</h2>
+<div class="prompt-box">
+Write the team and applicant background section for a [funder name] application.
+
+Applicant details:
+- Name: Haja Fabrice Razafindrabe Maminiaina
+- Current role: Drone Instructor & Conservation Technology Lead, Techni-Drones Madagascar
+- Education: MSc Biology of Animal Conservation, University of Antananarivo (2018)
+- Field experience: [list key field projects — Ihofa 2024-25, Kirindy, Beza Mahafaly, Ambatotsirongorongo]
+- Publications: Flowers et al. (2023) American Journal of Biological Anthropology [co-author]
+- Presentations: IPS Congress 2025 — thermal drone lemur surveys
+- Awards: Pierre Castel Foundation Laureate 2025
+- ERIS project: founder and architect
+
+Partner/team members (if applicable):
+[Describe any co-investigators, local NGO partners, or institutional collaborators]
+
+For each team member, write ONE sentence that states: their name, role in this project, and the specific qualification that makes them essential to this specific project.
+
+Requirements for the overall section:
+- Lead with field experience, not academic credentials (especially for Rufford)
+- Show why THIS team at THIS site is uniquely positioned — not just generically qualified
+- Include any site-specific experience explicitly
+</div>
+
+<h2>Prompt 10 — Timeline and Milestones</h2>
+<div class="prompt-box">
+Generate a project timeline for a [duration]-month conservation grant.
+
+Activities to schedule:
+[List all project activities in rough sequence]
+
+Constraints:
+- Field season: [months when fieldwork is possible at this site]
+- Permit acquisition time: [weeks]
+- Equipment acquisition and import time: [weeks]
+- Analysis and reporting time required: [weeks]
+- Funder reporting requirements: [interim report at month X, final report at month Y]
+
+Generate:
+1. A month-by-month Gantt-style timeline (text format — columns: Month, Activity, Milestone, Responsible person)
+2. Four to six key milestones with dates (a milestone is a verifiable deliverable, not an ongoing activity)
+3. Flag any timeline bottlenecks where delays in one activity would cascade to others
+4. A note on what could cause the timeline to slip and how each risk would be managed
+</div>
+
+<h2>Prompt 11 — Statement of Purpose (WCS Fonseca)</h2>
+<div class="prompt-box">
+Write a Statement of Purpose for the WCS Fonseca Fund for Conservation Leaders.
+
+Candidate: Haja Fabrice Razafindrabe Maminiaina (details as above in Prompt 9)
+
+Proposed PhD focus: [Describe the proposed PhD research — ERIS methodology, thermal drone biodiversity assessment, or related topic]
+Proposed host institution: [If identified — e.g., UCLouvain, Max Planck Inst., Univ. Osnabrück]
+Proposed supervisor: [Name and institution, if identified]
+
+The Statement of Purpose must weave three threads:
+1. Scientific trajectory: what has been achieved, what it demonstrates, where it leads (Flowers et al., IPS 2025, ERIS concept, Techni-Drones role)
+2. Research proposal: the specific conservation problem the PhD will address, the methodology, and the expected contribution to knowledge
+3. Return commitment: how this PhD training will be applied to conservation in Madagascar and the Global South — ERIS, Techni-Drones, OPLURIX
+
+Requirements:
+- 800–1,000 words
+- Tone: confident, mission-driven, specific — not humble or deferential
+- Must make a compelling case that this candidate is a conservation leader, not just a PhD student
+- Must show that the PhD institution and supervisor are the right fit for the specific research question
+</div>
+
+<h2>Prompt 12 — Reviewer Feedback Response</h2>
+<div class="prompt-box">
+Help me respond to reviewer feedback on a rejected grant application.
+
+Original application: [brief description of the project and funder]
+Reviewer feedback received:
+[Paste the reviewer comments exactly as received]
+
+For each criticism in the reviewer feedback:
+1. Classify it as: VALID (requires a change to the project or narrative) / MISUNDERSTANDING (the information was in the application but the reviewer missed it) / DISAGREEMENT (the reviewer has a different view of conservation priority — acknowledge and respond)
+2. Generate a specific response to each criticism: how the revised application addresses it
+3. Flag any criticism that suggests a fundamental problem that would require rethinking the project (not just the narrative)
+
+Then generate:
+- An overall revision strategy: which sections need the most work
+- A cover letter paragraph for the resubmission explaining how the application has been improved in response to review
+</div>
+
+<h2>Prompt 13 — French Application Translation</h2>
+<div class="prompt-box">
+Translate and adapt the following grant application section into French for a Francophone funder or review panel.
+
+Target funder/audience: [GEF SGP Madagascar / Francophone institutional partner / French research funding agency]
+
+Requirements:
+- Natural formal French, not literal translation
+- Conservation and scientific terminology in standard French usage
+- Maintain the same argumentative structure and persuasive intent
+- Do not translate proper nouns (species names in Latin, place names, institution names, equipment model names)
+- Adapt any examples that rely on English idiomatic expressions
+
+Section to translate:
+[PASTE THE ENGLISH SECTION HERE]
+</div>
+
+<h2>Prompt 14 — Application Completion Checklist Generator</h2>
+<div class="prompt-box">
+Generate a submission checklist for a [funder name] grant application.
+
+Application requirements (from funder guidelines):
+[List all required sections, attachments, word limits, and submission format requirements]
+
+My application status:
+[Describe what has been written and what is still pending]
+
+Generate:
+1. A section-by-section checklist with word count check for each section
+2. A required attachments list (CV, letters of support, budget spreadsheet, etc.)
+3. A pre-submission quality check: the 10 most common errors for this specific funder
+4. A submission timeline working backward from the deadline: when each section must be complete
+5. The three most important things a reviewer should remember from this application — if these do not emerge clearly from the text, the application needs revision
+</div>
+
+<h2>Prompt 15 — Multi-Funder Application Adaptation</h2>
+<div class="prompt-box">
+I have a completed grant application for [Funder A]. Help me adapt it for [Funder B].
+
+My [Funder A] application summary:
+[Paste your complete application or key sections]
+
+Differences between the two funders:
+[Describe the key differences in priorities, framing, audience, word limits, and reviewer criteria]
+
+Generate:
+1. Which sections can be reused with minimal changes (and what minimal changes are needed)
+2. Which sections require significant rewriting for [Funder B]
+3. The new six-sentence argument for [Funder B] (the framing may differ from [Funder A])
+4. Any new sections required by [Funder B] that are not in the [Funder A] application
+5. The 5 most important language changes needed to align with [Funder B]'s specific vocabulary and priorities
+6. Estimated time to produce the [Funder B] application from the [Funder A] base
+</div>
+
+<!-- S8 REVIEWER PSYCHOLOGY -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>Reviewer Psychology Guide</h1>
+<p>Understanding how grant reviewers read applications is as important as understanding what to write. This section is based on published research on grant review behaviour and on feedback patterns from major conservation funders.</p>
+
+<h2>How Reviewers Read</h2>
+<ul>
+  <li><strong>They read the summary first and form an impression.</strong> That impression affects how generously they read everything else. A strong summary primes a reviewer to find merit in the details. A weak summary primes them to look for problems.</li>
+  <li><strong>They are reading 30–80 applications in a compressed review period.</strong> They are looking for reasons to shortlist or eliminate. Make their job easy — put the most important information in the most obvious place.</li>
+  <li><strong>They look for the funding case, not the project description.</strong> Many applications describe a project without making the case for why this specific project deserves funding at this specific moment. The funding case is: this problem is real → these existing approaches are insufficient → this project fills the gap → these specific people can do it → this funder's money makes it possible.</li>
+  <li><strong>They notice what is missing.</strong> An application that does not mention the limitations of the proposed methodology looks naïve. One that does not acknowledge community engagement looks extractive. One that does not explain sustainability looks short-sighted. Acknowledge these things before the reviewer has to note them as weaknesses.</li>
+  <li><strong>They remember the last thing they read.</strong> The concluding sentences of each section — and especially the final paragraph of the application — carry disproportionate weight. End strong.</li>
+</ul>
+
+<h2>The Six Reviewer Scoring Criteria — How to Address Each</h2>
+<table>
+  <tr><th>Criterion</th><th>What reviewers look for</th><th>How to address it explicitly</th></tr>
+  <tr><td><strong>Scientific merit / rigour</strong></td><td>Is the methodology appropriate? Are sample sizes justified? Are limitations acknowledged?</td><td>State sample size calculations explicitly. Name the statistical approach. Acknowledge one or two limitations with management strategies.</td></tr>
+  <tr><td><strong>Conservation relevance</strong></td><td>Does this produce conservation outcomes, not just scientific outputs?</td><td>Connect every output to a specific conservation decision or action. Name who will use the data and how.</td></tr>
+  <tr><td><strong>Applicant credibility</strong></td><td>Can this team actually deliver what it promises?</td><td>Lead with field-specific experience at this site or with these methods. Reference prior outputs (publications, reports, previous funded projects).</td></tr>
+  <tr><td><strong>Value for money</strong></td><td>Is the budget proportional to the expected outputs?</td><td>Calculate and state the cost-per-output explicitly. Show any co-funding or in-kind contributions.</td></tr>
+  <tr><td><strong>Sustainability</strong></td><td>What persists after the grant ends?</td><td>Describe institutional capacity, trained local staff, established methodology, or financing pathway that continues without external grant funding.</td></tr>
+  <tr><td><strong>Feasibility</strong></td><td>Is the timeline realistic? Are the objectives achievable in the grant period?</td><td>Show that the timeline accounts for permit lead times, field season constraints, and analysis time. Do not overpromise.</td></tr>
+</table>
+
+<h2>Language That Weakens Applications</h2>
+<table>
+  <tr><th>Weak phrase</th><th>Why it weakens</th><th>Stronger alternative</th></tr>
+  <tr><td>"We hope to..."</td><td>Signals uncertainty about deliverability</td><td>"We will..." (for objectives) or "We expect to..." (for impact)</td></tr>
+  <tr><td>"This project will contribute to conservation..."</td><td>Vague — does not specify what changes</td><td>"This project will produce [specific output] that enables [specific actor] to [specific action]"</td></tr>
+  <tr><td>"Our team has extensive experience..."</td><td>Generic — every applicant says this</td><td>"[Name] has conducted [specific survey type] at [site] for [period], producing [specific output]"</td></tr>
+  <tr><td>"Madagascar is one of the most biodiverse..."</td><td>Every Madagascar application opens this way</td><td>Open with the specific site and the specific problem — not the global context</td></tr>
+  <tr><td>"We will use state-of-the-art technology..."</td><td>Marketing language in a scientific context</td><td>Name the technology, state its specific advantage for this application, and name its limitation</td></tr>
+  <tr><td>"Any amount of funding would be helpful..."</td><td>No clear ask — implies the budget is flexible rather than calculated</td><td>"We are requesting £X, which enables [specific activities producing specific outputs]"</td></tr>
+  <tr><td>"If funding permits, we may also..."</td><td>Signals that the primary objectives were padded</td><td>Include secondary objectives only if they are achievable within the budget. Otherwise, cut them.</td></tr>
+</table>
+
+<!-- S9 BEFORE/AFTER LIBRARY -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Before / After Language Library</h1>
+<p>15 specific grant language transformations from weak to strong. Study these and apply the same logic to your own application.</p>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Opening — weak</div><div class="ba-text">"Madagascar is recognised as one of the world's top biodiversity hotspots, with extraordinary levels of endemism and ongoing threats from deforestation, which is having a devastating impact on the country's unique wildlife."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Opening — strong</div><div class="ba-text">"The Ihofa forest holds the only known breeding population of Indri indri in the Alaotra-Mangoro region. At current encroachment rates, its connectivity to the nearest viable forest block will be severed before 2032."</div></div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Team — weak</div><div class="ba-text">"The project lead has extensive experience in biodiversity surveys and conservation research in Madagascar, with strong technical skills and a track record of successful project management."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Team — strong</div><div class="ba-text">"Haja Fabrice Razafindrabe Maminiaina conducted the 2024–2025 multi-method biodiversity inventory at this site, producing the only existing baseline dataset for Ihofa mammal species. No other team has comparable site-specific knowledge of this forest."</div></div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Impact — weak</div><div class="ba-text">"This project will generate valuable data that can inform conservation management decisions and contribute to the protection of Madagascar's unique biodiversity."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Impact — strong</div><div class="ba-text">"The ERIS pilot score produced by this project is the specific data product that enables Ihofa Forest to be evaluated for biodiversity credit certification — a pathway to recurring conservation revenue that does not depend on grant cycles."</div></div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Methods — weak</div><div class="ba-text">"We will conduct comprehensive biodiversity surveys using multiple methods including camera traps, transects, and acoustic monitoring across the study area."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Methods — strong</div><div class="ba-text">"To estimate mammal occupancy at Ihofa, we will deploy 20 camera traps in a systematic grid at 500m spacing for 60 trap-nights per station — the minimum required for single-species occupancy models at expected detection rates (MacKenzie et al. 2006)."</div></div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Budget — weak</div><div class="ba-text">"Field equipment: £3,500. Personnel costs: £4,200. Travel and logistics: £2,800. Total: £10,500."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Budget — strong</div><div class="ba-text">"Thermal sensor (Zenmuse H30T, 1 unit): £6,200. This enables 40+ drone survey hours at Ihofa, producing thermal wildlife detection data and habitat quality metrics for all 12,000 ha of the survey area — the core output of the ERIS pilot score. Equipment will remain at Techni-Drones Madagascar for continued research after project end."</div></div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Sustainability — weak</div><div class="ba-text">"We will seek continued funding from other sources to sustain the project beyond the grant period."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Sustainability — strong</div><div class="ba-text">"Beyond the grant period, the ERIS score enables Ihofa Forest to access biodiversity credit markets — creating a self-financing mechanism for forest protection. The trained field team and the open methodology remain at no additional cost."</div></div>
+</div>
+
+<div class="ba-grid">
+  <div class="ba-box ba-bad"><div class="ba-label">Community engagement — weak</div><div class="ba-text">"We will engage with local communities to ensure they are informed about and supportive of the project."</div></div>
+  <div class="ba-box ba-good"><div class="ba-label">Community engagement — strong</div><div class="ba-text">"Three community monitors from the Ihofa fokontany will be trained and employed as field technicians throughout the survey season. Survey results will be shared with community leaders at project close, including a plain-language Malagasy-language summary."</div></div>
+</div>
+
+<!-- S10 APPLICATION CALENDAR -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Application Calendar — 6-Week Submission Timeline</h1>
+<p>Never write a grant application in the final week. This calendar gives you a 6-week submission timeline that produces a stronger application with less stress.</p>
+
+<table>
+  <tr><th>Week</th><th>Focus</th><th>Key tasks</th></tr>
+  <tr><td><strong>Week 6</strong><br>(6 weeks before deadline)</td><td>Foundation</td><td>Complete funder-project fit assessment (Prompt 1). Read funder guidelines and recent funded projects. Build the six-sentence argument (Prompt 2). Confirm team composition and availability. Begin permit and letter of support requests.</td></tr>
+  <tr><td><strong>Week 5</strong></td><td>Core narrative</td><td>Write conservation problem section (Prompt 4). Write objectives (Prompt 5). Write methods (Prompt 6). Draft timeline (Prompt 10). Do not write the summary yet.</td></tr>
+  <tr><td><strong>Week 4</strong></td><td>Supporting sections</td><td>Write benefits to conservation (Prompt 7). Write team and background (Prompt 9). Build detailed budget. Write budget narrative (Prompt 8). Collect all letters of support and attachments.</td></tr>
+  <tr><td><strong>Week 3</strong></td><td>Summary and integration</td><td>Write the project summary LAST (Prompt 3) — now that the full application exists. Read the full application as a single document for the first time. Check flow and internal consistency. Run reviewer psychology checklist (Section 8).</td></tr>
+  <tr><td><strong>Week 2</strong></td><td>External review</td><td>Send to at least one external reviewer (not the project team). Ask them: what does this project do, why does it matter, and why should this team be funded? Revise based on their answers. Read aloud.</td></tr>
+  <tr><td><strong>Week 1</strong></td><td>Final checks and submission</td><td>Final read-aloud. Word count check for every section. Budget arithmetic check (add up again). Attachment checklist. Submit at least 24 hours before deadline — never at the last hour.</td></tr>
+</table>
+
+<h2>OPLURIX Active Grant Calendar — 2026–2027</h2>
+<table>
+  <tr><th>Grant</th><th>Deadline</th><th>Status</th><th>Next action</th></tr>
+  <tr><td>Rufford Small Grants</td><td>Rolling</td><td>NOT SUBMITTED</td><td>Begin 6-week timeline now. Week 6 starts today.</td></tr>
+  <tr><td>Pierre Castel (2nd)</td><td>TBD — via Techni-Drones</td><td>Inquire with director</td><td>Raise with director in Week 1 of Techni-Drones employment.</td></tr>
+  <tr><td>GEF Small Grants</td><td>Rolling — 4 months from concept note</td><td>NOT STARTED</td><td>Submit concept note to UNDP Madagascar coordinator. Begin in Month 2.</td></tr>
+  <tr><td>WWF Russell E. Train</td><td>April 2027</td><td>2026 missed — plan 2027</td><td>Begin preparation in January 2027. Use Rufford application as base.</td></tr>
+  <tr><td>WCS Fonseca Fund</td><td>February 2027</td><td>In preparation</td><td>Confirm Pr. Andrianarimisa as nominator this week. Begin SoP draft (Prompt 11) in Month 3.</td></tr>
+</table>
+
+<!-- S11 REBUTTAL GUIDE -->
+<div class="section-label" style="margin-top:6mm;">Section 11</div>
+<h1>Rebuttal and Revision Guide</h1>
+<p>Most conservation grants are competitive. Most strong applications are rejected at least once. A well-handled rejection is a funded resubmission in the next cycle.</p>
+
+<h2>Reading Reviewer Feedback</h2>
+<ul>
+  <li><strong>Read it twice before reacting.</strong> The first read after a rejection triggers defensiveness. The second read, a day later, identifies what is actually actionable.</li>
+  <li><strong>Classify every criticism</strong> as: VALID (the reviewer identified a real weakness) / MISUNDERSTANDING (the information was in the application but communicated poorly) / DISAGREEMENT (the reviewer has a different scientific or strategic view).</li>
+  <li><strong>VALID criticisms are gifts.</strong> They tell you exactly what to improve. A reviewer who says "the sampling design is not adequately justified" has given you the revision instruction.</li>
+  <li><strong>MISUNDERSTANDINGS are communication failures</strong> — which means they are your responsibility to fix, not the reviewer's failure to read carefully. If a reviewer missed something important, it was not prominent enough.</li>
+  <li><strong>DISAGREEMENTS require acknowledgment, not capitulation.</strong> If a reviewer thinks your budget is too large and you have good reasons for each line item, defend them with evidence in the revision — do not simply reduce the budget to please the reviewer.</li>
+</ul>
+
+<h2>The Revision Protocol</h2>
+<ol>
+  <li>List every reviewer criticism in a table with: criticism text / classification (valid/misunderstanding/disagreement) / intended revision.</li>
+  <li>For VALID criticisms: make the specific improvement. Note what changed and where.</li>
+  <li>For MISUNDERSTANDINGS: move the relevant information to a more prominent position. Often this means adding it to the summary or the opening paragraph of the relevant section.</li>
+  <li>For DISAGREEMENTS: add a clear, evidence-based response. Acknowledge the reviewer's perspective, then explain why your approach is appropriate for this specific project and context.</li>
+  <li>Write a cover letter for the resubmission that clearly explains what changed and why. Reviewers who see a revision round appreciate knowing their feedback was taken seriously.</li>
+</ol>
+
+<!-- QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 12</div>
+<h1>Quick Start — Your Next Application in 6 Weeks</h1>
+
+<h2>Today (Day 1)</h2>
+<ul class="checklist">
+  <li>Identify your target funder from this guide. Read their funder profile (Section 5) in full.</li>
+  <li>Download the current application guidelines from the funder's website. Not a cached version — the current one.</li>
+  <li>Run Prompt 1 (funder-project fit assessment). If the result is WEAK FIT, choose a different funder.</li>
+  <li>Mark your deadline in your calendar. Mark Week 6, 5, 4, 3, 2, 1 milestones from the calendar (Section 10).</li>
+</ul>
+
+<h2>This Week (Week 6)</h2>
+<ul class="checklist">
+  <li>Run Prompt 2 (six-sentence argument). Write it out. Test it: can you explain it to a non-specialist friend in 60 seconds? If not, revise.</li>
+  <li>Send letters of support request to all institutional partners. These take the longest to arrive and cannot be chased at the last moment.</li>
+  <li>Build a rough budget. You do not need exact numbers yet — but you need to know whether the project fits within the grant ceiling.</li>
+</ul>
+
+<h2>Weeks 5–4</h2>
+<ul class="checklist">
+  <li>Write conservation problem section (Prompt 4). This is the most important narrative section.</li>
+  <li>Write objectives (Prompt 5) and methods (Prompt 6).</li>
+  <li>Build the detailed budget and write the budget narrative (Prompt 8).</li>
+  <li>Write the team section (Prompt 9).</li>
+</ul>
+
+<h2>Weeks 3–2</h2>
+<ul class="checklist">
+  <li>Write the project summary LAST (Prompt 3).</li>
+  <li>Run the reviewer psychology checklist against every section (Section 8).</li>
+  <li>Send to one external reviewer. Ask the three questions.</li>
+  <li>Revise based on their feedback.</li>
+</ul>
+
+<h2>Week 1 — Final</h2>
+<ul class="checklist">
+  <li>Read the complete application aloud. Fix anything that sounds unclear or forced.</li>
+  <li>Check every word count. Trim any section over the limit.</li>
+  <li>Add up the budget again from scratch.</li>
+  <li>Verify all attachments are attached and formatted correctly.</li>
+  <li>Submit at least 24 hours before the deadline.</li>
+</ul>
+
+<!-- MVP vs PREMIUM -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>6-step application system</td><td>✓</td><td>✓</td></tr>
+  <tr><td>5 funder profiles (Rufford, WWF, GEF, WCS, Pierre Castel)</td><td>✓</td><td>✓ + 5 more funders</td></tr>
+  <tr><td>5 narrative frameworks with worked examples</td><td>✓</td><td>✓ + 3 more frameworks</td></tr>
+  <tr><td>15 AI prompts</td><td>✓</td><td>✓ 25 prompts</td></tr>
+  <tr><td>Reviewer psychology guide</td><td>✓</td><td>✓ + funder-specific reviewer notes</td></tr>
+  <tr><td>Before/After language library (15 pairs)</td><td>✓</td><td>✓ 30 pairs</td></tr>
+  <tr><td>6-week application calendar</td><td>✓</td><td>✓ + multi-grant coordination calendar</td></tr>
+  <tr><td>Rebuttal and revision guide</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Pre-written Rufford application template (ERIS/drone)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>WCS Fonseca statement of purpose example</td><td>—</td><td>Planned</td></tr>
+  <tr><td>GEF concept note template</td><td>—</td><td>Planned</td></tr>
+  <tr><td>French version (all sections)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Budget calculator (Google Sheets)</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:30mm 0;">
+  <div style="font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8mm;">OPLURIX</div>
+  <div style="font-size:22pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    The difference between funded<br>and unfunded is almost always<br><em>a communication difference.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:120mm;margin:0 auto 12mm;line-height:1.7;">
+    Good conservation science deserves funding. But it does not automatically receive it. Making the case — specifically, credibly, and in the structure that reviewers are looking for — is as much a professional skill as the fieldwork itself. This guide gives you that skill in a form you can use every application cycle.
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-size:8pt;color:var(--faint);line-height:2;">
+    Grant Writing Co-Pilot v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div>
+</body>
+</html>

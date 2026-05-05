@@ -1,0 +1,20 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_01_expert_to_influencer_content_engine",
+  "public_name": "Expert-to-Influencer Content Engine",
+  "suite_number": 1,
+  "current_state": "live",
+  "recommended_public_state": "live",
+  "launch_decision": "keep_live",
+  "activation_priority": 0,
+  "delivery_state": "ready_for_manual_fulfillment",
+  "recommended_client_format": "hybrid",
+  "price": "$39",
+  "activation_gate": "Keep the current manual delivery and buyer feedback loop clean.",
+  "source_artifacts": [
+    "documents/oplurix-site/product.html",
+    "documents/oplurix-site/ExpertToInfluencer.txt",
+    "documents/oplurix-site/OPLURIX_Product1_Expert_to_Influencer_Content_Engine.pdf"
+  ],
+  "sellable_page": "docs/products/01-expert-to-influencer-content-engine.html"
+}

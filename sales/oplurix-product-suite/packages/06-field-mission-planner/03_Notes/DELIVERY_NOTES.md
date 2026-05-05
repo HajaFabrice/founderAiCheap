@@ -1,0 +1,10 @@
+﻿# Delivery Notes
+
+- Recommended client format: $( @{id=oplurix_06_field_mission_planner; suite_number=6; public_name=Field Mission Planner; status=source_only; price_usd=49; primary_audience=System.Object[]; core_promise=Turn tacit field planning knowledge into a shared, reviewable mission plan.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=internal_only; checkout_enabled=False; recommended_client_format=pdf_plus_checklists; format_reason=The product is operational and checklist-heavy, which fits printable and editable field documents well.; agent_uses=System.Object[]}.recommended_client_format )
+- Format reason: The product is operational and checklist-heavy, which fits printable and editable field documents well.
+- Public state: $( @{id=oplurix_06_field_mission_planner; suite_number=6; public_name=Field Mission Planner; status=source_only; price_usd=49; primary_audience=System.Object[]; core_promise=Turn tacit field planning knowledge into a shared, reviewable mission plan.; source_formats=System.Object[]; source_artifacts=System.Object[]; storefront_visibility=internal_only; checkout_enabled=False; recommended_client_format=pdf_plus_checklists; format_reason=The product is operational and checklist-heavy, which fits printable and editable field documents well.; agent_uses=System.Object[]}.status )
+- Recommended public state: $( @{product_id=oplurix_06_field_mission_planner; public_name=Field Mission Planner; current_state=source_only; recommended_public_state=source_only; launch_decision=package_later; activation_priority=4; minimum_activation_gate=Extract editable checklists, timelines, and team planning sheets.; main_blocker=Needs asset extraction beyond the source document.; recommended_client_format=pdf_plus_checklists; agent_rule=Keep internal until the operational templates are packaged.}.recommended_public_state )
+- Main blocker: Needs asset extraction beyond the source document.
+
+If this product moves to checkout later, keep the sellable surface in HTML and
+the delivered bundle in a bounded package.

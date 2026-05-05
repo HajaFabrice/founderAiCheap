@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --forest:  #16331F;
+  --forest2: #1F4A2C;
+  --sage:    #4A7A55;
+  --sage-lt: #B2CEB5;
+  --amber:   #B87A1A;
+  --gold:    #D4921F;
+  --cream:   #F3EFE6;
+  --parch:   #EBE4D6;
+  --sand:    #D9CFBC;
+  --ink:     #1A1A1A;
+  --muted:   #555;
+  --faint:   #888;
+  --red:     #8B2500;
+  --blue:    #1A3A5C;
+  --teal:    #0D4A44;
+  --orange:  #8B3A00;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.65; color: var(--ink); background: white; }
+
+@page cover { size: A4; margin: 0; }
+@page content {
+  size: A4; margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Field Mission Planner  ·  OPLURIX  ·  " counter(page);
+    font-size: 7pt; color: #999;
+    border-top: 0.5pt solid #DDD; padding-top: 4pt;
+  }
+}
+
+/* COVER */
+.cover { page: cover; page-break-after: always; width: 210mm; height: 297mm; background: var(--forest); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.cover-top { padding: 18mm 16mm 0 16mm; flex: 1; }
+.cover-brand { font-size:8pt; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:32mm; }
+.cover-eyebrow { font-size:7.5pt; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:6mm; display:flex; align-items:center; gap:8pt; }
+.cover-eyebrow::before { content:''; display:inline-block; width:20pt; height:0.5pt; background:rgba(212,146,31,0.6); }
+.cover-title { font-size:30pt; font-weight:700; line-height:1.12; color:white; letter-spacing:-0.02em; margin-bottom:6mm; }
+.cover-title em { font-style:italic; color:var(--gold); }
+.cover-subtitle { font-size:11pt; font-weight:300; color:rgba(255,255,255,0.55); line-height:1.6; max-width:130mm; margin-bottom:14mm; }
+.cover-for-label { font-size:7pt; letter-spacing:0.1em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:4mm; }
+.cover-audience { display:flex; flex-wrap:wrap; gap:6pt; margin-bottom:18mm; }
+.cover-tag { font-size:8pt; padding:3pt 10pt; border:0.5pt solid rgba(255,255,255,0.2); border-radius:20pt; color:rgba(255,255,255,0.6); }
+.cover-promise { background:rgba(212,146,31,0.12); border-left:2pt solid var(--gold); padding:8mm 10mm; }
+.cover-promise-label { font-size:6.5pt; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:3mm; }
+.cover-promise p { font-size:9.5pt; color:rgba(255,255,255,0.75); line-height:1.55; font-style:italic; }
+.cover-bottom { padding:8mm 16mm; border-top:0.5pt solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-author { font-size:7.5pt; color:rgba(255,255,255,0.35); }
+.cover-author strong { display:block; color:rgba(255,255,255,0.55); margin-bottom:2pt; }
+.cover-version { font-size:7pt; color:rgba(255,255,255,0.25); text-align:right; }
+
+/* CONTENT */
+.content-pages { page: content; }
+h1 { font-size:18pt; font-weight:700; color:var(--forest); letter-spacing:-0.02em; line-height:1.2; margin-top:10mm; margin-bottom:4mm; padding-bottom:3mm; border-bottom:1.5pt solid var(--forest); page-break-after:avoid; }
+h2 { font-size:13pt; font-weight:700; color:var(--forest2); margin-top:8mm; margin-bottom:3mm; page-break-after:avoid; }
+h3 { font-size:10pt; font-weight:700; color:var(--sage); text-transform:uppercase; letter-spacing:0.06em; margin-top:6mm; margin-bottom:2.5mm; page-break-after:avoid; }
+p { margin-bottom:3mm; }
+strong { font-weight:700; color:var(--forest); }
+em { font-style:italic; color:var(--forest2); }
+
+.section-label { font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; display:flex; align-items:center; gap:8pt; }
+.section-label::before { content:''; display:inline-block; width:16pt; height:0.5pt; background:var(--amber); }
+
+.page-break { page-break-before:always; }
+.no-break { page-break-inside:avoid; }
+
+/* CALLOUTS */
+.callout  { background:var(--cream); border-left:3pt solid var(--forest); padding:5mm 7mm; margin:5mm 0; page-break-inside:avoid; }
+.ca { background:#FBF0DC; border-left:3pt solid var(--amber); }
+.cr { background:#FDF0EE; border-left:3pt solid var(--red); }
+.cb { background:#EEF3FA; border-left:3pt solid var(--blue); }
+.ct { background:#E6F4F4; border-left:3pt solid var(--teal); }
+.co { background:#FDF3E8; border-left:3pt solid var(--orange); }
+.cl { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2mm; }
+.cl-a { color:var(--amber); } .cl-f { color:var(--forest); } .cl-r { color:var(--red); }
+.cl-b { color:var(--blue); } .cl-t { color:var(--teal); } .cl-o { color:var(--orange); }
+
+/* DARK BOX */
+.dark-box { background:var(--forest); padding:6mm 8mm; margin:5mm 0; page-break-inside:avoid; }
+.dark-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:3mm; }
+.dark-box p { color:rgba(255,255,255,0.85); font-size:9.5pt; line-height:1.6; margin-bottom:2mm; }
+.dark-box p:last-child { margin-bottom:0; }
+
+/* NUMBERED CARD */
+.numbered-card { display:flex; gap:5mm; margin-bottom:4mm; page-break-inside:avoid; }
+.num-badge { font-size:8pt; font-weight:700; color:var(--amber); flex-shrink:0; padding-top:0.5mm; width:12pt; text-align:right; }
+.num-content strong { display:block; font-size:10pt; margin-bottom:0.5mm; color:var(--forest); }
+.num-content p { font-size:9pt; color:var(--muted); margin-bottom:0; line-height:1.5; }
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; margin:4mm 0; font-size:9pt; page-break-inside:avoid; }
+th { background:var(--forest); color:white; padding:3mm 4mm; text-align:left; font-weight:700; font-size:8.5pt; }
+td { padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); vertical-align:top; }
+tr:nth-child(even) td { background:var(--cream); }
+
+/* LISTS */
+ul { margin:3mm 0 3mm 6mm; list-style:none; padding:0; }
+ul li { margin-bottom:1.5mm; padding-left:4mm; position:relative; }
+ul li::before { content:'→'; position:absolute; left:-3mm; color:var(--amber); font-size:9pt; }
+ol { margin:3mm 0 3mm 7mm; padding:0; }
+ol li { margin-bottom:2mm; padding-left:2mm; }
+
+/* STEP BLOCK */
+.step-block { display:flex; gap:5mm; margin-bottom:5mm; page-break-inside:avoid; }
+.step-num { width:18pt; height:18pt; background:var(--forest); color:white; font-size:8pt; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0.5mm; }
+
+/* PROMPT BOX */
+.prompt-box { background:#F0F4F0; border:0.5pt solid #B2CEB5; border-left:2.5pt solid var(--sage); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.7; color:var(--forest); page-break-inside:avoid; }
+
+/* TEMPLATE BOX */
+.template-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 7mm; margin:4mm 0; font-family:monospace; font-size:8pt; line-height:1.8; color:var(--forest); page-break-inside:avoid; }
+
+/* CHECKLIST */
+.checklist { list-style:none; margin:3mm 0; }
+.checklist li { display:flex; gap:4mm; padding:1.5mm 0; font-size:9.5pt; border-bottom:0.5pt solid var(--parch); }
+.checklist li::before { content:'☐'; color:var(--amber); font-size:10pt; flex-shrink:0; position:static; }
+
+/* MISSION CARD */
+.mission-card { border:0.5pt solid var(--sand); margin-bottom:5mm; page-break-inside:avoid; }
+.mc-header { background:var(--forest); padding:4mm 6mm; display:flex; justify-content:space-between; align-items:center; }
+.mc-title { font-size:11pt; font-weight:700; color:white; }
+.mc-meta { font-family:monospace; font-size:7.5pt; color:var(--gold); }
+.mc-body { padding:5mm 6mm; background:white; }
+.mc-row { display:grid; grid-template-columns:90pt 1fr; gap:3mm; margin-bottom:2mm; font-size:9pt; border-bottom:0.5pt solid var(--parch); padding-bottom:2mm; }
+.mc-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.mc-key { font-weight:700; color:var(--forest2); }
+.mc-val { color:var(--ink); }
+
+/* SCHEDULE GRID */
+.sched-grid { border:0.5pt solid var(--sand); margin:4mm 0; page-break-inside:avoid; }
+.sched-header { display:grid; grid-template-columns:40pt repeat(7, 1fr); background:var(--forest); }
+.sched-header div { padding:2mm 3mm; font-size:7.5pt; font-weight:700; color:white; text-align:center; border-right:0.5pt solid rgba(255,255,255,0.15); }
+.sched-row { display:grid; grid-template-columns:40pt repeat(7, 1fr); border-top:0.5pt solid var(--sand); }
+.sched-row:nth-child(even) { background:var(--cream); }
+.sched-time { padding:2mm 3mm; font-size:7.5pt; font-family:monospace; color:var(--faint); border-right:0.5pt solid var(--sand); }
+.sched-cell { padding:2mm 3mm; font-size:7.5pt; color:var(--ink); border-right:0.5pt solid var(--sand); text-align:center; }
+.sched-cell.active { background:rgba(74,122,85,0.12); color:var(--forest2); font-weight:700; }
+.sched-cell.travel { background:rgba(184,122,26,0.10); color:var(--amber); }
+.sched-cell.off { background:rgba(0,0,0,0.03); color:var(--faint); }
+.sched-cell.risk { background:rgba(139,37,0,0.08); color:var(--red); }
+
+/* TRANSECT LAYOUT */
+.transect-box { background:var(--parch); border:0.5pt solid var(--sand); padding:5mm 6mm; margin:4mm 0; page-break-inside:avoid; }
+.tx-label { font-size:6.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); margin-bottom:2mm; }
+.tx-formula { font-family:monospace; font-size:9pt; color:var(--forest); background:white; padding:3mm 5mm; border:0.5pt solid var(--sand); margin:2mm 0; }
+
+/* RISK MATRIX */
+.risk-row { display:grid; grid-template-columns:130pt 60pt 60pt 1fr; gap:3mm; padding:2.5mm 4mm; border-bottom:0.5pt solid var(--sand); font-size:9pt; page-break-inside:avoid; }
+.risk-header { background:var(--forest); color:white; font-weight:700; font-size:8.5pt; }
+.risk-l { color:#166534; font-weight:700; text-align:center; }
+.risk-m { color:#92400E; font-weight:700; text-align:center; }
+.risk-h { color:var(--red); font-weight:700; text-align:center; }
+
+/* DAY PLAN */
+.day-plan { border:0.5pt solid var(--sand); margin:4mm 0; page-break-inside:avoid; }
+.dp-header { background:var(--teal); padding:3mm 6mm; display:flex; justify-content:space-between; }
+.dp-title { font-size:10pt; font-weight:700; color:white; }
+.dp-date { font-family:monospace; font-size:8pt; color:rgba(255,255,255,0.6); }
+.dp-body { padding:4mm 6mm; }
+.dp-row { display:flex; gap:4mm; padding:1.5mm 0; border-bottom:0.5pt solid var(--parch); font-size:9pt; align-items:flex-start; }
+.dp-time { font-family:monospace; font-size:8pt; color:var(--amber); width:30pt; flex-shrink:0; }
+.dp-task { color:var(--ink); flex:1; }
+.dp-who { font-size:8pt; color:var(--muted); width:50pt; flex-shrink:0; text-align:right; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+    <div class="cover-title">Field Mission<br><em>Planner</em></div>
+    <div class="cover-subtitle">Plan every field survey from first contact to last data backup — transect design, team scheduling, logistics, equipment lists, risk management, and day-by-day itineraries, all in one structured system.</div>
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Field Survey Leaders</span>
+      <span class="cover-tag">Research Coordinators</span>
+      <span class="cover-tag">Conservation NGO Field Managers</span>
+      <span class="cover-tag">Graduate Researchers</span>
+    </div>
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I am planning a field mission by memory, WhatsApp messages, and hope" to "I have a documented, shared, risk-assessed field plan that the whole team can follow — and that I can hand to any funder or institution as evidence of operational rigour."</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Field Biologist · Conservation Technologist · Founder, OPLURIX
+    </div>
+    <div class="cover-version">v1.0 · 2026<br>OPLURIX · $49</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-pages">
+
+<div class="callout" style="margin-top:0;margin-bottom:6mm;">
+  <div class="cl cl-f">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once. Then go to Section 4 (the 7-Step Planning System) and work through it for your next mission. Use the Templates (Section 6) and AI Prompts (Section 7) at each planning stage. The Risk Register (Section 9) and the Day-by-Day Planning Guide (Section 10) are the most operationally critical sections.</p>
+  <p style="margin-bottom:0;font-size:9pt;color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 7-Step Planning System · Mission Briefing Template · Planning Templates · AI Prompt Pack · Transect Design Guide · Risk Register · Day-by-Day Planning · Equipment Master Lists · Communication Protocols · Debrief System · Quick Start</p>
+</div>
+
+<!-- S1 -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>A field survey is not an adventure. It is an operational mission with a specific scientific objective, a team of people whose safety is your responsibility, equipment that can fail, logistics that can collapse, weather that does not care about your schedule, and data that is irreplaceable once the season ends.</p>
+
+<p>Most field missions are planned the way field missions have always been planned: a combination of experience, memory, informal WhatsApp coordination, and improvisation. This works — until it does not. A missing permit. A team member who did not know which site to go to. An equipment list that forgot the memory cards. A near-accident because nobody had reviewed the safety protocol since the previous field season.</p>
+
+<p>This guide does not replace field experience. It documents it. It gives you a system for turning what experienced field biologists know intuitively into an explicit, shared, reviewable plan that any team member can follow, any funder can audit, and any new team member can learn from.</p>
+
+<div class="callout ca">
+  <div class="cl cl-a">The Transformation</div>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:2mm;"><strong>Before:</strong> "I am planning this mission by memory, WhatsApp messages, and hope."</p>
+  <p style="font-size:10.5pt;line-height:1.6;margin-bottom:0;"><strong>After:</strong> "I have a documented, risk-assessed, shared field plan that the whole team can follow — and that I can hand to any institution as evidence of operational rigour."</p>
+</div>
+
+<!-- S2 -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content"><strong>Planning happens in your head — and then falls apart in the field.</strong><p>You know the plan. But when a team member arrives at the wrong site, or equipment arrives one day late, or the driver does not know where to go, it becomes clear that the plan was never actually shared — it was only understood by you.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content"><strong>Transect or plot design is improvised in the field.</strong><p>Deciding transect placement, length, and spacing during the field trip rather than before it wastes the first one or two days and compromises the statistical design. Good spatial design requires a map, a research question, and a calculation — none of which should happen in the field for the first time.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content"><strong>The equipment list is never complete.</strong><p>Something critical is always missing. Not because you are careless — because equipment lists are built from memory and memory is imperfect under time pressure. A structured, category-based equipment master list that you update after every field season eliminates this problem.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content"><strong>Roles are assumed, not assigned.</strong><p>"Everyone knows what they need to do" is the most common precursor to nobody doing what needs to be done. Assigned roles with specific responsibilities, written down before departure, prevent the most common coordination failures in field teams.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content"><strong>You have no plan for when things go wrong.</strong><p>Equipment fails. People get sick. Roads are impassable. A community permits access at some sites but not others. Every field mission has a risk register — even if it only exists in the field leader's head. Writing it down before departure means the whole team knows the contingency plan, not just one person.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content"><strong>Safety protocols are informal or absent.</strong><p>In remote field conditions, a snake bite, a vehicle accident, an allergic reaction, or a fall can become life-threatening without a documented emergency protocol. This is not a bureaucratic requirement — it is the difference between a managed emergency and a crisis.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content"><strong>Community and permit coordination happens too late.</strong><p>Permission from community leaders and government authorities takes time. Starting the permitting process one week before departure instead of one month before departure is the single most common reason for delayed or cancelled field seasons.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content"><strong>You cannot prove what was planned vs. what was executed.</strong><p>Funders and institutional partners increasingly require field mission documentation — not just results. A pre-written mission plan with a post-mission comparison is the only way to show the difference between what was planned and what actually happened, and why.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content"><strong>Knowledge about the site lives only with the most experienced team member.</strong><p>If the person who has been to this site before cannot come this season, all institutional knowledge about access routes, camp locations, water sources, and hazards is lost. A site information document solves this.</p></div>
+</div>
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content"><strong>Nothing is learned between field seasons.</strong><p>After every field mission, there are lessons — what worked, what failed, what to do differently. Without a structured debrief, these lessons live in informal conversations and are forgotten before the next season. The debrief system in Section 13 captures them in a form the next team can use.</p></div>
+</div>
+
+<!-- S3 -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">01</td><td>Complete a full mission plan document before any team member departs — one document, every team member has a copy.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">02</td><td>Design a statistically sound transect or plot layout before arrival at the field site.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">03</td><td>Pack a complete, category-organised equipment list with zero critical omissions.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">04</td><td>Assign every team member a specific role with specific daily responsibilities.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">05</td><td>Identify every significant risk before departure and have a written contingency for each one.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">06</td><td>Have a documented emergency protocol that every team member has read and acknowledged.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">07</td><td>Start permit and community coordination at least 4 weeks before departure.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">08</td><td>Produce a day-by-day field schedule that shows exactly who does what, where, and when.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">09</td><td>Complete a structured post-mission debrief that captures lessons for the next season.</td></tr>
+  <tr><td style="font-size:8pt;color:var(--amber);font-weight:700;">10</td><td>Build a reusable site information document that survives team member turnover.</td></tr>
+</table>
+
+<!-- S4 THE 7-STEP PLANNING SYSTEM -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 7-Step Mission Planning System</h1>
+<p>This workflow runs in reverse chronological order — it starts from the mission end date and works backward. Every field mission should start planning at least 6 weeks before departure. 8–10 weeks is better for remote or multi-site missions.</p>
+
+<div class="step-block">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>DEFINE THE SCIENTIFIC OBJECTIVE AND MINIMUM SUCCESS CRITERIA</h3>
+    <p>Before any logistics, answer: what does this mission need to produce, at minimum, to be considered a success? A field mission with a vague objective produces vague data. One with a specific objective produces a specific dataset.</p>
+    <div class="callout">
+      <div class="cl cl-f">Objective Definition Questions</div>
+      <ul style="margin:0;">
+        <li>What is the primary research question this mission will address?</li>
+        <li>What is the minimum dataset that constitutes a successful mission? (e.g., "At least 800 trap-nights of camera trap data across 20 sites" — not "as much data as possible")</li>
+        <li>What are the secondary objectives that are desirable but not critical?</li>
+        <li>What would cause the mission to be aborted or significantly modified?</li>
+        <li>What data must be collected in what format for downstream analysis?</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: A one-paragraph mission objective statement and a minimum success criteria table. Both go into the Mission Briefing document.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>DESIGN THE SURVEY LAYOUT</h3>
+    <p>Before departure, not on arrival. Transect placement, camera trap grid design, plot locations, and acoustic monitor sites are scientific decisions that require a map, a sampling theory, and calculations. Use the Transect Design Guide in Section 8 and Prompts 4–6 in the AI Prompt Pack.</p>
+    <p>Key outputs of this step:</p>
+    <ul>
+      <li>A map with all survey locations plotted and labelled</li>
+      <li>GPS coordinates for every transect endpoint, plot corner, camera trap site, and acoustic monitor location</li>
+      <li>A sampling effort table: total transect km, total trap-nights, total acoustic nights, by site</li>
+      <li>A note on the sampling rationale: why this design answers the research question</li>
+    </ul>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Output: A survey design map and a sampling effort table. These go into the Mission Briefing document and the grant reporting file.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>ASSEMBLE THE TEAM AND ASSIGN ROLES</h3>
+    <p>Every person on the mission has a named role with specific daily responsibilities. Roles are not assumed — they are documented before departure.</p>
+    <div class="callout">
+      <div class="cl cl-f">Standard field team roles</div>
+      <ul style="margin:0;">
+        <li><strong>Mission Leader:</strong> Overall responsibility for safety, schedule, and scientific objectives. Makes all Go/No-Go decisions. Single point of contact for external parties during the mission.</li>
+        <li><strong>Data Manager:</strong> Responsible for daily data backup, quality checks, and datasheet completeness. Reviews all data entries at end of each field day.</li>
+        <li><strong>Equipment Officer:</strong> Responsible for all equipment — charging, maintenance, inventory, and troubleshooting. Carries the equipment manifest.</li>
+        <li><strong>Safety Officer:</strong> Responsible for daily safety briefings, emergency protocol, first aid kit, and emergency communication. Can override Mission Leader on safety grounds.</li>
+        <li><strong>Community Liaison:</strong> Manages all interaction with local communities, guides, and authorities. Often a local team member.</li>
+        <li><strong>Field Technicians (variable):</strong> Conduct specific survey tasks according to daily assignment sheet.</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">Small teams often combine roles. The minimum is: one person responsible for safety and one person responsible for data — and these responsibilities should not default to being both the Mission Leader's alone.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>PERMITS, AUTHORISATIONS, AND COMMUNITY COORDINATION</h3>
+    <p>This step must begin at least 4 weeks before departure. 6–8 weeks for national parks or sites with complex institutional arrangements. Permit delays are the most common cause of wasted fieldwork budget.</p>
+    <div class="callout co">
+      <div class="cl cl-o">Standard permit checklist for Madagascar field research</div>
+      <ul style="margin:0;">
+        <li>Research permit: Ministry of Environment (MEDD) — 4–8 weeks processing time</li>
+        <li>Protected area access permit: MNP (Madagascar National Parks) if site is inside a national park</li>
+        <li>Specimen/tissue collection permit: if biological samples will be collected</li>
+        <li>Drone flight authorisation: ANAC (civil aviation authority) — 4–8 weeks; separate from research permit</li>
+        <li>Community consent: formal or informal meeting with fokontany (local community authority) leaders</li>
+        <li>Export permit: if any biological material will leave Madagascar</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt;color:var(--muted);font-style:italic;margin:0;">For other countries: adapt the permit types but keep the same lead time principles. Never assume a permit from a previous season is still valid — check before each mission.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">5</div>
+  <div class="step-content">
+    <h3>BUILD THE EQUIPMENT LIST AND LOGISTICS PLAN</h3>
+    <p>Use the Equipment Master Lists in Section 11. Build your mission-specific list by going through each category and checking what you have, what you need to acquire, and what needs servicing before departure. Then plan the logistics: transport, accommodation, resupply schedule, power access, and communication.</p>
+    <div class="callout">
+      <div class="cl cl-f">Logistics planning checklist</div>
+      <ul style="margin:0;">
+        <li>Transport: vehicle type, driver contacts, fuel access along route, 4WD requirement, wet season road status</li>
+        <li>Accommodation: camp location with coordinates, water source, latrine, cooking setup</li>
+        <li>Resupply: food for full team for mission duration + 3 days contingency; fuel; battery charging access</li>
+        <li>Communication: satellite phone or PLB for remote sites; emergency contacts list; regular check-in schedule</li>
+        <li>Medical: nearest clinic or hospital with coordinates; first aid kit inventory; team medical conditions documented</li>
+        <li>Data: storage capacity for all data collected; backup plan; data transfer plan at end of mission</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">6</div>
+  <div class="step-content">
+    <h3>ASSESS RISKS AND BUILD THE CONTINGENCY PLAN</h3>
+    <p>Every mission has risks. Document them before departure. A risk that is identified in advance has a plan. A risk that is encountered without warning becomes a crisis. Use the Risk Register in Section 9.</p>
+    <p>The four risk categories for field missions:</p>
+    <ul>
+      <li><strong>Safety risks:</strong> Personnel injury, wildlife encounter, vehicle accident, medical emergency, evacuation requirement</li>
+      <li><strong>Operational risks:</strong> Equipment failure, permit problem, logistics breakdown, weather disruption, site access denied</li>
+      <li><strong>Data risks:</strong> Data loss, data corruption, protocol deviation, insufficient sample size</li>
+      <li><strong>Relationship risks:</strong> Community tension, institutional conflict, team interpersonal issues</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">7</div>
+  <div class="step-content">
+    <h3>WRITE THE MISSION BRIEFING AND DISTRIBUTE</h3>
+    <p>The Mission Briefing is a single document that every team member receives before departure. It is not long — a good mission briefing for a 2-week field survey is 4–6 pages. It contains everything a team member needs to know to do their job safely and effectively without asking the Mission Leader every question.</p>
+    <p>Use the Mission Briefing Template in Section 5. Use Prompt 1 in the AI Prompt Pack to draft it from your planning notes.</p>
+    <div class="callout ca">
+      <div class="cl cl-a">The non-negotiable distribution rule</div>
+      <p style="margin:0;">Every team member receives the Mission Briefing before departure — not at the first camp. Print copies for field use. Save a digital copy on every team device. Send a copy to the institutional contact who is your emergency point of contact.</p>
+    </div>
+  </div>
+</div>
+
+<!-- S5 MISSION BRIEFING TEMPLATE -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>Mission Briefing Template</h1>
+<p>A complete, ready-to-fill mission briefing document. Replace every bracket with your specific mission details. Aim for 4–6 pages total. Distribute to all team members before departure.</p>
+
+<div class="mission-card">
+  <div class="mc-header">
+    <div class="mc-title">MISSION BRIEFING DOCUMENT</div>
+    <div class="mc-meta">CONFIDENTIAL · FIELD USE COPY</div>
+  </div>
+  <div class="mc-body">
+    <div class="mc-row"><div class="mc-key">Mission name</div><div class="mc-val">[Project name + site + season]</div></div>
+    <div class="mc-row"><div class="mc-key">Mission dates</div><div class="mc-val">[Departure date] → [Return date] ([total days] days)</div></div>
+    <div class="mc-row"><div class="mc-key">Primary site</div><div class="mc-val">[Site name, region, country] · GPS: [lat, lon]</div></div>
+    <div class="mc-row"><div class="mc-key">Mission Leader</div><div class="mc-val">[Name] · [Phone] · [Emergency contact name and number]</div></div>
+    <div class="mc-row"><div class="mc-key">Institutional contact</div><div class="mc-val">[Name, institution, phone] — to be notified if emergency occurs</div></div>
+    <div class="mc-row"><div class="mc-key">Scientific objective</div><div class="mc-val">[One paragraph from Step 1]</div></div>
+    <div class="mc-row"><div class="mc-key">Minimum success criteria</div><div class="mc-val">[Specific dataset that constitutes a successful mission]</div></div>
+    <div class="mc-row"><div class="mc-key">Permits held</div><div class="mc-val">[List all permits, permit numbers, and expiry dates]</div></div>
+    <div class="mc-row"><div class="mc-key">Team and roles</div><div class="mc-val">[Name · Role · Specific responsibilities for each team member]</div></div>
+    <div class="mc-row"><div class="mc-key">Emergency protocol</div><div class="mc-val">See Emergency Protocol card — every team member carries one</div></div>
+    <div class="mc-row"><div class="mc-key">Daily check-in</div><div class="mc-val">Mission Leader reports status to [institutional contact] at [time] daily. If no check-in by [time + 2 hours]: [emergency action]</div></div>
+    <div class="mc-row"><div class="mc-key">Nearest medical facility</div><div class="mc-val">[Name, address, GPS coordinates, phone, distance and travel time from camp]</div></div>
+    <div class="mc-row"><div class="mc-key">Evacuation route</div><div class="mc-val">[Primary and secondary evacuation routes with GPS waypoints]</div></div>
+  </div>
+</div>
+
+<div class="callout ca" style="margin-top:3mm;">
+  <div class="cl cl-a">Emergency Protocol Card — laminate and every team member carries one</div>
+  <p style="margin-bottom:2mm;font-weight:700;">In any emergency: STOP · ASSESS · COMMUNICATE · ACT</p>
+  <p style="margin-bottom:1.5mm;"><strong>Medical emergency:</strong> Call [emergency number]. Mission Leader is notified immediately. Do not move an injured person unless in immediate danger. First aid kit location: [location]. First aider: [name].</p>
+  <p style="margin-bottom:1.5mm;"><strong>Lost or separated:</strong> Stay where you are. Signal with whistle (three blasts = distress). Check-in time: [time]. If not at camp by [time]: search initiated by [name].</p>
+  <p style="margin-bottom:1.5mm;"><strong>Equipment emergency:</strong> Contact Equipment Officer: [name]. Backup equipment location: [location]. Protocol deviation must be documented immediately.</p>
+  <p style="margin-bottom:0;"><strong>Security concern:</strong> All team members return to camp immediately. Do not confront. Mission Leader contacts [authority contact]. Abort criteria: [specify].</p>
+</div>
+
+<!-- S6 PLANNING TEMPLATES -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>Planning Templates</h1>
+
+<h2>Template A — Team Role Assignment Sheet</h2>
+<div class="template-box">
+MISSION: [Mission name]   DATES: [start] – [end]
+PREPARED BY: [Mission Leader]   DATE: [preparation date]
+
+TEAM MEMBER    ROLE               DAILY RESPONSIBILITIES
+[Name]         Mission Leader     Scientific decisions, Go/No-Go, external comms
+[Name]         Data Manager       Daily data backup at 18:00, datasheet review, QC flags
+[Name]         Equipment Officer  Equipment check at 06:00 and 18:00, charging schedule
+[Name]         Safety Officer     Morning safety brief, first aid, emergency comms
+[Name]         Community Liaison  Community interactions, guide coordination
+[Name]         Field Technician   [Specific survey tasks assigned daily]
+[Name]         Field Technician   [Specific survey tasks assigned daily]
+[Name]         Driver/Logistics   Transport, camp logistics, resupply
+
+ACKNOWLEDGEMENT:
+I have read and understood the Mission Briefing and my assigned responsibilities.
+Name: _______________   Signature: _______________   Date: ___________
+[Repeat for each team member]
+</div>
+
+<h2>Template B — Daily Survey Assignment Sheet</h2>
+<div class="template-box">
+DAILY SURVEY ASSIGNMENT — Day [N] of [total]
+Date: [DD/MM/YYYY]   Weather forecast: [conditions]   Go/No-Go: GO / HOLD / ABORT
+
+MORNING BRIEF: [time]   Led by: [Safety Officer name]
+Safety note for today: [specific hazard or protocol reminder]
+
+TEAM ASSIGNMENTS:
+[Name]  →  [Transect/site ID]  →  Depart [time]  →  Return by [time]
+[Name]  →  [Transect/site ID]  →  Depart [time]  →  Return by [time]
+[Name]  →  Camera trap check (sites: [list])  →  Depart [time]  →  Return by [time]
+[Name]  →  Camp / data entry / equipment maintenance
+
+EQUIPMENT ALLOCATED:
+[Name]  →  GPS unit [ID], datasheet pack, field pack, radio/phone
+[Name]  →  GPS unit [ID], camera trap toolkit, memory card set [batch ID]
+
+END-OF-DAY PROTOCOL:
+18:00  All teams return to camp (or radio confirmation if delayed)
+18:30  Equipment Officer: equipment check and charging setup
+19:00  Data Manager: data backup and quality check
+19:30  Mission Leader: daily debrief — what happened, what changes tomorrow
+</div>
+
+<h2>Template C — Weekly Survey Schedule</h2>
+<div class="sched-grid">
+  <div class="sched-header">
+    <div>Time</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">05:30</div>
+    <div class="sched-cell active">Morning prep</div>
+    <div class="sched-cell active">Morning prep</div>
+    <div class="sched-cell active">Morning prep</div>
+    <div class="sched-cell active">Morning prep</div>
+    <div class="sched-cell active">Morning prep</div>
+    <div class="sched-cell active">Morning prep</div>
+    <div class="sched-cell off">Rest day</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">06:00</div>
+    <div class="sched-cell active">T1+T2 transects</div>
+    <div class="sched-cell active">T3+T4 transects</div>
+    <div class="sched-cell active">CT checks: sites 1-10</div>
+    <div class="sched-cell active">T5+T6 transects</div>
+    <div class="sched-cell active">Drone survey: NE block</div>
+    <div class="sched-cell active">CT checks: sites 11-20</div>
+    <div class="sched-cell off">—</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">08:00</div>
+    <div class="sched-cell active">Acoustic deploy: S1-S5</div>
+    <div class="sched-cell active">Acoustic check: S1-S5</div>
+    <div class="sched-cell active">Data entry</div>
+    <div class="sched-cell active">Acoustic deploy: S6-S10</div>
+    <div class="sched-cell active">Acoustic check: S6-S10</div>
+    <div class="sched-cell active">Data entry</div>
+    <div class="sched-cell off">—</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">12:00</div>
+    <div class="sched-cell">Camp / rest</div>
+    <div class="sched-cell">Camp / rest</div>
+    <div class="sched-cell">Camp / rest</div>
+    <div class="sched-cell">Camp / rest</div>
+    <div class="sched-cell">Camp / rest</div>
+    <div class="sched-cell">Camp / rest</div>
+    <div class="sched-cell off">—</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">15:00</div>
+    <div class="sched-cell active">Night prep + CT deploy</div>
+    <div class="sched-cell active">Night prep + CT deploy</div>
+    <div class="sched-cell active">Equip maintenance</div>
+    <div class="sched-cell active">Night prep + CT deploy</div>
+    <div class="sched-cell active">Night prep</div>
+    <div class="sched-cell active">Equip maintenance</div>
+    <div class="sched-cell off">—</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">20:00</div>
+    <div class="sched-cell active">Nocturnal transect: Stream A</div>
+    <div class="sched-cell active">Nocturnal transect: Stream B</div>
+    <div class="sched-cell off">Rest</div>
+    <div class="sched-cell active">Nocturnal transect: Stream C</div>
+    <div class="sched-cell active">Nocturnal transect: Stream D</div>
+    <div class="sched-cell off">Rest</div>
+    <div class="sched-cell off">—</div>
+  </div>
+  <div class="sched-row">
+    <div class="sched-time">18:00</div>
+    <div class="sched-cell active">Debrief + data backup</div>
+    <div class="sched-cell active">Debrief + data backup</div>
+    <div class="sched-cell active">Debrief + data backup</div>
+    <div class="sched-cell active">Debrief + data backup</div>
+    <div class="sched-cell active">Debrief + data backup</div>
+    <div class="sched-cell active">Debrief + data backup</div>
+    <div class="sched-cell off">—</div>
+  </div>
+</div>
+<p style="font-size:8.5pt;color:var(--muted);font-style:italic;">Adapt this schedule to your specific mission. CT = Camera Trap. S1-S10 = Acoustic monitor sites. Green = active survey. Rest day is non-negotiable for missions exceeding 10 days.</p>
+
+<!-- S7 AI PROMPT PACK -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>AI Prompt Pack — 12 Prompts</h1>
+<p>Use with Claude, ChatGPT, or any capable AI assistant. These prompts are designed to take your raw planning notes and produce structured planning documents at each stage of the workflow.</p>
+
+<h2>Prompt 1 — Generate Mission Briefing from Planning Notes</h2>
+<div class="prompt-box">
+I am planning a field survey mission. From my planning notes below, generate a complete Mission Briefing document.
+
+The briefing must include:
+1. Mission overview (objective, dates, site, team)
+2. Scientific objective and minimum success criteria
+3. Team roles and daily responsibilities
+4. Survey design summary (methods, sites, sampling effort)
+5. Logistics summary (transport, accommodation, resupply, power)
+6. Permit and authorisation status
+7. Emergency protocol (medical, lost person, equipment, security)
+8. Daily check-in schedule and escalation procedure
+9. Go/No-Go criteria for each survey day
+10. End-of-mission protocol (data backup, equipment return, debrief)
+
+Format: a structured document suitable for printing and distribution to all team members.
+
+My planning notes:
+[PASTE YOUR NOTES HERE — dates, site, team names, survey methods, logistics details]
+</div>
+
+<h2>Prompt 2 — Daily Assignment Sheet Generator</h2>
+<div class="prompt-box">
+Generate a daily survey assignment sheet for Day [N] of my field mission.
+
+Mission context:
+- Total team: [list names and roles]
+- Survey methods active today: [list methods]
+- Sites to be surveyed: [list site IDs]
+- Weather: [conditions]
+- Any carryover tasks from yesterday: [describe]
+
+For each team member, assign:
+- Primary task and site
+- Departure time and expected return time
+- Equipment allocated
+- Specific protocol reminders for today
+
+Include: morning brief topics, end-of-day protocol reminders, and any Go/No-Go considerations for today based on weather or logistical factors.
+</div>
+
+<h2>Prompt 3 — Equipment List Builder</h2>
+<div class="prompt-box">
+Generate a complete equipment packing list for a [duration]-day field survey mission using the following methods:
+- [Method 1 e.g., camera trap survey: X units]
+- [Method 2 e.g., acoustic monitoring: Y units]
+- [Method 3 e.g., drone thermal survey: Z units]
+- [Method 4 e.g., transect surveys: N observers]
+
+Site conditions: [remote forest / vehicle accessible / wet season / highland / coastal]
+Team size: [number of people]
+Power availability: [solar / generator / none]
+
+Organise the equipment list by category:
+Survey equipment · Data collection · Navigation · Power and charging · Camp and accommodation · Safety and medical · Communication · Food and water · Documentation and admin
+
+For each item: quantity needed, critical (cannot proceed without) vs. useful, weight flag if heavy.
+</div>
+
+<h2>Prompt 4 — Transect Design Calculator</h2>
+<div class="prompt-box">
+Help me design a line transect survey for the following conditions:
+
+Target taxa: [species or guild]
+Survey method: [distance sampling / occupancy / belt transect]
+Study area: [total area in hectares]
+Habitat type: [forest type, terrain]
+Expected detection probability: [if known — otherwise I will use standard assumptions]
+Minimum detections needed for analysis: [number]
+Survey effort available: [person-days × hours per day]
+
+Calculate:
+1. Recommended number of transects
+2. Recommended transect length
+3. Recommended spacing between transects
+4. Recommended number of replicate surveys
+5. Expected total sampling effort (km or trap-nights)
+6. Whether the proposed effort is adequate to detect a population change of [X%] at [Y]% power
+
+Show the calculation so I can verify and adjust the assumptions.
+</div>
+
+<h2>Prompt 5 — Camera Trap Grid Designer</h2>
+<div class="prompt-box">
+Design a camera trap survey grid for the following conditions:
+
+Study area: [total area in km² or hectares]
+Target species: [primary target — determines detection distance]
+Home range size of target: [km² if known]
+Terrain: [flat / hilly / ridgeline / stream network]
+Survey duration: [days]
+Number of cameras available: [number]
+Minimum trap-nights required: [number]
+
+Generate:
+1. Recommended grid spacing (systematic grid or targeted placement)
+2. Number of sites needed to achieve the required trap-nights
+3. Camera deployment height and orientation for the target species
+4. Recommended check interval (days between card swaps)
+5. A site naming convention for the grid
+6. Any habitat-specific placement recommendations
+</div>
+
+<h2>Prompt 6 — Acoustic Monitor Deployment Design</h2>
+<div class="prompt-box">
+Design an acoustic monitoring deployment for the following survey:
+
+Target taxa: [bats / birds / amphibians / mixed]
+Study area: [size and habitat]
+Equipment: [AudioMoth / Swift One / SM4 / other]
+Number of units available: [number]
+Survey nights: [number]
+Recording schedule: [continuous / scheduled / triggered]
+
+Generate:
+1. Number of sites needed to adequately sample the study area
+2. Recommended site selection criteria for this habitat type
+3. Unit placement height and orientation guidelines
+4. Recording schedule settings that balance battery life and data coverage
+5. Storage calculation: GB needed per unit per survey night
+6. Battery change interval based on schedule and battery type
+</div>
+
+<h2>Prompt 7 — Risk Register Builder</h2>
+<div class="prompt-box">
+Build a field mission risk register for the following context:
+
+Mission type: [survey methods]
+Location: [country, region, habitat type]
+Season: [wet / dry / transition]
+Team size and composition: [number and experience levels]
+Remoteness: [road access / 4WD only / foot access only / helicopter access]
+Known hazards in the region: [wildlife, security, terrain, disease]
+Mission duration: [days]
+
+For each risk identified:
+- Risk description
+- Likelihood (Low / Medium / High)
+- Impact (Low / Medium / High)
+- Early warning signs
+- Prevention measure
+- Contingency response
+- Who is responsible for the response
+
+Organise by category: Safety · Operational · Data · Relationship/Community
+</div>
+
+<h2>Prompt 8 — Community Engagement Plan</h2>
+<div class="prompt-box">
+Write a community engagement plan for a field survey in the following context:
+
+Location: [village or community name, region]
+Survey activities: [describe what the team will do near or in community areas]
+Survey duration: [days]
+Team composition: [local team members / international team / NGO affiliation]
+Previous engagement history: [first visit / returning team / existing relationship]
+Potential community concerns: [land access / wildlife / foreigners / noise / equipment]
+Benefits to community: [employment, information sharing, other]
+
+The plan must cover:
+1. Pre-arrival notification and consent-seeking protocol
+2. Who leads community interaction (role and language)
+3. What the community will be told about the survey activities
+4. Benefit-sharing arrangements
+5. Data-sharing commitments (what results the community will receive)
+6. Protocol for addressing complaints or concerns during the mission
+7. Post-mission follow-up commitments
+</div>
+
+<h2>Prompt 9 — Go/No-Go Decision Framework</h2>
+<div class="prompt-box">
+Create a Go/No-Go decision framework for daily field operations in the following conditions:
+
+Survey methods in use: [list methods]
+Site conditions: [terrain type, access type]
+Season: [wet / dry]
+Team composition: [experience levels]
+Communication infrastructure: [satellite / mobile / radio / none]
+
+For each of the following conditions, specify whether it is Go, Hold (wait and reassess), or Abort, and the decision rationale:
+- Heavy rain during survey
+- Strong wind during drone operations
+- Visibility below [X] metres
+- One team member with fever or injury
+- Communication system failure
+- Permit not confirmed
+- Community access refused at last minute
+- Vehicle breakdown en route
+- Flash flood warning for the area
+- Temperature extreme [specify threshold for your region]
+
+Format as a one-page laminated reference card for field use.
+</div>
+
+<h2>Prompt 10 — Day-by-Day Itinerary Generator</h2>
+<div class="prompt-box">
+Generate a day-by-day field itinerary for the following mission:
+
+Mission duration: [number] days
+Team size: [number]
+Survey methods: [list methods and daily capacity per method]
+Sites to survey: [list sites with access time from camp]
+Rest day requirement: one day every [X] days
+Fixed dates: [any dates with specific constraints — permit review, resupply, etc.]
+Data management requirement: [hours of data entry per day]
+Equipment maintenance requirement: [interval]
+
+For each day produce:
+- Primary survey objective for that day
+- Sites covered
+- Team assignments (grouped, not individual — individual assignments go in the daily sheet)
+- Departure and return times
+- End-of-day requirements
+- Next-day preparation tasks
+
+Flag any days that are logistically tight or depend on weather or access conditions.
+</div>
+
+<h2>Prompt 11 — Post-Mission Debrief Facilitator</h2>
+<div class="prompt-box">
+I have just completed a [duration]-day field mission. Help me facilitate a structured debrief using the following information.
+
+What was planned vs. what happened:
+- Planned survey effort: [X]
+- Actual survey effort: [Y]
+- Planned sites: [list]
+- Sites actually surveyed: [list]
+- Equipment failures: [describe]
+- Protocol deviations: [describe]
+- Safety incidents: [describe]
+- Community interactions: [describe]
+- Unexpected findings: [describe]
+
+For each area, generate:
+1. What worked well — preserve in next mission plan
+2. What failed — root cause analysis
+3. What to change — specific protocol or logistics recommendation
+4. What to watch — items that need monitoring in future missions
+
+Format: a structured debrief report suitable for institutional filing and handover to the next field team.
+</div>
+
+<h2>Prompt 12 — Site Information Document Builder</h2>
+<div class="prompt-box">
+Create a Site Information Document for [site name] based on the following field notes and experience.
+
+Site details to include:
+- Site name, region, country, GPS coordinates (main camp and key waypoints)
+- Access route: from nearest town, road conditions, typical travel time, wet vs. dry season differences
+- Accommodation: camp location, water source, fuel wood, latrine options
+- Known hazards: wildlife, terrain, plants, security, weather patterns
+- Community relationships: village name, authority contact, history of research presence, protocol for community interaction
+- Ecological notes: habitat types, known species of interest, seasonal patterns affecting survey timing
+- Equipment notes: what works well at this site, what has failed before, specific maintenance issues
+- Contacts: local guide name and phone, nearest clinic, driver contact, authority contact
+
+Format: a 2-page document that a team member visiting this site for the first time could use to prepare for and navigate the mission.
+
+My field notes and experience from this site:
+[PASTE YOUR NOTES HERE]
+</div>
+
+<!-- S8 TRANSECT DESIGN GUIDE -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>Transect Design Guide</h1>
+<p>The key principles for designing statistically sound transect, plot, and monitoring layouts before arriving at the field site. These are frameworks, not substitutes for a statistician's review on complex designs.</p>
+
+<h2>Line Transect Design — Core Principles</h2>
+
+<div class="transect-box">
+  <div class="tx-label">Sampling effort calculation</div>
+  <p style="margin-bottom:2mm;font-size:9pt;">The minimum sampling effort needed depends on the detection probability of your target species and the population density you are trying to estimate.</p>
+  <div class="tx-formula">Minimum detections needed for distance sampling: n ≥ 60–80 individual detections</div>
+  <div class="tx-formula">Transect length needed = (target detections) ÷ (expected density × effective strip width × 2)</div>
+  <p style="font-size:8.5pt;color:var(--muted);margin-top:2mm;margin-bottom:0;">For occupancy modelling: minimum 10 sites × 3 repeat surveys, or 30 sites × 2 surveys, depending on expected occupancy and detection probability. Use the package <code>RPresence</code> or the occupancy design tool at USGS to calculate site number requirements.</p>
+</div>
+
+<h2>Transect Placement Rules</h2>
+<ul>
+  <li><strong>Systematic random placement</strong> is almost always preferable to convenience placement. Lay a grid over your study area map. Place transect start points randomly within grid cells. This is reproducible and defensible.</li>
+  <li><strong>Avoid placing transects along roads, trails, or streams</strong> unless those features are the survey target. Animals use these features differently from the surrounding habitat — transects placed along them produce biased density estimates.</li>
+  <li><strong>Transect spacing should be at least 2× the expected detection distance</strong> to avoid double-counting individuals across adjacent transects.</li>
+  <li><strong>Transects should be perpendicular to the main habitat gradient</strong> (e.g., perpendicular to a stream, perpendicular to an elevation contour) to ensure they sample the full range of habitat variation.</li>
+  <li><strong>Record all transect start and end points with GPS before beginning any survey.</strong> Transect endpoints that are determined in the field are inconsistently replicable.</li>
+</ul>
+
+<h2>Camera Trap Grid Design — Key Decisions</h2>
+<table>
+  <tr><th>Decision</th><th>Principle</th><th>Common mistake</th></tr>
+  <tr><td><strong>Grid spacing</strong></td><td>Should be ≤ 2× the average home range radius of the target species. For Cryptoprocta ferox (~6 km² HR): spacing ≤ ~1.4 km.</td><td>Spacing too wide — same individuals never detected at multiple stations; individual ID impossible.</td></tr>
+  <tr><td><strong>Station placement</strong></td><td>Target wildlife crossings, trail intersections, water sources, fruit trees. Avoid placing cameras facing east or west (sunrise/sunset backlight destroys images).</td><td>Cameras placed for convenience, not for detection probability.</td></tr>
+  <tr><td><strong>Survey duration</strong></td><td>Minimum 30 trap-nights per station for occupancy. 60+ trap-nights for density estimation. Longer is almost always better.</td><td>Short survey season producing insufficient trap-nights for analysis.</td></tr>
+  <tr><td><strong>Number of stations</strong></td><td>More stations with shorter deployment is often better than fewer stations with longer deployment, up to a point. Check with your statistical design before purchasing equipment.</td><td>Buying too few cameras — not enough spatial replication.</td></tr>
+</table>
+
+<!-- S9 RISK REGISTER -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Risk Register</h1>
+<p>A pre-filled risk register for a standard conservation field mission in Madagascar. Adapt for your specific site, season, and methods. Add, remove, or modify entries as needed.</p>
+
+<div class="risk-row risk-header">
+  <div>Risk</div><div style="text-align:center;">Likelihood</div><div style="text-align:center;">Impact</div><div>Response</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Medical emergency — serious injury or illness</strong></div>
+  <div class="risk-m">Medium</div><div class="risk-h">High</div>
+  <div>Safety Officer activates emergency protocol. Nearest clinic: [name, distance, GPS]. Evacuation route: [primary, secondary]. Mission Leader contacts institutional emergency contact. Mission suspended until resolved.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Snake bite or venomous animal contact</strong></div>
+  <div class="risk-m">Medium</div><div class="risk-h">High</div>
+  <div>First aid (immobilise, keep calm, remove constrictive clothing, no incision). Evacuate to nearest clinic immediately. Antivenom availability confirmed at [clinic name] before mission. Team briefed on snake avoidance at morning brief.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Vehicle breakdown in remote area</strong></div>
+  <div class="risk-h">High</div><div class="risk-m">Medium</div>
+  <div>Driver carries basic toolkit and tyre repair. Backup driver contact: [name, phone]. If immovable: Mission Leader calls for recovery. Team waits with vehicle. Contingency food and water for 48 hours carried at all times.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Permit problem at protected area entrance</strong></div>
+  <div class="risk-l">Low</div><div class="risk-h">High</div>
+  <div>All permits checked and photocopied before departure. Permit officer contact: [name, phone]. If entry refused: Mission Leader contacts MNP headquarters. Contingency: non-protected buffer zone sites used until resolved. Never argue at the gate.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Community denies access to survey site</strong></div>
+  <div class="risk-l">Low</div><div class="risk-m">Medium</div>
+  <div>Community Liaison leads negotiation. Do not proceed without consent. If access denied: use alternative sites identified in advance. Document the refusal and reason. Follow up through formal channels after the mission.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Drone flight permit not issued by departure date</strong></div>
+  <div class="risk-m">Medium</div><div class="risk-m">Medium</div>
+  <div>Permit application submitted 8 weeks before mission. Ground-based methods proceed without drone. Drone surveys held until permit confirmed. Mission objective adjusted to reflect reduced data coverage — document in mission report.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Camera traps stolen at high-theft-risk sites</strong></div>
+  <div class="risk-m">Medium</div><div class="risk-m">Medium</div>
+  <div>Security cables and padlocks on all units. Budget for 10% loss rate. High-risk sites use security housing. Community liaison informed of deployment sites — community-based monitoring reduces theft significantly. Replace from spares budget.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Sustained heavy rain making survey impossible</strong></div>
+  <div class="risk-h">High (wet season)</div><div class="risk-l">Low</div>
+  <div>Wet season survey scheduled with 2-day weather contingency per week. Rain days: data entry, equipment maintenance, team training. Acoustic monitors continue — rain provides no survey gap for them. Adjust schedule dynamically.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Mass data loss — storage device failure</strong></div>
+  <div class="risk-l">Low</div><div class="risk-h">High</div>
+  <div>3-2-1 backup protocol enforced daily by Data Manager. Memory cards retained until data verified on at least 2 devices. Do not reformat cards in the field until data is confirmed backed up. Critical data backed up to cloud when internet available.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Team interpersonal conflict affecting work</strong></div>
+  <div class="risk-m">Medium</div><div class="risk-m">Medium</div>
+  <div>Mission Leader mediates. If unresolvable: separate assignments to reduce contact. Document in debrief. For serious conflicts: Mission Leader has authority to remove a team member from field duties. Conflict protocol discussed at team briefing before departure.</div>
+</div>
+
+<div class="risk-row no-break">
+  <div><strong>Insufficient sample size at end of mission</strong></div>
+  <div class="risk-m">Medium</div><div class="risk-m">Medium</div>
+  <div>Progress reviewed against minimum success criteria at Day 3, Day 7, and Day 10 of any mission longer than 10 days. If behind target: adjust schedule to prioritise primary survey method. Document shortfall and reason. Debrief includes plan to address in next season.</div>
+</div>
+
+<!-- S10 DAY BY DAY PLANNING GUIDE -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Day-by-Day Planning Guide</h1>
+<p>How to structure each day of a field mission for maximum efficiency, safety, and data quality. Every day has the same architecture — what changes is the specific survey content.</p>
+
+<h2>The Standard Field Day Architecture</h2>
+
+<div class="day-plan">
+  <div class="dp-header">
+    <div class="dp-title">Morning — Preparation and Deployment</div>
+    <div class="dp-date">05:00 – 09:00</div>
+  </div>
+  <div class="dp-body">
+    <div class="dp-row"><div class="dp-time">05:00</div><div class="dp-task">Equipment Officer: equipment check. Verify all equipment charged, memory cards formatted, GPS units have coordinates loaded.</div><div class="dp-who">Equip. Officer</div></div>
+    <div class="dp-row"><div class="dp-time">05:30</div><div class="dp-task">Breakfast. Individual preparation — pack field gear, check personal equipment against daily assignment sheet.</div><div class="dp-who">All</div></div>
+    <div class="dp-row"><div class="dp-time">06:00</div><div class="dp-task">Morning safety brief (5 min): today's hazards, check-in time, buddy system pairs, emergency signal (3 whistle blasts). Go/No-Go confirmation.</div><div class="dp-who">Safety Officer</div></div>
+    <div class="dp-row"><div class="dp-time">06:15</div><div class="dp-task">Teams depart for survey sites according to daily assignment sheet. Mission Leader confirms departure of all teams.</div><div class="dp-who">Mission Leader</div></div>
+    <div class="dp-row"><div class="dp-time">09:00</div><div class="dp-task">All teams at survey sites and beginning data collection. Radio check (if in range).</div><div class="dp-who">All teams</div></div>
+  </div>
+</div>
+
+<div class="day-plan">
+  <div class="dp-header">
+    <div class="dp-title">Midday — Survey and Camp Tasks</div>
+    <div class="dp-date">09:00 – 15:00</div>
+  </div>
+  <div class="dp-body">
+    <div class="dp-row"><div class="dp-time">09:00</div><div class="dp-task">Active survey period. Each team follows their assigned protocol. Any protocol deviation documented immediately in datasheet.</div><div class="dp-who">Field teams</div></div>
+    <div class="dp-row"><div class="dp-time">12:00</div><div class="dp-task">Lunch break. Teams at field sites or return to camp depending on distance. Stay-out teams carry adequate food and water.</div><div class="dp-who">All</div></div>
+    <div class="dp-row"><div class="dp-time">12:30</div><div class="dp-task">Camp team: data entry from morning datasheets (if camp-based). Equipment charging maintenance. Camp maintenance as needed.</div><div class="dp-who">Camp team</div></div>
+    <div class="dp-row"><div class="dp-time">14:00</div><div class="dp-task">Teams begin return to camp. Allow adequate travel time — plan for 30% longer than expected in wet season.</div><div class="dp-who">Field teams</div></div>
+  </div>
+</div>
+
+<div class="day-plan">
+  <div class="dp-header">
+    <div class="dp-title">Evening — Data, Equipment, Debrief</div>
+    <div class="dp-date">15:00 – 20:00</div>
+  </div>
+  <div class="dp-body">
+    <div class="dp-row"><div class="dp-time">15:00</div><div class="dp-task">Camera trap check teams deploy for afternoon check if scheduled. Acoustic monitor teams swap memory cards.</div><div class="dp-who">Designated teams</div></div>
+    <div class="dp-row"><div class="dp-time">17:00</div><div class="dp-task">All teams at camp. Equipment Officer: collect all equipment, begin charging, log any issues in equipment log.</div><div class="dp-who">All · Equip. Officer</div></div>
+    <div class="dp-row"><div class="dp-time">17:30</div><div class="dp-task">Data Manager: collect all datasheets. Run completeness check — every required field must be filled or flagged. Begin daily backup.</div><div class="dp-who">Data Manager</div></div>
+    <div class="dp-row"><div class="dp-time">18:30</div><div class="dp-task">Dinner.</div><div class="dp-who">All</div></div>
+    <div class="dp-row"><div class="dp-time">19:00</div><div class="dp-task">Daily debrief (15–20 min): what happened today, any issues or incidents, progress against minimum success criteria, what changes tomorrow, tomorrow's assignment sheet distributed.</div><div class="dp-who">Mission Leader</div></div>
+    <div class="dp-row"><div class="dp-time">19:30</div><div class="dp-task">Data backup complete. Data Manager confirms backup to both devices. If internet available: cloud backup initiated.</div><div class="dp-who">Data Manager</div></div>
+    <div class="dp-row"><div class="dp-time">20:00</div><div class="dp-task">Nocturnal survey teams depart (if scheduled). Rest for remaining team.</div><div class="dp-who">Nocturnal team</div></div>
+  </div>
+</div>
+
+<h2>Three Non-Negotiable Daily Rituals</h2>
+<div class="callout cr">
+  <div class="cl cl-r">These three things happen every single day. No exceptions.</div>
+  <ul style="margin:0;">
+    <li><strong>Morning safety brief</strong> before any team leaves camp — even on days when nothing seems risky. Habits that form on easy days hold on hard days.</li>
+    <li><strong>Evening data backup</strong> to at least two devices before anyone sleeps. Data lost overnight cannot be recovered.</li>
+    <li><strong>Evening debrief</strong> — 15 minutes, Mission Leader facilitates. What happened. What changes. Tomorrow's plan distributed.</li>
+  </ul>
+</div>
+
+<!-- S11 EQUIPMENT MASTER LISTS -->
+<div class="page-break"></div>
+<div class="section-label">Section 11</div>
+<h1>Equipment Master Lists</h1>
+<p>Complete category-by-category equipment lists for a standard multi-method biodiversity survey. Mark each item as HAVE / NEED / N/A for your specific mission.</p>
+
+<h2>Survey Equipment</h2>
+<ul class="checklist">
+  <li>Camera traps — units + security cables + padlocks + desiccant packs</li>
+  <li>AudioMoth units — units + weatherproof cases + deployment straps</li>
+  <li>Drone + controller + batteries (3× minimum per session) + ND filters + landing pad</li>
+  <li>GPS units (1 per team + 1 spare) — pre-loaded with all waypoints</li>
+  <li>Rangefinder / laser distance meter (for transect surveys)</li>
+  <li>Binoculars (1 pair per observer)</li>
+  <li>Headlamps (2 per person) + spare batteries</li>
+  <li>Field datasheets — 150% of expected quantity + waterproof clipboard + pencils</li>
+  <li>Flagging tape for transect marking</li>
+  <li>Measuring tape (50m) for plot surveys</li>
+  <li>Pitfall traps / Sherman traps / mist nets if applicable</li>
+</ul>
+
+<h2>Data Collection and Storage</h2>
+<ul class="checklist">
+  <li>Memory cards — 50% more than calculated minimum. Class 10, 32 GB, FAT32 formatted</li>
+  <li>External SSDs (2× 1 TB minimum for large datasets)</li>
+  <li>Laptop or tablet for field data entry and backup</li>
+  <li>USB card reader</li>
+  <li>Waterproof cases for all electronics</li>
+  <li>Printed protocol reference cards for each survey method</li>
+  <li>Printed species identification guides for target taxa</li>
+</ul>
+
+<h2>Power and Charging</h2>
+<ul class="checklist">
+  <li>Solar panel (minimum 60W for remote sites) + charge controller</li>
+  <li>Power bank (20,000 mAh minimum, 2× for team of 6+)</li>
+  <li>Multi-port USB charging hub</li>
+  <li>Drone battery charging hub</li>
+  <li>AA batteries — Energizer Lithium for cold/humid, alkaline acceptable in temperate conditions</li>
+  <li>AAA batteries — for headlamps</li>
+  <li>Voltage adapter if team includes international members</li>
+</ul>
+
+<h2>Safety and Medical</h2>
+<ul class="checklist">
+  <li>First aid kit — complete, checked for expiry before departure</li>
+  <li>Snake bite kit (pressure bandage — not tourniquet)</li>
+  <li>Personal medication for each team member documented with Data Manager</li>
+  <li>Malaria prophylaxis if applicable for region</li>
+  <li>Water purification (tablets + filter — both)</li>
+  <li>PLB (Personal Locator Beacon) or satellite communicator for remote sites</li>
+  <li>Emergency whistle (every team member)</li>
+  <li>Emergency contact list — laminated, carried by every team member</li>
+  <li>Vehicle emergency kit: tyre repair, tow rope, basic tools, fuel can</li>
+</ul>
+
+<h2>Camp and Accommodation</h2>
+<ul class="checklist">
+  <li>Tents (1 per 2 people + 1 extra for equipment storage)</li>
+  <li>Sleeping bags rated for minimum expected temperature</li>
+  <li>Cooking equipment + fuel + food for [N] days + 3-day contingency</li>
+  <li>Water containers (10L per person per day minimum)</li>
+  <li>Latrine spade + hygiene kit</li>
+  <li>Mosquito nets + repellent + sun protection</li>
+</ul>
+
+<h2>Documentation and Admin</h2>
+<ul class="checklist">
+  <li>All permits — originals + 3 photocopies each</li>
+  <li>Team ID documents — photocopies held by Mission Leader</li>
+  <li>Mission Briefing — printed copies for all team members</li>
+  <li>Emergency contact list — laminated, distributed</li>
+  <li>Vehicle and fuel budget + petty cash for contingencies</li>
+  <li>Equipment log book</li>
+</ul>
+
+<!-- S12 COMMUNICATION PROTOCOLS -->
+<div class="section-label" style="margin-top:6mm;">Section 12</div>
+<h1>Communication Protocols</h1>
+
+<h2>Internal Team Communication</h2>
+<table>
+  <tr><th>Situation</th><th>Method</th><th>Frequency</th><th>Who is responsible</th></tr>
+  <tr><td>Daily schedule and assignments</td><td>Printed daily assignment sheet + verbal debrief</td><td>Every evening for next day</td><td>Mission Leader</td></tr>
+  <tr><td>Teams in field check-in</td><td>Radio or mobile phone</td><td>At midday and on return to camp</td><td>Each team leader</td></tr>
+  <tr><td>Overdue team</td><td>Radio or mobile phone. If no contact after 30 min: safety protocol activated</td><td>Immediately when overdue</td><td>Safety Officer</td></tr>
+  <tr><td>Protocol deviation</td><td>Documented on datasheet and verbal report at debrief</td><td>Same day</td><td>Team member who deviated</td></tr>
+  <tr><td>Equipment failure</td><td>Verbal report to Equipment Officer. Written in equipment log</td><td>Immediately on discovery</td><td>Team member who discovers</td></tr>
+</table>
+
+<h2>External Communication</h2>
+<table>
+  <tr><th>Contact</th><th>Method</th><th>Frequency</th><th>Content</th></tr>
+  <tr><td>Institutional emergency contact</td><td>Satellite phone or SMS/WhatsApp if mobile coverage</td><td>Daily at [specified time]</td><td>Mission status, team health, any incidents</td></tr>
+  <tr><td>PI / supervisor</td><td>Email or WhatsApp when internet available</td><td>Every 2–3 days or on significant finding</td><td>Progress update, key findings, any issues requiring guidance</td></tr>
+  <tr><td>Community liaison</td><td>In person</td><td>At start and end of each day of community-adjacent work</td><td>Daily plan, any community concerns, results sharing</td></tr>
+  <tr><td>Protected area authority</td><td>In person or phone</td><td>On arrival and departure from protected area</td><td>Permit confirmation, any incidents, survey summary</td></tr>
+</table>
+
+<!-- S13 DEBRIEF SYSTEM -->
+<div class="section-label" style="margin-top:6mm;">Section 13</div>
+<h1>Debrief System</h1>
+<p>The post-mission debrief is not a formality. It is the mechanism by which field experience becomes institutional knowledge. Use the structure below within 7 days of returning from the field, while memory is still accurate.</p>
+
+<h2>Debrief Report Template</h2>
+<div class="template-box">
+POST-MISSION DEBRIEF REPORT
+Mission: [name]   Dates: [start – end]   Lead: [Mission Leader]   Written: [date within 7 days]
+
+1. SURVEY ACHIEVEMENT vs. PLAN
+   Planned effort: [X transects / trap-nights / survey hours]
+   Actual effort: [Y]
+   Gap: [Z] · Reason: [explain]
+
+2. WHAT WORKED WELL (preserve in next season)
+   [List 3-5 specific things that worked — be specific, not vague]
+
+3. WHAT FAILED (root cause + recommendation)
+   Issue: [describe] · Root cause: [why did it happen?] · Fix: [specific change for next season]
+   [Repeat for each significant failure]
+
+4. SAFETY INCIDENTS AND NEAR-MISSES
+   [Describe any incident, however minor. If none: write "No incidents."]
+   Root cause: [why did it happen / why could it have happened?]
+   Protocol change: [specific change to prevent recurrence]
+
+5. COMMUNITY AND RELATIONSHIP NOTES
+   [How did interactions with community leaders, guides, authorities go?]
+   [Any commitments made that must be followed up?]
+
+6. EQUIPMENT PERFORMANCE
+   [What worked? What failed? What needs replacement before next season?]
+
+7. PROTOCOL DEVIATIONS
+   [Were any protocol deviations recorded? What was the data impact?]
+
+8. KNOWLEDGE THAT MUST BE PRESERVED
+   [What did we learn about this site that a future team member must know?]
+   [Update the Site Information Document with this information]
+
+9. PRIORITY ACTIONS BEFORE NEXT SEASON
+   Action 1: [specific, with responsible person and deadline]
+   Action 2: [specific, with responsible person and deadline]
+   Action 3: [specific, with responsible person and deadline]
+
+SIGN-OFF: All team members read this report: _______________
+</div>
+
+<!-- QUICK START -->
+<div class="page-break"></div>
+<div class="section-label">Section 14</div>
+<h1>Quick Start — Plan Your Next Mission</h1>
+
+<h2>8 Weeks Before Departure</h2>
+<ul class="checklist">
+  <li>Define the scientific objective and minimum success criteria (Step 1).</li>
+  <li>Identify the team. Assign roles. Confirm availability.</li>
+  <li>Submit all permit applications. This is the most time-critical step.</li>
+  <li>Begin community engagement — notify the fokontany of planned arrival dates.</li>
+</ul>
+
+<h2>6 Weeks Before Departure</h2>
+<ul class="checklist">
+  <li>Design the survey layout using Section 8 and Prompts 4–6. Produce the survey map.</li>
+  <li>Build the equipment list using Section 11. Order or borrow missing items.</li>
+  <li>Book transport. Confirm driver and vehicle.</li>
+  <li>Use Prompt 7 to build the Risk Register.</li>
+</ul>
+
+<h2>4 Weeks Before Departure</h2>
+<ul class="checklist">
+  <li>Follow up on permit applications. Escalate if no response received.</li>
+  <li>Complete the day-by-day itinerary using Prompt 10.</li>
+  <li>Use Prompt 8 to write the community engagement plan.</li>
+  <li>Run the Equipment Master List against what you have. Order everything missing.</li>
+</ul>
+
+<h2>2 Weeks Before Departure</h2>
+<ul class="checklist">
+  <li>Test all equipment. Camera traps, AudioMoths, drone, GPS. Document any failures.</li>
+  <li>Use Prompt 1 to draft the Mission Briefing from your planning notes.</li>
+  <li>Distribute Mission Briefing to all team members. Collect acknowledgements.</li>
+  <li>Print Emergency Protocol cards. Laminate. Distribute.</li>
+</ul>
+
+<h2>Day Before Departure</h2>
+<ul class="checklist">
+  <li>Equipment Officer: final equipment check against manifest.</li>
+  <li>Data Manager: confirm all datasheets printed, memory cards formatted, backup devices ready.</li>
+  <li>Mission Leader: confirm permit originals and copies in mission pack.</li>
+  <li>All team: confirm personal medical supplies, ID documents, emergency contacts.</li>
+</ul>
+
+<h2>Within 7 Days of Return</h2>
+<ul class="checklist">
+  <li>Complete the Debrief Report using Prompt 11 and the template in Section 13.</li>
+  <li>Update the Site Information Document with new knowledge from this mission.</li>
+  <li>Implement any immediate equipment replacements or protocol changes identified in the debrief.</li>
+  <li>Archive mission documentation: briefing, datasheets, debrief report, permits.</li>
+</ul>
+
+<!-- MVP vs PREMIUM -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>7-step planning system</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Mission Briefing template</td><td>✓</td><td>✓ + digital form version</td></tr>
+  <tr><td>5 planning templates</td><td>✓</td><td>✓ 10 templates</td></tr>
+  <tr><td>12 AI prompts</td><td>✓</td><td>✓ 20 prompts</td></tr>
+  <tr><td>Transect design guide</td><td>✓</td><td>✓ + design calculator tool</td></tr>
+  <tr><td>Risk register (11 risks)</td><td>✓</td><td>✓ 20 risks + site-specific risks</td></tr>
+  <tr><td>Day-by-day planning guide</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Equipment master lists (6 categories)</td><td>✓</td><td>✓ 10 categories + drone-specific list</td></tr>
+  <tr><td>Communication protocols</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Debrief system + template</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Site Information Document builder</td><td>Prompt only</td><td>Full template + database</td></tr>
+  <tr><td>French version (full translation)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Malagasy permit guide (current procedures)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Google Sheets mission planner template</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- FINAL PAGE -->
+<div class="page-break"></div>
+<div style="text-align:center;padding:30mm 0;">
+  <div style="font-size:7pt;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8mm;">OPLURIX</div>
+  <div style="font-size:22pt;font-weight:700;color:var(--forest);line-height:1.3;margin-bottom:8mm;">
+    A field mission planned on paper<br>survives contact with reality.<br><em>One planned by memory does not.</em>
+  </div>
+  <div style="font-size:10pt;color:var(--muted);max-width:120mm;margin:0 auto 12mm;line-height:1.7;">
+    The best field scientists are not the ones who never face problems. They are the ones who anticipated the problems before departure, assigned someone to handle them, and had a documented plan that the whole team could follow when things did not go as expected.
+  </div>
+  <hr style="border:none;border-top:0.5pt solid var(--sand);width:60mm;margin:0 auto 10mm;">
+  <div style="font-size:8pt;color:var(--faint);line-height:2;">
+    Field Mission Planner v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div>
+</body>
+</html>

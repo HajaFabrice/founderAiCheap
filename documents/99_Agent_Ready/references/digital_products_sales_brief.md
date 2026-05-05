@@ -1,10 +1,13 @@
 # Digital Products Sales Brief
 
-Updated: 2026-05-03
+Updated: 2026-05-04
 
 This is the compact sales and positioning brief for the digital products inside
 the OPLURIX revenue ladder. Two products are live; two are documented and
 pending checkout activation.
+
+Canonical source folder reference:
+- [OPLURIX_Product_Suite_Final.md](C:\Users\Student\Desktop\perso\founderAiCheap\documents\oplurix-site\OPLURIX_Product_Suite_Final.md)
 
 ## Strategic Role
 
@@ -89,6 +92,16 @@ pending checkout activation.
 - Activation rule:
   - activate checkout only after delivery assets are packaged and the payment
     confirmation flow is tested end-to-end
+
+## Broader 10-Product Pipeline Rule
+
+- The wider OPLURIX source library defines a 10-product ladder.
+- For near-term launch sequencing, the approved activation order is:
+  1. `Training-to-Quiz Generator`
+  2. `Biodiversity Pitch Deck Builder`
+  3. `Handwritten Log Digitizer` as the first later waitlist candidate
+- The remaining source-only products should not be discussed as near-term
+  purchasable offers unless the founder explicitly activates them.
 
 ### 4. Biodiversity Pitch Deck Builder
 

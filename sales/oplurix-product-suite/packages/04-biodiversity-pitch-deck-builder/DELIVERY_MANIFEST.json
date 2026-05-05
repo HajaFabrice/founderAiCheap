@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_04_biodiversity_pitch_deck_builder",
+  "public_name": "Biodiversity Pitch Deck Builder",
+  "suite_number": 4,
+  "current_state": "coming_soon",
+  "recommended_public_state": "waitlist_now",
+  "launch_decision": "sellable_next",
+  "activation_priority": 2,
+  "delivery_state": "packaged_waitlist_candidate",
+  "recommended_client_format": "pdf_plus_editable_slides",
+  "price": "$69",
+  "activation_gate": "Package the editable slide assets and test the buyer delivery path.",
+  "source_artifacts": [
+    "documents/oplurix-site/OPLURIX_Product4_Biodiversity_Pitch_Deck_Builder.pdf"
+  ],
+  "sellable_page": "docs/products/04-biodiversity-pitch-deck-builder.html"
+}

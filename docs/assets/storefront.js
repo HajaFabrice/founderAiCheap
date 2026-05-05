@@ -34,6 +34,20 @@
         nameFr: "EcoR Toolkit Pro Bundle",
         priceUsd: 149,
         checkoutEnabled: false
+      },
+      "training-to-quiz-generator": {
+        id: "training-to-quiz-generator",
+        nameEn: "Training-to-Quiz Generator",
+        nameFr: "Training-to-Quiz Generator",
+        priceUsd: 29,
+        checkoutEnabled: false
+      },
+      "biodiversity-pitch-deck-builder": {
+        id: "biodiversity-pitch-deck-builder",
+        nameEn: "Biodiversity Pitch Deck Builder",
+        nameFr: "Biodiversity Pitch Deck Builder",
+        priceUsd: 69,
+        checkoutEnabled: false
       }
     }
   };

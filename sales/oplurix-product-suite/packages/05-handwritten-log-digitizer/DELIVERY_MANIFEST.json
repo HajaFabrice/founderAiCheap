@@ -1,0 +1,18 @@
+﻿{
+  "generated_at": "2026-05-05",
+  "product_id": "oplurix_05_handwritten_log_digitizer",
+  "public_name": "Handwritten Log Digitizer",
+  "suite_number": 5,
+  "current_state": "source_only",
+  "recommended_public_state": "source_only_then_waitlist",
+  "launch_decision": "package_after_next",
+  "activation_priority": 3,
+  "delivery_state": "internal_preview_package",
+  "recommended_client_format": "pdf_plus_workbook",
+  "price": "$39",
+  "activation_gate": "Add workbook files, examples, and a clean delivery bundle.",
+  "source_artifacts": [
+    "documents/oplurix-site/product5.html"
+  ],
+  "sellable_page": "docs/products/05-handwritten-log-digitizer.html"
+}

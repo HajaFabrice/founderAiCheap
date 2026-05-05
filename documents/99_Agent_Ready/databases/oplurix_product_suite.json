@@ -1,0 +1,294 @@
+{
+  "generated_at": "2026-05-05",
+  "purpose": "Structured reference for the 10 OPLURIX product source files in documents/oplurix-site.",
+  "operating_rule": "Only live or founder-approved waitlist products may be presented as actively sellable.",
+  "status_legend": {
+    "live": "Can be sold now with the current storefront and delivery process.",
+    "coming_soon": "Can be discussed publicly but checkout should remain disabled until packaging and delivery are verified.",
+    "source_only": "Exists as a strong source document but is not currently part of the public checkout surface."
+  },
+  "default_format_rule": {
+    "storefront": "html",
+    "first_cycle_delivery": "pdf_or_zip_bundle",
+    "hybrid_definition": "HTML for sales and discovery, PDF or ZIP for delivery."
+  },
+  "products": [
+    {
+      "id": "oplurix_01_expert_to_influencer_content_engine",
+      "suite_number": 1,
+      "public_name": "Expert-to-Influencer Content Engine",
+      "status": "live",
+      "price_usd": 39,
+      "primary_audience": [
+        "field biologists wanting LinkedIn visibility",
+        "researchers",
+        "conservation professionals"
+      ],
+      "core_promise": "Turn real field notes, research, and conservation work into credible, specific professional content.",
+      "source_formats": [
+        "html",
+        "pdf",
+        "txt"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product.html",
+        "documents/oplurix-site/ExpertToInfluencer.txt",
+        "documents/oplurix-site/OPLURIX_Product1_Expert_to_Influencer_Content_Engine.pdf"
+      ],
+      "storefront_visibility": "live",
+      "checkout_enabled": true,
+      "recommended_client_format": "hybrid",
+      "format_reason": "HTML is best for browsing and checkout; PDF or ZIP is best for a bounded delivered bundle.",
+      "agent_uses": [
+        "storefront copy",
+        "product comparison",
+        "warm outreach",
+        "FAQ handling"
+      ]
+    },
+    {
+      "id": "oplurix_02_training_to_quiz_generator",
+      "suite_number": 2,
+      "public_name": "Training-to-Quiz Generator",
+      "status": "coming_soon",
+      "price_usd": 29,
+      "primary_audience": [
+        "NGO trainers",
+        "field team leaders",
+        "workshop facilitators"
+      ],
+      "core_promise": "Turn SOPs and field training materials into validated quizzes that test protocol understanding.",
+      "source_formats": [
+        "pdf"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/OPLURIX_Product2_Training_to_Quiz_Generator.pdf"
+      ],
+      "storefront_visibility": "waitlist_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_templates",
+      "format_reason": "The client needs a stable guide plus editable quiz assets more than a dynamic app.",
+      "agent_uses": [
+        "waitlist explanation",
+        "product-ladder comparison",
+        "future launch planning"
+      ]
+    },
+    {
+      "id": "oplurix_03_gear_and_equipment_concierge",
+      "suite_number": 3,
+      "public_name": "Gear & Equipment Concierge",
+      "status": "source_only",
+      "price_usd": 39,
+      "primary_audience": [
+        "early-career field biologists"
+      ],
+      "core_promise": "Help buyers choose the right field equipment without wasting budget or buying the wrong tool.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product3.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "hybrid",
+      "format_reason": "Equipment specs and prices change often, so HTML ages better; PDF is acceptable only as a timestamped guide.",
+      "agent_uses": [
+        "future product planning",
+        "audience mapping",
+        "format decisions"
+      ]
+    },
+    {
+      "id": "oplurix_04_biodiversity_pitch_deck_builder",
+      "suite_number": 4,
+      "public_name": "Biodiversity Pitch Deck Builder",
+      "status": "coming_soon",
+      "price_usd": 69,
+      "primary_audience": [
+        "conservation NGOs",
+        "researchers seeking funding",
+        "protected area managers"
+      ],
+      "core_promise": "Turn biodiversity data and field results into donor-ready or funder-ready pitch decks.",
+      "source_formats": [
+        "pdf"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/OPLURIX_Product4_Biodiversity_Pitch_Deck_Builder.pdf"
+      ],
+      "storefront_visibility": "waitlist_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_editable_slides",
+      "format_reason": "The value lives in the structure plus the slide assets, not in a constantly changing web interface.",
+      "agent_uses": [
+        "waitlist explanation",
+        "future launch planning",
+        "product positioning"
+      ]
+    },
+    {
+      "id": "oplurix_05_handwritten_log_digitizer",
+      "suite_number": 5,
+      "public_name": "Handwritten Log Digitizer",
+      "status": "source_only",
+      "price_usd": 39,
+      "primary_audience": [
+        "field teams with paper-based records",
+        "researchers with archival notebooks"
+      ],
+      "core_promise": "Provide a repeatable workflow from handwritten notebooks to a clean, documented, analysis-ready dataset.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product5.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_workbook",
+      "format_reason": "Clients need a stable process guide plus structured worksheets more than a storefront-style interface.",
+      "agent_uses": [
+        "future product planning",
+        "workflow explanation",
+        "delivery design"
+      ]
+    },
+    {
+      "id": "oplurix_06_field_mission_planner",
+      "suite_number": 6,
+      "public_name": "Field Mission Planner",
+      "status": "source_only",
+      "price_usd": 49,
+      "primary_audience": [
+        "research teams",
+        "NGO field operations"
+      ],
+      "core_promise": "Turn tacit field planning knowledge into a shared, reviewable mission plan.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product6.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_checklists",
+      "format_reason": "The product is operational and checklist-heavy, which fits printable and editable field documents well.",
+      "agent_uses": [
+        "future product planning",
+        "client-fit checks",
+        "delivery design"
+      ]
+    },
+    {
+      "id": "oplurix_07_biodiversity_data_harmonizer",
+      "suite_number": 7,
+      "public_name": "Biodiversity Data Harmonizer",
+      "status": "source_only",
+      "price_usd": 99,
+      "primary_audience": [
+        "multi-site research projects",
+        "teams merging multi-season or multi-method biodiversity datasets"
+      ],
+      "core_promise": "Give buyers a repeatable pipeline for harmonizing messy, mixed-source biodiversity data before analysis begins.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product7.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_templates",
+      "format_reason": "The guide should be stable, but the real value also includes data schemas and template files.",
+      "agent_uses": [
+        "future product planning",
+        "ERIS-adjacent product mapping",
+        "format decisions"
+      ]
+    },
+    {
+      "id": "oplurix_08_thermal_data_translator",
+      "suite_number": 8,
+      "public_name": "Thermal Data Translator",
+      "status": "source_only",
+      "price_usd": 149,
+      "primary_audience": [
+        "drone-equipped research teams"
+      ],
+      "core_promise": "Turn raw thermal survey outputs into validated, GPS-tagged wildlife detection data.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product8.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_code",
+      "format_reason": "The explanation can live in a guide, but the usable value depends on code, schema, and technical companion files.",
+      "agent_uses": [
+        "future product planning",
+        "technical scope explanation",
+        "ERIS ecosystem mapping"
+      ]
+    },
+    {
+      "id": "oplurix_09_grant_writing_co_pilot",
+      "suite_number": 9,
+      "public_name": "Grant Writing Co-Pilot",
+      "status": "source_only",
+      "price_usd": 199,
+      "primary_audience": [
+        "conservation NGOs",
+        "independent researchers"
+      ],
+      "core_promise": "Turn grant writing into a repeatable, funder-aware system rather than a generic writing exercise.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product9.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "pdf_plus_templates",
+      "format_reason": "The first client value is in a stable guide, worked examples, and template assets rather than a dynamic site.",
+      "agent_uses": [
+        "future product planning",
+        "offer sequencing",
+        "high-ticket positioning"
+      ]
+    },
+    {
+      "id": "oplurix_10_mrv_report_architect",
+      "suite_number": 10,
+      "public_name": "MRV Report Architect",
+      "status": "source_only",
+      "price_range_usd": "499-999",
+      "primary_audience": [
+        "institutions",
+        "REDD+ projects",
+        "conservation NGOs"
+      ],
+      "core_promise": "Turn field data plus the ERIS scoring framework into a structured, standards-aligned MRV package.",
+      "source_formats": [
+        "html"
+      ],
+      "source_artifacts": [
+        "documents/oplurix-site/product10.html"
+      ],
+      "storefront_visibility": "internal_only",
+      "checkout_enabled": false,
+      "recommended_client_format": "hybrid_high_ticket",
+      "format_reason": "High-ticket buyers need a persuasive web-facing explanation, but the deliverable itself is a document and template system.",
+      "agent_uses": [
+        "future flagship planning",
+        "ERIS commercial framing",
+        "high-ticket format decisions"
+      ]
+    }
+  ]
+}

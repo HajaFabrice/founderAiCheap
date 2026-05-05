@@ -23,6 +23,13 @@ attached V4/V5 strategy texts plus the latest operational documents.
     - `Pro Bundle` at `USD 149`
     - `Complete` is the first-sale focus
     - `Pro Bundle` is a public anchor, not a live checkout until its walkthrough assets exist
+- Behind the live storefront, the OPLURIX source library already defines a
+  broader 10-product suite. Only the founder-approved live and waitlist
+  products should be discussed as publicly launchable today.
+- Within that 10-product suite, the next activation order is:
+  1. `Training-to-Quiz Generator`
+  2. `Biodiversity Pitch Deck Builder`
+  3. `Handwritten Log Digitizer` as the first later waitlist candidate
 - The system remains local-first, approval-gated, and file-auditable even when
   cloud portability is discussed.
 

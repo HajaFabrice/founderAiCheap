@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --forest:   #16331F;
+  --forest2:  #1F4A2C;
+  --sage:     #4A7A55;
+  --sage-lt:  #B2CEB5;
+  --amber:    #B87A1A;
+  --gold:     #D4921F;
+  --cream:    #F3EFE6;
+  --parch:    #EBE4D6;
+  --sand:     #D9CFBC;
+  --ink:      #1A1A1A;
+  --muted:    #555;
+  --faint:    #888;
+  --white:    #FAFAF7;
+  --red:      #8B2500;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.65;
+  color: var(--ink);
+  background: white;
+}
+
+/* ── PAGE LAYOUT ── */
+@page cover {
+  size: A4;
+  margin: 0;
+}
+@page content {
+  size: A4;
+  margin: 22mm 20mm 22mm 20mm;
+  @bottom-center {
+    content: "Expert-to-Influencer Content Engine  ·  OPLURIX  ·  " counter(page);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7pt;
+    color: #999;
+    border-top: 0.5pt solid #DDD;
+    padding-top: 4pt;
+  }
+}
+
+/* ── COVER PAGE ── */
+.cover {
+  page: cover;
+  page-break-after: always;
+  width: 210mm;
+  height: 297mm;
+  background: var(--forest);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cover-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1pt solid rgba(212,146,31,0.15);
+}
+
+.cover-top {
+  padding: 18mm 16mm 0 16mm;
+  flex: 1;
+}
+
+.cover-brand {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8pt;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 32mm;
+}
+
+.cover-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7.5pt;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  margin-bottom: 6mm;
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+}
+
+.cover-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20pt;
+  height: 0.5pt;
+  background: rgba(212,146,31,0.6);
+}
+
+.cover-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 31pt;
+  font-weight: 700;
+  line-height: 1.12;
+  color: white;
+  letter-spacing: -0.02em;
+  margin-bottom: 6mm;
+}
+
+.cover-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.cover-subtitle {
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 11pt;
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+  max-width: 130mm;
+  margin-bottom: 14mm;
+}
+
+.cover-for-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7pt;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-bottom: 4mm;
+}
+
+.cover-audience {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6pt;
+  margin-bottom: 18mm;
+}
+
+.cover-tag {
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 8pt;
+  padding: 3pt 10pt;
+  border: 0.5pt solid rgba(255,255,255,0.2);
+  border-radius: 20pt;
+  color: rgba(255,255,255,0.6);
+}
+
+.cover-promise {
+  background: rgba(212,146,31,0.12);
+  border-left: 2pt solid var(--gold);
+  padding: 8mm 10mm;
+  margin-bottom: 0;
+}
+
+.cover-promise-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 6.5pt;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 3mm;
+}
+
+.cover-promise p {
+  font-size: 9.5pt;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.cover-bottom {
+  padding: 8mm 16mm;
+  border-top: 0.5pt solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cover-author {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7.5pt;
+  color: rgba(255,255,255,0.35);
+}
+
+.cover-author strong {
+  display: block;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 2pt;
+}
+
+.cover-version {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7pt;
+  color: rgba(255,255,255,0.25);
+  text-align: right;
+}
+
+/* ── CONTENT PAGES ── */
+.content-pages {
+  page: content;
+  counter-reset: page;
+}
+
+/* ── TYPOGRAPHY ── */
+h1 {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 18pt;
+  font-weight: 700;
+  color: var(--forest);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 10mm;
+  margin-bottom: 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 1.5pt solid var(--forest);
+  page-break-after: avoid;
+}
+
+h2 {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--forest2);
+  letter-spacing: -0.01em;
+  margin-top: 8mm;
+  margin-bottom: 3mm;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 10pt;
+  font-weight: 500;
+  color: var(--sage);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 6mm;
+  margin-bottom: 2.5mm;
+  page-break-after: avoid;
+}
+
+p {
+  margin-bottom: 3mm;
+  color: var(--ink);
+}
+
+strong { font-weight: 500; color: var(--forest); }
+em { font-style: italic; color: var(--forest2); }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2mm;
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 16pt;
+  height: 0.5pt;
+  background: var(--amber);
+}
+
+/* ── PAGE BREAK ── */
+.page-break { page-break-before: always; }
+.no-break { page-break-inside: avoid; }
+
+/* ── CALLOUT BOX ── */
+.callout {
+  background: var(--cream);
+  border-left: 3pt solid var(--forest);
+  padding: 5mm 7mm;
+  margin: 5mm 0;
+  page-break-inside: avoid;
+}
+
+.callout-amber {
+  background: #FBF0DC;
+  border-left: 3pt solid var(--amber);
+}
+
+.callout-red {
+  background: #FDF0EE;
+  border-left: 3pt solid var(--red);
+}
+
+.callout-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 6.5pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2mm;
+}
+
+.callout-label-red { color: var(--red); }
+.callout-label-forest { color: var(--forest); }
+
+/* ── EXAMPLE BOX ── */
+.example-box {
+  background: var(--forest);
+  padding: 6mm 8mm;
+  margin: 5mm 0;
+  page-break-inside: avoid;
+}
+
+.example-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 6.5pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 3mm;
+}
+
+.example-box p {
+  color: rgba(255,255,255,0.8);
+  font-size: 9.5pt;
+  line-height: 1.6;
+  margin-bottom: 2mm;
+}
+
+.example-box p:last-child { margin-bottom: 0; }
+
+.why-box {
+  background: #EEF6EF;
+  border: 0.5pt solid #B2CEB5;
+  padding: 4mm 6mm;
+  margin-top: -1mm;
+  margin-bottom: 5mm;
+  page-break-inside: avoid;
+}
+
+.why-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 6.5pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 2mm;
+}
+
+.why-box p {
+  font-size: 9pt;
+  color: var(--forest2);
+  margin-bottom: 0;
+}
+
+/* ── TEMPLATE BOX ── */
+.template-box {
+  background: var(--parch);
+  border: 0.5pt solid var(--sand);
+  padding: 5mm 7mm;
+  margin: 4mm 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8.5pt;
+  line-height: 1.7;
+  color: var(--forest);
+  page-break-inside: avoid;
+}
+
+.template-filled {
+  background: white;
+  border: 0.5pt dashed var(--sand);
+  padding: 4mm 6mm;
+  margin: -1mm 0 4mm 0;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: var(--muted);
+  font-style: italic;
+  page-break-inside: avoid;
+}
+
+/* ── PROMPT BOX ── */
+.prompt-box {
+  background: #F0F4F0;
+  border: 0.5pt solid #B2CEB5;
+  border-left: 2.5pt solid var(--sage);
+  padding: 5mm 7mm;
+  margin: 4mm 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8pt;
+  line-height: 1.7;
+  color: var(--forest);
+  page-break-inside: avoid;
+}
+
+/* ── NUMBERED LIST ── */
+ol {
+  margin: 3mm 0 3mm 7mm;
+  padding: 0;
+}
+
+ol li {
+  margin-bottom: 2mm;
+  padding-left: 2mm;
+}
+
+/* ── BULLET LIST ── */
+ul {
+  margin: 3mm 0 3mm 6mm;
+  padding: 0;
+  list-style: none;
+}
+
+ul li {
+  margin-bottom: 1.5mm;
+  padding-left: 4mm;
+  position: relative;
+}
+
+ul li::before {
+  content: '→';
+  position: absolute;
+  left: -3mm;
+  color: var(--amber);
+  font-size: 9pt;
+}
+
+/* ── PAIN/OUTCOME LIST ── */
+.numbered-card {
+  display: flex;
+  gap: 5mm;
+  margin-bottom: 4mm;
+  page-break-inside: avoid;
+}
+
+.num-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  color: var(--amber);
+  flex-shrink: 0;
+  padding-top: 0.5mm;
+  width: 12pt;
+  text-align: right;
+}
+
+.num-content strong {
+  display: block;
+  font-size: 10pt;
+  margin-bottom: 0.5mm;
+  color: var(--forest);
+}
+
+.num-content p {
+  font-size: 9pt;
+  color: var(--muted);
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* ── FRAMEWORK CARD ── */
+.framework-card {
+  border: 0.5pt solid var(--sand);
+  margin-bottom: 6mm;
+  page-break-inside: avoid;
+}
+
+.framework-header {
+  background: var(--forest);
+  padding: 4mm 6mm;
+  display: flex;
+  align-items: baseline;
+  gap: 6mm;
+}
+
+.framework-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7pt;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.framework-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 11pt;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.01em;
+}
+
+.framework-body {
+  padding: 5mm 6mm;
+  background: white;
+}
+
+.framework-when {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.5mm;
+}
+
+.framework-when-text {
+  font-size: 9pt;
+  color: var(--muted);
+  margin-bottom: 4mm;
+}
+
+.framework-steps {
+  background: var(--cream);
+  padding: 4mm 5mm;
+  margin-bottom: 4mm;
+}
+
+.framework-steps ol {
+  margin: 0 0 0 5mm;
+}
+
+.framework-steps li {
+  font-size: 9pt;
+  margin-bottom: 1mm;
+  color: var(--ink);
+}
+
+/* ── TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4mm 0;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+th {
+  background: var(--forest);
+  color: white;
+  padding: 3mm 4mm;
+  text-align: left;
+  font-weight: 500;
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 8.5pt;
+}
+
+td {
+  padding: 2.5mm 4mm;
+  border-bottom: 0.5pt solid var(--sand);
+  vertical-align: top;
+  color: var(--ink);
+}
+
+tr:nth-child(even) td { background: var(--cream); }
+
+/* ── CHECKLIST ── */
+.checklist {
+  list-style: none;
+  margin: 3mm 0 3mm 0;
+}
+
+.checklist li {
+  display: flex;
+  gap: 4mm;
+  padding: 1.5mm 0;
+  font-size: 9.5pt;
+  border-bottom: 0.5pt solid var(--parch);
+  padding-left: 0;
+}
+
+.checklist li::before {
+  content: '☐';
+  color: var(--amber);
+  font-size: 10pt;
+  flex-shrink: 0;
+  position: static;
+}
+
+/* ── TRANSFORMATION BOX ── */
+.transform-raw {
+  background: #FFF8F0;
+  border: 0.5pt solid #E8D5B0;
+  border-left: 2.5pt solid var(--amber);
+  padding: 4mm 6mm;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8pt;
+  line-height: 1.6;
+  color: #5A4020;
+  margin-bottom: 2mm;
+  page-break-inside: avoid;
+}
+
+.transform-arrow {
+  text-align: center;
+  font-size: 12pt;
+  color: var(--sage);
+  margin: 1.5mm 0;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── STEP BLOCKS ── */
+.step-block {
+  display: flex;
+  gap: 5mm;
+  margin-bottom: 5mm;
+  page-break-inside: avoid;
+}
+
+.step-num {
+  width: 18pt;
+  height: 18pt;
+  background: var(--forest);
+  color: white;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8pt;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.5mm;
+}
+
+.step-content h3 {
+  margin-top: 0;
+  color: var(--forest);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  border: none;
+  border-top: 0.5pt solid var(--sand);
+  margin: 6mm 0;
+}
+
+/* ── SECTION BREAK PAGE ── */
+.section-break-page {
+  page-break-before: always;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20mm 0;
+}
+
+.section-number-large {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 60pt;
+  font-weight: 500;
+  color: var(--parch);
+  line-height: 1;
+  margin-bottom: 4mm;
+}
+
+.section-break-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 24pt;
+  font-weight: 700;
+  color: var(--forest);
+  letter-spacing: -0.02em;
+  margin-bottom: 4mm;
+}
+
+.section-break-sub {
+  font-size: 11pt;
+  color: var(--muted);
+  max-width: 120mm;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     COVER PAGE
+══════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-brand">OPLURIX · Ecological Intelligence</div>
+
+    <div class="cover-eyebrow">An OPLURIX Product · Version 1.0 · EN</div>
+
+    <div class="cover-title">
+      Expert-to-<em>Influencer</em><br>
+      Content Engine
+    </div>
+
+    <div class="cover-subtitle">
+      A complete system for turning field notes, research data,
+      and conservation expertise into clear, credible LinkedIn
+      content — consistently, without starting from zero.
+    </div>
+
+    <div class="cover-for-label">Built for</div>
+    <div class="cover-audience">
+      <span class="cover-tag">Field Biologists</span>
+      <span class="cover-tag">Biodiversity Researchers</span>
+      <span class="cover-tag">Conservation NGO Workers</span>
+      <span class="cover-tag">Graduate Students</span>
+    </div>
+
+    <div class="cover-promise">
+      <div class="cover-promise-label">The Transformation</div>
+      <p>From "I have valuable work that no one knows about" to "I consistently share conservation insights that build my professional reputation."</p>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Haja Fabrice Razafindrabe Maminiaina</strong>
+      Field Biologist · Conservation Technologist · Founder, OPLURIX
+    </div>
+    <div class="cover-version">
+      v1.0 · 2026<br>
+      marvelous-valkyrie-f94b2f.netlify.app
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTENT
+══════════════════════════════════════════════════════════ -->
+<div class="content-pages">
+
+<!-- ── HOW TO USE ─────────────────────────────────────── -->
+<div class="callout" style="margin-top:0; margin-bottom:6mm;">
+  <div class="callout-label" style="color:var(--forest);">How to use this product</div>
+  <p style="margin-bottom:2mm;">Read Sections 1–3 once to understand the system. Then go directly to the section you need. Return weekly. The value compounds with repetition.</p>
+  <p style="margin-bottom:0; font-size:9pt; color:var(--muted);">Contents: Core Promise · Pain Points · Desired Outcomes · 4-Step System · 12 Frameworks · 30 Templates · 15 AI Prompts · 5 Raw→Post Transformations · Editing Checklist · Ethics Guide · Reuse System · Weekly Rhythm</p>
+</div>
+
+<!-- ── SECTION 1: CORE PROMISE ────────────────────────── -->
+<div class="section-label">Section 1</div>
+<h1>The Core Promise</h1>
+
+<p>You have years of real fieldwork, real data, and real expertise. Your notebooks are full. Your hard drive has hundreds of photos. You have been part of surveys, studies, and conservation projects that most people never get to see. But when you open LinkedIn, you stare at a blank text box and close the app. Or you write something, hate it, delete it, and decide to post next week instead.</p>
+
+<p>This system changes that. Not by making you a marketer. Not by teaching you viral content tricks. By giving you a repeatable workflow built around the kind of work you already do.</p>
+
+<div class="callout callout-amber" style="margin:5mm 0;">
+  <div class="callout-label">The Transformation</div>
+  <p style="font-size:10.5pt; line-height:1.6; margin-bottom:2mm;"><strong>Before:</strong> "I have valuable work that no one knows about."</p>
+  <p style="font-size:10.5pt; line-height:1.6; margin-bottom:0;"><strong>After:</strong> "I consistently share conservation insights that build my professional reputation."</p>
+</div>
+
+<p><strong>What this system is:</strong> A structured, repeatable workflow for turning real field notes, research observations, and technical conservation work into clear LinkedIn content that sounds like you — professional, credible, and human.</p>
+
+<p><strong>What this system is not:</strong> Marketing advice. Personal branding tricks. Viral content tactics. Generic writing templates. It is a communication system built specifically for the kind of work conservation professionals do.</p>
+
+<!-- ── SECTION 2: PAIN POINTS ─────────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 2</div>
+<h1>10 Real Pain Points</h1>
+<p>These are the reasons conservation professionals do not post consistently. Recognise yours.</p>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">01</div>
+  <div class="num-content">
+    <strong>Your expertise is scattered across too many places.</strong>
+    <p>It lives in field notebooks, voice memos, WhatsApp messages, half-finished reports, and your memory. There is no single place to go when you want to write.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">02</div>
+  <div class="num-content">
+    <strong>You do not know what counts as post-worthy.</strong>
+    <p>You assume your daily work is too ordinary. In reality, the most valuable posts come from exactly those ordinary moments — your ordinary is someone else's extraordinary.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">03</div>
+  <div class="num-content">
+    <strong>You fear sounding shallow or self-promotional.</strong>
+    <p>You have seen too many LinkedIn posts full of vague inspiration. You do not want to sound like that. This system is built on the opposite: real work, specific details, honest reflection.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">04</div>
+  <div class="num-content">
+    <strong>Technical language is hard to simplify without losing accuracy.</strong>
+    <p>You know the science. The challenge is translating it for an audience that includes donors, collaborators, students, and policy people — without dumbing it down.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">05</div>
+  <div class="num-content">
+    <strong>You do not know how to structure a post.</strong>
+    <p>A field story that stays in your head is clear. The moment you try to write it, it falls apart. Structure is what you are missing, not ideas.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">06</div>
+  <div class="num-content">
+    <strong>You spend too long on one post.</strong>
+    <p>Writing one LinkedIn post should not take three hours. It takes that long when you have no system. With a template and a prompt, it takes 15–20 minutes.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">07</div>
+  <div class="num-content">
+    <strong>You have no system for turning one experience into multiple pieces.</strong>
+    <p>Every field trip contains 5–10 posts. Right now, you probably write one post — or zero — from each.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">08</div>
+  <div class="num-content">
+    <strong>Conservation has ethical constraints others do not have.</strong>
+    <p>Exact GPS coordinates can endanger a species. Unpublished data has confidentiality implications. Community partners deserve protection. Generic writing advice ignores all of this. This system does not.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">09</div>
+  <div class="num-content">
+    <strong>You have no examples that feel relevant.</strong>
+    <p>Most LinkedIn advice shows examples from tech, business, or coaching. You need examples from real field biology, biodiversity monitoring, and conservation science. This product provides them.</p>
+  </div>
+</div>
+
+<div class="numbered-card no-break">
+  <div class="num-badge">10</div>
+  <div class="num-content">
+    <strong>Inconsistency kills momentum.</strong>
+    <p>You post three times in one week, then go silent for two months. The audience you built forgets you. Consistency matters more than quality. A clear system is the only thing that makes it possible.</p>
+  </div>
+</div>
+
+<!-- ── SECTION 3: DESIRED OUTCOMES ───────────────────── -->
+<div class="section-label" style="margin-top:7mm;">Section 3</div>
+<h1>10 Desired Outcomes</h1>
+<p>What changes after you use this system consistently.</p>
+
+<table>
+  <tr><th>#</th><th>Outcome</th></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">01</td><td>Turn raw field notes into a publishable post in under 20 minutes.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">02</td><td>Sound credible, specific, and human at the same time — not academic, not promotional.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">03</td><td>Post consistently without needing a burst of inspiration to start.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">04</td><td>Build a visible professional reputation in the conservation field.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">05</td><td>Translate technical work for mixed audiences — scientists, donors, students, policy makers.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">06</td><td>Attract collaborations, funding attention, speaking invitations, and networking opportunities.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">07</td><td>Remove the mental friction from writing so you stop dreading it.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">08</td><td>Turn one field observation into 5 different pieces of content.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">09</td><td>Share real work without compromising ethical or sensitive information.</td></tr>
+  <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">10</td><td>Feel genuinely proud of your online professional presence.</td></tr>
+</table>
+
+<!-- ── SECTION 4: THE 4-STEP SYSTEM ─────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 4</div>
+<h1>The 4-Step Field-to-Post System</h1>
+<p>This is the core workflow. Everything else in this product supports it. Four steps, every time, no exceptions.</p>
+
+<div class="step-block">
+  <div class="step-num">1</div>
+  <div class="step-content">
+    <h3>CAPTURE</h3>
+    <p>Do this in the field or within 24 hours of a field day. Use these questions. Do not try to write a post yet — just capture the raw material.</p>
+    <div class="callout">
+      <div class="callout-label callout-label-forest">Field Intake Questions</div>
+      <ul style="margin:0;">
+        <li>What happened today? (One paragraph, no editing.)</li>
+        <li>What surprised me?</li>
+        <li>What would I tell a colleague over dinner that they'd find interesting?</li>
+        <li>What does this suggest about a larger conservation pattern?</li>
+        <li>Is there a method, tool, or decision I can explain?</li>
+        <li>What must stay private? (species locations, partner details, unpublished data)</li>
+        <li>Who would find this useful?</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt; color:var(--muted); font-style:italic; margin:0;">Rule: Write for 5 minutes. Do not edit. The goal is to capture, not to polish.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">2</div>
+  <div class="step-content">
+    <h3>EXTRACT</h3>
+    <p>Review your raw notes and find the single most interesting thing inside them.</p>
+    <div class="callout">
+      <div class="callout-label callout-label-forest">Extraction Questions</div>
+      <ul style="margin:0;">
+        <li>What is the single most interesting thing here?</li>
+        <li>What does a non-specialist need to know first?</li>
+        <li>What is the lesson, insight, or implication?</li>
+        <li>Is there a before/after, a surprise, a mistake, or a pattern?</li>
+        <li>What would make someone stop scrolling?</li>
+      </ul>
+    </div>
+    <p style="font-size:9pt; color:var(--muted); font-style:italic; margin:0;">Rule: One idea per post. Most field days contain many possible posts. Choose one. Save the others for next week.</p>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">3</div>
+  <div class="step-content">
+    <h3>STRUCTURE</h3>
+    <p>Choose one framework from Section 5. Apply it to your extracted idea. Do not mix frameworks.</p>
+    <table>
+      <tr><th>If your idea is…</th><th>Use Framework…</th></tr>
+      <tr><td>Something happened in the field</td><td>1 — Field Observation → Meaning → Lesson</td></tr>
+      <tr><td>A result or data finding</td><td>4 — Data Point → Interpretation → Caution</td></tr>
+      <tr><td>Something went wrong</td><td>5 — Mistake → Lesson → Better Practice</td></tr>
+      <tr><td>Explaining a method</td><td>8 — One Method, One Lesson</td></tr>
+      <tr><td>Correcting a misconception</td><td>2 — Problem → What People Miss → What Data Shows</td></tr>
+      <tr><td>A career or professional reflection</td><td>12 — Reflection → Direction</td></tr>
+      <tr><td>A surprising comparison</td><td>7 — Question → Field Answer → Caveat</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-num">4</div>
+  <div class="step-content">
+    <h3>REFINE</h3>
+    <p>Edit your draft using the checklist in Section 9. The five non-negotiables:</p>
+    <ul>
+      <li>First two lines must hook — specific, honest, not clickbait.</li>
+      <li>One main idea. Cut anything that belongs in a different post.</li>
+      <li>Simple language. If a non-specialist can't follow it, simplify.</li>
+      <li>Honest tone. Not arrogant, not self-deprecating, not promotional.</li>
+      <li>End with a takeaway, question, or reflection — never a sales pitch.</li>
+    </ul>
+    <p style="font-size:9pt; color:var(--muted); font-style:italic; margin:0;">Rule: Edit once. Post. Perfectionism is the enemy of consistency.</p>
+  </div>
+</div>
+
+<!-- ── SECTION 5: 12 FRAMEWORKS ──────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 5</div>
+<h1>12 Content Frameworks</h1>
+<p>Each framework includes: when to use it, the step-by-step structure, and a real conservation example post. Use one framework per post, every time.</p>
+
+<!-- Framework 1 -->
+<div class="framework-card">
+  <div class="framework-header">
+    <div class="framework-num">FRAMEWORK 01</div>
+    <div class="framework-title">Field Observation → Meaning → Wider Lesson</div>
+  </div>
+  <div class="framework-body">
+    <div class="framework-when">When to use it</div>
+    <div class="framework-when-text">Something interesting, surprising, or telling happened in the field and you want to draw a broader point from it.</div>
+    <div class="framework-steps">
+      <ol>
+        <li>State the observation specifically — name the place, species, or condition.</li>
+        <li>Explain why it is interesting or unexpected.</li>
+        <li>Draw the wider conservation or scientific meaning.</li>
+        <li>End with a lesson, question, or reflection.</li>
+      </ol>
+    </div>
+    <div class="example-label">Example post — Thermal drone survey, Ihofa Forest</div>
+    <div class="example-box">
+      <p>During a thermal drone pass over the Ihofa forest edge, we detected lemur signatures much closer to the degraded zone than our previous ground surveys had suggested.</p>
+      <p>It was not what we expected. The standard assumption is that disturbance pushes wildlife toward core forest areas.</p>
+      <p>What this might mean: edge habitats are more functional than our methods had been capturing — or we were underdetecting in those zones during ground surveys.</p>
+      <p>Either way, it is a reminder that our data is only as complete as our methods. When the method changes, the picture changes too.</p>
+    </div>
+    <div class="why-box">
+      <div class="why-label">Why it works</div>
+      <p>Opens with a specific, credible observation. Does not overclaim. Turns a survey result into a methodological reflection that any field biologist can relate to.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Framework 2 -->
+<div class="framework-card">
+  <div class="framework-header">
+    <div class="framework-num">FRAMEWORK 02</div>
+    <div class="framework-title">Problem → What People Miss → What the Data Shows</div>
+  </div>
+  <div class="framework-body">
+    <div class="framework-when">When to use it</div>
+    <div class="framework-when-text">A common assumption in conservation is wrong or incomplete, and your experience complicates it.</div>
+    <div class="framework-steps">
+      <ol>
+        <li>Name the widely held assumption.</li>
+        <li>Explain what it gets wrong or leaves out.</li>
+        <li>Show what your experience or data suggests instead.</li>
+        <li>Offer the more accurate view.</li>
+      </ol>
+    </div>
+    <div class="example-label">Example post — Absence of detection ≠ population decline</div>
+    <div class="example-box">
+      <p>Many reports flag a "decline" whenever detection rates drop in a survey.</p>
+      <p>But detection is not the same as abundance. In dense vegetation, during a dry season, after a change in observer protocol — detection can drop for reasons that have nothing to do with the actual population.</p>
+      <p>During our herpetofauna surveys, absence in one season often meant the species moved, not that it disappeared. Confirming a real decline requires multiple seasons, consistent methods, and often completely different survey techniques.</p>
+      <p>One data point, one season, one method: that is a starting point. It is rarely a conclusion.</p>
+    </div>
+    <div class="why-box">
+      <div class="why-label">Why it works</div>
+      <p>Demonstrates analytical depth. Builds trust with a scientific audience. Educates without lecturing. Positions the author as someone who thinks carefully before communicating.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Framework 3 -->
+<div class="framework-card">
+  <div class="framework-header">
+    <div class="framework-num">FRAMEWORK 03</div>
+    <div class="framework-title">Small Moment → Bigger System</div>
+  </div>
+  <div class="framework-body">
+    <div class="framework-when">When to use it</div>
+    <div class="framework-when-text">A small, concrete field detail reflects a larger structural challenge in conservation.</div>
+    <div class="framework-steps">
+      <ol>
+        <li>Share the small, specific moment.</li>
+        <li>Connect it to a wider pattern or system.</li>
+        <li>Explain why that wider pattern matters.</li>
+        <li>End with the implication.</li>
+      </ol>
+    </div>
+    <div class="example-label">Example post — AudioMoth card format failure</div>
+    <div class="example-box">
+      <p>Our AudioMoth units stopped recording on day three of the survey. Not because of a technical failure — because the memory cards were formatted in the wrong file system.</p>
+      <p>Small problem. Big consequence: two nights of bat acoustic data gone.</p>
+      <p>That detail reflects something I see across field teams everywhere: we train for ecology, not for field data systems. How to name files, how to check card formats, how to validate recordings in the field — these things do not appear in most methodology training.</p>
+      <p>Conservation science runs on data. Data runs on systems. Systems fail when nobody is responsible for them.</p>
+    </div>
+    <div class="why-box">
+      <div class="why-label">Why it works</div>
+      <p>Honest and specific. Connects a frustrating moment to a systemic observation. Useful for any field biologist who has experienced data loss.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Framework 4 -->
+<div class="framework-card">
+  <div class="framework-header">
+    <div class="framework-num">FRAMEWORK 04</div>
+    <div class="framework-title">Data Point → Interpretation → Caution</div>
+  </div>
+  <div class="framework-body">
+    <div class="framework-when">When to use it</div>
+    <div class="framework-when-text">You want to discuss a result without overclaiming. Essential for any post involving numbers, trends, or survey findings.</div>
+    <div class="framework-steps">
+      <ol>
+        <li>Present one specific data point or finding.</li>
+        <li>Give the careful interpretation.</li>
+        <li>Add the caution or limitation most people would skip.</li>
+        <li>Explain what the next step should be.</li>
+      </ol>
+    </div>
+    <div class="example-label">Example post — Detection rates across habitat types</div>
+    <div class="example-box">
+      <p>In our mammal surveys, detection rates in disturbed forest patches were roughly 40% lower than in the intact forest core.</p>
+      <p>That pattern is interesting. But it does not tell us whether the species is rarer there, harder to detect, or actively avoiding the area. Detection rate and abundance are not the same thing.</p>
+      <p>The correct interpretation requires controlling for habitat visibility, survey effort, and time of day — none of which are simple to standardise across sites.</p>
+      <p>Numbers without context are just numbers. Premature conclusions can drive the wrong interventions.</p>
+    </div>
+    <div class="why-box">
+      <div class="why-label">Why it works</div>
+      <p>Shows scientific rigour. Builds credibility with a research audience. Demonstrates that the author thinks carefully before communicating results.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Framework 5 -->
+<div class="framework-card">
+  <div class="framework-header">
+    <div class="framework-num">FRAMEWORK 05</div>
+    <div class="framework-title">Mistake → Lesson → Better Practice</div>
+  </div>
+  <div class="framework-body">
+    <div class="framework-when">When to use it</div>
+    <div class="framework-when-text">Something went wrong in the field or project, and the failure produced a genuine improvement. One of the most powerful frameworks for building trust.</div>
+    <div class="framework-steps">
+      <ol>
+        <li>Describe the mistake clearly and honestly.</li>
+        <li>Explain what caused it or what was missed.</li>
+        <li>State the lesson learned.</li>
+        <li>Describe the better practice that replaced it.</li>
+      </ol>
+    </div>
+    <div class="example-label">Example post — Sample mislabelling at Ambatotsirongorongo</div>
+    <div class="example-box">
+      <p>On a long field day, we nearly mixed up tissue samples from two different sites. Labels had been written in the same pen, in poor light, after six hours in the forest.</p>
+      <p>It was caught before the samples were processed. But only because one team member double-checked — which was not part of the protocol at the time.</p>
+      <p>We now have a two-person verification step at every sample collection point. It adds four minutes per site. It has prevented at least three potential mislabelling events since then.</p>
+      <p>Good field protocols are often built from small near-misses like that one.</p>
+    </div>
+    <div class="why-box">
+      <div class="why-label">Why it works</div>
+      <p>Honest and specific without self-flagellation. Shows systems thinking. Every field biologist has a version of this story and will recognise it immediately.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Frameworks 6–12 condensed for space efficiency -->
+<div class="page-break"></div>
+<h2>Frameworks 6–12 — Quick Reference</h2>
+<p>The same logic applies to all remaining frameworks. Structure: When to use → Steps → Example topic.</p>
+
+<table>
+  <tr>
+    <th style="width:8%;">#</th>
+    <th style="width:28%;">Framework Name</th>
+    <th style="width:32%;">When to Use</th>
+    <th style="width:32%;">Example Topic</th>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">06</td>
+    <td><strong>Before → During → After</strong></td>
+    <td>Show how a method, protocol, or workflow improved over time.</td>
+    <td>Revising a mammal survey protocol across two field seasons.</td>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">07</td>
+    <td><strong>Question → Field Answer → Caveat</strong></td>
+    <td>Explore a scientific question your fieldwork has shed light on, without claiming a definitive answer.</td>
+    <td>Can thermal drones replace ground-based mammal surveys?</td>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">08</td>
+    <td><strong>One Method, One Lesson</strong></td>
+    <td>Explain a field method or tool accessibly for a broad audience.</td>
+    <td>AudioMoth passive acoustic monitoring — what it does and where it fails.</td>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">09</td>
+    <td><strong>Myth → Reality</strong></td>
+    <td>Correct a widely held belief about conservation, ecology, or field practice.</td>
+    <td>Species counts do not equal conservation success.</td>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">10</td>
+    <td><strong>Tool → Use Case → Limits</strong></td>
+    <td>Communicate honestly about a technology — its value and its real boundaries.</td>
+    <td>YOLO-based CV for wildlife detection: what it can and cannot do in Malagasy forest.</td>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">11</td>
+    <td><strong>Career Insight → Field-Learned Principle</strong></td>
+    <td>Share a professional reflection grounded in a specific field experience. Not motivational — grounded.</td>
+    <td>Learning that community communication requires a different structure than scientific reporting.</td>
+  </tr>
+  <tr>
+    <td style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:var(--amber);">12</td>
+    <td><strong>Reflection → Direction</strong></td>
+    <td>Share a broader observation about conservation work and point toward its implication for the future.</td>
+    <td>The gap between conservation science and conservation finance — and why it is a communication problem, not a science problem.</td>
+  </tr>
+</table>
+
+<!-- ── SECTION 6: 30 TEMPLATES ────────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 6</div>
+<h1>30 Fill-in-the-Blank Templates</h1>
+<p>Replace brackets with your real details. Edit the result to sound like you. The template is a starting point, not a final product.</p>
+
+<h2>Fieldwork Stories</h2>
+
+<h3>Template 1 — The Field Observation</h3>
+<div class="template-box">
+Today in [location], we found/observed [specific observation].<br>
+It reminded me that [field insight or principle].<br>
+What stood out was [specific detail].<br>
+For me, this reinforces why [conservation point] matters.
+</div>
+<div class="template-filled">
+Today in Kirindy, we found fosa tracks along a transect we had not covered in two seasons. It reminded me that absence of detection is not the same as absence. What stood out was how close the signs were to a heavily used path. For me, this reinforces why expanding survey effort into buffer zones matters.
+</div>
+
+<h3>Template 2 — The Difficult Day</h3>
+<div class="template-box">
+Today was the kind of field day where [challenge] made everything harder than expected.<br>
+We managed to [task], but only by [adjustment].<br>
+Days like this are a reminder that conservation work is not only technical.<br>
+It is also [principle — patience, teamwork, adaptability].
+</div>
+
+<h3>Template 3 — The Unexpected Finding</h3>
+<div class="template-box">
+I did not expect to find [observation] during today's work in [location].<br>
+It changed how I think about [species / habitat / method] at that site.<br>
+[Brief explanation of significance.]<br>
+Small surprises like this are why fieldwork remains irreplaceable. They challenge assumptions.
+</div>
+
+<h3>Template 4 — The Return Visit</h3>
+<div class="template-box">
+Back at [site name] after [time period], I noticed [specific change or continuity].<br>
+Some things have stayed the same. Others have clearly shifted.<br>
+That contrast is one of the reasons long-term monitoring matters.<br>
+One-time surveys cannot show what repeated visits reveal.
+</div>
+
+<h3>Template 5 — The Field Routine</h3>
+<div class="template-box">
+A typical survey day at [site/project] starts with [step], moves through [task],<br>
+and usually ends with [end-of-day task].<br>
+That consistency is what makes the data trustworthy.<br>
+In conservation monitoring, routine is not the enemy of good science. It is the foundation of it.
+</div>
+
+<h3>Template 6 — The Teamwork Moment</h3>
+<div class="template-box">
+A field day in [location] only works because of coordination.<br>
+Today, [role 1], [role 2], and [role 3] each handled different parts of [task].<br>
+That kind of collaboration does not appear in the published methodology.<br>
+But it shapes the quality of the work as much as the protocol does.
+</div>
+
+<h3>Template 7 — The Quiet Moment</h3>
+<div class="template-box">
+Not every field memory is dramatic.<br>
+Sometimes it is [small, specific observation] in [location] that stays with you.<br>
+Those moments matter because they remind you why the work exists:<br>
+to understand [species / ecosystem] carefully enough to protect it.
+</div>
+
+<h2>Data Insights</h2>
+
+<h3>Template 8 — The Careful Result</h3>
+<div class="template-box">
+In our data from [project/site], we noticed [pattern or trend].<br>
+That does not automatically mean [overclaim].<br>
+But it does suggest [careful interpretation].<br>
+This is why data interpretation matters as much as data collection.
+</div>
+
+<h3>Template 9 — What the Data Does Not Say</h3>
+<div class="template-box">
+Our results from [project] show [finding].<br>
+But they do not tell us [important limitation].<br>
+That distinction matters for how we use the information.<br>
+Knowing what data cannot prove is as important as knowing what it can.
+</div>
+
+<h3>Template 10 — The Comparison</h3>
+<div class="template-box">
+Comparing [site A] and [site B] showed [difference].<br>
+The interesting part was not the difference itself, but what it implies about [habitat / method / pressure].<br>
+Comparisons like this help turn raw observations into usable conservation insight.
+</div>
+
+<h3>Template 11 — The Surprising Number</h3>
+<div class="template-box">
+One number from our recent work stood out: [specific data point].<br>
+On its own, it does not mean much.<br>
+With context — [what the context is] — it tells us something about [process or issue].<br>
+That is one of the hardest things to communicate: what a number actually means.
+</div>
+
+<h3>Template 12 — Why Method Shapes Results</h3>
+<div class="template-box">
+The way we collected data for [project] shaped what we found as much as the actual ecology.<br>
+[Brief explanation of how the method influenced the result.]<br>
+Method design is a scientific decision, not a logistical one.<br>
+What you measure and how you measure it determines what is visible.
+</div>
+
+<h2>Lessons Learned</h2>
+
+<h3>Template 13 — The Protocol Change</h3>
+<div class="template-box">
+Before we revised [protocol], [problem or inconsistency].<br>
+During the revision, we [specific change made].<br>
+After that, [specific improvement].<br>
+Sometimes progress in conservation comes from better process, not bigger budgets.
+</div>
+
+<h3>Template 14 — The Long-Term Observation</h3>
+<div class="template-box">
+After [time period] of working in [location/field], I have come to understand [insight].<br>
+It is not something that appears in a single field season.<br>
+It takes time to see [pattern or change] clearly enough to draw any conclusions.<br>
+That is one argument for long-term research that does not fit short funding cycles.
+</div>
+
+<h3>Template 15 — The Method Comparison</h3>
+<div class="template-box">
+We compared [method A] and [method B] for [task].<br>
+[Method A] was stronger for [specific advantage].<br>
+[Method B] captured [what method A missed].<br>
+Using both gave us a more complete picture than either alone.
+</div>
+
+<h2>Mistakes and Failures</h2>
+
+<h3>Template 16 — The Near-Miss</h3>
+<div class="template-box">
+On a [field day / survey], we nearly [mistake that almost happened].<br>
+It was caught because [how it was caught].<br>
+Since then, we added [specific protocol change].<br>
+The expensive mistakes in fieldwork are the ones you only notice after analysis.
+</div>
+
+<h3>Template 17 — The Honest Failure</h3>
+<div class="template-box">
+I tried [approach or method] and it did not work the way I expected.<br>
+The reason: [honest explanation].<br>
+What I would do differently: [specific change].<br>
+Failures only cost something if you do not learn from them.
+</div>
+
+<h3>Template 18 — The Equipment Problem</h3>
+<div class="template-box">
+[Equipment] failed at [critical moment] during [project/survey].<br>
+The cause was [specific reason — not vague].<br>
+The fix was [what resolved it].<br>
+Field teams that plan for equipment failure produce more reliable data than those that plan only for success.
+</div>
+
+<h2>Conservation Awareness</h2>
+
+<h3>Template 19 — The Invisible Work</h3>
+<div class="template-box">
+Most people never see what happens before the conservation result becomes visible.<br>
+For [specific project], it requires [behind-the-scenes work].<br>
+None of that appears in the summary report.<br>
+But it determines whether the result is real or not.
+</div>
+
+<h3>Template 20 — The Community Dimension</h3>
+<div class="template-box">
+The conservation of [species / habitat] in [place] is only possible because of [community involvement].<br>
+Without [specific local contribution], [what would be lost or impossible].<br>
+Scientific methods and local knowledge are not competing frameworks.<br>
+In most places I have worked, they are complementary.
+</div>
+
+<h2>Technical Explanations</h2>
+
+<h3>Template 21 — Explain It Simply</h3>
+<div class="template-box">
+Let me explain [technical concept] without the jargon.<br>
+Think of it like [accessible analogy].<br>
+In practice, what this means is [plain-language explanation].<br>
+It matters because [conservation application].
+</div>
+<div class="template-filled">
+Let me explain NDVI without the jargon. Think of it like a health reading for a forest. In practice, it measures how strongly vegetation reflects near-infrared light — healthy plants reflect more. It matters because it lets us monitor forest condition from aerial surveys without visiting every plot on foot.
+</div>
+
+<h3>Template 22 — The Tool Introduction</h3>
+<div class="template-box">
+[Tool] is being used more frequently in conservation surveys.<br>
+Here is what it actually does: [plain explanation].<br>
+Here is where it works well: [specific use case].<br>
+Here is where it does not: [honest limitation].<br>
+Understanding both is what makes a tool useful rather than just fashionable.
+</div>
+
+<h2>Career Insights</h2>
+
+<h3>Template 23 — The Skill You Did Not Expect to Need</h3>
+<div class="template-box">
+When I started working in [field], I did not expect that [unexpected skill] would matter as much as [primary expertise].<br>
+But in practice, [why the unexpected skill is essential].<br>
+The skills that make a conservation professional effective are not only the ones taught in the degree.
+</div>
+
+<h3>Template 24 — The Shift in Perspective</h3>
+<div class="template-box">
+Early in my career, I thought [earlier belief].<br>
+After [experience or time], I now think [revised understanding].<br>
+The change was not dramatic. It came from [what produced the shift].<br>
+That kind of slow revision is what fieldwork is good for.
+</div>
+
+<h3>Template 25 — The Communication Gap</h3>
+<div class="template-box">
+I spent [time] working on [project]. The science was solid. The results were clear.<br>
+But when I tried to communicate them to [audience], [what went wrong].<br>
+That experience changed how I think about who science is for and who it actually reaches.
+</div>
+
+<h3>Template 26 — The Mentor Lesson</h3>
+<div class="template-box">
+The most useful piece of advice I received about [topic] came from [type of person].<br>
+They said: [paraphrase or direct quote].<br>
+I applied it to [specific situation] and found that [result].<br>
+The best professional lessons rarely come from formal training.
+</div>
+
+<h3>Template 27 — Why This Work Matters</h3>
+<div class="template-box">
+Every time I am asked why I work in [conservation area], I give a practical answer about [professional reason].<br>
+But the real reason is [honest, personal, specific reason].<br>
+I share this not to be inspirational — but because the field is better when people say clearly why they are here.
+</div>
+
+<h3>Templates 28–30 — Additional Career Formats</h3>
+<p style="font-size:9pt; color:var(--muted);">The following three structures work for: (28) sharing a career crossroads decision, (29) explaining a long-term realisation from field experience, and (30) sharing a principle you now apply consistently that was not obvious early in your career. Apply any of the numbered frameworks above to these topics — the structure is the same, the subject matter changes.</p>
+
+<!-- ── SECTION 7: AI PROMPT PACK ─────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 7</div>
+<h1>AI Prompt Pack</h1>
+<p>15 copy-paste prompts for use with Claude, ChatGPT, Gemini, or any AI assistant. Paste your raw notes after the prompt. Review and edit the output — you are responsible for scientific accuracy. Never publish an AI draft without reading it carefully.</p>
+
+<h2>Prompt 1 — Field Notes to LinkedIn Post</h2>
+<div class="prompt-box">
+You are a science communication specialist. Convert the field notes below into a LinkedIn post for conservation professionals.
+
+Requirements:
+- Maximum 250 words
+- Opening line must hook without clickbait
+- Use specific details from the notes — do not generalise
+- Do not overclaim any result or observation
+- Tone: professional, honest, human. Not promotional.
+- End with a takeaway or open question
+
+Field notes: [PASTE YOUR RAW NOTES HERE]
+</div>
+
+<h2>Prompt 2 — Technical Concept Simplifier</h2>
+<div class="prompt-box">
+You are a science communicator specialising in conservation biology. Explain the concept below for a mixed LinkedIn audience including conservation scientists, NGO professionals, students, and donors.
+
+Requirements:
+- Start with a plain-language definition or analogy
+- Explain one real-world application in conservation
+- Name one limitation or caveat
+- Maximum 200 words — no jargon without immediate explanation
+
+Concept: [NAME THE CONCEPT — e.g., occupancy modelling, eDNA, line transect distance sampling]
+</div>
+
+<h2>Prompt 3 — Data Point to Insight Post</h2>
+<div class="prompt-box">
+You are helping a field biologist communicate a research result on LinkedIn.
+
+Convert the data finding below into a post that:
+- Presents the result specifically and accurately
+- Interprets it carefully without overclaiming
+- Names at least one important caveat or limitation
+- Explains why this matters for conservation practice
+- Maximum 220 words
+
+Data finding: [PASTE YOUR RESULT OR OBSERVATION HERE]
+</div>
+
+<h2>Prompt 4 — Mistake to Lesson Post</h2>
+<div class="prompt-box">
+Turn the field mistake below into a LinkedIn post.
+
+Requirements:
+- Honest and specific — do not soften or dramatise
+- Explain what caused it clearly
+- Describe the practical lesson and what changed
+- Tone: reflective, professional, not self-pitying
+- Maximum 200 words
+- No vague lessons — specific enough that another field biologist could apply them
+
+Mistake: [DESCRIBE WHAT HAPPENED]
+</div>
+
+<h2>Prompt 5 — Raw Observation to 5 Post Angles</h2>
+<div class="prompt-box">
+From the field observation below, generate 5 different LinkedIn post angles.
+
+Each angle should:
+- Use a different framework or emotional entry point
+- Be suitable for a different audience (researchers, students, NGO staff, donors, general public)
+- Be summarised in 2–3 sentences with an opening line
+
+Field observation: [PASTE YOUR OBSERVATION HERE]
+</div>
+
+<h2>Prompt 6 — Simplify Without Losing Accuracy</h2>
+<div class="prompt-box">
+Rewrite the draft below so that:
+- Language is simpler without losing scientific accuracy
+- Every jargon term is removed or explained in the same sentence
+- The post can be understood by an intelligent non-specialist
+- Scientific meaning is fully preserved — maximum 220 words
+
+Original draft: [PASTE YOUR DRAFT HERE]
+</div>
+
+<h2>Prompt 7 — Generate 5 Opening Hooks</h2>
+<div class="prompt-box">
+Write 5 alternative opening lines (hooks) for a post about the topic below.
+
+Requirements:
+- Each hook must be specific — no vague openers
+- Each makes a reader curious without being clickbait
+- No yes/no questions
+- No "I am proud to share" or "excited to announce" openers
+- Maximum 20 words each
+
+Post topic: [DESCRIBE THE MAIN TOPIC]
+</div>
+
+<h2>Prompt 8 — Ethics Review</h2>
+<div class="prompt-box">
+Review the LinkedIn post draft below and flag:
+1. Location details that could endanger a species
+2. Results requiring citation that have none
+3. Community or partner details that should be anonymised
+4. Unpublished data that may be premature to share
+5. Statements that could be misinterpreted as definitive when preliminary
+
+For each issue: quote the text, explain the risk, suggest an edit.
+
+Post draft: [PASTE YOUR DRAFT HERE]
+</div>
+
+<h2>Prompt 9 — Career Reflection Post</h2>
+<div class="prompt-box">
+Help me write a LinkedIn post sharing a professional insight from my conservation career.
+
+The insight should be:
+- Grounded in a specific real experience (not abstract)
+- Honest and not performatively modest or arrogant
+- Useful to a conservation professional at any career stage
+- Tone: reflective, direct, human — maximum 200 words
+
+The insight: [DESCRIBE YOUR INSIGHT OR EXPERIENCE]
+</div>
+
+<h2>Prompt 10 — Paper or Report to Post</h2>
+<div class="prompt-box">
+Summarise the main finding of my published paper or report into a LinkedIn post that:
+- States the finding specifically
+- Explains its significance for conservation practice
+- Does not require the reader to have read the paper
+- Directs interested readers to the source without advertising
+- Tone: informative, professional — maximum 220 words
+
+Key points: [PASTE ABSTRACT OR KEY FINDINGS]
+</div>
+
+<h2>Prompt 11 — Translate to French</h2>
+<div class="prompt-box">
+Translate and adapt the LinkedIn post below into French.
+
+Requirements:
+- Read naturally — not like a direct translation
+- Same tone: professional, specific, honest
+- Conservation terminology uses standard French scientific terms
+- Do not translate proper nouns (species names, place names, organisations)
+- Same length as original
+
+English post: [PASTE YOUR ENGLISH POST HERE]
+</div>
+
+<h2>Prompt 12 — Repurpose Into 3 Formats</h2>
+<div class="prompt-box">
+Take the LinkedIn post below and repurpose it into:
+1. A shorter version (max 80 words) for a LinkedIn comment or reply
+2. A newsletter paragraph (max 120 words) with a slightly more personal tone
+3. A one-sentence insight (max 25 words) for a profile headline or Twitter/X
+
+Do not change the core scientific meaning in any version.
+
+Original post: [PASTE YOUR ORIGINAL POST HERE]
+</div>
+
+<h2>Prompt 13 — Explain a Method for Non-Specialists</h2>
+<div class="prompt-box">
+Write a LinkedIn post explaining the conservation method or tool below to a mixed audience including non-scientists.
+
+Requirements:
+- Begin with an analogy or plain-language description
+- Explain one specific use case in conservation
+- Name one genuine limitation
+- No jargon without immediate explanation
+- Tone: informative, not evangelising — maximum 200 words
+
+Method or tool: [NAME AND BRIEFLY DESCRIBE]
+</div>
+
+<h2>Prompt 14 — Myth vs Reality Post</h2>
+<div class="prompt-box">
+Write a LinkedIn post challenging the following common assumption about conservation.
+
+Requirements:
+- State the myth clearly and fairly
+- Explain what the more accurate picture looks like based on field evidence
+- Acknowledge where the myth has partial truth
+- Tone: confident but not condescending — maximum 220 words
+
+Common assumption: [STATE THE MYTH]
+Your evidence: [DESCRIBE YOUR FIELD EXPERIENCE OR EVIDENCE]
+</div>
+
+<h2>Prompt 15 — Weekly Content Plan From Field Notes</h2>
+<div class="prompt-box">
+From the field notes below, generate a 4-post content plan for this week.
+
+For each post:
+1. Identify the single core idea
+2. Recommend a framework (Field Observation / Data Point / Mistake / Method / Myth / Career Insight / Reflection)
+3. Write the opening 2 sentences
+4. Estimate writing time: quick (10 min) / medium (20 min) / longer (30 min)
+
+Prioritise variety — not all 4 posts should be the same type.
+
+This week's notes: [PASTE YOUR WEEKLY NOTES HERE]
+</div>
+
+<!-- ── SECTION 8: TRANSFORMATIONS ─────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 8</div>
+<h1>5 Raw Note → Finished Post Transformations</h1>
+<p>These examples show the full process from messy field notes to a publishable post. What the system produces in practice — not what a professional writer produces, but what a field biologist with this system can produce.</p>
+
+<h2>Transformation 1 — Thermal Drone Survey</h2>
+<div class="callout-label" style="margin-bottom:2mm;">Raw field notes — as captured</div>
+<div class="transform-raw">
+"Drone flight this morning over the forest edge. Saw thermal signatures in the disturbed area near the village — much more than expected. Don't know if these are lemurs or other mammals. YOLO model hasn't been calibrated for these sizes yet. Interesting that ground transect yesterday showed almost nothing there. Battery lasted less than expected because of humidity. Need to log humidity at start of each flight from now on."
+</div>
+<div class="transform-arrow">↓  Framework: Field Observation → Meaning → Wider Lesson  ↓</div>
+<div class="example-box">
+  <div class="example-label">Finished post</div>
+  <p>A thermal drone pass over a disturbed forest edge this morning produced far more wildlife signatures than our ground transect from the previous day had suggested. The two methods were surveying the same area. The results looked like different sites.</p>
+  <p>We are still working on species identification — thermal signatures alone require careful validation, especially for smaller-bodied mammals. But the pattern is clear: what you detect depends enormously on how you look.</p>
+  <p>This is one of the core arguments for multi-method surveys in biodiversity monitoring. Not because each method is imperfect, but because each method is partial. The complete picture requires more than one view of the same forest.</p>
+</div>
+<div class="why-box">
+  <div class="why-label">What changed</div>
+  <p>Removed the battery failure detail (save for a separate post). Removed the village reference. Transformed uncertainty about species ID into a point about method limitations. The humidity note becomes a future post about field systems.</p>
+</div>
+
+<h2>Transformation 2 — Herpetofauna Discovery</h2>
+<div class="transform-raw">
+"Night survey at stream. Found a Mantella species we hadn't recorded at this elevation before. Small sample, only 2 individuals, can't make any claims. But interesting. Habitat was unusual — very rocky, close to agricultural edge. Took tissue samples. Will need molecular confirmation. Team was exhausted, almost missed the site."
+</div>
+<div class="transform-arrow">↓  Framework: Data Point → Interpretation → Caution  ↓</div>
+<div class="example-box">
+  <div class="example-label">Finished post</div>
+  <p>During a night survey along a high-elevation stream, we encountered a Mantella species at an elevation and habitat type where we had no previous records for this site.</p>
+  <p>It is an interesting observation. It is not yet a conclusion.</p>
+  <p>Sample size is small — two individuals. The habitat is atypical. Molecular confirmation is pending. Each of those caveats matters before any ecological interpretation is made.</p>
+  <p>What it does suggest: our survey design may have been missing certain microhabitats — rocky, edge-adjacent sites we had not prioritised. In herpetofauna work, where detectability is highly variable, findings at the edge of expected ranges deserve follow-up, not immediate claims.</p>
+</div>
+<div class="why-box">
+  <div class="why-label">What changed</div>
+  <p>Removed the team exhaustion detail (not relevant). Preserved all scientific caveats and made them explicit. Turned "interesting observation" into a methodological reflection about survey design gaps.</p>
+</div>
+
+<h2>Transformation 3 — Equipment Failure</h2>
+<div class="transform-raw">
+"AudioMoth recordings corrupted again. Third time this trip. Different reason each time — once it was card format, once humidity, today the unit was face-down and the microphone was muffled. Lost two nights of bat data. Frustrating. Team is doing their best. Need a pre-deployment checklist."
+</div>
+<div class="transform-arrow">↓  Framework: Mistake → Lesson → Better Practice  ↓</div>
+<div class="example-box">
+  <div class="example-label">Finished post</div>
+  <p>Three AudioMoth recording failures across one field trip. Three different causes: wrong card format, humidity interference, and a muffled microphone from poor unit placement. Two nights of bat acoustic data lost.</p>
+  <p>The frustrating part is that none of these failures required expensive fixes. They required a pre-deployment checklist that did not yet exist.</p>
+  <p>We built one after this trip. It takes four minutes to complete before each unit is placed. It covers card format, battery level, unit orientation, microphone exposure, and humidity protection. Zero corrupt recordings across the next two survey sessions.</p>
+  <p>Field protocols for data collection get attention. Field protocols for equipment deployment get less. In acoustic monitoring, those four minutes matter more than I initially assumed.</p>
+</div>
+<div class="why-box">
+  <div class="why-label">What changed</div>
+  <p>Removed "frustrating" from the narrative. Turned a complaint into a systems lesson. Provided specific, actionable detail in the solution — specific enough that another field biologist could apply it tomorrow.</p>
+</div>
+
+<h2>Transformation 4 — Community Communication</h2>
+<div class="transform-raw">
+"Meeting with village leaders to share survey results. I presented species counts, detection rates, habitat condition scores. Very technical. Long silence after. One leader asked: 'Does this mean the forest is healthy or not?' I had been talking for 20 minutes and that was the first clear question. I had not answered it at all."
+</div>
+<div class="transform-arrow">↓  Framework: Mistake → Lesson → Better Practice  ↓</div>
+<div class="example-box">
+  <div class="example-label">Finished post</div>
+  <p>I spent twenty minutes presenting biodiversity survey results to a group of community leaders. Detection rates. Species counts. Habitat condition indices. Tables and scores.</p>
+  <p>After twenty minutes, one leader asked the only question that mattered: "Does this mean the forest is healthy or not?"</p>
+  <p>I had not answered it. I had given them everything except the one thing they came to understand.</p>
+  <p>That moment changed how I think about science communication at the community level. Not as a matter of simplifying — but of starting from the question they actually have, not the findings I want to present.</p>
+  <p>Since then, I structure community sessions differently: lead with the verdict, then the evidence, then the context. The opposite of how I would write a scientific report.</p>
+</div>
+<div class="why-box">
+  <div class="why-label">What changed</div>
+  <p>Preserved the humility without performative self-criticism. Made the lesson specific and transferable. Ended with a concrete structural change that any practitioner can apply.</p>
+</div>
+
+<h2>Transformation 5 — Career Reflection</h2>
+<div class="transform-raw">
+"Thinking about why I am building this digital business alongside conservation work. It's because I see the same thing everywhere: excellent research, invisible impact. Good data, no funding for the next phase. Hard work that nobody outside a small circle ever sees. Visibility is not vanity — it is a prerequisite for conservation to get the support it needs."
+</div>
+<div class="transform-arrow">↓  Framework: Reflection → Direction  ↓</div>
+<div class="example-box">
+  <div class="example-label">Finished post</div>
+  <p>One pattern I have noticed across years of field research: the quality of the science rarely predicts the level of support the work receives.</p>
+  <p>Excellent surveys, carefully collected data, rigorous analysis — and then a funding cycle ends, a report sits unread, a forest goes unprotected.</p>
+  <p>The gap is not a science problem. It is a communication and infrastructure problem.</p>
+  <p>If conservation work cannot be seen, measured, and reported in ways that the people controlling resources can understand, the best field data in the world is not enough.</p>
+  <p>Visibility is not optional for conservation professionals. It is a condition for impact.</p>
+</div>
+<div class="why-box">
+  <div class="why-label">What changed</div>
+  <p>Removed direct self-promotion. Kept the mission-driven reasoning and made it universal. Ends on a principle that any conservation professional can relate to — not a personal announcement.</p>
+</div>
+
+<!-- ── SECTION 9: EDITING CHECKLIST ───────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 9</div>
+<h1>Editing Checklist</h1>
+<p>Run every post through this before publishing. It takes three minutes. Do not skip it.</p>
+
+<h2>Hook — First 2 Lines</h2>
+<ul class="checklist">
+  <li>Does the first line make a reader want to continue?</li>
+  <li>Is it specific — not vague or generic?</li>
+  <li>Is it honest — not clickbait or exaggerated?</li>
+</ul>
+
+<h2>Structure</h2>
+<ul class="checklist">
+  <li>Is there one clear main idea?</li>
+  <li>Does each paragraph move the idea forward?</li>
+  <li>Is the ending a takeaway, reflection, or open question — not a pitch?</li>
+</ul>
+
+<h2>Language</h2>
+<ul class="checklist">
+  <li>Can a non-specialist follow this without a glossary?</li>
+  <li>Have you explained every technical term the first time you use it?</li>
+  <li>Are sentences shorter than 25 words where possible?</li>
+  <li>Have you removed filler words ("very," "really," "quite," "basically")?</li>
+</ul>
+
+<h2>Scientific Integrity</h2>
+<ul class="checklist">
+  <li>Does any claim require a source that you have not provided?</li>
+  <li>Have you avoided stating a correlation as a causation?</li>
+  <li>Have you acknowledged key limitations or caveats?</li>
+  <li>Is any result presented as more conclusive than it actually is?</li>
+</ul>
+
+<h2>Ethics</h2>
+<ul class="checklist">
+  <li>Does the post include any precise location that could endanger a species?</li>
+  <li>Are community partners or local people protected?</li>
+  <li>Is any unpublished data being shared prematurely?</li>
+  <li>Are all sensitive details removed or generalised?</li>
+</ul>
+
+<h2>Tone</h2>
+<ul class="checklist">
+  <li>Does this sound like you — not a marketing brochure?</li>
+  <li>Is the confidence level appropriate — neither arrogant nor falsely modest?</li>
+  <li>Would you be comfortable if your most rigorous scientific colleague read this?</li>
+  <li>Does it add genuine value, or is it just announcing something?</li>
+</ul>
+
+<h2>Final Check</h2>
+<ul class="checklist">
+  <li>Read it aloud. Does it flow naturally?</li>
+  <li>Is it under 300 words? (Ideal LinkedIn length for text posts)</li>
+  <li>Are you proud of it?</li>
+</ul>
+
+<div class="callout callout-amber" style="margin-top:5mm;">
+  <div class="callout-label">The rule</div>
+  <p>If yes to all: post it. If not: identify the one thing that needs to change. Fix that one thing. Post it. Perfectionism is the enemy of consistency.</p>
+</div>
+
+<!-- ── SECTION 10: ETHICS GUIDE ───────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 10</div>
+<h1>Ethics &amp; Safety Guide</h1>
+<p>Conservation communication has ethical dimensions that generic writing advice ignores. This section is not optional. Read it once and apply it to every post.</p>
+
+<div class="callout callout-red" style="margin-bottom:6mm;">
+  <div class="callout-label callout-label-red">Important</div>
+  <p>As a conservation professional, you are held to a higher standard than general social media users. A careless claim about population decline, species distribution, or conservation status can spread and cause real harm to the very species and communities you work to protect.</p>
+</div>
+
+<h2>Species Location Sensitivity</h2>
+<div class="callout">
+  <p><strong>The risk:</strong> Publishing precise GPS coordinates, named micro-sites, or recognisable habitat features can enable poaching, specimen collection, or tourism pressure on sensitive species.</p>
+  <p><strong>The rule:</strong> Never include coordinates. Never name specific nest trees, roost sites, or known resting locations. Never describe a habitat in enough detail that an outsider could locate an individual animal.</p>
+  <p style="margin-bottom:0;"><strong>Safe approach:</strong> Use regional names (Alaotra-Mangoro, southern dry forest, highland forest patch). Describe habitat type, not location. Say "at a site in [region]" without further detail.</p>
+</div>
+
+<h2>Unpublished Data</h2>
+<div class="callout">
+  <p><strong>The risk:</strong> Sharing key results before peer review can compromise publication, alert competing researchers, or create a public record of findings that later change.</p>
+  <p><strong>The rule:</strong> Do not share specific quantitative results from unpublished work. Do not describe findings in enough detail that they could be extracted as data points.</p>
+  <p style="margin-bottom:0;"><strong>Safe approach:</strong> Share methodological observations, lessons from the process, or conceptual insights — without the actual numbers that belong in a future paper.</p>
+</div>
+
+<h2>Community and Partner Protection</h2>
+<div class="callout">
+  <p><strong>The risk:</strong> Identifying community partners, local research technicians, or partner organisations without consent can create political, social, or safety risks.</p>
+  <p><strong>The rule:</strong> Do not name individuals without explicit consent. Do not describe community relationships in ways that could be used against them. Do not identify partner NGOs in ways that could compromise their neutrality.</p>
+  <p style="margin-bottom:0;"><strong>Safe approach:</strong> "The local team," "community-based monitors," "the partner organisation" — general descriptors that preserve the story without identifying detail.</p>
+</div>
+
+<h2>Claim Accuracy</h2>
+<div class="callout">
+  <p><strong>The risk:</strong> Conservation professionals are held to a higher standard than general social media users. A careless claim about population decline, species distribution, or conservation status can spread and cause real harm.</p>
+  <p><strong>The rule:</strong> Distinguish clearly between: observation (what you saw), interpretation (what you think it means), and conclusion (what the evidence supports). These are different. Treat them differently in every post.</p>
+  <p style="margin-bottom:0;"><strong>Safe approach:</strong> "We observed..." rather than "This proves..." Use hedging language as precision, not weakness: "This suggests," "Our data is consistent with," "This may indicate."</p>
+</div>
+
+<h2>Sensitive Timing</h2>
+<div class="callout">
+  <p><strong>The risk:</strong> Publishing about an active project during a sensitive phase (community negotiation, regulatory review, active field season) can disrupt the project.</p>
+  <p style="margin-bottom:0;"><strong>Safe approach:</strong> Post about completed field seasons. Post about methods and lessons rather than current results. Post about your learning and process rather than project-specific outcomes when timing is sensitive.</p>
+</div>
+
+<!-- ── SECTION 11: REUSE SYSTEM ───────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 11</div>
+<h1>Content Reuse System</h1>
+<p>One field observation can become multiple pieces of content. Use this system to extract maximum value from every post you write.</p>
+
+<h2>The Reuse Tree</h2>
+<p>From one core observation or experience:</p>
+
+<table>
+  <tr><th>Level</th><th>Format</th><th>Length</th></tr>
+  <tr><td><strong>Primary</strong></td><td>Full LinkedIn post using a framework</td><td>150–300 words</td></tr>
+  <tr><td><strong>Variant A</strong></td><td>Shorter, more personal version of the same story</td><td>80–120 words</td></tr>
+  <tr><td><strong>Variant B</strong></td><td>Technical version for a specialist audience</td><td>150–250 words</td></tr>
+  <tr><td><strong>Variant C</strong></td><td>French version (use Prompt 11)</td><td>Same length</td></tr>
+  <tr><td><strong>Comment</strong></td><td>LinkedIn comment expanding on someone else's related post</td><td>50–80 words</td></tr>
+  <tr><td><strong>Newsletter</strong></td><td>Newsletter paragraph for your email list</td><td>100–150 words</td></tr>
+  <tr><td><strong>Grant narrative</strong></td><td>Proof of public engagement and communication capacity</td><td>1–2 sentences</td></tr>
+  <tr><td><strong>Profile update</strong></td><td>If the insight represents a core principle, update your About section</td><td>1 sentence</td></tr>
+</table>
+
+<h2>Reuse Tracker Template</h2>
+<p>Keep a simple log of each post and its reuse potential:</p>
+<div class="template-box" style="font-size:8.5pt;">
+Date:
+Core observation:
+Primary post: [published / draft / not started]
+Variant A (shorter):
+Variant B (technical):
+Variant C (French):
+Newsletter use:
+Comment use:
+Grant narrative use:
+</div>
+
+<!-- ── SECTION 12: WEEKLY SYSTEM ─────────────────────── -->
+<div class="section-label" style="margin-top:6mm;">Section 12</div>
+<h1>The Weekly Posting System</h1>
+<p>Consistency is more valuable than quality at the beginning. A good post published weekly builds more than a perfect post published randomly.</p>
+
+<h2>The Weekly Rhythm</h2>
+<table>
+  <tr><th>Day</th><th>Activity</th><th>Time</th></tr>
+  <tr><td><strong>Monday</strong></td><td>Field intake — capture this week's raw material using the Step 1 questions</td><td>10 min</td></tr>
+  <tr><td><strong>Wednesday</strong></td><td>Write and post — choose a framework, use a prompt, write, edit, publish</td><td>20–30 min</td></tr>
+  <tr><td><strong>Friday</strong></td><td>Review — what reaction did the post get? Note anything worth developing</td><td>5 min</td></tr>
+  <tr><td><strong>Sunday</strong></td><td>Plan — identify 2–3 possible topics for next week from your notes</td><td>10 min</td></tr>
+</table>
+<p style="font-size:9pt; color:var(--muted); margin-top:2mm;"><em>Total: approximately 50 minutes per week.</em></p>
+
+<h2>Suggested Monthly Content Mix</h2>
+<table>
+  <tr><th>Posts per month</th><th>Type</th><th>Best frameworks</th></tr>
+  <tr><td>2</td><td>Field observations or project experiences</td><td>1, 3, 6, 7</td></tr>
+  <tr><td>1</td><td>Data, methods, or technical explanation</td><td>4, 8, 9, 10</td></tr>
+  <tr><td>1</td><td>Lessons, mistakes, or career reflection</td><td>5, 11, 12</td></tr>
+</table>
+
+<h2>Content Bank Template</h2>
+<p>Keep a running list of ideas. Add to it every week. A good content bank has 10–15 ideas at any time.</p>
+<div class="template-box" style="font-size:8.5pt;">
+Topic: [one sentence]
+Framework suggestion:
+Urgency: [now / this month / later]
+Sensitivity check: [any ethical flags?]
+</div>
+
+<!-- ── SECTION 13: QUICK START ────────────────────────── -->
+<div class="page-break"></div>
+<div class="section-label">Section 13</div>
+<h1>Quick Start Checklist</h1>
+<p>If you have 30 minutes right now, do this. Not tomorrow. Now.</p>
+
+<ul class="checklist">
+  <li>Choose one experience from the last two weeks of your work. Just one.</li>
+  <li>Write raw notes using the Capture questions from Step 1. Do not edit. 5 minutes.</li>
+  <li>Read your notes and identify the single most interesting thing. 2 minutes.</li>
+  <li>Choose a framework from the quick selector in Step 3.</li>
+  <li>Open an AI assistant. Use the relevant prompt from Section 7.</li>
+  <li>Paste your raw notes after the prompt. Generate a draft.</li>
+  <li>Read the draft. Edit for accuracy and your voice. 10 minutes.</li>
+  <li>Run the editing checklist from Section 9. 3 minutes.</li>
+  <li>Run the ethics check from Section 10. 2 minutes.</li>
+  <li>Post it.</li>
+</ul>
+
+<div class="callout callout-amber" style="margin:6mm 0;">
+  <div class="callout-label">The only rule that matters</div>
+  <p>The first time takes 30 minutes. By the tenth time, it takes 15. By the fiftieth time, it is a habit. Start with one post. Post it. Then do it again next week.</p>
+</div>
+
+<!-- ── MINIMUM VIABLE vs PREMIUM ──────────────────────── -->
+<h1 style="margin-top:8mm;">Minimum Viable vs. Premium Version</h1>
+
+<table>
+  <tr><th>Feature</th><th>This Version (MVP)</th><th>Premium (Future)</th></tr>
+  <tr><td>Core 4-step system</td><td>✓ Included</td><td>✓ Included</td></tr>
+  <tr><td>12 content frameworks</td><td>✓ Included</td><td>✓ Expanded to 20</td></tr>
+  <tr><td>30 fill-in-the-blank templates</td><td>✓ Included</td><td>✓ 60 templates</td></tr>
+  <tr><td>15 AI prompts</td><td>✓ Included</td><td>✓ 30 prompts</td></tr>
+  <tr><td>5 raw→post transformations</td><td>✓ Included</td><td>✓ 15 transformations</td></tr>
+  <tr><td>Editing checklist</td><td>✓ Included</td><td>✓ Included</td></tr>
+  <tr><td>Ethics &amp; safety guide</td><td>✓ Included</td><td>✓ Included</td></tr>
+  <tr><td>Content reuse system</td><td>✓ Included</td><td>✓ Included</td></tr>
+  <tr><td>Weekly posting system</td><td>✓ Included</td><td>✓ Included</td></tr>
+  <tr><td>12-week content calendar</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Audience segmentation guide</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Multi-format engine (newsletter, carousel, bio)</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Collaborative NGO mode</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Voice-to-post capture workflow</td><td>—</td><td>Planned</td></tr>
+  <tr><td>Personal brand audit template</td><td>—</td><td>Planned</td></tr>
+</table>
+
+<!-- ── FINAL PAGE ──────────────────────────────────────── -->
+<div class="page-break"></div>
+<div style="text-align:center; padding: 30mm 0;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:7pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); margin-bottom:8mm;">OPLURIX</div>
+
+  <div style="font-family:'Lora',Georgia,serif; font-size:22pt; font-weight:700; color:var(--forest); line-height:1.3; margin-bottom:8mm;">
+    You already have the expertise.<br>
+    <em>Clarity is what makes it visible.</em>
+  </div>
+
+  <div style="font-size:10pt; color:var(--muted); max-width:120mm; margin:0 auto 12mm; line-height:1.7;">
+    You have spent years in the field. You have data that others will never collect, observations that no one else will have, and insights that come only from that kind of sustained attention to real ecological systems. The only thing this system does is create the conditions for that expertise to be seen.
+  </div>
+
+  <hr style="border:none; border-top:0.5pt solid var(--sand); width:60mm; margin:0 auto 10mm;">
+
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:8pt; color:var(--faint); line-height:2;">
+    Expert-to-Influencer Content Engine v1.0<br>
+    An OPLURIX Product · 2026<br>
+    marvelous-valkyrie-f94b2f.netlify.app<br>
+    hajafabrice.r@gmail.com<br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </div>
+</div>
+
+</div><!-- end content-pages -->
+</body>
+</html>

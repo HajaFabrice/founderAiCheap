@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-05-05",
+  "purpose": "Structured launch-priority and activation-gate matrix for the 10 OPLURIX source products.",
+  "global_rule": "Only founder-approved products may move from source-only to waitlist or from waitlist to active checkout.",
+  "launch_sequence": [
+    {
+      "priority": 1,
+      "product_id": "oplurix_02_training_to_quiz_generator",
+      "decision": "sellable_next",
+      "reason": "Clearly bounded value, simple PDF-plus-template delivery, and lower technical complexity."
+    },
+    {
+      "priority": 2,
+      "product_id": "oplurix_04_biodiversity_pitch_deck_builder",
+      "decision": "sellable_next",
+      "reason": "Strong buyer outcome and straightforward delivery as a guide plus editable slides."
+    },
+    {
+      "priority": 3,
+      "product_id": "oplurix_05_handwritten_log_digitizer",
+      "decision": "move_to_waitlist_later",
+      "reason": "Strong pain point and offline fit, but still needs a workbook and cleaner delivery bundle."
+    }
+  ],
+  "products": [
+    {
+      "product_id": "oplurix_01_expert_to_influencer_content_engine",
+      "public_name": "Expert-to-Influencer Content Engine",
+      "current_state": "live",
+      "recommended_public_state": "live",
+      "launch_decision": "keep_live",
+      "activation_priority": 0,
+      "minimum_activation_gate": "Keep the current manual delivery and buyer feedback loop clean.",
+      "main_blocker": null,
+      "recommended_client_format": "hybrid",
+      "agent_rule": "Can be sold and discussed openly as a live product."
+    },
+    {
+      "product_id": "oplurix_02_training_to_quiz_generator",
+      "public_name": "Training-to-Quiz Generator",
+      "current_state": "coming_soon",
+      "recommended_public_state": "waitlist_now",
+      "launch_decision": "sellable_next",
+      "activation_priority": 1,
+      "minimum_activation_gate": "Package the templates, test payment confirmation, and verify the delivery path end to end.",
+      "main_blocker": "Packaging and delivery are not yet verified.",
+      "recommended_client_format": "pdf_plus_templates",
+      "agent_rule": "Mention as the first next sellable product, but do not imply active checkout yet."
+    },
+    {
+      "product_id": "oplurix_03_gear_and_equipment_concierge",
+      "public_name": "Gear & Equipment Concierge",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only",
+      "launch_decision": "defer",
+      "activation_priority": 6,
+      "minimum_activation_gate": "Refresh equipment specs, pricing logic, and update workflow before public launch.",
+      "main_blocker": "Fast-changing product facts make a static first launch risky.",
+      "recommended_client_format": "hybrid",
+      "agent_rule": "Keep as internal pipeline only for now."
+    },
+    {
+      "product_id": "oplurix_04_biodiversity_pitch_deck_builder",
+      "public_name": "Biodiversity Pitch Deck Builder",
+      "current_state": "coming_soon",
+      "recommended_public_state": "waitlist_now",
+      "launch_decision": "sellable_next",
+      "activation_priority": 2,
+      "minimum_activation_gate": "Package the editable slide assets and test the buyer delivery path.",
+      "main_blocker": "Delivery package and checkout path still need verification.",
+      "recommended_client_format": "pdf_plus_editable_slides",
+      "agent_rule": "Mention as the second next sellable product, but keep checkout off."
+    },
+    {
+      "product_id": "oplurix_05_handwritten_log_digitizer",
+      "public_name": "Handwritten Log Digitizer",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only_then_waitlist",
+      "launch_decision": "package_after_next",
+      "activation_priority": 3,
+      "minimum_activation_gate": "Add workbook files, examples, and a clean delivery bundle.",
+      "main_blocker": "The source document is strong, but the delivery package is not yet productized.",
+      "recommended_client_format": "pdf_plus_workbook",
+      "agent_rule": "Can be discussed as a future product, not a near-term checkout."
+    },
+    {
+      "product_id": "oplurix_06_field_mission_planner",
+      "public_name": "Field Mission Planner",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only",
+      "launch_decision": "package_later",
+      "activation_priority": 4,
+      "minimum_activation_gate": "Extract editable checklists, timelines, and team planning sheets.",
+      "main_blocker": "Needs asset extraction beyond the source document.",
+      "recommended_client_format": "pdf_plus_checklists",
+      "agent_rule": "Keep internal until the operational templates are packaged."
+    },
+    {
+      "product_id": "oplurix_07_biodiversity_data_harmonizer",
+      "public_name": "Biodiversity Data Harmonizer",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only",
+      "launch_decision": "package_later",
+      "activation_priority": 5,
+      "minimum_activation_gate": "Add data schemas, templates, and sample harmonization assets.",
+      "main_blocker": "The product promise is strong but still too document-only for a first-cycle launch.",
+      "recommended_client_format": "pdf_plus_templates",
+      "agent_rule": "Treat as a later technical product, not a near-term storefront addition."
+    },
+    {
+      "product_id": "oplurix_08_thermal_data_translator",
+      "public_name": "Thermal Data Translator",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only",
+      "launch_decision": "defer_until_proof",
+      "activation_priority": 7,
+      "minimum_activation_gate": "Prepare a stronger technical proof bundle with code, schema, and example outputs.",
+      "main_blocker": "High technical complexity and proof expectations.",
+      "recommended_client_format": "pdf_plus_code",
+      "agent_rule": "Discuss only as pipeline or technical future work unless the founder explicitly activates it."
+    },
+    {
+      "product_id": "oplurix_09_grant_writing_co_pilot",
+      "public_name": "Grant Writing Co-Pilot",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only",
+      "launch_decision": "defer_until_proof",
+      "activation_priority": 8,
+      "minimum_activation_gate": "Show stronger proof and define support boundaries before public sale.",
+      "main_blocker": "High-stakes buyer expectations and credibility burden.",
+      "recommended_client_format": "pdf_plus_templates",
+      "agent_rule": "Do not present as a near-term product without explicit founder approval."
+    },
+    {
+      "product_id": "oplurix_10_mrv_report_architect",
+      "public_name": "MRV Report Architect",
+      "current_state": "source_only",
+      "recommended_public_state": "source_only",
+      "launch_decision": "future_flagship_service",
+      "activation_priority": 9,
+      "minimum_activation_gate": "Reframe as a flagship service or institutional offer, not a normal lightweight download.",
+      "main_blocker": "Scope and buyer type are too large for a simple digital-product launch.",
+      "recommended_client_format": "hybrid_high_ticket",
+      "agent_rule": "Treat as future flagship commercial infrastructure, not a current downloadable product."
+    }
+  ]
+}

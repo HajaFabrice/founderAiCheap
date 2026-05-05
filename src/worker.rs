@@ -332,6 +332,10 @@ fn render_agent_ready_documents(
             &root.join("references").join("canonical_reference_brief.md"),
         ),
         render_document_section(
+            "OPLURIX Agent Mission Map",
+            &root.join("references").join("oplurix_agent_mission_map.md"),
+        ),
+        render_document_section(
             "Independent Business Boundary",
             &root
                 .join("references")
@@ -376,6 +380,16 @@ fn render_agent_ready_documents(
                     .join("digital_products_sales_brief.md"),
             ),
             (
+                "OPLURIX Full Product Suite",
+                root.join("references")
+                    .join("oplurix_full_product_suite.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
                 "Agent Conversation Reference",
                 root.join("references")
                     .join("agent_conversation_reference.md"),
@@ -414,6 +428,14 @@ fn render_agent_ready_documents(
             (
                 "Digital Products Catalog Database",
                 root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
+                "OPLURIX Product Suite Database",
+                root.join("databases").join("oplurix_product_suite.json"),
+            ),
+            (
+                "OPLURIX Launch Matrix Database",
+                root.join("databases").join("oplurix_launch_matrix.json"),
             ),
             (
                 "Freelance Proof Assets Database",
@@ -483,6 +505,16 @@ fn render_agent_ready_documents(
                     .join("digital_products_sales_brief.md"),
             ),
             (
+                "OPLURIX Full Product Suite",
+                root.join("references")
+                    .join("oplurix_full_product_suite.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
                 "Independent CRM Database",
                 root.join("databases").join("independent_crm.json"),
             ),
@@ -501,6 +533,14 @@ fn render_agent_ready_documents(
             (
                 "Digital Products Catalog Database",
                 root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
+                "OPLURIX Product Suite Database",
+                root.join("databases").join("oplurix_product_suite.json"),
+            ),
+            (
+                "OPLURIX Launch Matrix Database",
+                root.join("databases").join("oplurix_launch_matrix.json"),
             ),
             (
                 "Review-Ready Outreach Shortlist Database",
@@ -576,6 +616,16 @@ fn render_agent_ready_documents(
                     .join("digital_products_sales_brief.md"),
             ),
             (
+                "OPLURIX Full Product Suite",
+                root.join("references")
+                    .join("oplurix_full_product_suite.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
                 "Independent CRM Database",
                 root.join("databases").join("independent_crm.json"),
             ),
@@ -591,6 +641,14 @@ fn render_agent_ready_documents(
             (
                 "Digital Products Catalog Database",
                 root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
+                "OPLURIX Product Suite Database",
+                root.join("databases").join("oplurix_product_suite.json"),
+            ),
+            (
+                "OPLURIX Launch Matrix Database",
+                root.join("databases").join("oplurix_launch_matrix.json"),
             ),
             (
                 "Freelance Proof Assets Database",
@@ -642,10 +700,93 @@ fn render_agent_ready_documents(
                     .join("digital_product_sales_templates.md"),
             ),
         ],
+        "bernardine" => vec![
+            (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
+            ),
+            (
+                "OPLURIX Full Product Suite",
+                root.join("references")
+                    .join("oplurix_full_product_suite.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
+                "Digital Products Catalog Database",
+                root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
+                "OPLURIX Product Suite Database",
+                root.join("databases").join("oplurix_product_suite.json"),
+            ),
+            (
+                "OPLURIX Launch Matrix Database",
+                root.join("databases").join("oplurix_launch_matrix.json"),
+            ),
+            (
+                "OPLURIX Hybrid Delivery Package Map",
+                config.workspace_root
+                    .join("sales")
+                    .join("oplurix-product-suite")
+                    .join("README.md"),
+            ),
+            (
+                "Template Index",
+                root.join("templates").join("template_index.md"),
+            ),
+            (
+                "Internal Operations Templates",
+                root.join("templates").join("internal_operations.md"),
+            ),
+            (
+                "Digital Product Sales Templates",
+                root.join("templates")
+                    .join("digital_product_sales_templates.md"),
+            ),
+        ],
         "bartholomew" | "pio" | "clare" | "columban" => vec![
             (
                 "Collaboration Charter",
                 root.join("references").join("collaboration_charter.md"),
+            ),
+            (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
+            ),
+            (
+                "OPLURIX Full Product Suite",
+                root.join("references")
+                    .join("oplurix_full_product_suite.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
+                "Digital Products Catalog Database",
+                root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
+                "OPLURIX Product Suite Database",
+                root.join("databases").join("oplurix_product_suite.json"),
+            ),
+            (
+                "OPLURIX Launch Matrix Database",
+                root.join("databases").join("oplurix_launch_matrix.json"),
+            ),
+            (
+                "OPLURIX Hybrid Delivery Package Map",
+                config.workspace_root
+                    .join("sales")
+                    .join("oplurix-product-suite")
+                    .join("README.md"),
             ),
             (
                 "Document Registry Database",
@@ -684,6 +825,16 @@ fn render_agent_ready_documents(
         ],
         "jacinta" => vec![
             (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
             ),
@@ -716,12 +867,39 @@ fn render_agent_ready_documents(
                     .join("marketing_intelligence_overlay.md"),
             ),
             (
+                "Digital Products Sales Brief",
+                root.join("references")
+                    .join("digital_products_sales_brief.md"),
+            ),
+            (
+                "OPLURIX Full Product Suite",
+                root.join("references")
+                    .join("oplurix_full_product_suite.md"),
+            ),
+            (
+                "OPLURIX Launch Matrix",
+                root.join("references")
+                    .join("oplurix_launch_matrix.md"),
+            ),
+            (
                 "Document Registry Database",
                 root.join("databases").join("document_registry.json"),
             ),
             (
                 "Independent Pipeline Database",
                 root.join("databases").join("independent_pipeline.json"),
+            ),
+            (
+                "Digital Products Catalog Database",
+                root.join("databases").join("digital_products_catalog.json"),
+            ),
+            (
+                "OPLURIX Product Suite Database",
+                root.join("databases").join("oplurix_product_suite.json"),
+            ),
+            (
+                "OPLURIX Launch Matrix Database",
+                root.join("databases").join("oplurix_launch_matrix.json"),
             ),
             (
                 "ERIS Scoring Defaults Database",

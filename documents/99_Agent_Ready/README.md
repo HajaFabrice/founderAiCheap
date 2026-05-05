@@ -1,6 +1,6 @@
 # Agent-Ready Document Layer
 
-Updated: 2026-04-27
+Updated: 2026-05-05
 
 This folder is the curated, plain-text mirror of the broader `documents/`
 library. Agents should use this layer first during conversations and
@@ -34,6 +34,7 @@ operations instead of relying on raw mixed-version source files.
 
 ## Current Canonical Digital Product Sources
 
+- `documents/oplurix-site/OPLURIX_Product_Suite_Final.md`
 - `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
 - `documents/oplurix-site/ExpertToInfluencer.txt`
 - `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
@@ -66,6 +67,9 @@ operations instead of relying on raw mixed-version source files.
 - `references/collaboration_charter.md`
 - `references/eris_metadata_governance.md`
 - `references/digital_products_sales_brief.md`
+- `references/oplurix_agent_mission_map.md`
+- `references/oplurix_full_product_suite.md`
+- `references/oplurix_launch_matrix.md`
 - `references/continuous_improvement_system.md`
 - `databases/freelance_proof_assets.json`
 - `databases/independent_service_catalog.json`
@@ -75,6 +79,8 @@ operations instead of relying on raw mixed-version source files.
 - `databases/founder_profile_blocks.json`
 - `databases/eris_scoring_defaults.json`
 - `databases/digital_products_catalog.json`
+- `databases/oplurix_product_suite.json`
+- `databases/oplurix_launch_matrix.json`
 - `runtime/improvement/achievement_log.json`
 - `runtime/improvement/customer_feedback.json`
 - `runtime/improvement/improvement_backlog.json`
