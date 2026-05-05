@@ -126,7 +126,7 @@
   },
   "offline_queue": {
     "enabled": true,
-    "path": "offline_queue",
+    "path": "runtime/offline_queue/",
     "replay_on_job": "internet-recovery-review"
   },
   "notifier": {

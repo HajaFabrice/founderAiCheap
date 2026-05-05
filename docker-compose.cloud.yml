@@ -61,6 +61,8 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: founderai-cloudflared
+    env_file:
+      - .env.cloud
     command:
       - tunnel
       - --no-autoupdate
