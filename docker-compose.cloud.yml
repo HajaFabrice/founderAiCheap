@@ -4,14 +4,6 @@ services:
     container_name: founderai-daemon
     env_file:
       - .env.cloud
-    environment:
-      FOUNDERAI_PROVIDER: ${FOUNDERAI_PROVIDER:-}
-      FOUNDERAI_BASE_URL: ${FOUNDERAI_BASE_URL:-}
-      FOUNDERAI_MODEL: ${FOUNDERAI_MODEL:-}
-      FOUNDERAI_TIMEOUT_SECONDS: ${FOUNDERAI_TIMEOUT_SECONDS:-}
-      FOUNDERAI_API_KEY_ENV: ${FOUNDERAI_API_KEY_ENV:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
       - /srv/founderai/inbox:/srv/founderai/inbox
       - /srv/founderai/outbox:/srv/founderai/outbox
@@ -43,14 +35,6 @@ services:
     container_name: founderai-web
     env_file:
       - .env.cloud
-    environment:
-      FOUNDERAI_PROVIDER: ${FOUNDERAI_PROVIDER:-}
-      FOUNDERAI_BASE_URL: ${FOUNDERAI_BASE_URL:-}
-      FOUNDERAI_MODEL: ${FOUNDERAI_MODEL:-}
-      FOUNDERAI_TIMEOUT_SECONDS: ${FOUNDERAI_TIMEOUT_SECONDS:-}
-      FOUNDERAI_API_KEY_ENV: ${FOUNDERAI_API_KEY_ENV:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
       - /srv/founderai/inbox:/srv/founderai/inbox
       - /srv/founderai/outbox:/srv/founderai/outbox
