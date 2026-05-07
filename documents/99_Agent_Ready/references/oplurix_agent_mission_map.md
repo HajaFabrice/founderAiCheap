@@ -1,6 +1,6 @@
 # OPLURIX Agent Mission Map
 
-Updated: 2026-05-05
+Updated: 2026-05-07
 
 This reference tells the agents how the OPLURIX products support the broader
 FounderAI mission without drifting into fake checkout, fake delivery, or
@@ -24,6 +24,10 @@ product sprawl.
   - may be discussed publicly
   - may be used for waitlist or early-interest capture
   - must not be described as active checkout
+- `contact_ready`:
+  - may be discussed publicly
+  - may be used as a real CTA for manual quote or onboarding conversations
+  - must not be described as instant checkout
 - `source_only`:
   - internal pipeline only
   - do not present as purchasable unless the founder explicitly activates it
@@ -34,8 +38,9 @@ product sprawl.
   - `Expert-to-Influencer Content Engine`
   - `EcoR Toolkit Starter`
   - `EcoR Toolkit Complete`
-- Anchor only, not active checkout:
   - `EcoR Toolkit Pro Bundle`
+- Contact-ready, not direct checkout:
+  - `EcoR Toolkit Institutional`
 - Waitlist / sellable next:
   - `Training-to-Quiz Generator`
   - `Biodiversity Pitch Deck Builder`
@@ -70,6 +75,7 @@ product sprawl.
 - Use live products as low-friction CTAs when they fit better than a custom
   service offer.
 - Use waitlist products only for interest capture, never as active checkout.
+- Use `EcoR Toolkit Pro Bundle` as a real CTA when the buyer clearly wants higher-touch support.
 
 ### Bonaventure
 
@@ -123,8 +129,8 @@ product sprawl.
 
 ### Pio
 
-- Track activation gates, waitlist follow-ups, manual delivery commitments, and
-  post-sale follow-up deadlines.
+- Track Pro support windows, WhatsApp onboarding, institutional quote follow-ups,
+  manual delivery commitments, and post-sale deadlines.
 
 ### Clare
 
@@ -155,5 +161,6 @@ product sprawl.
 - Do not sell source-only products.
 - Do not imply automatic delivery if the real workflow is manual.
 - Do not present waitlist products as instantly deliverable.
+- Do not present `EcoR Toolkit Institutional` as instant checkout.
 - Do not claim traction, downloads, or buyer success that is not grounded in
   the logs.

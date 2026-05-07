@@ -1,9 +1,15 @@
 # OPLURIX First Sale Workspace
 
-Updated: 2026-05-03
+Updated: 2026-05-07
 
 This folder is the operational workspace for the first paid product download.
 It is centered on `EcoR Toolkit Complete` at `USD 97`.
+
+The broader EcoR ladder is now:
+- `Starter` at `USD 29` — live
+- `Complete` at `USD 97` — live and still the first-sale focus
+- `Pro Bundle` at `USD 297` — live with manual support handling
+- `Institutional` at `USD 499` — contact-led team path only
 
 ## First-Sale Defaults
 
@@ -43,6 +49,6 @@ It is centered on `EcoR Toolkit Complete` at `USD 97`.
 
 ## Important Boundary
 
-- `EcoR Toolkit Pro Bundle` is not a live checkout product yet.
-- Do not take payment for Pro until the walkthrough assets are actually ready.
-- If a buyer asks for Pro, use the waitlist or request-access path instead.
+- `EcoR Toolkit Pro Bundle` is now a live checkout product, but support and WhatsApp onboarding remain manual.
+- If the Pro support tracker or community path is not being maintained, pause Pro promotion until it is operational again.
+- If a buyer asks for Institutional, route them to a manual founder conversation.

@@ -1,0 +1,774 @@
+
+<h2 class="sr-only">Interactive decision tree: choose the right statistical test for community ecology data in R</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0;font-family:var(--font-sans)}
+.progress{display:flex;gap:4px;margin-bottom:1.25rem}
+.prog-dot{height:4px;flex:1;border-radius:2px;background:var(--color-border-tertiary);transition:background .3s}
+.prog-dot.done{background:#1D9E75}
+.prog-dot.active{background:#0F6E56}
+.screen{display:none}.screen.visible{display:block}
+.q-label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:.5rem}
+.q-text{font-size:15px;font-weight:500;color:var(--color-text-primary);line-height:1.45;margin-bottom:1rem}
+.q-sub{font-size:12px;color:var(--color-text-secondary);line-height:1.55;margin-top:-.5rem;margin-bottom:1rem}
+.btn-grid{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:.75rem 1rem;text-align:left;cursor:pointer;transition:background .15s,border-color .15s;width:100%}
+.opt-btn:hover{background:var(--color-background-secondary);border-color:var(--color-border-primary)}
+.opt-title{font-size:13px;font-weight:500;color:var(--color-text-primary);display:block}
+.opt-ex{font-size:11px;color:var(--color-text-secondary);display:block;margin-top:2px}
+.back-btn{background:transparent;border:none;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:4px 0;margin-bottom:.75rem;display:flex;align-items:center;gap:4px}
+.back-btn:hover{color:var(--color-text-primary)}
+.result-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:10px}
+.result-header{padding:1rem 1.25rem;background:#E1F5EE}
+.result-name{font-size:17px;font-weight:500;color:#0F6E56}
+.result-tagline{font-size:12px;color:#1D9E75;margin-top:2px}
+.result-body{padding:1rem 1.25rem}
+.r-section{margin-bottom:10px}
+.r-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:4px}
+.code-box{background:#1E1E2E;border-radius:var(--border-radius-md);padding:.65rem .85rem;font-family:var(--font-mono);font-size:11px;line-height:1.65;color:#CDD6F4;overflow-x:auto;white-space:pre}
+.assume-list{list-style:none;padding:0}
+.assume-list li{font-size:12px;color:var(--color-text-secondary);line-height:1.6;padding-left:14px;position:relative}
+.assume-list li:before{content:"·";position:absolute;left:2px;color:#1D9E75;font-weight:500}
+.warn-box{background:#FAEEDA;border-left:3px solid #854F0B;border-radius:0;padding:.6rem .85rem;font-size:12px;color:#633806;line-height:1.55}
+.post-hoc{background:#E6F1FB;border-left:3px solid #185FA5;border-radius:0;padding:.6rem .85rem;font-size:12px;color:#0C447C;line-height:1.55}
+.alt-list{display:flex;flex-direction:column;gap:6px;margin-top:.5rem}
+.alt-chip{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:6px 10px;font-size:11px;color:var(--color-text-secondary);cursor:pointer;text-align:left}
+.alt-chip:hover{background:var(--color-background-primary);border-color:var(--color-border-primary)}
+.restart-btn{display:block;width:100%;padding:9px;font-size:13px;cursor:pointer;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary);text-align:center;margin-top:.75rem}
+.restart-btn:hover{background:var(--color-background-secondary)}
+.breadcrumb{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1rem}
+.bc-item{font-size:11px;background:var(--color-background-secondary);border-radius:20px;padding:2px 8px;color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+</style>
+
+<div class="wrap">
+<div class="progress" id="prog">
+  <div class="prog-dot active"></div>
+  <div class="prog-dot"></div>
+  <div class="prog-dot"></div>
+  <div class="prog-dot"></div>
+  <div class="prog-dot"></div>
+</div>
+
+<div id="breadcrumb" class="breadcrumb" style="display:none"></div>
+
+<!-- Q0: Variable type -->
+<div class="screen visible" id="s0">
+  <p class="q-label">étape 1 / 5 — type de variable réponse</p>
+  <p class="q-text">Quelle est votre variable réponse ?</p>
+  <p class="q-sub">La variable que vous voulez expliquer ou comparer entre groupes.</p>
+  <div class="btn-grid">
+    <button class="opt-btn" onclick="go(0,'diversity')">
+      <span class="opt-title">Indice de diversité (continu)</span>
+      <span class="opt-ex">Shannon H', Simpson D, richesse spécifique, équitabilité J'</span>
+    </button>
+    <button class="opt-btn" onclick="go(0,'composition')">
+      <span class="opt-title">Composition des communautés (multivariée)</span>
+      <span class="opt-ex">Matrice site × espèce — abondances ou présence-absence</span>
+    </button>
+    <button class="opt-btn" onclick="go(0,'abundance')">
+      <span class="opt-title">Abondance d'une seule espèce (comptage)</span>
+      <span class="opt-ex">Nb individus de l'espèce X par site ou par transect</span>
+    </button>
+    <button class="opt-btn" onclick="go(0,'binary')">
+      <span class="opt-title">Présence / absence (binaire)</span>
+      <span class="opt-ex">L'espèce est-elle présente ? 0 / 1 par site</span>
+    </button>
+  </div>
+</div>
+
+<!-- Q1a: diversity → normality -->
+<div class="screen" id="s1a">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <p class="q-label">étape 2 / 5 — normalité</p>
+  <p class="q-text">Vos indices de diversité sont-ils distribués normalement ?</p>
+  <p class="q-sub">Testez avec shapiro.test(votre_vecteur). Si p > 0.05 → normal.</p>
+  <div class="btn-grid">
+    <button class="opt-btn" onclick="go(1,'normal')">
+      <span class="opt-title">Oui — Shapiro p &gt; 0.05</span>
+      <span class="opt-ex">Distribution approximativement en cloche, pas de valeurs extrêmes</span>
+    </button>
+    <button class="opt-btn" onclick="go(1,'nonnormal')">
+      <span class="opt-title">Non — Shapiro p &lt; 0.05</span>
+      <span class="opt-ex">Distribution asymétrique, données de comptage, valeurs aberrantes</span>
+    </button>
+    <button class="opt-btn" onclick="go(1,'dontknow')">
+      <span class="opt-title">Je ne sais pas / petit échantillon (n &lt; 30)</span>
+      <span class="opt-ex">Par précaution, utilisez le test non-paramétrique</span>
+    </button>
+  </div>
+</div>
+
+<!-- Q2a: diversity + normal → n groups -->
+<div class="screen" id="s2a">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <p class="q-label">étape 3 / 5 — nombre de groupes</p>
+  <p class="q-text">Combien de groupes comparez-vous ?</p>
+  <p class="q-sub">Ex : 2 sites, 3 habitats, 4 saisons…</p>
+  <div class="btn-grid">
+    <button class="opt-btn" onclick="go(2,'2g-paired')">
+      <span class="opt-title">2 groupes — mesures appariées</span>
+      <span class="opt-ex">Même sites avant/après, même individus deux conditions</span>
+    </button>
+    <button class="opt-btn" onclick="go(2,'2g-indep')">
+      <span class="opt-title">2 groupes — indépendants</span>
+      <span class="opt-ex">Forêt A vs Forêt B, traitement vs contrôle</span>
+    </button>
+    <button class="opt-btn" onclick="go(2,'3plus')">
+      <span class="opt-title">3 groupes ou plus</span>
+      <span class="opt-ex">Gradient d'altitude, plusieurs types d'habitat</span>
+    </button>
+    <button class="opt-btn" onclick="go(2,'continuous')">
+      <span class="opt-title">Variable explicative continue</span>
+      <span class="opt-ex">Altitude, température, distance, gradient</span>
+    </button>
+  </div>
+</div>
+
+<!-- Q2b: diversity + non-normal → n groups -->
+<div class="screen" id="s2b">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <p class="q-label">étape 3 / 5 — nombre de groupes</p>
+  <p class="q-text">Combien de groupes comparez-vous ?</p>
+  <div class="btn-grid">
+    <button class="opt-btn" onclick="go(3,'2g-paired-np')">
+      <span class="opt-title">2 groupes — mesures appariées</span>
+      <span class="opt-ex">Même sites avant/après</span>
+    </button>
+    <button class="opt-btn" onclick="go(3,'2g-indep-np')">
+      <span class="opt-title">2 groupes — indépendants</span>
+      <span class="opt-ex">Deux habitats ou deux sites distincts</span>
+    </button>
+    <button class="opt-btn" onclick="go(3,'3plus-np')">
+      <span class="opt-title">3 groupes ou plus</span>
+      <span class="opt-ex">Plusieurs types d'habitat, gradient</span>
+    </button>
+    <button class="opt-btn" onclick="go(3,'continuous-np')">
+      <span class="opt-title">Variable explicative continue</span>
+      <span class="opt-ex">Relation avec altitude, température, etc.</span>
+    </button>
+  </div>
+</div>
+
+<!-- Q composition -->
+<div class="screen" id="s1b">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <p class="q-label">étape 2 / 5 — objectif de l'analyse</p>
+  <p class="q-text">Que voulez-vous faire avec votre matrice de composition ?</p>
+  <div class="btn-grid">
+    <button class="opt-btn" onclick="go(4,'visualize')">
+      <span class="opt-title">Visualiser les similarités entre sites</span>
+      <span class="opt-ex">Ordination — quels sites ont des communautés proches ?</span>
+    </button>
+    <button class="opt-btn" onclick="go(4,'test-diff')">
+      <span class="opt-title">Tester si des groupes diffèrent</span>
+      <span class="opt-ex">Forêt vs savane — les communautés sont-elles significativement différentes ?</span>
+    </button>
+    <button class="opt-btn" onclick="go(4,'explain')">
+      <span class="opt-title">Expliquer la composition par des variables env.</span>
+      <span class="opt-ex">Altitude, température, perturbation expliquent-ils la composition ?</span>
+    </button>
+    <button class="opt-btn" onclick="go(4,'species')">
+      <span class="opt-title">Identifier les espèces indicatrices</span>
+      <span class="opt-ex">Quelles espèces contribuent le plus aux différences ?</span>
+    </button>
+  </div>
+</div>
+
+<!-- Result screens -->
+<div class="screen" id="r-t-test-paired">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">t-test apparié</div>
+      <div class="result-tagline">Comparer 2 mesures sur les mêmes unités — données normales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">t.test(avant, apres, paired = TRUE)
+
+# Ou avec un dataframe :
+t.test(valeur ~ temps, data = df,
+       paired = TRUE)</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Hypothèses</div>
+        <ul class="assume-list">
+          <li>Différences (avant − après) normalement distribuées</li>
+          <li>Même unités mesurées aux deux temps</li>
+          <li>Indépendance entre les paires</li>
+        </ul>
+      </div>
+      <div class="warn-box">Vérifiez avec shapiro.test(avant - apres). Si p &lt; 0.05 → utilisez le test de Wilcoxon signé.</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi un exemple complet de t-test apparié en R pour comparer la diversité Shannon avant et après une perturbation forestière.')">Voir un exemple complet ↗</button>
+</div>
+
+<div class="screen" id="r-t-test-indep">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">t-test de Student</div>
+      <div class="result-tagline">Comparer 2 groupes indépendants — données normales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">t.test(shannon ~ habitat, data = df)
+
+# Vérifier les variances d'abord :
+var.test(shannon ~ habitat, data = df)
+# Si p < 0.05 : variances inégales
+t.test(shannon ~ habitat, data = df,
+       var.equal = FALSE)  # Welch (défaut)</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Hypothèses</div>
+        <ul class="assume-list">
+          <li>Normalité dans chaque groupe (shapiro.test)</li>
+          <li>Indépendance des observations</li>
+          <li>Welch corrige automatiquement les variances inégales</li>
+        </ul>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Taille d'effet</div>
+        <div class="code-box">library(effectsize)
+cohens_d(shannon ~ habitat, data = df)
+# d < 0.2 = petit | 0.5 = moyen | 0.8 = grand</div>
+      </div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi comment faire un t-test de Student en R pour comparer la richesse spécifique entre deux habitats, avec vérification des hypothèses et calcul de la taille d effet.')">Exemple complet avec vérifications ↗</button>
+</div>
+
+<div class="screen" id="r-anova">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">ANOVA à un facteur</div>
+      <div class="result-tagline">Comparer 3+ groupes — données normales, variances égales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">model <- aov(shannon ~ habitat, data = df)
+summary(model)
+
+# Vérification des résidus
+par(mfrow = c(2,2))
+plot(model)  # QQ-plot + résidus vs ajustés</div>
+      </div>
+      <div class="post-hoc">Post-hoc obligatoire si p &lt; 0.05 : quels groupes diffèrent ?</div>
+      <div class="r-section" style="margin-top:8px">
+        <div class="r-label">Tests post-hoc</div>
+        <div class="code-box"># Tukey HSD (recommandé, contrôle le taux d erreur)
+TukeyHSD(model)
+
+# Ou avec emmeans (plus flexible)
+library(emmeans)
+emmeans(model, pairwise ~ habitat)</div>
+      </div>
+      <div class="warn-box">Si les résidus ne sont pas normaux ou si les variances sont inégales → Kruskal-Wallis.</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi une ANOVA complète en R pour comparer Shannon entre 4 types d habitat, avec vérification des hypothèses et test de Tukey post-hoc.')">Exemple ANOVA complet ↗</button>
+</div>
+
+<div class="screen" id="r-regression">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">Régression linéaire</div>
+      <div class="result-tagline">Relation entre diversité et variable continue — données normales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">model <- lm(shannon ~ altitude, data = df)
+summary(model)
+
+# Plusieurs prédicteurs :
+model2 <- lm(shannon ~ altitude + temperature +
+               couverture, data = df)
+
+# Sélection de modèle AIC :
+library(MASS)
+model_sel <- stepAIC(model2, direction = "both")</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Vérification des résidus</div>
+        <div class="code-box">par(mfrow = c(2,2)); plot(model)
+# Chercher : résidus centrés sur 0
+# QQ-plot sur la diagonale
+# Pas de patron dans résidus vs ajustés</div>
+      </div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi une régression linéaire multiple en R pour expliquer la diversité Shannon par altitude, température et couverture forestière, avec sélection de modèle par AIC.')">Exemple régression multiple ↗</button>
+</div>
+
+<div class="screen" id="r-wilcoxon-paired">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">Test de Wilcoxon signé</div>
+      <div class="result-tagline">2 groupes appariés — données non normales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">wilcox.test(avant, apres, paired = TRUE)
+
+# Avec p-value exacte (recommandé pour n < 25) :
+wilcox.test(avant, apres, paired = TRUE,
+            exact = TRUE)</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Taille d'effet</div>
+        <div class="code-box">library(effectsize)
+rank_biserial(avant, apres, paired = TRUE)
+# r < 0.1 = trivial | 0.3 = moyen | 0.5 = grand</div>
+      </div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+</div>
+
+<div class="screen" id="r-wilcoxon-indep">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">Test de Mann-Whitney U</div>
+      <div class="result-tagline">2 groupes indépendants — données non normales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">wilcox.test(shannon ~ habitat, data = df)
+# (wilcox.test = Mann-Whitney pour 2 groupes indép.)
+
+# Avec intervalles de confiance sur la différence :
+wilcox.test(shannon ~ habitat, data = df,
+            conf.int = TRUE)</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Taille d'effet — r de rang-bisériel</div>
+        <div class="code-box">library(effectsize)
+rank_biserial(shannon ~ habitat, data = df)</div>
+      </div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi un exemple complet de test de Mann-Whitney en R pour comparer la diversité entre deux habitats, avec taille d effet et visualisation boxplot.')">Exemple complet ↗</button>
+</div>
+
+<div class="screen" id="r-kruskal">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">Kruskal-Wallis</div>
+      <div class="result-tagline">3+ groupes — données non normales, analogue non-param. de l'ANOVA</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">kruskal.test(shannon ~ habitat, data = df)
+
+# Résumé groupes (médiane ± IQR recommandés) :
+df %>% group_by(habitat) %>%
+  summarise(med = median(shannon),
+            iqr = IQR(shannon))</div>
+      </div>
+      <div class="post-hoc">Si p &lt; 0.05 → test de Dunn pour identifier les paires significatives</div>
+      <div class="r-section" style="margin-top:8px">
+        <div class="r-label">Post-hoc de Dunn</div>
+        <div class="code-box">library(dunn.test)
+dunn.test(df$shannon, df$habitat,
+          method = "bonferroni")
+# method = "holm" ou "BH" aussi acceptés</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Taille d'effet — eta² de rang</div>
+        <div class="code-box">library(effectsize)
+rank_eta_squared(shannon ~ habitat, data = df)</div>
+      </div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi un Kruskal-Wallis complet en R pour comparer la richesse entre 4 habitats : test global, post-hoc Dunn avec correction Bonferroni, et figure ggplot2 avec lettres de signification.')">Exemple Kruskal + Dunn complet ↗</button>
+</div>
+
+<div class="screen" id="r-spearman">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">Corrélation de Spearman</div>
+      <div class="result-tagline">Relation monotone — données non normales ou ordonnées</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">cor.test(df$shannon, df$altitude,
+         method = "spearman")
+
+# Matrice de corrélations multiples :
+library(corrplot)
+M <- cor(df[, c("shannon","altitude","temp")],
+         method = "spearman")
+corrplot(M, method = "circle",
+         p.mat = cor_pmat(df[,vars]),
+         sig.level = 0.05)</div>
+      </div>
+      <div class="warn-box">Spearman mesure la relation monotone (rang), pas forcément linéaire. Si la relation est clairement linéaire et les données normales → Pearson est plus puissant.</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+</div>
+
+<div class="screen" id="r-nmds">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">NMDS</div>
+      <div class="result-tagline">Ordination non-métrique — visualiser les similarités de composition</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">library(vegan)
+
+# comm = matrice sites x espèces
+nmds <- metaMDS(comm, distance = "bray",
+                k = 2, trymax = 100)
+
+# Stress : < 0.1 excellent | < 0.2 acceptable
+cat("Stress :", nmds$stress)
+
+# Figure avec ggplot2
+library(ggplot2)
+coords <- as.data.frame(scores(nmds))
+coords$site <- rownames(coords)
+
+ggplot(coords, aes(NMDS1, NMDS2)) +
+  geom_point(aes(color = groupes), size = 3) +
+  stat_ellipse(aes(color = groupes)) +
+  theme_minimal()</div>
+      </div>
+      <div class="warn-box">NMDS ne teste pas les différences — c'est une visualisation. Combinez avec ANOSIM ou PERMANOVA pour tester.</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi un NMDS complet en R avec vegan pour visualiser la composition des communautés, avec ellipses de confiance et test de stress. Données : matrice site x espèce.')">Exemple NMDS complet ↗</button>
+</div>
+
+<div class="screen" id="r-anosim">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">ANOSIM + PERMANOVA</div>
+      <div class="result-tagline">Tester si des groupes ont des compositions significativement différentes</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">library(vegan)
+
+# ANOSIM (Analysis of Similarities)
+anosim_res <- anosim(comm, grouping = habitat,
+                     distance = "bray",
+                     permutations = 999)
+# R proche de 1 = groupes très distincts
+
+# PERMANOVA (plus puissant, recommandé)
+adonis2(comm ~ habitat + temperature,
+        data = env, method = "bray",
+        permutations = 999)
+# Donne % de variance expliquée par chaque variable</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Homogénéité de dispersion (tester d'abord)</div>
+        <div class="code-box">disp <- betadisper(
+  vegdist(comm, "bray"), habitat)
+permutest(disp)
+# Si p < 0.05 : dispersion inégale
+# → interpréter PERMANOVA avec précaution</div>
+      </div>
+      <div class="post-hoc">PERMANOVA post-hoc : pairwise.adonis2() du package pairwiseAdonis</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi ANOSIM et PERMANOVA en R avec vegan pour tester si trois types d habitat ont des compositions de communautés significativement différentes. Include la vérification de betadisper.')">Exemple ANOSIM + PERMANOVA ↗</button>
+</div>
+
+<div class="screen" id="r-cca">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">RDA / CCA</div>
+      <div class="result-tagline">Relier la composition à des variables environnementales</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Quelle méthode choisir ?</div>
+        <div class="code-box"># Tester la longueur du gradient (DCA)
+dca <- decorana(comm)
+dca  # Si axe 1 < 3 SD : RDA | > 4 SD : CCA</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">RDA (gradient court, réponse linéaire)</div>
+        <div class="code-box">library(vegan)
+rda_res <- rda(comm ~ altitude + temperature +
+               perturbation, data = env)
+summary(rda_res)
+anova(rda_res, permutations = 999)
+plot(rda_res)  # biplot espèces + variables</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">CCA (gradient long, réponse unimodale)</div>
+        <div class="code-box">cca_res <- cca(comm ~ altitude + temperature,
+              data = env)
+anova(cca_res, by = "term",
+      permutations = 999)  # test par variable</div>
+      </div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi comment choisir entre RDA et CCA en R et réaliser l analyse complète avec vegan : test DCA, ordination, biplot et tests de permutation par variable environnementale.')">Exemple RDA / CCA complet ↗</button>
+</div>
+
+<div class="screen" id="r-simper">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">SIMPER</div>
+      <div class="result-tagline">Identifier les espèces qui expliquent les différences entre groupes</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">library(vegan)
+
+simper_res <- simper(comm, habitat,
+                     permutations = 999)
+summary(simper_res)
+# → liste des espèces ordonnées par contribution
+# à la dissimilarité entre chaque paire de groupes</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Visualisation</div>
+        <div class="code-box"># Top 10 espèces contributrices
+sp_contrib <- as.data.frame(
+  summary(simper_res)$Foret_Savane)
+sp_contrib %>%
+  slice_max(average, n = 10) %>%
+  ggplot(aes(reorder(species, average),
+             average, fill = average)) +
+  geom_col() + coord_flip() +
+  scale_fill_viridis_c() + theme_minimal()</div>
+      </div>
+      <div class="warn-box">SIMPER doit être accompagné d'un test ANOSIM ou PERMANOVA qui valide que les groupes diffèrent réellement avant d'interpréter.</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi SIMPER en R pour identifier quelles espèces contribuent le plus aux différences de composition entre forêt et savane, avec figure ggplot2 des espèces indicatrices.')">Exemple SIMPER complet ↗</button>
+</div>
+
+<div class="screen" id="r-glm-poisson">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">GLM Poisson / Binomial négatif</div>
+      <div class="result-tagline">Modéliser des comptages (abondance d'une espèce)</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R — Poisson (pas de surdispersion)</div>
+        <div class="code-box">model <- glm(abondance ~ habitat + altitude,
+             family = poisson(link = "log"),
+             data = df)
+summary(model)
+
+# Vérifier surdispersion
+deviance(model) / df.residual(model)
+# ratio > 1.5 → surdispersion → neg. binomiale</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Si surdispersion → binomiale négative</div>
+        <div class="code-box">library(MASS)
+model_nb <- glm.nb(abondance ~ habitat + altitude,
+                   data = df)
+summary(model_nb)</div>
+      </div>
+      <div class="warn-box">Les données de comptages avec beaucoup de zéros (>30%) nécessitent un modèle Zero-Inflated : pscl::zeroinfl()</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi un GLM Poisson et binomiale négative en R pour modéliser l abondance d une espèce en fonction de l habitat et de variables environnementales, avec vérification de la surdispersion.')">Exemple GLM comptages ↗</button>
+</div>
+
+<div class="screen" id="r-glm-logistic">
+  <button class="back-btn" onclick="back()">&#8592; retour</button>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-name">Régression logistique</div>
+      <div class="result-tagline">Modéliser la présence / absence d'une espèce</div>
+    </div>
+    <div class="result-body">
+      <div class="r-section">
+        <div class="r-label">Code R</div>
+        <div class="code-box">model <- glm(presence ~ altitude + temperature +
+                     couverture + perturbation,
+             family = binomial(link = "logit"),
+             data = df)
+summary(model)
+
+# Odds ratios (plus interprétables que les coefs)
+exp(coef(model))
+exp(confint(model))</div>
+      </div>
+      <div class="r-section">
+        <div class="r-label">Performance du modèle</div>
+        <div class="code-box">library(pROC)
+roc_curve <- roc(df$presence,
+                 fitted(model))
+auc(roc_curve)
+# AUC > 0.7 = bon | > 0.9 = excellent</div>
+      </div>
+      <div class="post-hoc">Pour les modèles d'occupancy (détection imparfaite) → utilisez le package unmarked avec occu()</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restart()">Recommencer ↺</button>
+  <button class="restart-btn" onclick="sendPrompt('Montre-moi une régression logistique complète en R pour modéliser la présence d une espèce en fonction de variables environnementales, avec calcul des odds ratios, courbe ROC et AUC.')">Exemple régression logistique ↗</button>
+</div>
+
+</div>
+
+<script>
+var history_stack=[];
+var crumbs=[];
+var total_steps=5;
+
+var tree={
+  0:{
+    diversity:'s1a',
+    composition:'s1b',
+    abundance:'s_abund',
+    binary:'s_binary'
+  },
+  1:{
+    normal:'s2a',
+    nonnormal:'s2b',
+    dontknow:'s2b'
+  },
+  2:{
+    '2g-paired':'r-t-test-paired',
+    '2g-indep':'r-t-test-indep',
+    '3plus':'r-anova',
+    continuous:'r-regression'
+  },
+  3:{
+    '2g-paired-np':'r-wilcoxon-paired',
+    '2g-indep-np':'r-wilcoxon-indep',
+    '3plus-np':'r-kruskal',
+    'continuous-np':'r-spearman'
+  },
+  4:{
+    visualize:'r-nmds',
+    'test-diff':'r-anosim',
+    explain:'r-cca',
+    species:'r-simper'
+  }
+};
+
+var crumb_labels={
+  diversity:'Diversité (continu)',
+  composition:'Composition (multivar.)',
+  abundance:'Abondance (comptage)',
+  binary:'Présence/absence',
+  normal:'Normal (p>0.05)',
+  nonnormal:'Non normal',
+  dontknow:'Incertain',
+  '2g-paired':'2 gr. appariés',
+  '2g-indep':'2 gr. indép.',
+  '3plus':'3+ groupes',
+  continuous:'Continu',
+  '2g-paired-np':'2 gr. appariés',
+  '2g-indep-np':'2 gr. indép.',
+  '3plus-np':'3+ groupes',
+  'continuous-np':'Continu',
+  visualize:'Visualiser',
+  'test-diff':'Tester diff.',
+  explain:'Expliquer',
+  species:'Espèces ind.'
+};
+
+var current='s0';
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('visible');});
+  var el=document.getElementById(id);
+  if(el) el.classList.add('visible');
+  current=id;
+  updateProgress();
+  updateBreadcrumb();
+}
+
+function go(level,choice){
+  history_stack.push(current);
+  crumbs.push(crumb_labels[choice]||choice);
+  var next=tree[level]&&tree[level][choice];
+  if(next){
+    if(next==='s_abund'){showAbund();}
+    else if(next==='s_binary'){showBinary();}
+    else{showScreen(next);}
+  }
+}
+
+function showAbund(){
+  history_stack.push(current);
+  showScreen('r-glm-poisson');
+}
+
+function showBinary(){
+  history_stack.push(current);
+  showScreen('r-glm-logistic');
+}
+
+function back(){
+  if(history_stack.length>0){
+    crumbs.pop();
+    var prev=history_stack.pop();
+    showScreen(prev);
+  }
+}
+
+function restart(){
+  history_stack=[];
+  crumbs=[];
+  showScreen('s0');
+}
+
+function updateProgress(){
+  var dots=document.querySelectorAll('.prog-dot');
+  var depth=history_stack.length;
+  dots.forEach(function(d,i){
+    d.classList.remove('done','active');
+    if(i<depth) d.classList.add('done');
+    else if(i===depth) d.classList.add('active');
+  });
+}
+
+function updateBreadcrumb(){
+  var bc=document.getElementById('breadcrumb');
+  if(crumbs.length===0){bc.style.display='none';return;}
+  bc.style.display='flex';
+  bc.innerHTML=crumbs.map(function(c){
+    return '<span class="bc-item">'+c+'</span>';
+  }).join('');
+}
+</script>

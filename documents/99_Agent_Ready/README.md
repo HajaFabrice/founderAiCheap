@@ -37,8 +37,8 @@ operations instead of relying on raw mixed-version source files.
 - `documents/oplurix-site/OPLURIX_Product_Suite_Final.md`
 - `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
 - `documents/oplurix-site/ExpertToInfluencer.txt`
-- `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
-- `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+- `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md`
+- `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
 
 ## Current Canonical Freelance Sources
 
@@ -67,6 +67,8 @@ operations instead of relying on raw mixed-version source files.
 - `references/collaboration_charter.md`
 - `references/eris_metadata_governance.md`
 - `references/digital_products_sales_brief.md`
+- `references/ecor_pro_launch_operations.md`
+- `references/ecor_institutional_path.md`
 - `references/oplurix_agent_mission_map.md`
 - `references/oplurix_full_product_suite.md`
 - `references/oplurix_launch_matrix.md`
@@ -90,6 +92,7 @@ operations instead of relying on raw mixed-version source files.
 - `templates/ecor_first_sale_launch_pack.md`
 - `templates/marketing_intelligence_templates.md`
 - `templates/digital_product_sales_templates.md`
+- `templates/ecor_pro_and_institutional_templates.md`
 - `templates/continuous_improvement_templates.md`
 
 ## Working Rule For Agents

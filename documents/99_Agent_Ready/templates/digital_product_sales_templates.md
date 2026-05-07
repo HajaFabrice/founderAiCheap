@@ -1,6 +1,6 @@
 # Digital Product Sales Templates
 
-Updated: 2026-05-02
+Updated: 2026-05-07
 
 Use these as clean starting structures for OPLURIX product promotion. Keep the
 tone scientific, restrained, and product-specific.
@@ -36,8 +36,13 @@ tone scientific, restrained, and product-specific.
 
 ### EcoR Toolkit Pro Bundle
 
-- EN: `Use this as the future high-anchor tier, but keep it in request-access mode until the walkthrough assets are actually live.`
-- FR: `Utilisez-le comme futur niveau d'ancrage haut, mais gardez-le en mode demande d'acces tant que les assets de walkthrough ne sont pas vraiment en ligne.`
+- EN: `Use this as the higher-support EcoR tier for buyers who want advanced notebooks, a decision tree, email Q&A, and a private WhatsApp support path.`
+- FR: `Utilisez-le comme niveau EcoR a support renforce pour les acheteurs qui veulent des notebooks avances, un arbre de decision, du Q&A par email et une voie WhatsApp privee.`
+
+### EcoR Toolkit Institutional
+
+- EN: `Use this as the small-team contact tier for NGOs, university labs, and research departments who need onboarding and shared templates.`
+- FR: `Utilisez-le comme niveau contact pour petites equipes ONG, laboratoires universitaires et departements de recherche qui ont besoin d'onboarding et de modeles partages.`
 
 ## Button Labels
 
@@ -48,6 +53,7 @@ tone scientific, restrained, and product-specific.
   - `Buy Starter with PayPal`
   - `Buy Complete with PayPal`
   - `Buy Pro with PayPal`
+  - `Request team quote`
 - Fallback button: `Request a PayPal checkout link`
 - Contact button: `Ask a pre-sale question`
 - Proof button: `See the founder background`
@@ -59,6 +65,7 @@ tone scientific, restrained, and product-specific.
   - `Acheter Starter avec PayPal`
   - `Acheter Complete avec PayPal`
   - `Acheter Pro avec PayPal`
+  - `Demander un devis equipe`
 - Bouton de secours: `Demander un lien PayPal`
 - Bouton contact: `Poser une question avant achat`
 - Bouton preuve: `Voir le parcours du fondateur`
@@ -83,11 +90,11 @@ tone scientific, restrained, and product-specific.
 
 ### EcoR Tier Framing - English
 
-`Starter reduces entry friction, Complete is the best-value main offer and first-sale focus, and Pro Bundle stays as the higher anchor until its promised assets are ready.`
+`Starter reduces entry friction, Complete is the best-value main offer and first-sale focus, Pro Bundle is the live support-backed individual tier, and Institutional stays the contact-led team path.`
 
 ### EcoR Tier Framing - Francais
 
-`Starter reduit la friction d'entree, Complete est l'offre principale avec le meilleur rapport valeur et le focus de la premiere vente, et Pro Bundle reste l'ancre haute jusqu'a ce que ses assets promis soient prets.`
+`Starter reduit la friction d'entree, Complete est l'offre principale avec le meilleur rapport valeur et le focus de la premiere vente, Pro Bundle est le niveau individuel avec support deja actif, et Institutional reste la voie equipe guidee par contact.`
 
 ## Manual Delivery Note
 

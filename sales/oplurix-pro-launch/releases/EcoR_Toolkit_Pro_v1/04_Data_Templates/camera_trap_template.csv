@@ -1,0 +1,4 @@
+camera_id,site,date,time,species,count,event_id,deployment_days,independent_event,notes
+CAM01,Foret_Primaire,2024-07-01,21:34,Fossa_fossana,1,E001,30,1,
+CAM01,Foret_Primaire,2024-07-01,21:42,Fossa_fossana,1,E001,30,0,same event within 30 minutes
+CAM02,Lisiere_Nord,2024-07-02,03:12,Tenrec_ecaudatus,1,E002,28,1,

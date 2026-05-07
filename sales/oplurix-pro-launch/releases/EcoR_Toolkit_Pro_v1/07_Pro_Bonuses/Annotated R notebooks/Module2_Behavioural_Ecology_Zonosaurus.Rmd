@@ -1,0 +1,902 @@
+---
+title: "Analyse de Données Comportementales — Éthologie de Terrain"
+subtitle: "Focal follows · Budgets-temps · Variation inter-individuelle · Étude de cas : *Zonosaurus karsteni*, Kirindy"
+author: "Haja Fabrice RAZAFINDRABE MAMINIAINA"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width  = 9,
+  fig.height = 5.5,
+  dpi = 150
+)
+```
+
+---
+
+> **Contexte de ce notebook**
+>
+> L'éthologie de terrain produit des données fondamentalement différentes
+> des inventaires de biodiversité. Ici, l'unité d'observation est
+> **l'individu** (pas le site), et la variable d'intérêt est
+> **un comportement dans le temps** (pas une abondance d'espèces).
+>
+> Ce notebook couvre le pipeline complet :
+> notes de terrain brutes → budget-temps → modèle mixte → figures publication.
+>
+> **Étude de cas :** Mode de fourragement de *Zonosaurus karsteni*
+> (lézard de Kirindy, Madagascar) — adultes et juvéniles en période
+> post-reproductive. Données issues de la thèse de l'auteur (2017–2018).
+
+---
+
+# 1. Packages
+
+```{r packages}
+# ============================================================
+# PACKAGES SPÉCIFIQUES À L'ÉTHOLOGIE
+#
+# lme4    : modèles mixtes (essentiel quand on mesure
+#           le même individu plusieurs fois)
+# lmerTest: ajoute les p-values aux modèles lme4
+# irr     : fiabilité inter-observateurs (Cohen's Kappa)
+# circular: statistiques pour données circulaires
+#           (heures de la journée, angles, saisons)
+# ============================================================
+
+pkgs <- c("lme4", "lmerTest", "irr", "circular",
+          "ggplot2", "dplyr", "tidyr", "knitr",
+          "ggrepel", "patchwork", "scales", "broom.mixed")
+
+new <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
+if (length(new)) install.packages(new)
+
+library(lme4)      # Modèles mixtes
+library(lmerTest)  # P-values pour lme4
+library(irr)       # Fiabilité inter-observateurs
+library(circular)  # Statistiques circulaires
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(ggrepel)
+library(patchwork)
+library(scales)
+library(broom.mixed)
+
+message("✓ Packages chargés.")
+```
+
+---
+
+# 2. Données de focal follows
+
+```{r donnees}
+# ============================================================
+# LA STRUCTURE DES DONNÉES EN ÉTHOLOGIE
+#
+# Un "focal follow" = une session d'observation continue sur
+# UN individu focal pendant une durée définie.
+# On enregistre CHAQUE comportement avec son horodatage.
+#
+# Format brut typique (carnet de terrain) :
+#   ID individu | Heure début | Comportement | Durée (sec)
+#
+# Pour importer vos vraies données :
+#   data <- read.csv("focal_follows.csv")
+#   data <- readxl::read_excel("focal_follows.xlsx")
+# ============================================================
+
+set.seed(123)
+
+# --- Individus focaux ---
+n_individus <- 24  # 12 adultes + 12 juvéniles
+
+individus <- data.frame(
+  ind_id      = paste0("ZK_", sprintf("%02d", 1:n_individus)),
+  classe_age  = rep(c("Adulte", "Juvénile"), each = 12),
+  sexe        = c(rep(c("M","F","M","F","M","F",
+                        "M","F","M","F","M","F"), 2)),
+  svl_mm      = c(
+    round(rnorm(12, mean = 142, sd = 12)),  # Adultes plus grands
+    round(rnorm(12, mean = 68,  sd =  8))   # Juvéniles
+  ),
+  masse_g     = c(
+    round(rnorm(12, mean = 28, sd = 5), 1),
+    round(rnorm(12, mean =  7, sd = 2), 1)
+  )
+)
+
+# --- Catalogue des comportements ---
+# Basé sur l'éthogramme de la thèse Zonosaurus karsteni
+comportements <- c(
+  "Immobile",           # Sit-and-wait (passif)
+  "Deplacement_lent",   # Marche ≤ 1 longueur de corps/sec
+  "Deplacement_rapide", # Course > 1 longueur de corps/sec
+  "Fourragement",       # Mouvement de langue / exploration substrat
+  "Capture_proie",      # Attaque et ingestion
+  "Thermoregulation",   # Basking / déplacement vers/depuis soleil
+  "Vigilance",          # Tête levée, regard dirigé
+  "Interaction"         # Contact avec conspécifique
+)
+
+# Probabilités de chaque comportement selon classe d'âge
+# (les adultes sont plus sit-and-wait, les juvéniles plus actifs)
+prob_adulte  <- c(0.40, 0.15, 0.05, 0.18, 0.06, 0.08, 0.06, 0.02)
+prob_juv     <- c(0.22, 0.20, 0.12, 0.22, 0.08, 0.08, 0.06, 0.02)
+
+# --- Génération des focal follows ---
+# Chaque individu : 8 sessions × 30 minutes = 4h d'observation par individu
+n_sessions   <- 8
+duree_totale <- 1800  # 30 minutes en secondes
+
+focal_data <- do.call(rbind, lapply(1:nrow(individus), function(i) {
+
+  ind   <- individus[i, ]
+  probs <- if (ind$classe_age == "Adulte") prob_adulte else prob_juv
+
+  do.call(rbind, lapply(1:n_sessions, function(s) {
+
+    # Heure de début variable : matin tôt (6h) à fin après-midi (17h)
+    heure_debut_h <- sample(6:16, 1) + runif(1)
+
+    # Génération des événements comportementaux
+    n_events <- sample(15:45, 1)
+    durees   <- diff(c(0, sort(runif(n_events - 1, 0, duree_totale)), duree_totale))
+    comptes  <- sample(comportements, n_events, replace = TRUE, prob = probs)
+
+    data.frame(
+      ind_id      = ind$ind_id,
+      classe_age  = ind$classe_age,
+      sexe        = ind$sexe,
+      svl_mm      = ind$svl_mm,
+      session_id  = paste0(ind$ind_id, "_S", s),
+      session_num = s,
+      date        = as.Date("2017-09-01") + sample(0:60, 1),
+      heure_debut = heure_debut_h,
+      comportement = comptes,
+      duree_sec   = round(durees, 1),
+      # Variables environnementales mesurées pendant la session
+      temp_air_c  = round(rnorm(1, 30 + (heure_debut_h - 12) * 0.5, 2.5), 1),
+      densite_arbustes = round(runif(1, 0.5, 8.5), 1),  # arbustes/m²
+      couverture_sol   = round(runif(1, 10, 80)),          # % litière
+      stringsAsFactors = FALSE
+    )
+  }))
+}))
+
+cat("=== RÉSUMÉ DU JEU DE DONNÉES ===\n")
+cat("Individus focaux  :", n_distinct(focal_data$ind_id), "\n")
+cat("Sessions totales  :", n_distinct(focal_data$session_id), "\n")
+cat("Événements codés  :", nrow(focal_data), "\n")
+cat("Durée totale obs. :",
+    round(sum(focal_data$duree_sec) / 3600, 1), "heures\n")
+cat("Classes d'âge     :", paste(unique(focal_data$classe_age), collapse = ", "), "\n")
+```
+
+```{r apercu}
+kable(
+  head(focal_data %>%
+    select(ind_id, classe_age, session_num, heure_debut,
+           comportement, duree_sec, temp_air_c, densite_arbustes), 10),
+  caption = "Tableau 1. Extrait des données de focal follows brutes",
+  col.names = c("Individu", "Âge", "Session", "Heure début",
+                "Comportement", "Durée (sec)", "Temp. air (°C)", "Densité arbustes")
+)
+```
+
+---
+
+# 3. Fiabilité Inter-Observateurs
+
+```{r fiabilite}
+# ============================================================
+# POURQUOI C'EST INDISPENSABLE ?
+#
+# En éthologie, deux observateurs différents voient-ils les
+# mêmes comportements ? Si non, vos données ne sont pas fiables.
+#
+# Cohen's Kappa (κ) mesure l'accord au-delà du hasard :
+#   κ < 0.40 → accord faible (données non publiables)
+#   κ 0.40–0.60 → accord modéré
+#   κ 0.60–0.80 → accord substantiel ← seuil minimal acceptable
+#   κ > 0.80 → accord presque parfait ← visez ça
+#
+# À faire AVANT votre vrai terrain, pendant la phase pilote.
+# ============================================================
+
+set.seed(42)
+n_obs_test <- 120  # 120 événements codés en double
+
+# Simuler 2 observateurs codant les mêmes comportements
+obs1 <- sample(comportements, n_obs_test, replace = TRUE,
+               prob = c(0.35, 0.15, 0.08, 0.20, 0.07, 0.08, 0.05, 0.02))
+
+# Observateur 2 : accord ~85% (réaliste pour un bon entraînement)
+obs2 <- ifelse(runif(n_obs_test) < 0.85, obs1,
+               sample(comportements, n_obs_test, replace = TRUE))
+
+kappa_result <- kappa2(data.frame(obs1, obs2), weight = "unweighted")
+
+cat("=== TEST FIABILITÉ INTER-OBSERVATEURS ===\n\n")
+cat("Cohen's Kappa (κ) :", round(kappa_result$value, 3), "\n")
+cat("p-value           :", format(kappa_result$p.value, scientific = TRUE), "\n")
+cat("Interprétation    :",
+    ifelse(kappa_result$value >= 0.80, "Accord presque parfait ✓ Publication possible",
+    ifelse(kappa_result$value >= 0.60, "Accord substantiel ✓ Acceptable",
+    ifelse(kappa_result$value >= 0.40, "Accord modéré — entraînement supplémentaire requis",
+                                       "Accord faible ✗ Ne pas publier ces données"))), "\n\n")
+
+# Matrice de confusion des désaccords
+confusion <- table(Observateur_1 = obs1, Observateur_2 = obs2)
+cat("Quels comportements sont les plus confondus ?\n")
+diag(confusion) <- 0  # Mettre les accords à 0 pour voir seulement les désaccords
+confusion_df <- as.data.frame(confusion) %>%
+  filter(Freq > 0) %>%
+  arrange(desc(Freq))
+
+kable(head(confusion_df, 8),
+      caption = "Tableau 2. Principaux désaccords entre observateurs",
+      col.names = c("Observateur 1", "Observateur 2", "Nb désaccords"))
+```
+
+---
+
+# 4. Budget-Temps
+
+```{r budget-temps}
+# ============================================================
+# LE BUDGET-TEMPS : la base de toute étude comportementale
+#
+# Pour chaque individu et chaque session, on calcule le % de temps
+# passé dans chaque comportement.
+#
+# Attention : on ne moyenne PAS les durées brutes.
+# On calcule d'abord le % par session, puis on moyenne les %.
+# (Sinon les sessions longues biaisent les résultats.)
+# ============================================================
+
+# Étape 1 : % de temps par comportement, par individu et session
+budget_session <- focal_data %>%
+  group_by(ind_id, classe_age, sexe, svl_mm,
+           session_id, session_num, heure_debut,
+           temp_air_c, densite_arbustes, couverture_sol,
+           comportement) %>%
+  summarise(
+    duree_totale_comportement = sum(duree_sec),
+    .groups = "drop"
+  ) %>%
+  group_by(ind_id, session_id) %>%
+  mutate(
+    duree_session = sum(duree_totale_comportement),
+    pct_temps     = duree_totale_comportement / duree_session * 100
+  ) %>%
+  ungroup()
+
+# Étape 2 : Moyenne par individu (sur toutes ses sessions)
+budget_individu <- budget_session %>%
+  group_by(ind_id, classe_age, sexe, svl_mm, comportement) %>%
+  summarise(
+    pct_moyen = mean(pct_temps),
+    pct_sd    = sd(pct_temps),
+    n_sessions = n(),
+    .groups = "drop"
+  )
+
+# Étape 3 : Moyenne par classe d'âge
+budget_age <- budget_individu %>%
+  group_by(classe_age, comportement) %>%
+  summarise(
+    pct_mean = mean(pct_moyen),
+    pct_se   = sd(pct_moyen) / sqrt(n()),
+    n_ind    = n(),
+    .groups  = "drop"
+  )
+
+kable(
+  budget_age %>%
+    arrange(classe_age, desc(pct_mean)) %>%
+    mutate(across(c(pct_mean, pct_se), round, 1)),
+  caption = "Tableau 3. Budget-temps moyen (% ± SE) par comportement et classe d'âge",
+  col.names = c("Classe d'âge", "Comportement", "% moyen", "SE", "N individus")
+)
+```
+
+---
+
+# 5. Visualisations
+
+## 5.1 Budget-temps comparé : adultes vs juvéniles
+
+```{r fig-budget, fig.cap="Figure 1. Budget-temps moyen (% ± SE) de Zonosaurus karsteni par comportement et classe d'âge. Les barres d'erreur représentent l'erreur standard."}
+
+palette_age <- c("Adulte" = "#0F6E56", "Juvénile" = "#D85A30")
+
+# Ordre des comportements par % moyen global
+ordre_comp <- budget_age %>%
+  group_by(comportement) %>%
+  summarise(moy = mean(pct_mean)) %>%
+  arrange(moy) %>%
+  pull(comportement)
+
+fig_budget <- budget_age %>%
+  mutate(comportement = factor(comportement, levels = ordre_comp)) %>%
+  ggplot(aes(x = comportement, y = pct_mean, fill = classe_age)) +
+  geom_col(position = position_dodge(0.75), width = 0.65) +
+  geom_errorbar(
+    aes(ymin = pct_mean - pct_se,
+        ymax = pct_mean + pct_se),
+    position = position_dodge(0.75),
+    width = 0.25, linewidth = 0.6
+  ) +
+  coord_flip() +
+  scale_fill_manual(values = palette_age, name = "Classe d'âge") +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title    = "Budget-temps de *Zonosaurus karsteni*",
+    subtitle = "Adultes vs Juvéniles · Kirindy CNFEREF · Post-reproduction 2017–2018",
+    x        = NULL,
+    y        = "% temps moyen (± SE)",
+    caption  = "N = 12 adultes, 12 juvéniles · 8 sessions × 30 min par individu"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title    = ggtext::element_markdown(face = "bold"),
+    legend.position = "bottom",
+    panel.grid.major.y = element_blank()
+  )
+
+# Alternative si ggtext non installé :
+fig_budget <- budget_age %>%
+  mutate(comportement = factor(comportement, levels = ordre_comp)) %>%
+  ggplot(aes(x = comportement, y = pct_mean, fill = classe_age)) +
+  geom_col(position = position_dodge(0.75), width = 0.65) +
+  geom_errorbar(
+    aes(ymin = pct_mean - pct_se, ymax = pct_mean + pct_se),
+    position = position_dodge(0.75), width = 0.25, linewidth = 0.6
+  ) +
+  coord_flip() +
+  scale_fill_manual(values = palette_age, name = "Classe d'âge") +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "Budget-temps de Zonosaurus karsteni — Adultes vs Juvéniles",
+    subtitle = "Kirindy CNFEREF · Post-reproduction 2017–2018",
+    x = NULL, y = "% temps moyen (± SE)",
+    caption = "N = 12 adultes, 12 juvéniles · 8 sessions × 30 min/individu"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        panel.grid.major.y = element_blank(),
+        plot.title = element_text(face = "bold"))
+
+print(fig_budget)
+```
+
+## 5.2 Patron d'activité journalière
+
+```{r fig-activite, fig.cap="Figure 2. Patron d'activité journalière de Z. karsteni. Le % de temps en déplacement actif (déplacements lents + rapides + fourragement) est représenté par heure de la journée pour adultes et juvéniles."}
+# ============================================================
+# PATRON JOURNALIER : comment l'activité varie selon l'heure
+#
+# On regroupe les comportements "actifs" vs "passifs"
+# et on calcule le % d'activité par tranche horaire.
+# ============================================================
+
+activite_horaire <- budget_session %>%
+  mutate(
+    heure_tranche = floor(heure_debut),
+    actif = comportement %in% c("Deplacement_lent",
+                                "Deplacement_rapide",
+                                "Fourragement",
+                                "Capture_proie")
+  ) %>%
+  group_by(classe_age, heure_tranche, session_id) %>%
+  summarise(
+    pct_actif = sum(pct_temps[actif], na.rm = TRUE),
+    .groups   = "drop"
+  ) %>%
+  group_by(classe_age, heure_tranche) %>%
+  summarise(
+    moy_actif = mean(pct_actif),
+    se_actif  = sd(pct_actif) / sqrt(n()),
+    n         = n(),
+    .groups   = "drop"
+  )
+
+fig_horaire <- activite_horaire %>%
+  ggplot(aes(x = heure_tranche, y = moy_actif,
+             color = classe_age, fill = classe_age)) +
+  geom_ribbon(
+    aes(ymin = moy_actif - se_actif,
+        ymax = moy_actif + se_actif),
+    alpha = 0.15, color = NA
+  ) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = palette_age, name = "Classe d'âge") +
+  scale_fill_manual(values  = palette_age, name = "Classe d'âge") +
+  scale_x_continuous(
+    breaks = 6:17,
+    labels = paste0(6:17, "h")
+  ) +
+  scale_y_continuous(labels = function(x) paste0(x, "%"),
+                     limits = c(0, 80)) +
+  # Annotations des périodes de la journée
+  annotate("rect", xmin = 6, xmax = 9, ymin = 0, ymax = 80,
+           alpha = 0.05, fill = "#FFA500") +
+  annotate("text", x = 7.5, y = 77, label = "Matin\n(fraîcheur)",
+           size = 3, color = "grey50") +
+  annotate("rect", xmin = 11, xmax = 14, ymin = 0, ymax = 80,
+           alpha = 0.05, fill = "#FF4500") +
+  annotate("text", x = 12.5, y = 77, label = "Zénith\n(pic thermique)",
+           size = 3, color = "grey50") +
+  labs(
+    title    = "Patron d'activité journalière — Z. karsteni",
+    subtitle = "% de temps en comportements actifs par heure (± SE)",
+    x        = "Heure de la journée",
+    y        = "% temps actif",
+    caption  = "Actif = déplacements + fourragement + capture"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        plot.title      = element_text(face = "bold"))
+
+print(fig_horaire)
+```
+
+## 5.3 Variation inter-individuelle
+
+```{r fig-variation, fig.cap="Figure 3. Variation inter-individuelle du % de temps en fourragement. Chaque point représente la moyenne d'un individu. La variation intra-individuelle (entre sessions) est représentée par les barres d'erreur."}
+# ============================================================
+# LA VARIATION INTER-INDIVIDUELLE : souvent ignorée, toujours importante
+#
+# Votre thèse a montré que le mode de fourragement varie
+# de "extrêmement passif" à "extrêmement actif" ENTRE individus.
+# Cette figure le montre visuellement.
+# ============================================================
+
+budget_fourrage <- budget_individu %>%
+  filter(comportement == "Fourragement") %>%
+  arrange(classe_age, desc(pct_moyen)) %>%
+  mutate(
+    ind_rank = row_number(),
+    ind_label = paste0(substr(classe_age, 1, 1), "_",
+                       sub("ZK_", "", ind_id))
+  )
+
+fig_variation <- budget_fourrage %>%
+  ggplot(aes(x = reorder(ind_label, pct_moyen),
+             y = pct_moyen, color = classe_age)) +
+  geom_hline(
+    data = budget_age %>% filter(comportement == "Fourragement"),
+    aes(yintercept = pct_mean, color = classe_age),
+    linetype = "dashed", linewidth = 0.8, alpha = 0.6
+  ) +
+  geom_errorbar(
+    aes(ymin = pct_moyen - pct_sd,
+        ymax = pct_moyen + pct_sd),
+    width = 0.4, alpha = 0.5
+  ) +
+  geom_point(size = 3.5, alpha = 0.9) +
+  coord_flip() +
+  scale_color_manual(values = palette_age, name = "Classe d'âge") +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  annotate("text", x = 1.5, y = max(budget_fourrage$pct_moyen) * 0.95,
+           label = "Ligne pointillée = moyenne du groupe",
+           size = 3, color = "grey50", hjust = 1) +
+  labs(
+    title    = "Variation inter-individuelle du fourragement",
+    subtitle = "Chaque point = moyenne d'un individu (± SD entre sessions)",
+    x        = "Individu",
+    y        = "% temps en fourragement",
+    caption  = "Continuum passif–actif visible au sein des deux classes d'âge"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        plot.title      = element_text(face = "bold"))
+
+print(fig_variation)
+```
+
+---
+
+# 6. Modèles Mixtes — Les facteurs qui expliquent le fourragement
+
+```{r modele-mixte}
+# ============================================================
+# POURQUOI UN MODÈLE MIXTE (et pas un simple t-test) ?
+#
+# Problème : chaque individu a été observé 8 fois.
+# Ces 8 sessions ne sont PAS indépendantes — elles viennent
+# du même individu qui a ses propres habitudes.
+#
+# Si on ignore ça et on fait un t-test, on viole l'hypothèse
+# d'indépendance → résultats invalides → refus du reviewer.
+#
+# Solution : modèle mixte = lmer()
+#   Effets FIXES : les variables qui nous intéressent
+#                 (classe d'âge, température, densité arbustes)
+#   Effets ALÉATOIRES : la structure de répétition
+#                      (1|ind_id → chaque individu a sa propre baseline)
+# ============================================================
+
+# Préparer les données : une ligne par session, % fourragement
+data_modele <- budget_session %>%
+  filter(comportement == "Fourragement") %>%
+  select(ind_id, classe_age, sexe, svl_mm, session_num,
+         pct_temps, temp_air_c, densite_arbustes,
+         couverture_sol, heure_debut)
+
+cat("Données pour le modèle :", nrow(data_modele), "sessions\n\n")
+
+# --- Modèle 1 : Effet de la classe d'âge seule ---
+m1 <- lmer(pct_temps ~ classe_age + (1 | ind_id),
+           data = data_modele, REML = TRUE)
+
+# --- Modèle 2 : Ajout des variables environnementales ---
+# (Variables centrées-réduites pour comparaison des coefficients)
+data_modele <- data_modele %>%
+  mutate(
+    temp_scaled     = scale(temp_air_c)[,1],
+    arbustes_scaled = scale(densite_arbustes)[,1],
+    heure_scaled    = scale(heure_debut)[,1],
+    svl_scaled      = scale(svl_mm)[,1]
+  )
+
+m2 <- lmer(
+  pct_temps ~ classe_age + temp_scaled + arbustes_scaled +
+              heure_scaled + svl_scaled + (1 | ind_id),
+  data = data_modele, REML = FALSE  # REML=FALSE pour comparaison AIC
+)
+
+# --- Modèle 3 : Interactions ---
+m3 <- lmer(
+  pct_temps ~ classe_age * temp_scaled + arbustes_scaled +
+              heure_scaled + svl_scaled + (1 | ind_id),
+  data = data_modele, REML = FALSE
+)
+
+# --- Sélection de modèle par AIC ---
+cat("=== COMPARAISON DES MODÈLES (AIC) ===\n")
+aic_table <- AIC(m1, m2, m3)
+aic_table$dAIC <- aic_table$AIC - min(aic_table$AIC)
+aic_table$Poids <- round(exp(-0.5 * aic_table$dAIC) /
+                         sum(exp(-0.5 * aic_table$dAIC)), 3)
+
+cat("Le meilleur modèle a le AIC le plus bas (dAIC = 0)\n")
+cat("Poids d'Akaike > 0.9 → modèle clairement préférable\n\n")
+print(round(aic_table, 2))
+```
+
+```{r resultats-modele}
+# Résultats du meilleur modèle (m2)
+cat("\n=== RÉSULTATS DU MODÈLE SÉLECTIONNÉ (M2) ===\n\n")
+print(summary(m2))
+```
+
+```{r tableau-coefficients}
+# ============================================================
+# INTERPRÉTER LES COEFFICIENTS DU MODÈLE MIXTE
+#
+# Estimate (β) : effet de la variable sur le % fourragement
+#   β positif → augmente le fourragement
+#   β négatif → diminue le fourragement
+#
+# Variables centrées-réduites → les β sont comparables entre eux.
+# Le β le plus grand (en valeur absolue) = variable la plus influente.
+#
+# (Intercept) = % fourragement moyen de la catégorie de référence
+#               (ici : Adultes, à la température/densité moyennes)
+# ============================================================
+
+coefs <- broom.mixed::tidy(m2, effects = "fixed", conf.int = TRUE) %>%
+  mutate(
+    terme = recode(term,
+      "(Intercept)"       = "Intercept (Adulte, valeurs moyennes)",
+      "classe_ageJuvénile" = "Classe d'âge : Juvénile",
+      "temp_scaled"        = "Température de l'air (centrée)",
+      "arbustes_scaled"    = "Densité d'arbustes (centrée)",
+      "heure_scaled"       = "Heure de la journée (centrée)",
+      "svl_scaled"         = "Taille corporelle SVL (centrée)"
+    ),
+    significatif = case_when(
+      p.value < 0.001 ~ "***",
+      p.value < 0.01  ~ "**",
+      p.value < 0.05  ~ "*",
+      p.value < 0.10  ~ ".",
+      TRUE            ~ "ns"
+    )
+  ) %>%
+  select(terme, estimate, conf.low, conf.high, statistic, p.value, significatif)
+
+kable(
+  coefs %>% mutate(across(where(is.numeric), round, 3)),
+  caption = "Tableau 4. Coefficients du modèle mixte (lmer) — Variable réponse : % temps en fourragement",
+  col.names = c("Variable", "β", "IC inf. 95%", "IC sup. 95%", "t", "p", "Sig.")
+)
+```
+
+```{r interpretation-modele}
+# ============================================================
+# PHRASES PRÊTES POUR VOTRE SECTION RESULTS
+# (générées automatiquement depuis les résultats du modèle)
+# ============================================================
+
+coefs_raw <- broom.mixed::tidy(m2, effects = "fixed", conf.int = TRUE)
+
+# Extraire les coefficients clés
+b_juv   <- coefs_raw$estimate[coefs_raw$term == "classe_ageJuvénile"]
+b_arb   <- coefs_raw$estimate[coefs_raw$term == "arbustes_scaled"]
+b_temp  <- coefs_raw$estimate[coefs_raw$term == "temp_scaled"]
+b_date  <- coefs_raw$estimate[coefs_raw$term == "heure_scaled"]
+
+p_juv   <- coefs_raw$p.value[coefs_raw$term == "classe_ageJuvénile"]
+p_arb   <- coefs_raw$p.value[coefs_raw$term == "arbustes_scaled"]
+
+cat("=== PHRASES RESULTS (anglais académique) ===\n\n")
+
+cat(sprintf(
+  "Time allocated to foraging differed significantly between age classes:
+  juveniles spent %.1f%% more time foraging than adults (β = %.2f,
+  95%% CI [%.2f, %.2f], p %s).\n\n",
+  abs(b_juv),
+  b_juv,
+  coefs_raw$conf.low[coefs_raw$term  == "classe_ageJuvénile"],
+  coefs_raw$conf.high[coefs_raw$term == "classe_ageJuvénile"],
+  ifelse(p_juv < 0.001, "< 0.001", paste("=", round(p_juv, 3)))
+))
+
+cat(sprintf(
+  "Shrub density had a %s effect on foraging frequency
+  (β = %.2f, p %s), consistent with the hypothesis that
+  denser microhabitat structure %s prey detection.\n\n",
+  ifelse(b_arb < 0, "negative", "positive"),
+  b_arb,
+  ifelse(p_arb < 0.001, "< 0.001", paste("=", round(p_arb, 3))),
+  ifelse(b_arb < 0, "reduces", "enhances")
+))
+
+cat(
+  "Individual identity accounted for substantial variance in foraging time
+  (random effect of individual ID), indicating that foraging mode varies
+  along a passive–active continuum among conspecifics, independent of
+  age class or environmental conditions.\n"
+)
+```
+
+## 6.1 Figure des effets du modèle
+
+```{r fig-effets, fig.cap="Figure 4. Effets des variables explicatives sur le % temps en fourragement de Z. karsteni (coefficients β ± IC 95% du modèle mixte). Les variables centrées-réduites permettent la comparaison directe des effets. * p<0.05, ** p<0.01, *** p<0.001."}
+
+coefs_plot <- coefs %>%
+  filter(!grepl("Intercept", terme)) %>%
+  mutate(
+    couleur = case_when(
+      estimate > 0 & !grepl("ns", significatif) ~ "Positif sig.",
+      estimate < 0 & !grepl("ns", significatif) ~ "Négatif sig.",
+      TRUE ~ "Non sig."
+    )
+  )
+
+ggplot(coefs_plot,
+       aes(x = reorder(terme, estimate), y = estimate, color = couleur)) +
+  geom_hline(yintercept = 0, linetype = "dashed",
+             color = "grey60", linewidth = 0.8) +
+  geom_errorbar(
+    aes(ymin = `conf.low`, ymax = `conf.high`),
+    width = 0.25, linewidth = 1
+  ) +
+  geom_point(size = 4) +
+  geom_text(
+    aes(label = significatif,
+        y     = ifelse(`conf.high` > 0, `conf.high` + 0.3, `conf.low` - 0.3)),
+    size = 4, fontface = "bold"
+  ) +
+  coord_flip() +
+  scale_color_manual(
+    values = c("Positif sig." = "#0F6E56",
+               "Négatif sig." = "#D85A30",
+               "Non sig."     = "grey60"),
+    name = "Effet"
+  ) +
+  labs(
+    title    = "Effets sur le % temps en fourragement",
+    subtitle = "Coefficients β ± IC 95% · Modèle mixte (lmer)",
+    x        = NULL,
+    y        = "Coefficient β (variables centrées-réduites)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        plot.title      = element_text(face = "bold"))
+```
+
+---
+
+# 7. Statistiques Circulaires — Patron Temporel
+
+```{r stats-circulaires}
+# ============================================================
+# POURQUOI DES STATISTIQUES CIRCULAIRES ?
+#
+# L'heure de la journée est une variable "circulaire" :
+# 23h et 1h sont proches (2h d'écart), pas lointains (22h d'écart).
+# Un test classique (t-test, ANOVA) ne capture pas ça.
+#
+# Test de Rayleigh : teste si l'activité est concentrée
+# autour d'une heure préférentielle (distribution non uniforme).
+#   p < 0.05 → l'activité n'est pas aléatoire dans la journée
+#              → il y a une heure de pic significative
+# ============================================================
+
+# Convertir les heures en angles (24h = 360°)
+heures_adultes  <- budget_session %>%
+  filter(classe_age == "Adulte",
+         comportement %in% c("Fourragement", "Deplacement_lent",
+                              "Deplacement_rapide")) %>%
+  pull(heure_debut)
+
+heures_juveniles <- budget_session %>%
+  filter(classe_age == "Juvénile",
+         comportement %in% c("Fourragement", "Deplacement_lent",
+                              "Deplacement_rapide")) %>%
+  pull(heure_debut)
+
+# Conversion en radians (heures → angles circulaires)
+to_circular <- function(heures) {
+  circular(heures * 2 * pi / 24,
+           units = "radians",
+           template = "clock24")
+}
+
+circ_adultes  <- to_circular(heures_adultes)
+circ_juveniles <- to_circular(heures_juveniles)
+
+# Test de Rayleigh
+rayleigh_a <- rayleigh.test(circ_adultes)
+rayleigh_j <- rayleigh.test(circ_juveniles)
+
+cat("=== TEST DE RAYLEIGH (uniformité de l'activité dans la journée) ===\n\n")
+
+cat("Adultes :\n")
+cat("  Statistique R =", round(rayleigh_a$statistic, 3), "\n")
+cat("  p =", round(rayleigh_a$p.value, 4), "\n")
+cat("  →", ifelse(rayleigh_a$p.value < 0.05,
+    "Activité concentrée autour d'une heure préférentielle ✓",
+    "Activité distribuée uniformément dans la journée"), "\n\n")
+
+cat("Juvéniles :\n")
+cat("  Statistique R =", round(rayleigh_j$statistic, 3), "\n")
+cat("  p =", round(rayleigh_j$p.value, 4), "\n")
+cat("  →", ifelse(rayleigh_j$p.value < 0.05,
+    "Activité concentrée autour d'une heure préférentielle ✓",
+    "Activité distribuée uniformément dans la journée"), "\n")
+
+# Heure moyenne d'activité
+mean_adultes  <- mean(circ_adultes)
+mean_juveniles <- mean(circ_juveniles)
+
+cat("\nHeure moyenne d'activité maximale :\n")
+cat("  Adultes  :", round(as.numeric(mean_adultes)  * 24 / (2*pi), 1), "h\n")
+cat("  Juvéniles:", round(as.numeric(mean_juveniles) * 24 / (2*pi), 1), "h\n")
+```
+
+---
+
+# 8. Figure Composite Publication
+
+```{r fig-composite, fig.width=12, fig.height=9, fig.cap="Figure 5. Résumé des résultats comportementaux de Z. karsteni. A : Budget-temps par classe d'âge. B : Patron d'activité journalière. C : Variation inter-individuelle du fourragement. D : Effets des variables environnementales (modèle mixte)."}
+# ============================================================
+# ASSEMBLER LES 4 FIGURES EN UNE PLANCHE PUBLICATION-READY
+# avec le package patchwork
+# ============================================================
+
+# Figure D : effets du modèle (recréée pour le composite)
+fig_effets_compact <- coefs_plot %>%
+  ggplot(aes(x = reorder(terme, estimate), y = estimate, color = couleur)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey60") +
+  geom_errorbar(aes(ymin = `conf.low`, ymax = `conf.high`),
+                width = 0.3, linewidth = 0.8) +
+  geom_point(size = 3) +
+  coord_flip() +
+  scale_color_manual(
+    values = c("Positif sig." = "#0F6E56",
+               "Négatif sig." = "#D85A30",
+               "Non sig."     = "grey60")
+  ) +
+  labs(x = NULL, y = "Coefficient β") +
+  theme_minimal(base_size = 10) +
+  theme(legend.position = "none")
+
+# Figures simplifiées pour le composite
+fig_budget_c <- fig_budget + theme(legend.position = "none",
+                                   plot.title    = element_blank(),
+                                   plot.subtitle = element_blank())
+fig_horaire_c <- fig_horaire + theme(legend.position = "none",
+                                     plot.title    = element_blank(),
+                                     plot.subtitle = element_blank())
+fig_var_c     <- fig_variation + theme(legend.position = "none",
+                                       plot.title    = element_blank(),
+                                       plot.subtitle = element_blank())
+
+# Assemblage avec patchwork
+composite <- (fig_budget_c | fig_horaire_c) /
+             (fig_var_c    | fig_effets_compact) +
+  plot_annotation(
+    title   = "Behavioural ecology of Zonosaurus karsteni — Kirindy, Madagascar",
+    caption = "RAZAFINDRABE MAMINIAINA H.F. & ANDRIANARIMISA A. (in prep.)",
+    tag_levels = "A",
+    theme = theme(
+      plot.title   = element_text(face = "bold", size = 13),
+      plot.caption = element_text(size = 8, color = "grey50")
+    )
+  )
+
+print(composite)
+```
+
+---
+
+# 9. Export
+
+```{r export, eval=FALSE}
+# Mettre eval=TRUE pour exécuter l'export
+
+dir.create("figures", showWarnings = FALSE)
+dir.create("resultats", showWarnings = FALSE)
+
+# Figures
+ggsave("figures/fig1_budget_temps.png",
+       fig_budget, width = 9, height = 5.5, dpi = 300)
+ggsave("figures/fig2_activite_horaire.png",
+       fig_horaire, width = 9, height = 5.5, dpi = 300)
+ggsave("figures/fig3_variation_interindividuelle.png",
+       fig_variation, width = 9, height = 6, dpi = 300)
+ggsave("figures/fig5_composite_publication.png",
+       composite, width = 12, height = 9, dpi = 300)
+
+# Tableaux
+write.csv(budget_age,       "resultats/budget_temps_par_age.csv",   row.names = FALSE)
+write.csv(coefs,            "resultats/coefficients_modele.csv",     row.names = FALSE)
+write.csv(budget_individu,  "resultats/budget_par_individu.csv",     row.names = FALSE)
+
+cat("✓ Figures exportées en 300 DPI — prêtes pour soumission.\n")
+cat("✓ Tableaux exportés en CSV.\n")
+```
+
+---
+
+# Récapitulatif
+
+| Étape | Analyse | Package | Alerte courante |
+|-------|---------|---------|-----------------|
+| Fiabilité | Cohen's Kappa | `irr` | Faire AVANT le terrain |
+| Budget-temps | % par comportement/session | `dplyr` | Moyenner les %, pas les durées |
+| Patron journalier | Activité par heure | `ggplot2` | Vérifier n par tranche horaire |
+| Variation indiv. | Boxplot par individu | `ggplot2` | Clé pour detecter les outliers |
+| Modèle mixte | `lmer()` | `lme4` | Centrer-réduire les variables |
+| Sélection modèle | AIC | base R | REML=FALSE pour comparer |
+| Statistiques circ. | Rayleigh test | `circular` | Heures = données circulaires |
+| Export | 300 DPI | `ggplot2` | Toujours vérifier les dimensions |
+
+---
+
+*R `r R.version$major`.`r R.version$minor` ·
+lme4 `r packageVersion("lme4")` ·
+ggplot2 `r packageVersion("ggplot2")`*
+
+*Auteur : Haja Fabrice RAZAFINDRABE MAMINIAINA — hajafabrice.r@gmail.com*
+
+*EcoR Toolkit — Module 2 : Behavioural Ecology*

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04",
+  "generated_at": "2026-05-07",
   "brand": {
     "name": "OPLURIX",
     "tagline": "Ecological Intelligence for Conservation Finance",
@@ -26,11 +26,14 @@
     {
       "id": "expert_to_influencer_content_engine",
       "status": "live",
+      "listing_status": "prepared_not_published",
+      "sales_channel": "payhip_direct_digital_delivery",
       "headline": "Turn field notes, research, and conservation work into clear LinkedIn content.",
       "price_usd": 39,
-      "launch_pricing_note": "Founder-launch price while delivery is still manual and the first buyer feedback loop is being built.",
-      "primary_cta": "Buy with PayPal",
-      "fallback_cta": "Request a PayPal checkout link",
+      "launch_pricing_note": "Fixed-price Payhip launch at USD 39 for a warm audience. Launch assets are prepared, but the public Payhip listing still needs to be published.",
+      "primary_cta": "Buy on Payhip",
+      "fallback_cta": "Request the Payhip link",
+      "launch_channel_note": "Payhip launch pack is prepared in C:/Users/Student/Downloads/payhipLaunch. Do not switch the public storefront CTA until the live Payhip URL exists.",
       "audience": [
         "biodiversity researchers",
         "conservation NGO workers",
@@ -59,15 +62,21 @@
         "PDF or document bundle",
         "prompt pack",
         "framework and example library"
+      ],
+      "launch_assets": [
+        "Payhip product-page copy",
+        "Payhip field map",
+        "Preview PDF",
+        "Cover PNG"
       ]
     },
     {
       "id": "ecor_toolkit",
       "status": "live",
       "first_sale_focus_tier_id": "ecor_toolkit_tier_2_complete_toolkit",
-      "headline": "Go from raw field data to cleaner tables, figures, and Results-ready outputs faster.",
-      "pricing_model": "three-tier_hormozi_aligned",
-      "pricing_strategy_note": "Use a low entry tier, a clearly preferred middle tier, and a higher anchor tier with real added support.",
+      "headline": "Go from messy field data to publication-ready figures and cleaner Results-ready outputs faster.",
+      "pricing_model": "four-tier_hormozi_aligned",
+      "pricing_strategy_note": "Use a low entry tier, a clearly preferred middle tier, a higher anchor tier for guided support, and a contact-only institutional tier for team licensing.",
       "public_tiers": [
         {
           "id": "ecor_toolkit_tier_1_starter",
@@ -97,13 +106,24 @@
           "id": "ecor_toolkit_tier_3_pro_bundle",
           "legacy_package_name": "EcoR_Toolkit_Tier_3_Pro_Bundle_69USD",
           "public_label": "EcoR Toolkit Pro Bundle",
-          "status": "coming_soon",
+          "status": "live",
+          "checkout_enabled": true,
+          "role": "guided_support",
+          "price_usd": 297,
+          "headline": "The higher-support EcoR path with advanced notebooks, a decision tree, one month of email Q&A, and founder-managed WhatsApp access.",
+          "cta": "Buy Pro with PayPal",
+          "truthful_positioning": "Live paid tier with manual post-purchase handling. Delivery still requires founder-managed support tracking, support-window activation, and a manual WhatsApp invite."
+        },
+        {
+          "id": "ecor_toolkit_tier_4_institutional",
+          "public_label": "EcoR Toolkit Institutional",
+          "status": "contact_ready",
           "checkout_enabled": false,
-          "role": "anchor",
-          "price_usd": 149,
-          "headline": "The planned full EcoR workflow with walkthroughs, community access, and one month of email support.",
-          "cta": "Request Pro access",
-          "truthful_positioning": "Public anchor tier only. Do not take payment until the walkthrough assets and support workflow are actually ready."
+          "role": "team_license",
+          "price_usd": 499,
+          "headline": "A small-team EcoR license with onboarding and custom template adaptation for NGOs, departments, and research teams.",
+          "cta": "Request team quote",
+          "truthful_positioning": "Contact-led team offer for organizations. Keep it off direct checkout while quotes, onboarding, and license handling remain manual."
         }
       ],
       "fallback_cta": "Request a PayPal checkout link",
@@ -111,33 +131,39 @@
         "ecology and biology graduate students",
         "early-career researchers",
         "field biologists",
-        "conservation researchers working with biodiversity count data"
+        "conservation researchers working with biodiversity count data",
+        "small NGO or university teams needing a shared biodiversity workflow"
       ],
       "core_promise": "Help buyers move from messy biodiversity field data to usable R workflows, figures, and interpretation-ready outputs without wasting hours on scattered tutorials.",
       "what_is_inside": [
-        "annotated R scripts",
+        "annotated R scripts for biodiversity workflows",
         "Claude prompt library for debugging and interpretation",
         "field data templates",
         "ggplot2 figure templates",
-        "workflow guide from field notes to Results section"
+        "workflow guide from field notes to Results section",
+        "five annotated R notebooks and advanced guided assets in the higher-support Pro tier"
       ],
       "truthful_outcomes": [
         "faster analysis setup",
         "cleaner biodiversity data workflows",
-        "better starting point for figures and written results"
+        "better starting point for figures and written results",
+        "clearer upgrade path from solo workflow to supported or team use"
       ],
       "future_pricing_strategy_note": "Future price increases should be tied to added proof, new assets, or stronger support rather than arbitrary repositioning.",
       "first_sale_delivery_rule": "Verify payment in PayPal first, then send the Google Drive delivery link manually by email and log the fulfillment event.",
       "source_documents": [
         "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
-        "documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md",
-        "documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md"
+        "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md",
+        "documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md",
+        "documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/Tier_3_Pro_Bundle/README.md"
       ],
       "delivery_assets": [
         "script bundle",
         "prompt bundle",
         "template files",
-        "workflow guide"
+        "workflow guide",
+        "advanced tier support assets",
+        "manual WhatsApp community access path"
       ]
     },
     {

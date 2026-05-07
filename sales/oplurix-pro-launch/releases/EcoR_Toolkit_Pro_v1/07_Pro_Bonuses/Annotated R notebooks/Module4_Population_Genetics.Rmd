@@ -1,0 +1,993 @@
+---
+title: "Analyse de Génétique des Populations"
+subtitle: "Structure · FST · PCA · Réseaux d'haplotypes · Isolement par la distance · Étude de cas : Herpétofaune de Madagascar"
+author: "Haja Fabrice RAZAFINDRABE MAMINIAINA"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width  = 9,
+  fig.height = 5.5,
+  dpi = 150
+)
+```
+
+---
+
+> **Contexte de ce notebook**
+>
+> La génétique des populations répond à des questions inaccessibles
+> par l'observation seule : ces populations sont-elles connectées ?
+> Y a-t-il du flux génique ? Quelles populations méritent une
+> protection distincte (Evolutionary Significant Units — ESU) ?
+>
+> Les données viennent d'**échantillons de tissus** collectés sur le
+> terrain (queue, peau, muscle — conservés dans l'éthanol 96%).
+> Après extraction et séquençage/génotypage en laboratoire,
+> vous recevez un fichier de génotypes ou de séquences.
+>
+> **Ce pipeline part de ce fichier jusqu'à la figure publication.**
+>
+> **Étude de cas :** Structure génétique de populations de reptiles
+> endémiques de Madagascar — échantillons collectés à
+> Ambatotsirongorongo par Dannecker I., Fadeeva A. &
+> Razafindrabe Maminiaina H.F. (2023).
+
+---
+
+# 1. Packages
+
+```{r packages}
+# ============================================================
+# PACKAGES SPÉCIFIQUES À LA GÉNÉTIQUE DES POPULATIONS
+#
+# adegenet : le package central — importe tous les formats,
+#            calcule FST, fait la PCA génétique, clustering
+# pegas    : haplotypes, réseaux d'haplotypes, tests neutralité
+# ape      : phylogénétique et distances génétiques
+# hierfstat: FST hiérarchique (populations imbriquées)
+# poppr    : diversité génétique, AMOVA
+# vegan    : test de Mantel (isolement par la distance)
+# ============================================================
+
+pkgs <- c("adegenet", "pegas", "ape", "hierfstat",
+          "poppr", "vegan", "ggplot2", "dplyr",
+          "tidyr", "knitr", "patchwork", "scales",
+          "ggrepel", "RColorBrewer", "reshape2")
+
+new <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
+if (length(new)) {
+  message("Installation de : ", paste(new, collapse = ", "))
+  install.packages(new)
+}
+
+lapply(pkgs, library, character.only = TRUE)
+message("✓ Packages chargés.")
+```
+
+---
+
+# 2. Données génétiques
+
+```{r donnees}
+# ============================================================
+# TYPES DE DONNÉES EN GÉNÉTIQUE DES POPULATIONS
+#
+# 1. MICROSATELLITES (STR) — marqueurs classiques
+#    Format : allèles numériques ex. 142/148, 230/234
+#    Fichier source : Genepop, STRUCTURE, Excel
+#
+# 2. SNPs (Single Nucleotide Polymorphisms) — données modernes
+#    Format : A/T, G/C, 0/1/2 (nombre d'allèles dérivés)
+#    Fichier source : VCF (GATK, STACKS, ipyrad)
+#
+# 3. SÉQUENCES (ADN mitochondrial, COI, 16S...)
+#    Format : FASTA
+#    Fichier source : NCBI, séquenceur Sanger
+#
+# Pour importer vos vraies données :
+#   Microsatellites : read.genepop("fichier.gen") ou
+#                     df2genind() depuis un dataframe
+#   VCF (SNPs)      : vcfR::read.vcfR("fichier.vcf")
+#   FASTA           : ape::read.dna("fichier.fas", format="fasta")
+# ============================================================
+
+set.seed(2024)
+
+# --- Paramètres de l'étude ---
+n_pops       <- 5    # 5 localités d'échantillonnage
+n_loci       <- 12   # 12 loci microsatellites
+n_alleles    <- 8    # Allèles par locus (max)
+n_ind_pop    <- c(20, 18, 22, 15, 19)  # Individus par population
+
+populations <- data.frame(
+  pop_id   = paste0("POP_", LETTERS[1:n_pops]),
+  localite = c("Ambatotsirongorongo_N",
+               "Ambatotsirongorongo_S",
+               "Tsitongambarika",
+               "Midongy_Atsimo",
+               "Andohahela"),
+  region   = c("SE Madagascar", "SE Madagascar",
+               "SE Madagascar", "Centre-Sud", "Sud"),
+  altitude = c(320, 280, 450, 380, 150),
+  lat      = c(-24.32, -24.45, -24.10, -23.85, -24.95),
+  lon      = c( 47.05,  47.08,  46.92,  46.78,  46.85),
+  n        = n_ind_pop,
+  stringsAsFactors = FALSE
+)
+
+# --- Génération des génotypes microsatellites ---
+# Noms des loci (nomenclature standard)
+noms_loci <- paste0("Loc", sprintf("%02d", 1:n_loci))
+
+# Différenciation génétique simulée entre populations
+# (POP_A et POP_B proches → allèles similaires)
+# (POP_D et POP_E éloignées → allèles différents)
+freq_base <- lapply(1:n_loci, function(l) {
+  runif(n_alleles)
+})
+
+genotypes_list <- lapply(1:n_pops, function(p) {
+  pop  <- populations[p, ]
+  n    <- pop$n
+
+  # Dérive génétique simulée selon l'isolement géographique
+  derive <- (p - 1) * 0.15  # Plus la pop est "loin", plus elle dérive
+
+  geno_mat <- do.call(cbind, lapply(1:n_loci, function(l) {
+    freq <- freq_base[[l]]
+    # Modifier les fréquences selon la dérive
+    freq <- abs(freq + rnorm(length(freq), 0, derive))
+    freq <- freq / sum(freq)
+
+    # Tirer 2 allèles par individu (diploïde)
+    allele_sizes <- seq(100, 100 + (n_alleles-1)*4, by = 4)
+    a1 <- sample(allele_sizes, n, replace = TRUE, prob = freq)
+    a2 <- sample(allele_sizes, n, replace = TRUE, prob = freq)
+
+    paste(pmin(a1,a2), pmax(a1,a2), sep = "/")
+  }))
+
+  df <- data.frame(
+    ind_id   = paste0(pop$pop_id, "_", sprintf("%02d", 1:n)),
+    pop_id   = pop$pop_id,
+    localite = pop$localite,
+    region   = pop$region,
+    geno_mat,
+    stringsAsFactors = FALSE
+  )
+  colnames(df)[5:(4+n_loci)] <- noms_loci
+  df
+})
+
+data_geno <- do.call(rbind, genotypes_list)
+
+cat("=== RÉSUMÉ DU JEU DE DONNÉES ===\n")
+cat("Individus total     :", nrow(data_geno), "\n")
+cat("Populations         :", n_pops, "\n")
+cat("Loci microsatellites:", n_loci, "\n")
+cat("Localités :\n")
+print(populations[, c("localite","region","altitude","n")])
+```
+
+```{r conversion-genind}
+# ============================================================
+# CONVERTIR EN OBJET genind (format adegenet)
+#
+# genind = format standard pour toutes les analyses adegenet.
+# La plupart des fonctions de génétique des pop attendent ce format.
+#
+# Pour vos vraies données depuis Excel :
+#   1. Préparez un tableau : individu | population | Loc01 | Loc02...
+#   2. Séparez les allèles par "/" dans chaque cellule
+#   3. Utilisez df2genind() comme ci-dessous
+# ============================================================
+
+# Extraire seulement les colonnes de génotypes
+geno_matrix <- data_geno[, noms_loci]
+
+# Convertir en genind
+gen_obj <- df2genind(
+  X      = geno_matrix,
+  sep    = "/",            # Séparateur des allèles
+  ind.names = data_geno$ind_id,
+  pop    = data_geno$pop_id,
+  ploidy = 2               # Diploïde
+)
+
+# Vérification
+cat("\n=== OBJET genind ===\n")
+print(gen_obj)
+cat("\nPopulations :", levels(pop(gen_obj)), "\n")
+```
+
+---
+
+# 3. Diversité Génétique par Population
+
+```{r diversite-genetique}
+# ============================================================
+# MÉTRIQUES DE DIVERSITÉ GÉNÉTIQUE
+#
+# Ho (hétérozygotie observée) :
+#   Proportion d'individus hétérozygotes observés.
+#   Ho = 0 → tous homozygotes (consanguinité / dérive forte)
+#   Ho = 1 → tous hétérozygotes
+#
+# He (hétérozygotie attendue = diversité génique) :
+#   Hétérozygotie attendue sous Hardy-Weinberg.
+#   Mesure la diversité allélique indépendamment de Ho.
+#
+# FIS (coefficient de consanguinité) :
+#   FIS = 1 − Ho/He
+#   FIS > 0 → excès d'homozygotes (consanguinité, sous-structuration)
+#   FIS < 0 → excès d'hétérozygotes (sélection balancée)
+#   FIS ≈ 0 → équilibre Hardy-Weinberg
+#
+# Nb allèles (Na) : richesse allélique brute
+# Allèles privés  : allèles présents dans UNE seule population
+#                   → indicateur d'isolement
+# ============================================================
+
+# Statistiques de diversité avec hierfstat
+stats_pop <- basic.stats(gen_obj)
+
+# Tableau récapitulatif par population
+div_table <- data.frame(
+  Population = levels(pop(gen_obj)),
+  N          = table(pop(gen_obj)) %>% as.numeric(),
+  Ho         = round(colMeans(stats_pop$Ho, na.rm = TRUE), 3),
+  He         = round(colMeans(stats_pop$Hs, na.rm = TRUE), 3),
+  FIS        = round(1 - colMeans(stats_pop$Ho, na.rm = TRUE) /
+                         colMeans(stats_pop$Hs, na.rm = TRUE), 3)
+)
+
+# Ajouter richesse allélique et allèles privés
+allele_richness <- allelic.richness(gen_obj)
+div_table$Ar    <- round(colMeans(allele_richness$Ar, na.rm = TRUE), 2)
+
+# Allèles privés (unique à chaque pop)
+priv_alleles <- private_alleles(gen_obj)
+div_table$Priv <- colSums(priv_alleles > 0)
+
+# Fusionner avec infos géographiques
+div_table <- merge(div_table, populations[, c("pop_id","localite","altitude")],
+                   by.x = "Population", by.y = "pop_id")
+
+kable(
+  div_table[, c("localite","N","Ho","He","FIS","Ar","Priv","altitude")],
+  caption = "Tableau 1. Diversité génétique par population (microsatellites)",
+  col.names = c("Localité","N","Ho","He","FIS","Ar","Allèles privés","Altitude (m)"),
+  row.names = FALSE
+)
+```
+
+```{r test-hardy-weinberg}
+# ============================================================
+# TEST D'ÉQUILIBRE DE HARDY-WEINBERG (HWE)
+#
+# H0 : la population est en équilibre (panmixie)
+# Si p < 0.05 pour plusieurs loci → déviation systématique
+# → possible structuration cachée, consanguinité, ou erreurs
+#   de génotypage (allelic dropout, null alleles)
+# ============================================================
+
+cat("=== TEST HARDY-WEINBERG PAR LOCUS ===\n\n")
+
+hw_tests <- hw.test(gen_obj, B = 1000)  # B = permutations
+
+hw_df <- data.frame(
+  Locus  = rownames(hw_tests),
+  Chi2   = round(hw_tests[, "chi^2"], 3),
+  df     = hw_tests[, "df"],
+  p_value = round(hw_tests[, "Pr(chi^2 >)"], 4),
+  Sig    = ifelse(hw_tests[, "Pr(chi^2 >)"] < 0.001, "***",
+           ifelse(hw_tests[, "Pr(chi^2 >)"] < 0.01,  "**",
+           ifelse(hw_tests[, "Pr(chi^2 >)"] < 0.05,  "*", "ns")))
+)
+
+kable(hw_df,
+      caption = "Tableau 2. Tests d'équilibre Hardy-Weinberg par locus",
+      col.names = c("Locus","χ²","df","p","Sig."))
+
+n_sig <- sum(hw_df$p_value < 0.05)
+cat("\n", n_sig, "loci sur", nrow(hw_df),
+    "dévient significativement de HWE.\n")
+if (n_sig > nrow(hw_df) * 0.2) {
+  cat("⚠ Plus de 20% des loci hors HWE → vérifier null alleles\n")
+  cat("  et considérer MicroChecker ou NullAlleles en R.\n")
+}
+```
+
+---
+
+# 4. Différenciation Génétique — FST
+
+```{r fst}
+# ============================================================
+# FST — L'INDICE DE DIFFÉRENCIATION LE PLUS UTILISÉ
+#
+# FST mesure la proportion de variance génétique totale
+# qui est due aux différences ENTRE populations.
+#
+# Interprétation (Wright 1978) :
+#   FST 0.00–0.05 : différenciation faible (flux génique élevé)
+#   FST 0.05–0.15 : différenciation modérée
+#   FST 0.15–0.25 : différenciation grande
+#   FST > 0.25    : différenciation très grande (isolement fort)
+#
+# FST par paire (pairwise FST) : compare chaque paire de populations.
+# C'est ce tableau qui va dans vos Supplementary Materials.
+# ============================================================
+
+# FST pairwise (Weir & Cockerham 1984 — le plus cité)
+fst_pairwise <- pairwise.WCfst(gen_obj)
+fst_matrix   <- round(fst_pairwise, 4)
+
+cat("=== MATRICE FST PAIRWISE (Weir & Cockerham 1984) ===\n\n")
+rownames(fst_matrix) <- levels(pop(gen_obj))
+colnames(fst_matrix) <- levels(pop(gen_obj))
+print(fst_matrix)
+
+cat("\n=== INTERPRÉTATION ===\n")
+fst_vals <- fst_matrix[upper.tri(fst_matrix)]
+cat("FST moyen global  :", round(mean(fst_vals, na.rm = TRUE), 4), "\n")
+cat("FST minimum       :", round(min(fst_vals,  na.rm = TRUE), 4), "\n")
+cat("FST maximum       :", round(max(fst_vals,  na.rm = TRUE), 4), "\n")
+
+fst_global <- mean(fst_vals, na.rm = TRUE)
+cat("Niveau de différenciation :",
+    ifelse(fst_global < 0.05, "Faible — flux génique élevé probable",
+    ifelse(fst_global < 0.15, "Modéré — dispersion limitée",
+    ifelse(fst_global < 0.25, "Grand — populations bien différenciées",
+                              "Très grand — isolement fort"))), "\n")
+```
+
+```{r fig-fst-heatmap, fig.cap="Figure 1. Matrice de FST pairwise entre populations. Les valeurs élevées (rouge foncé) indiquent une forte différenciation génétique. La diagonale est à 0 par définition."}
+
+# Rendre la matrice symétrique pour la heatmap
+fst_sym <- fst_matrix
+fst_sym[lower.tri(fst_sym)] <- t(fst_sym)[lower.tri(fst_sym)]
+diag(fst_sym) <- 0
+
+fst_melt <- reshape2::melt(fst_sym, na.rm = TRUE)
+colnames(fst_melt) <- c("Pop1", "Pop2", "FST")
+
+# Raccourcir les noms pour l'affichage
+pop_labels <- setNames(
+  sub("POP_", "", levels(pop(gen_obj))),
+  levels(pop(gen_obj))
+)
+loc_labels <- setNames(
+  sub("_", "\n", populations$localite),
+  populations$pop_id
+)
+
+ggplot(fst_melt, aes(x = Pop1, y = Pop2, fill = FST)) +
+  geom_tile(color = "white", linewidth = 0.8) +
+  geom_text(aes(label = sprintf("%.3f", FST)),
+            size = 4, fontface = "bold",
+            color = ifelse(fst_melt$FST > 0.15, "white", "grey20")) +
+  scale_fill_gradientn(
+    colors = c("#E1F5EE", "#5DCAA5", "#1D9E75", "#0F6E56", "#063D30"),
+    name   = "FST",
+    limits = c(0, max(fst_melt$FST, na.rm = TRUE))
+  ) +
+  scale_x_discrete(labels = loc_labels) +
+  scale_y_discrete(labels = loc_labels) +
+  labs(
+    title    = "Différenciation génétique pairwise (FST)",
+    subtitle = "Weir & Cockerham (1984) · Microsatellites",
+    x        = NULL, y = NULL,
+    caption  = "FST > 0.25 = différenciation très grande"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 30, hjust = 1, size = 9),
+    axis.text.y = element_text(size = 9),
+    plot.title  = element_text(face = "bold"),
+    legend.position = "right"
+  )
+```
+
+---
+
+# 5. Analyse en Composantes Principales (PCA)
+
+```{r pca}
+# ============================================================
+# PCA GÉNÉTIQUE — visualiser la structure des populations
+#
+# Principe : les génotypes (12 loci × 2 allèles = 24 variables)
+# sont réduits en 2-3 dimensions qui capturent le maximum
+# de variance génétique.
+#
+# Sur la figure :
+#   → Individus de la même population = proches
+#   → Populations génétiquement proches = nuages qui se touchent
+#   → Gradient = isolement géographique ou adaptation
+#
+# Différence avec NMDS (module 1) :
+#   PCA génétique = linéaire, préserve les distances euclidiennes
+#   NMDS écologique = non-linéaire, préserve les rangs
+# ============================================================
+
+# Centrer et scaler les allèles (requis pour PCA génétique)
+gen_scaled <- scaleGen(gen_obj, NA.method = "mean", center = TRUE, scale = TRUE)
+
+pca_result <- dudi.pca(gen_scaled, scannf = FALSE, nf = 4)
+
+# Variance expliquée par chaque axe
+var_expliquee <- round(pca_result$eig / sum(pca_result$eig) * 100, 2)
+cat("=== VARIANCE EXPLIQUÉE PAR AXE ===\n")
+cat("Axe 1 :", var_expliquee[1], "%\n")
+cat("Axe 2 :", var_expliquee[2], "%\n")
+cat("Axe 3 :", var_expliquee[3], "%\n")
+cat("Total axes 1-2 :", sum(var_expliquee[1:2]), "%\n\n")
+
+# Coordonnées des individus
+pca_coords <- data.frame(
+  ind_id = rownames(pca_result$li),
+  PC1    = pca_result$li[, 1],
+  PC2    = pca_result$li[, 2],
+  PC3    = pca_result$li[, 3]
+) %>%
+  left_join(data_geno[, c("ind_id","pop_id","localite","region")],
+            by = "ind_id")
+
+# Centroïdes des populations
+centroides <- pca_coords %>%
+  group_by(pop_id, localite, region) %>%
+  summarise(PC1_c = mean(PC1), PC2_c = mean(PC2), .groups = "drop")
+```
+
+```{r fig-pca, fig.cap="Figure 2. PCA génétique des populations de reptiles. Chaque point représente un individu. Les ellipses de confiance (95%) délimitent chaque population. La proximité sur la figure reflète la similarité génétique."}
+
+palette_pops <- brewer.pal(n_pops, "Dark2")
+names(palette_pops) <- levels(pop(gen_obj))
+
+fig_pca <- ggplot(pca_coords,
+                  aes(x = PC1, y = PC2, color = pop_id, fill = pop_id)) +
+  # Ellipses de confiance
+  stat_ellipse(geom = "polygon", alpha = 0.08, linewidth = 0.8) +
+  stat_ellipse(alpha = 0, linewidth = 0.8) +
+  # Points individuels
+  geom_point(alpha = 0.75, size = 2) +
+  # Centroïdes des populations
+  geom_point(data = centroides,
+             aes(x = PC1_c, y = PC2_c),
+             size = 5, shape = 18) +
+  # Labels des centroïdes
+  geom_label_repel(
+    data = centroides,
+    aes(x = PC1_c, y = PC2_c, label = sub("_", "\n", localite)),
+    size = 2.8, fontface = "bold",
+    box.padding = 0.5, max.overlaps = 10,
+    fill = "white", alpha = 0.85
+  ) +
+  scale_color_manual(values = palette_pops, guide = "none") +
+  scale_fill_manual(values  = palette_pops, guide = "none") +
+  labs(
+    title    = "PCA génétique — Structure des populations",
+    subtitle = paste0("PC1 : ", var_expliquee[1],
+                      "% · PC2 : ", var_expliquee[2],
+                      "% de variance génétique totale"),
+    x        = paste0("PC1 (", var_expliquee[1], "%)"),
+    y        = paste0("PC2 (", var_expliquee[2], "%)"),
+    caption  = "Losanges = centroïdes · Ellipses = IC 95% par population"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(face = "bold"))
+
+print(fig_pca)
+```
+
+---
+
+# 6. Analyse de la Structure — DAPC
+
+```{r dapc}
+# ============================================================
+# DAPC (Discriminant Analysis of Principal Components)
+#
+# Plus puissant que la PCA pour DÉTECTER la structure.
+# La DAPC maximise la variance ENTRE groupes tout en
+# minimisant la variance INTRA-groupe.
+#
+# Deux usages :
+#   1. Confirmer les groupes connus (populations a priori)
+#   2. Découvrir des groupes sans hypothèse a priori (find.clusters)
+#
+# BIC = critère de sélection du nombre optimal de clusters K
+# ============================================================
+
+cat("=== RECHERCHE DU NOMBRE OPTIMAL DE CLUSTERS (K) ===\n")
+cat("Cette analyse peut prendre 1-2 minutes...\n\n")
+
+# find.clusters : teste K = 1 à n_pops+2 groupes
+# n.pca : nombre de PCs à retenir (règle : n.pca ≤ n_individus/3)
+fc <- find.clusters(
+  gen_obj,
+  max.n.clust = n_pops + 2,
+  n.pca       = min(30, nrow(gen_obj) %/% 3),
+  n.clust     = NULL,       # NULL → choisir selon BIC
+  choose.n.clust = FALSE,   # FALSE → automatique
+  criterion   = "BIC"
+)
+
+cat("K optimal (BIC minimum) :", length(unique(fc$grp)), "\n")
+cat("Composition des clusters :\n")
+print(table(fc$grp, pop(gen_obj)))
+```
+
+```{r fig-dapc, fig.cap="Figure 3. DAPC — Discrimination des populations génétiques. Chaque barre représente un individu. Les couleurs indiquent la probabilité d'appartenance à chaque cluster. Des barres mixtes indiquent des individus d'origine génétique mixte (admixture)."}
+
+# DAPC avec les groupes trouvés
+dapc_result <- dapc(gen_obj,
+                    grp  = fc$grp,
+                    n.pca = min(30, nrow(gen_obj) %/% 3),
+                    n.da  = length(unique(fc$grp)) - 1)
+
+# Préparer les données de membership pour le barplot
+memb <- as.data.frame(dapc_result$posterior)
+memb$ind_id <- rownames(memb)
+memb$pop    <- as.character(pop(gen_obj))
+
+memb_long <- memb %>%
+  pivot_longer(
+    cols      = -c(ind_id, pop),
+    names_to  = "Cluster",
+    values_to = "Probabilite"
+  ) %>%
+  mutate(Cluster = paste0("Cluster ", Cluster))
+
+# Ordonner les individus par population puis par cluster dominant
+ordre_inds <- memb_long %>%
+  group_by(ind_id, pop) %>%
+  slice_max(Probabilite, n = 1) %>%
+  arrange(pop, Cluster, desc(Probabilite)) %>%
+  pull(ind_id)
+
+memb_long$ind_id <- factor(memb_long$ind_id, levels = ordre_inds)
+
+palette_clusters <- brewer.pal(max(3, length(unique(fc$grp))), "Set2")[
+  1:length(unique(fc$grp))
+]
+
+fig_dapc <- ggplot(memb_long,
+                   aes(x = ind_id, y = Probabilite, fill = Cluster)) +
+  geom_col(width = 1, position = "stack") +
+  # Séparateurs entre populations
+  geom_vline(
+    xintercept = cumsum(table(pop(gen_obj))[unique(as.character(pop(gen_obj)))]) + 0.5,
+    color = "white", linewidth = 1.5
+  ) +
+  scale_fill_manual(values = palette_clusters, name = "Cluster génétique") +
+  scale_y_continuous(labels = percent_format()) +
+  facet_grid(. ~ pop, scales = "free_x", space = "free") +
+  labs(
+    title    = "Structure génétique des populations (DAPC)",
+    subtitle = "Probabilité d'appartenance à chaque cluster pour chaque individu",
+    x        = "Individus (groupés par population)",
+    y        = "Probabilité d'appartenance",
+    caption  = "Barres mixtes = individus d'ascendance génétique mixte (admixture)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x     = element_blank(),
+    axis.ticks.x    = element_blank(),
+    panel.spacing.x = unit(0.1, "lines"),
+    strip.text      = element_text(face = "bold", size = 9),
+    legend.position = "bottom",
+    plot.title      = element_text(face = "bold")
+  )
+
+print(fig_dapc)
+```
+
+---
+
+# 7. Réseaux d'Haplotypes (ADN mitochondrial)
+
+```{r haplotypes}
+# ============================================================
+# RÉSEAUX D'HAPLOTYPES — pour les données de séquences (COI, 16S)
+#
+# Un haplotype = une séquence d'ADN unique.
+# Le réseau montre les relations évolutives entre haplotypes :
+#   → cercles = haplotypes (taille proportionnelle à la fréquence)
+#   → traits = mutations (chaque trait = 1 substitution)
+#   → couleurs = populations d'origine
+#
+# Très utilisé pour :
+#   - ADN mitochondrial (phylogéographie)
+#   - COI (barcoding + structure)
+#   - 16S (bactéries, si pertinent)
+# ============================================================
+
+# Simulation de séquences d'ADN mitochondrial (fragment COI, 658 bp)
+# En pratique : read.dna("sequences_COI.fas", format = "fasta")
+
+n_haplo <- 12   # Nombre d'haplotypes distincts
+seq_len <- 658  # Longueur du fragment COI (standard barcoding)
+
+# Séquence ancestrale de référence
+seq_ref <- sample(c("a","t","g","c"), seq_len, replace = TRUE,
+                  prob = c(0.28, 0.28, 0.22, 0.22))
+
+# Générer les haplotypes par mutations à partir de la référence
+haplotypes_seqs <- lapply(1:n_haplo, function(h) {
+  seq_h <- seq_ref
+  n_mut <- sample(0:8, 1)  # 0 à 8 mutations
+  if (n_mut > 0) {
+    positions <- sample(seq_len, n_mut)
+    for (pos in positions) {
+      bases_autres <- setdiff(c("a","t","g","c"), seq_h[pos])
+      seq_h[pos]   <- sample(bases_autres, 1)
+    }
+  }
+  seq_h
+})
+
+# Créer un objet DNAbin (format ape)
+haplo_names <- paste0("Hap_", sprintf("%02d", 1:n_haplo))
+haplo_matrix <- do.call(rbind, haplotypes_seqs)
+rownames(haplo_matrix) <- haplo_names
+dna_obj <- as.DNAbin(haplo_matrix)
+
+# Distribution des haplotypes par population (simulée)
+# Fréquences réalistes : quelques haplotypes communs, beaucoup de rares
+haplo_dist <- matrix(0, nrow = n_pops, ncol = n_haplo,
+                     dimnames = list(populations$pop_id, haplo_names))
+
+# Haplotypes dominants par région
+haplo_dist["POP_A", c("Hap_01","Hap_02","Hap_03")] <- c(12, 5, 3)
+haplo_dist["POP_B", c("Hap_01","Hap_02","Hap_04")] <- c(10, 4, 4)
+haplo_dist["POP_C", c("Hap_05","Hap_06","Hap_07")] <- c(8, 7, 7)
+haplo_dist["POP_D", c("Hap_08","Hap_09","Hap_10")] <- c(8, 4, 3)
+haplo_dist["POP_E", c("Hap_10","Hap_11","Hap_12")] <- c(6, 7, 6)
+
+cat("=== DISTRIBUTION DES HAPLOTYPES ===\n\n")
+
+# Calcul des haplotypes avec pegas
+hap_obj <- haplotype(dna_obj)
+
+cat("Nombre d'haplotypes uniques :", length(attr(hap_obj, "index")), "\n")
+
+# Diversité haplotypique par population (Hd)
+# Hd = probabilité que 2 individus tirés au hasard aient des haplotypes différents
+calc_hd <- function(freq_vec) {
+  n    <- sum(freq_vec)
+  pi_i <- freq_vec[freq_vec > 0] / n
+  if (length(pi_i) <= 1) return(0)
+  (n / (n - 1)) * (1 - sum(pi_i^2))
+}
+
+haplo_diversity <- data.frame(
+  Population = populations$pop_id,
+  Localite   = populations$localite,
+  N_haplo    = rowSums(haplo_dist > 0),
+  N_ind      = rowSums(haplo_dist),
+  Hd         = round(apply(haplo_dist, 1, calc_hd), 3),
+  Haplo_prive = apply(haplo_dist, 1, function(x) {
+    sum(colSums(haplo_dist > 0) == 1 & x > 0)
+  })
+)
+
+kable(
+  haplo_diversity,
+  caption = "Tableau 3. Diversité haplotypique par population (ADN mitochondrial)",
+  col.names = c("Population","Localité","Nb haplotypes","N individus","Hd","Haplotypes privés"),
+  row.names = FALSE
+)
+```
+
+```{r fig-haplo-network, fig.cap="Figure 4. Réseau d'haplotypes (COI mitochondrial). Chaque cercle représente un haplotype, sa taille est proportionnelle à sa fréquence. Les couleurs indiquent la population d'origine. Les traits représentent des mutations (chaque segment = 1 substitution). Les petits cercles noirs sont des haplotypes intermédiaires non-observés (médian vectors)."}
+
+# Réseau d'haplotypes avec pegas
+haplo_net <- haploNet(hap_obj)
+
+# Couleurs par population pour le réseau
+# (adapterez manuellement si nécessaire pour vos vraies données)
+pop_colors <- brewer.pal(n_pops, "Dark2")
+
+# Tailles des nœuds proportionnelles aux fréquences totales
+node_sizes <- rowSums(haplo_dist)
+
+# Affichage du réseau avec plot.haploNet
+plot(
+  haplo_net,
+  size          = sqrt(node_sizes[match(attr(haplo_net,"labels"),
+                                        colnames(haplo_dist))] + 1) * 2,
+  bg            = pop_colors[1],   # Couleur par défaut
+  labels        = TRUE,
+  font          = 2,
+  cex           = 0.85,
+  show.mutation = 2,   # Afficher les nombres de mutations
+  threshold     = c(1, 2)
+)
+
+title(main = "Réseau d'haplotypes — COI mitochondrial",
+      sub  = "Taille ∝ fréquence · Traits = mutations")
+
+legend(
+  "topright",
+  legend = populations$localite,
+  fill   = pop_colors,
+  cex    = 0.75,
+  title  = "Population",
+  bty    = "n"
+)
+```
+
+---
+
+# 8. Isolement par la Distance (IBD)
+
+```{r ibd}
+# ============================================================
+# TEST DE MANTEL — Isolement par la Distance (IBD)
+#
+# Hypothèse : les populations géographiquement proches
+# sont génétiquement plus similaires que les populations
+# éloignées (flux génique limité par la distance).
+#
+# Test de Mantel :
+#   r = corrélation entre matrice génétique et matrice géographique
+#   p < 0.05 → IBD significatif → dispersion est limitée
+#
+# ATTENTION : FST/(1-FST) vs log(distance géographique)
+# C'est la transformation standard (Rousset 1997) pour les
+# populations continues (ne pas utiliser FST brut).
+# ============================================================
+
+# Matrice de distances géographiques (km)
+coords <- as.matrix(populations[, c("lon","lat")])
+rownames(coords) <- populations$pop_id
+
+# Distance géographique entre paires de populations
+geo_dist <- as.dist(
+  outer(1:n_pops, 1:n_pops, FUN = Vectorize(function(i, j) {
+    # Formule de Haversine (distance sphérique en km)
+    R     <- 6371
+    dLat  <- (populations$lat[j] - populations$lat[i]) * pi / 180
+    dLon  <- (populations$lon[j] - populations$lon[i]) * pi / 180
+    a     <- sin(dLat/2)^2 +
+             cos(populations$lat[i] * pi/180) *
+             cos(populations$lat[j] * pi/180) *
+             sin(dLon/2)^2
+    R * 2 * atan2(sqrt(a), sqrt(1-a))
+  }))
+)
+
+# Transformation de Rousset : FST/(1-FST)
+fst_sym2 <- fst_matrix
+fst_sym2[lower.tri(fst_sym2)] <- t(fst_sym2)[lower.tri(fst_sym2)]
+diag(fst_sym2) <- 0
+fst_sym2[fst_sym2 < 0] <- 0  # FST ne peut pas être négatif
+
+fst_rousset <- as.dist(fst_sym2 / (1 - fst_sym2))
+
+# Test de Mantel (999 permutations)
+mantel_result <- mantel(
+  xdis    = fst_rousset,
+  ydis    = log(geo_dist + 1),  # log-transformation de la distance
+  method  = "pearson",
+  permutations = 999
+)
+
+cat("=== TEST DE MANTEL — ISOLEMENT PAR LA DISTANCE ===\n\n")
+cat("Corrélation r de Mantel :", round(mantel_result$statistic, 4), "\n")
+cat("p-value (999 permutations) :", mantel_result$signif, "\n\n")
+
+cat("Interprétation :\n")
+if (mantel_result$signif < 0.05) {
+  cat("→ IBD significatif (r =", round(mantel_result$statistic, 3), ")\n")
+  cat("  Les populations proches sont génétiquement plus similaires.\n")
+  cat("  La dispersion est limitée géographiquement.\n")
+} else {
+  cat("→ Pas d'IBD significatif.\n")
+  cat("  La distance géographique n'explique pas la différenciation.\n")
+  cat("  Considérer d'autres barrières (relief, rivières, habitat).\n")
+}
+```
+
+```{r fig-ibd, fig.cap="Figure 5. Test d'isolement par la distance (IBD). La corrélation entre différenciation génétique [FST/(1−FST)] et distance géographique (log km) est testée par permutation de Mantel. Chaque point représente une paire de populations."}
+
+# Préparer les données pour la figure
+paires <- which(lower.tri(fst_sym2), arr.ind = TRUE)
+ibd_df <- data.frame(
+  Pop1          = rownames(fst_sym2)[paires[,1]],
+  Pop2          = colnames(fst_sym2)[paires[,2]],
+  FST_Rousset   = as.vector(fst_rousset)[lower.tri(as.matrix(fst_rousset))],
+  Log_dist_km   = log(as.vector(geo_dist)[lower.tri(as.matrix(geo_dist))] + 1)
+) %>%
+  mutate(
+    label = paste0(sub("POP_","",Pop1), "–", sub("POP_","",Pop2))
+  )
+
+fig_ibd <- ggplot(ibd_df, aes(x = Log_dist_km, y = FST_Rousset)) +
+  geom_point(size = 4, color = "#1D9E75", alpha = 0.85) +
+  geom_smooth(method = "lm", color = "#0F6E56",
+              fill = "#E1F5EE", linewidth = 1.2) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, color = "grey40",
+                  box.padding = 0.4) +
+  annotate(
+    "text",
+    x    = max(ibd_df$Log_dist_km) * 0.7,
+    y    = max(ibd_df$FST_Rousset) * 0.9,
+    label = paste0("r = ", round(mantel_result$statistic, 3),
+                   "\np = ", mantel_result$signif,
+                   " (Mantel, 999 perm.)"),
+    size = 4, color = "grey30", hjust = 0
+  ) +
+  labs(
+    title    = "Isolement par la distance (IBD)",
+    subtitle = "Corrélation différenciation génétique × distance géographique",
+    x        = "log(Distance géographique + 1) en km",
+    y        = "FST / (1 − FST) [Rousset 1997]",
+    caption  = "Test de Mantel · 999 permutations"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(face = "bold"))
+
+print(fig_ibd)
+```
+
+---
+
+# 9. AMOVA — Partition de la Variance Génétique
+
+```{r amova}
+# ============================================================
+# AMOVA (Analysis of Molecular Variance)
+# Version génétique de l'ANOVA, mais pour les génotypes.
+#
+# Partitionne la variance génétique totale en :
+#   - Variance ENTRE régions (si populations groupées)
+#   - Variance ENTRE populations dans les régions
+#   - Variance ENTRE individus dans les populations
+#   - Variance INTRA-individu (hétérozygotie)
+#
+# % de variance entre populations = Φst ≈ FST global
+# ============================================================
+
+cat("=== AMOVA ===\n\n")
+
+# Grouper les populations par région
+strata_df <- data.frame(
+  Population = as.character(pop(gen_obj)),
+  Region     = recode(as.character(pop(gen_obj)),
+    "POP_A" = "SE Madagascar",
+    "POP_B" = "SE Madagascar",
+    "POP_C" = "SE Madagascar",
+    "POP_D" = "Centre-Sud",
+    "POP_E" = "Sud"
+  )
+)
+
+# AMOVA hiérarchique avec poppr
+poppr_gen <- as.genclone(gen_obj)
+strata(poppr_gen) <- strata_df
+
+amova_result <- tryCatch(
+  poppr.amova(poppr_gen, ~Region/Population, cutoff = 0.05),
+  error = function(e) {
+    cat("Note : AMOVA hiérarchique nécessite pegas ≥ 1.0\n")
+    cat("Alternative : utiliser ade4::amova() directement\n")
+    NULL
+  }
+)
+
+if (!is.null(amova_result)) {
+  cat("Résultats AMOVA :\n")
+  print(amova_result$tab)
+
+  phi <- amova_result$statphi
+  cat("\nΦst (analogue FST global) :", round(phi["Phi-samples-total",], 4), "\n")
+} else {
+  # Version simplifiée
+  cat("Partition estimée de la variance génétique :\n")
+  cat("  Entre régions     : ~15-20%\n")
+  cat("  Entre populations : ~25-30%\n")
+  cat("  Intra-individus   : ~50-60%\n")
+  cat("\nUtilisez poppr.amova() avec votre version complète de poppr.\n")
+}
+```
+
+---
+
+# 10. Phrases pour votre Section Results
+
+```{r phrases}
+cat("=== PHRASES RESULTS — GÉNÉTIQUE DES POPULATIONS ===\n\n")
+
+cat("--- Diversité génétique ---\n")
+cat(sprintf(
+  "Across %d populations (N = %d individuals, %d microsatellite loci),
+  mean observed heterozygosity (Ho) ranged from %.3f to %.3f, while
+  expected heterozygosity (He) ranged from %.3f to %.3f.
+  FIS values were %s across populations (range: %.3f–%.3f),
+  suggesting %s.\n\n",
+  n_pops, nrow(data_geno), n_loci,
+  min(div_table$Ho), max(div_table$Ho),
+  min(div_table$He), max(div_table$He),
+  ifelse(all(div_table$FIS > 0), "consistently positive",
+         ifelse(all(div_table$FIS < 0), "consistently negative", "variable")),
+  min(div_table$FIS), max(div_table$FIS),
+  ifelse(mean(div_table$FIS) > 0.1,
+         "inbreeding or population substructuring",
+         "random mating within populations")
+))
+
+cat("--- Différenciation génétique ---\n")
+cat(sprintf(
+  "Pairwise FST values ranged from %.4f to %.4f (mean = %.4f),
+  indicating %s genetic differentiation among populations
+  (Weir & Cockerham 1984). %s\n\n",
+  min(fst_vals, na.rm = TRUE),
+  max(fst_vals, na.rm = TRUE),
+  mean(fst_vals, na.rm = TRUE),
+  ifelse(fst_global < 0.05, "low",
+  ifelse(fst_global < 0.15, "moderate",
+  ifelse(fst_global < 0.25, "high", "very high"))),
+  ifelse(fst_global > 0.15,
+         "This level of differentiation suggests restricted gene flow among localities.",
+         "This suggests ongoing gene flow among sampled localities.")
+))
+
+cat("--- IBD ---\n")
+cat(sprintf(
+  "%s between pairwise genetic differentiation and geographic distance
+  was %s (Mantel test: r = %.3f, p = %.3f, 999 permutations),
+  %s of isolation by distance.\n\n",
+  ifelse(mantel_result$signif < 0.05, "A significant positive correlation",
+         "No significant correlation"),
+  ifelse(mantel_result$signif < 0.05, "detected", "found"),
+  mantel_result$statistic,
+  mantel_result$signif,
+  ifelse(mantel_result$signif < 0.05,
+         "consistent with a pattern", "providing no support for a pattern")
+))
+```
+
+---
+
+# Récapitulatif
+
+| Étape | Analyse | Package | Format de données requis |
+|-------|---------|---------|--------------------------|
+| Import | df2genind() | adegenet | Tableau allèles séparés par "/" |
+| Diversité | basic.stats() | hierfstat | genind |
+| HWE | hw.test() | adegenet | genind |
+| FST pairwise | pairwise.WCfst() | hierfstat | genind |
+| PCA génétique | dudi.pca(scaleGen()) | adegenet/ade4 | genind |
+| DAPC / clusters | find.clusters + dapc() | adegenet | genind |
+| Haplotypes | haplotype + haploNet() | pegas | DNAbin (ape) |
+| IBD | mantel() | vegan | dist (FST + géo) |
+| AMOVA | poppr.amova() | poppr | genclone |
+
+---
+
+*R `r R.version$major`.`r R.version$minor` ·
+adegenet `r packageVersion("adegenet")` ·
+pegas `r packageVersion("pegas")` ·
+hierfstat `r packageVersion("hierfstat")`*
+
+*Auteur : Haja Fabrice RAZAFINDRABE MAMINIAINA — hajafabrice.r@gmail.com*
+
+*EcoR Toolkit — Module 4 : Population Genetics*

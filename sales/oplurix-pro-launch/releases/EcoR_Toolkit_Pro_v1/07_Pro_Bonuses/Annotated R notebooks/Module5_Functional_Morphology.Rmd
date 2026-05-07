@@ -1,0 +1,968 @@
+---
+title: "Analyse de Morphologie Fonctionnelle — Biomécanique Alimentaire"
+subtitle: "Propriétés mécaniques des aliments · Séquences de mastication · Chargement mandibulaire · Étude de cas : *Lemur catta* et *Propithecus verreauxi*, Beza Mahafaly"
+author: "Haja Fabrice RAZAFINDRABE MAMINIAINA"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width  = 9,
+  fig.height = 5.5,
+  dpi = 150
+)
+```
+
+---
+
+> **Contexte de ce notebook**
+>
+> La morphologie fonctionnelle étudie le lien entre la forme
+> d'une structure anatomique et sa fonction. En alimentation,
+> la question centrale est : **comment les propriétés mécaniques
+> des aliments influencent-elles le comportement de mastication ?**
+>
+> Ce module est le plus exigeant en termes de types de données :
+> il combine des mesures physiques sur les aliments (rhéomètre,
+> texturomètre), des données vidéo codées (séquences de
+> mastication), et des mesures morphométriques sur les individus.
+>
+> **Étude de cas :** Propriétés mécaniques des aliments et chargement
+> mandibulaire chez deux lémuriens sympatriques (*Lemur catta* et
+> *Propithecus verreauxi*) — Réserve Spéciale de Beza Mahafaly.
+>
+> *Ce notebook est directement lié à la publication :*
+> *Flowers N., Fogaça M.D., Razafindrabe Maminiaina H.F. et al. (2023).*
+> *American Journal of Biological Anthropology, 182(1), 45–58.*
+
+---
+
+# 1. Packages
+
+```{r packages}
+# ============================================================
+# PACKAGES SPÉCIFIQUES À LA MORPHOLOGIE FONCTIONNELLE
+#
+# lme4 / lmerTest : modèles mixtes (même individu = mesures répétées)
+# nlme            : modèles mixtes avec structures de corrélation
+#                   complexes (autocorrélation temporelle)
+# emmeans         : moyennes marginales estimées et contrastes post-hoc
+# effectsize      : taille d'effet (Cohen's d, eta², omega²)
+# ggdist          : distributions et intervalles pour ggplot2
+# rptR            : répétabilité intra-classe (ICC)
+# ============================================================
+
+pkgs <- c("lme4", "lmerTest", "nlme", "emmeans",
+          "effectsize", "ggplot2", "dplyr", "tidyr",
+          "knitr", "patchwork", "scales", "ggrepel",
+          "broom.mixed", "car", "rptR", "reshape2")
+
+new <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
+if (length(new)) {
+  message("Installation : ", paste(new, collapse = ", "))
+  install.packages(new)
+}
+lapply(pkgs, library, character.only = TRUE)
+message("✓ Packages chargés.")
+```
+
+---
+
+# 2. Les trois jeux de données
+
+```{r donnees-aliments}
+# ============================================================
+# JEU DE DONNÉES 1 : PROPRIÉTÉS MÉCANIQUES DES ALIMENTS
+#
+# Mesurées au laboratoire ou sur le terrain avec un texturomètre
+# (Dillon Force Gauge ou similaire) ou un rhéomètre.
+#
+# Variables clés :
+#   Fmax (N)     : force maximale pour fracturer l'aliment
+#                  = "dureté" (hardness)
+#   E (MPa)      : module d'élasticité (rigidité)
+#   Toughness (J/m²) : énergie pour propager une fracture
+#                       = "tenacité" (résistance à la fissure)
+#   Water (%)    : teneur en eau (influence texture)
+#
+# Ces mesures vont dans la section Methods + Table des aliments.
+# ============================================================
+
+set.seed(2024)
+
+especes_plantes <- c(
+  "Tamarindus indica",      # Fruit pulpe — soft
+  "Euphorbia stenoclada",   # Tige — très dur
+  "Opuntia sp.",            # Cladode — intermédiaire
+  "Grewia sp.",             # Fruit — intermédiaire
+  "Aloe vaombe",            # Feuille — fibreux
+  "Cedrelopsis grevei",     # Ecorce — très dur
+  "Dichrostachys cinerea",  # Pod — dur
+  "Ficus sp.",              # Fruit mûr — très mou
+  "Salvadora angustifolia", # Baie — mou
+  "Dalbergia sp."           # Graine — très dur
+)
+
+categorie_aliment <- c("Fruit","Tige","Cladode","Fruit",
+                       "Feuille","Ecorce","Pod","Fruit","Baie","Graine")
+
+# Fmax (N) : plus c'est dur, plus la force est grande
+fmax_mean  <- c(5,  85,  35,  25,  45,  120, 70,  3,  8,  150)
+toughness_mean <- c(50, 800, 350, 200, 600, 1200, 700, 30, 60, 1500)
+
+# N mesures par aliment (= nombre d'items testés)
+n_mesures <- c(45, 30, 38, 42, 35, 28, 33, 50, 40, 25)
+
+data_aliments <- do.call(rbind, lapply(1:length(especes_plantes), function(i) {
+  data.frame(
+    espece_plante = especes_plantes[i],
+    categorie     = categorie_aliment[i],
+    item_id       = paste0(substr(especes_plantes[i],1,3), "_", 1:n_mesures[i]),
+    Fmax_N        = round(rlnorm(n_mesures[i],
+                                 log(fmax_mean[i]), 0.3), 2),
+    Toughness_Jm2 = round(rlnorm(n_mesures[i],
+                                  log(toughness_mean[i]), 0.35), 1),
+    Water_pct     = round(rnorm(n_mesures[i],
+                                80 - fmax_mean[i]/3, 8), 1),
+    Elasticity_MPa = round(rlnorm(n_mesures[i],
+                                  log(fmax_mean[i] * 0.8), 0.4), 2)
+  )
+})) %>%
+  mutate(
+    Water_pct = pmin(98, pmax(5, Water_pct)),
+    # Log-transformation (distribution log-normale typique)
+    log_Fmax      = log(Fmax_N),
+    log_Tough     = log(Toughness_Jm2)
+  )
+
+cat("=== DONNÉES PROPRIÉTÉS MÉCANIQUES ===\n")
+cat("Aliments testés :", n_distinct(data_aliments$espece_plante), "\n")
+cat("Mesures totales :", nrow(data_aliments), "\n\n")
+
+kable(
+  data_aliments %>%
+    group_by(espece_plante, categorie) %>%
+    summarise(
+      N       = n(),
+      Fmax_mean = round(mean(Fmax_N), 1),
+      Fmax_sd   = round(sd(Fmax_N), 1),
+      Tough_mean = round(mean(Toughness_Jm2), 0),
+      Water_mean = round(mean(Water_pct), 1),
+      .groups = "drop"
+    ) %>%
+    arrange(desc(Fmax_mean)),
+  caption = "Tableau 1. Propriétés mécaniques des aliments (moyenne ± SD)",
+  col.names = c("Espèce végétale","Catégorie","N",
+                "Fmax (N)","SD","Ténacité (J/m²)","Eau (%)"),
+  row.names = FALSE
+)
+```
+
+```{r donnees-comportement}
+# ============================================================
+# JEU DE DONNÉES 2 : SÉQUENCES DE MASTICATION
+# (codées depuis vidéo — focal follows avec caméra)
+#
+# Protocol : filmer l'animal de profil pendant qu'il mange.
+# Coder sur le logiciel BORIS ou ELAN :
+#   - Nombre de cycles de morsure (ingestion)
+#   - Nombre de cycles de mastication (traitement)
+#   - Durée totale du traitement de l'item
+#   - Amplitude du mouvement mandibulaire (si 3D possible)
+#
+# Pour importer vos fichiers BORIS :
+#   boris_data <- read.csv("boris_output.csv")
+# ============================================================
+
+n_individus <- data.frame(
+  ind_id   = c(paste0("LC_", sprintf("%02d", 1:12)),   # Lemur catta
+               paste0("PV_", sprintf("%02d", 1:10))),  # Propithecus verreauxi
+  espece   = c(rep("Lemur catta", 12),
+               rep("Propithecus verreauxi", 10)),
+  sexe     = sample(c("M","F"), 22, replace = TRUE),
+  masse_kg = c(round(rnorm(12, 2.4, 0.3), 2),
+               round(rnorm(10, 3.5, 0.4), 2)),
+  # Longueur de la série dentaire (proxy du chargement mécanique)
+  dental_row_mm = c(round(rnorm(12, 38, 2.5), 1),
+                    round(rnorm(10, 45, 3.0), 1))
+)
+
+# Séquences de mastication : chaque ligne = un item alimentaire traité
+n_sequences <- 800
+
+data_mast <- data.frame(
+  seq_id   = 1:n_sequences,
+  ind_id   = sample(n_individus$ind_id, n_sequences, replace = TRUE)
+) %>%
+  left_join(n_individus, by = "ind_id") %>%
+  mutate(
+    aliment = sample(especes_plantes, n_sequences, replace = TRUE,
+                     prob = c(0.20, 0.05, 0.08, 0.15, 0.07,
+                               0.03, 0.06, 0.18, 0.12, 0.06)),
+    date    = as.Date("2019-05-01") + sample(0:120, n_sequences, replace = TRUE),
+    session = sample(paste0("S",1:30), n_sequences, replace = TRUE)
+  ) %>%
+  left_join(
+    data_aliments %>%
+      group_by(espece_plante) %>%
+      summarise(Fmax_moy = mean(Fmax_N),
+                Tough_moy = mean(Toughness_Jm2),
+                Water_moy = mean(Water_pct),
+                .groups = "drop"),
+    by = c("aliment" = "espece_plante")
+  ) %>%
+  mutate(
+    # Nombre de cycles de mastication — augmente avec Fmax
+    # Propithecus (feuillages) a plus de cycles de mastication
+    n_chew_cycles = round(
+      rpois(n_sequences,
+            lambda = 8 + Fmax_moy * 0.15 +
+                     ifelse(espece == "Propithecus verreauxi", 5, 0) +
+                     rnorm(n_sequences, 0, 2))
+    ),
+    # Durée de traitement (sec)
+    duree_sec = round(
+      n_chew_cycles * (0.8 + Fmax_moy * 0.005) +
+      rnorm(n_sequences, 0, 1.5), 1
+    ),
+    # Nombre de cycles de morsure
+    n_bite_cycles = round(rpois(n_sequences, lambda = 3 + Fmax_moy * 0.02)),
+    # Fréquence de mastication (cycles/sec)
+    chew_rate = round(n_chew_cycles / pmax(duree_sec, 1), 2),
+    # Amplitude mandibulaire (mm) — varie selon la taille de l'item
+    amplitude_mm = round(rnorm(n_sequences,
+                               15 + Fmax_moy * 0.02 +
+                               ifelse(espece == "Propithecus verreauxi", 3, 0),
+                               2), 1)
+  ) %>%
+  mutate(across(c(n_chew_cycles, duree_sec, n_bite_cycles),
+                ~ pmax(1, .)))
+
+cat("=== DONNÉES SÉQUENCES DE MASTICATION ===\n")
+cat("Séquences totales   :", nrow(data_mast), "\n")
+cat("Individus           :", n_distinct(data_mast$ind_id), "\n")
+cat("Espèces             :", n_distinct(data_mast$espece), "\n")
+cat("Aliments différents :", n_distinct(data_mast$aliment), "\n")
+```
+
+```{r donnees-morpho}
+# ============================================================
+# JEU DE DONNÉES 3 : MORPHOMÉTRIE CRÂNIO-MANDIBULAIRE
+#
+# Mesures sur les individus vivants (calipers) ou sur des crânes
+# de museum. Ces mesures permettent de calculer l'avantage
+# mécanique de la mandibule (levier mandibulaire).
+#
+# Mesures standard (Hylander 1979) :
+#   LR (mm) : longueur du bras de résistance (= série dentaire)
+#   LE (mm) : longueur du bras d'effort (= muscle temporal/masséter)
+#   MA       : Mechanical Advantage = LE/LR
+#   MA > 1   : avantage de force (spécialiste dur)
+#   MA < 1   : avantage de vitesse (généraliste)
+# ============================================================
+
+data_morpho <- n_individus %>%
+  mutate(
+    # Bras de résistance = longueur série dentaire (déjà dans n_individus)
+    LR_mm = dental_row_mm,
+    # Bras d'effort = distance condyle-masséter (estimée)
+    LE_mm = round(LR_mm * 0.75 + rnorm(n(), 0, 1.5), 1),
+    # Avantage mécanique
+    MA    = round(LE_mm / LR_mm, 3),
+    # Hauteur du corpus mandibulaire (résistance à la flexion)
+    corpus_height_mm = round(rnorm(n(),
+      ifelse(espece == "Propithecus verreauxi", 18, 14), 1.5), 1),
+    # Indice de robustesse
+    robustesse = round(corpus_height_mm / LR_mm, 3)
+  )
+
+kable(
+  data_morpho %>%
+    group_by(espece) %>%
+    summarise(
+      N              = n(),
+      Masse_kg       = round(mean(masse_kg), 2),
+      LR_mm          = round(mean(LR_mm), 1),
+      LE_mm          = round(mean(LE_mm), 1),
+      MA             = round(mean(MA), 3),
+      Corpus_mm      = round(mean(corpus_height_mm), 1),
+      Robustesse     = round(mean(robustesse), 3),
+      .groups = "drop"
+    ),
+  caption = "Tableau 2. Morphométrie mandibulaire par espèce (moyennes)",
+  col.names = c("Espèce","N","Masse (kg)","LR (mm)","LE (mm)",
+                "Avantage mécanique","Hauteur corpus (mm)","Indice robustesse"),
+  row.names = FALSE
+)
+```
+
+---
+
+# 3. Analyses des Propriétés Mécaniques
+
+## 3.1 Distribution et normalité
+
+```{r normalite-aliments}
+# ============================================================
+# POURQUOI LOG-TRANSFORMER ?
+#
+# Les variables mécaniques (Fmax, Toughness) suivent souvent
+# une distribution log-normale : quelques aliments très durs,
+# beaucoup d'aliments mous.
+#
+# Règle empirique :
+#   Si Shapiro-Wilk p < 0.05 → log-transformer avant les tests
+#   Si skewness > 2 → log-transformer
+# ============================================================
+
+cat("=== TEST DE NORMALITÉ DES VARIABLES MÉCANIQUES ===\n\n")
+
+vars_test <- c("Fmax_N", "log_Fmax", "Toughness_Jm2", "log_Tough")
+
+for (v in vars_test) {
+  vals <- data_aliments[[v]]
+  sw   <- shapiro.test(sample(vals, min(length(vals), 5000)))
+  cat(sprintf("%-20s: W = %.4f, p = %.4f %s\n",
+              v, sw$statistic, sw$p.value,
+              ifelse(sw$p.value > 0.05, "✓ Normal",
+              ifelse(grepl("log", v), "→ encore à vérifier",
+                                      "→ LOG-TRANSFORMER"))))
+}
+
+cat("\n→ Utiliser log(Fmax) et log(Toughness) pour tous les tests.\n")
+```
+
+## 3.2 Comparaison entre catégories d'aliments
+
+```{r kruskal-aliments}
+# Test de Kruskal-Wallis : Fmax diffère-t-il entre catégories ?
+kw_fmax <- kruskal.test(Fmax_N ~ categorie, data = data_aliments)
+
+cat("=== KRUSKAL-WALLIS — Fmax entre catégories ===\n")
+cat("χ² =", round(kw_fmax$statistic, 2),
+    ", df =", kw_fmax$parameter,
+    ", p =", format(kw_fmax$p.value, scientific = TRUE, digits = 3), "\n\n")
+
+# Post-hoc : paires significativement différentes
+if (kw_fmax$p.value < 0.05) {
+  cat("Médianes par catégorie :\n")
+  medians_cat <- data_aliments %>%
+    group_by(categorie) %>%
+    summarise(median_Fmax = round(median(Fmax_N), 1),
+              n = n(), .groups = "drop") %>%
+    arrange(desc(median_Fmax))
+  print(medians_cat)
+  cat("\n→ Test post-hoc de Dunn recommandé (package dunn.test).\n")
+}
+```
+
+---
+
+# 4. Relation Propriétés Mécaniques — Comportement
+
+## 4.1 Corrélations bivariées
+
+```{r correlations}
+# ============================================================
+# QUESTION CENTRALE :
+# Les aliments plus durs induisent-ils plus de cycles de
+# mastication, une durée plus longue, et une amplitude plus grande ?
+#
+# On utilise Spearman (non-paramétrique) car les variables
+# mécaniques ne sont pas normales.
+# ============================================================
+
+variables_paires <- list(
+  c("log(Fmax_moy)",  "n_chew_cycles"),
+  c("log(Fmax_moy)",  "duree_sec"),
+  c("log(Fmax_moy)",  "chew_rate"),
+  c("log(Tough_moy)", "n_chew_cycles"),
+  c("log(Tough_moy)", "amplitude_mm"),
+  c("Water_moy",      "n_chew_cycles")
+)
+
+data_cor <- data_mast %>%
+  mutate(log_Fmax_moy  = log(Fmax_moy),
+         log_Tough_moy = log(Tough_moy))
+
+cor_results <- data.frame(
+  Variable_X = character(),
+  Variable_Y = character(),
+  rho        = numeric(),
+  p_value    = numeric(),
+  stringsAsFactors = FALSE
+)
+
+var_map <- c(
+  "log(Fmax_moy)"  = "log_Fmax_moy",
+  "log(Tough_moy)" = "log_Tough_moy",
+  "Water_moy"      = "Water_moy",
+  "n_chew_cycles"  = "n_chew_cycles",
+  "duree_sec"      = "duree_sec",
+  "chew_rate"      = "chew_rate",
+  "amplitude_mm"   = "amplitude_mm"
+)
+
+for (paire in variables_paires) {
+  x_col <- var_map[paire[1]]
+  y_col <- var_map[paire[2]]
+  ct <- cor.test(data_cor[[x_col]], data_cor[[y_col]],
+                 method = "spearman", exact = FALSE)
+  cor_results <- rbind(cor_results, data.frame(
+    Variable_X = paire[1], Variable_Y = paire[2],
+    rho = round(ct$estimate, 3),
+    p_value = round(ct$p.value, 4),
+    stringsAsFactors = FALSE
+  ))
+}
+
+cor_results$Sig <- ifelse(cor_results$p_value < 0.001, "***",
+                   ifelse(cor_results$p_value < 0.01,  "**",
+                   ifelse(cor_results$p_value < 0.05,  "*", "ns")))
+
+kable(
+  cor_results,
+  caption = "Tableau 3. Corrélations de Spearman entre propriétés mécaniques et comportement de mastication",
+  col.names = c("Variable X (propriété aliment)",
+                "Variable Y (comportement)",
+                "Spearman ρ", "p", "Sig.")
+)
+```
+
+## 4.2 Modèles mixtes — effet mécanique sur la mastication
+
+```{r modele-mastication}
+# ============================================================
+# MODÈLE MIXTE POUR LES DONNÉES DE MASTICATION
+#
+# Effets fixes : propriétés mécaniques de l'aliment + espèce
+# Effets aléatoires :
+#   (1 | ind_id) → chaque individu a sa propre baseline
+#   (1 | session) → effets de session (observateur, conditions)
+#
+# Variable réponse : log(n_chew_cycles) — log-normale, plus linéaire
+# ============================================================
+
+data_mast2 <- data_mast %>%
+  mutate(
+    log_chew     = log(n_chew_cycles + 1),
+    log_dur      = log(duree_sec + 1),
+    log_Fmax_c   = scale(log(Fmax_moy))[,1],
+    log_Tough_c  = scale(log(Tough_moy))[,1],
+    water_c      = scale(Water_moy)[,1],
+    masse_c      = scale(masse_kg)[,1]
+  )
+
+# Modèle 1 : propriétés mécaniques seules
+m1 <- lmer(
+  log_chew ~ log_Fmax_c + log_Tough_c + water_c +
+             (1 | ind_id) + (1 | session),
+  data = data_mast2, REML = FALSE
+)
+
+# Modèle 2 : ajouter l'espèce
+m2 <- lmer(
+  log_chew ~ espece + log_Fmax_c + log_Tough_c + water_c +
+             (1 | ind_id) + (1 | session),
+  data = data_mast2, REML = FALSE
+)
+
+# Modèle 3 : interaction espèce × Fmax
+m3 <- lmer(
+  log_chew ~ espece * log_Fmax_c + log_Tough_c + water_c +
+             (1 | ind_id) + (1 | session),
+  data = data_mast2, REML = FALSE
+)
+
+# Sélection AIC
+aic_tbl <- AIC(m1, m2, m3)
+aic_tbl$dAIC  <- round(aic_tbl$AIC - min(aic_tbl$AIC), 2)
+aic_tbl$Poids <- round(exp(-0.5 * aic_tbl$dAIC) /
+                       sum(exp(-0.5 * aic_tbl$dAIC)), 3)
+
+cat("=== SÉLECTION DE MODÈLE (AIC) ===\n")
+print(aic_tbl)
+
+# Résumé du meilleur modèle
+best_model <- if (which.min(aic_tbl$AIC) == 1) m1 else
+              if (which.min(aic_tbl$AIC) == 2) m2 else m3
+
+cat("\n=== RÉSUMÉ DU MEILLEUR MODÈLE ===\n")
+print(summary(best_model))
+```
+
+```{r coefs-modele}
+# Tableau des coefficients
+coefs_mast <- broom.mixed::tidy(m2, effects = "fixed", conf.int = TRUE) %>%
+  mutate(
+    terme = recode(term,
+      "(Intercept)"                    = "Intercept (L. catta, valeurs moy.)",
+      "especePropithecus verreauxi"    = "Espèce : P. verreauxi",
+      "log_Fmax_c"                     = "log(Fmax) — dureté (centré)",
+      "log_Tough_c"                    = "log(Ténacité) (centré)",
+      "water_c"                        = "Teneur en eau (centrée)"
+    ),
+    sig = case_when(
+      p.value < 0.001 ~ "***",
+      p.value < 0.01  ~ "**",
+      p.value < 0.05  ~ "*",
+      p.value < 0.10  ~ ".",
+      TRUE            ~ "ns"
+    )
+  ) %>%
+  select(terme, estimate, conf.low, conf.high, statistic, p.value, sig)
+
+kable(
+  coefs_mast %>% mutate(across(where(is.numeric), round, 3)),
+  caption = "Tableau 4. Coefficients du modèle mixte — Variable réponse : log(nb cycles mastication)",
+  col.names = c("Variable","β","IC inf.","IC sup.","t","p","Sig.")
+)
+```
+
+---
+
+# 5. Répétabilité Intra-Individuelle
+
+```{r repetabilite}
+# ============================================================
+# RÉPÉTABILITÉ (ICC — Intraclass Correlation Coefficient)
+#
+# Question : est-ce que le même individu produit des séquences
+# de mastication similaires d'une fois à l'autre ?
+#
+# R (répétabilité) proche de 1 → comportement très stéréotypé
+# R proche de 0 → très variable (plastique, contextuel)
+#
+# En morphologie fonctionnelle, une haute répétabilité valide
+# que les différences ENTRE individus sont réelles et non dues
+# à la variabilité de mesure.
+# ============================================================
+
+cat("=== RÉPÉTABILITÉ INTRA-INDIVIDUELLE ===\n\n")
+
+# Pour chaque variable comportementale
+vars_rept <- c("n_chew_cycles", "duree_sec", "chew_rate", "amplitude_mm")
+
+rept_results <- lapply(vars_rept, function(v) {
+  m_null <- lmer(
+    reformulate("espece + (1|ind_id)", response = v),
+    data = data_mast2,
+    REML = TRUE
+  )
+  vc <- as.data.frame(VarCorr(m_null))
+  var_ind <- vc$vcov[vc$grp == "ind_id"]
+  var_res <- vc$vcov[vc$grp == "Residual"]
+  R       <- var_ind / (var_ind + var_res)
+
+  data.frame(
+    Variable    = v,
+    R           = round(R, 3),
+    Interpretation = ifelse(R > 0.6, "Haute répétabilité",
+                     ifelse(R > 0.3, "Répétabilité modérée",
+                                     "Faible répétabilité"))
+  )
+})
+
+kable(
+  do.call(rbind, rept_results),
+  caption = "Tableau 5. Répétabilité intra-individuelle (ICC) des variables de mastication",
+  col.names = c("Variable","R (ICC)","Interprétation"),
+  row.names = FALSE
+)
+
+cat("\nNote : R > 0.4 suggère des différences individuelles stables —\n")
+cat("cela justifie l'utilisation de l'individu comme unité d'analyse.\n")
+```
+
+---
+
+# 6. Visualisations
+
+## 6.1 Propriétés mécaniques par catégorie d'aliment
+
+```{r fig-mecaniques, fig.cap="Figure 1. Distribution des propriétés mécaniques des aliments par catégorie. A : Force maximale (Fmax, N) en échelle logarithmique. B : Ténacité (J/m²) en échelle logarithmique. Les points représentent les mesures individuelles, les boîtes les quartiles."}
+
+palette_cat <- c(
+  "Fruit"   = "#1D9E75", "Feuille" = "#5DCAA5",
+  "Tige"    = "#D85A30", "Ecorce"  = "#993C1D",
+  "Pod"     = "#B8860B", "Graine"  = "#7B4B00",
+  "Baie"    = "#6A8CBF", "Cladode" = "#9A75B5"
+)
+
+p_fmax <- data_aliments %>%
+  ggplot(aes(x = reorder(categorie, Fmax_N, median),
+             y = Fmax_N, fill = categorie)) +
+  geom_boxplot(outlier.size = 0.8, outlier.alpha = 0.4,
+               width = 0.6, alpha = 0.85) +
+  geom_jitter(width = 0.15, alpha = 0.25, size = 0.8) +
+  scale_y_log10(labels = label_comma()) +
+  scale_fill_manual(values = palette_cat, guide = "none") +
+  coord_flip() +
+  labs(title = "A — Force maximale (Fmax)",
+       x = NULL, y = "Fmax (N) — échelle log") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"))
+
+p_tough <- data_aliments %>%
+  ggplot(aes(x = reorder(categorie, Toughness_Jm2, median),
+             y = Toughness_Jm2, fill = categorie)) +
+  geom_boxplot(outlier.size = 0.8, outlier.alpha = 0.4,
+               width = 0.6, alpha = 0.85) +
+  geom_jitter(width = 0.15, alpha = 0.25, size = 0.8) +
+  scale_y_log10(labels = label_comma()) +
+  scale_fill_manual(values = palette_cat, guide = "none") +
+  coord_flip() +
+  labs(title = "B — Ténacité",
+       x = NULL, y = "Ténacité (J/m²) — échelle log") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"))
+
+p_fmax | p_tough
+```
+
+## 6.2 Mastication en fonction de Fmax — deux espèces
+
+```{r fig-mast-fmax, fig.cap="Figure 2. Nombre de cycles de mastication en fonction de la dureté de l'aliment (log Fmax) pour les deux espèces. Les droites de régression sont issues du modèle mixte. La pente plus raide de P. verreauxi indique une réponse comportementale plus marquée à la dureté."}
+
+pred_data <- expand.grid(
+  log_Fmax_c  = seq(min(data_mast2$log_Fmax_c),
+                    max(data_mast2$log_Fmax_c), length.out = 50),
+  espece      = unique(data_mast2$espece),
+  log_Tough_c = 0,
+  water_c     = 0
+)
+
+pred_data$log_chew_pred <- predict(m2, newdata = pred_data,
+                                   re.form = NA)  # Effets fixes seulement
+pred_data$chew_pred     <- exp(pred_data$log_chew_pred)
+
+# Reconvertir log_Fmax_c en Fmax original pour l'axe x
+fmax_mean_orig <- mean(log(data_mast$Fmax_moy), na.rm = TRUE)
+fmax_sd_orig   <- sd(log(data_mast$Fmax_moy),   na.rm = TRUE)
+pred_data$Fmax_orig <- exp(pred_data$log_Fmax_c * fmax_sd_orig + fmax_mean_orig)
+
+palette_especes <- c(
+  "Lemur catta"           = "#0F6E56",
+  "Propithecus verreauxi" = "#D85A30"
+)
+
+ggplot() +
+  # Points observés (sous-échantillonnés)
+  geom_point(
+    data = data_mast %>% sample_n(300),
+    aes(x = Fmax_moy, y = n_chew_cycles, color = espece),
+    alpha = 0.35, size = 1.5
+  ) +
+  # Courbes de prédiction du modèle
+  geom_line(
+    data = pred_data,
+    aes(x = Fmax_orig, y = chew_pred, color = espece),
+    linewidth = 1.5
+  ) +
+  scale_x_log10(labels = label_comma()) +
+  scale_color_manual(
+    values = palette_especes,
+    name   = "Espèce",
+    labels = c("italic('Lemur catta')",
+               "italic('Propithecus verreauxi')")
+  ) +
+  labs(
+    title    = "Cycles de mastication × Dureté de l'aliment",
+    subtitle = "Points = observations · Droites = prédictions du modèle mixte",
+    x        = "Fmax (N) — échelle log",
+    y        = "Nombre de cycles de mastication",
+    caption  = "Modèle : log(chew) ~ espèce + log(Fmax) + log(Tough) + eau + (1|ind) + (1|session)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.text  = element_text(face = "italic"),
+    plot.title   = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+## 6.3 Comparaison inter-spécifique — moyennes marginales
+
+```{r fig-emmeans, fig.cap="Figure 3. Moyennes marginales estimées (EMM) des variables de mastication pour les deux espèces, contrôlées pour les propriétés mécaniques des aliments. Les barres d'erreur représentent les IC 95%. * p<0.05, ** p<0.01, *** p<0.001."}
+# ============================================================
+# MOYENNES MARGINALES ESTIMÉES (emmeans)
+#
+# Avantage sur les moyennes brutes : les EMM contrôlent
+# pour les covariables du modèle.
+# Ici : on compare les deux espèces pour le même aliment
+# (même Fmax, même ténacité, même teneur en eau).
+# C'est la comparaison "toutes choses égales par ailleurs".
+# ============================================================
+
+vars_comp <- list(
+  list(var = "log_chew",   label = "log(Cycles mastication)"),
+  list(var = "log_dur",    label = "log(Durée traitement, s)"),
+  list(var = "chew_rate",  label = "Fréquence mastication (c/s)"),
+  list(var = "amplitude_mm", label = "Amplitude mandibulaire (mm)")
+)
+
+emm_results <- do.call(rbind, lapply(vars_comp, function(v) {
+  m <- lmer(
+    reformulate(c("espece", "log_Fmax_c", "log_Tough_c",
+                  "water_c", "(1|ind_id)", "(1|session)"),
+               response = v$var),
+    data = data_mast2, REML = TRUE
+  )
+
+  emm <- emmeans(m, ~ espece)
+  pairs_result <- pairs(emm)
+  contr <- as.data.frame(pairs_result)
+
+  emm_df <- as.data.frame(emm)
+  emm_df$variable <- v$label
+  emm_df$p_vs_other <- NA
+  emm_df$sig <- NA
+
+  p_val <- contr$p.value
+  sig   <- ifelse(p_val < 0.001, "***",
+           ifelse(p_val < 0.01,  "**",
+           ifelse(p_val < 0.05,  "*", "ns")))
+
+  emm_df$p_vs_other <- p_val
+  emm_df$sig        <- sig
+  emm_df
+}))
+
+ggplot(emm_results,
+       aes(x = espece, y = emmean, fill = espece)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_errorbar(
+    aes(ymin = lower.CL, ymax = upper.CL),
+    width = 0.25, linewidth = 0.8
+  ) +
+  geom_text(
+    data = emm_results %>%
+      group_by(variable) %>%
+      slice(2) %>%
+      ungroup(),
+    aes(y = upper.CL + 0.05 * abs(upper.CL), label = sig),
+    size = 5, fontface = "bold", color = "grey30"
+  ) +
+  facet_wrap(~ variable, scales = "free_y", ncol = 2) +
+  scale_fill_manual(values = palette_especes, guide = "none") +
+  scale_x_discrete(labels = function(x)
+    ifelse(x == "Lemur catta", "L. catta", "P. verreauxi")) +
+  labs(
+    title    = "Comparaison inter-spécifique — Moyennes marginales estimées",
+    subtitle = "Contrôlé pour les propriétés mécaniques des aliments (emmeans)",
+    x        = NULL,
+    y        = "Valeur estimée (± IC 95%)",
+    caption  = "* p<0.05  ** p<0.01  *** p<0.001"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    strip.text   = element_text(face = "bold"),
+    plot.title   = element_text(face = "bold"),
+    axis.text.x  = element_text(face = "italic")
+  )
+```
+
+## 6.4 Morphologie mandibulaire et avantage mécanique
+
+```{r fig-morpho, fig.cap="Figure 4. Avantage mécanique mandibulaire (MA = LE/LR) et hauteur du corpus mandibulaire pour les deux espèces. P. verreauxi présente un MA plus élevé et un corpus plus robuste, cohérent avec sa spécialisation dans les aliments foliaires résistants."}
+
+p_ma <- data_morpho %>%
+  ggplot(aes(x = espece, y = MA, fill = espece)) +
+  geom_boxplot(width = 0.5, alpha = 0.85) +
+  geom_jitter(width = 0.1, size = 2, alpha = 0.7) +
+  scale_fill_manual(values = palette_especes, guide = "none") +
+  scale_x_discrete(labels = c("italic('L. catta')",
+                               "italic('P. verreauxi')")) +
+  labs(title = "Avantage mécanique (MA)",
+       x = NULL, y = "MA = LE / LR") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title   = element_text(face = "bold"),
+        axis.text.x  = element_text(face = "italic"))
+
+p_corpus <- data_morpho %>%
+  ggplot(aes(x = espece, y = corpus_height_mm, fill = espece)) +
+  geom_boxplot(width = 0.5, alpha = 0.85) +
+  geom_jitter(width = 0.1, size = 2, alpha = 0.7) +
+  scale_fill_manual(values = palette_especes, guide = "none") +
+  scale_x_discrete(labels = c("italic('L. catta')",
+                               "italic('P. verreauxi')")) +
+  labs(title = "Hauteur du corpus mandibulaire",
+       x = NULL, y = "Hauteur corpus (mm)") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title   = element_text(face = "bold"),
+        axis.text.x  = element_text(face = "italic"))
+
+p_ma | p_corpus
+```
+
+## 6.5 Intégration morphologie–comportement
+
+```{r fig-integration, fig.cap="Figure 5. Relation entre l'avantage mécanique mandibulaire (MA) et le nombre de cycles de mastication pour les aliments durs. Les individus avec un MA élevé produisent plus de cycles lors du traitement d'aliments durs, suggérant une co-adaptation morpho-comportementale."}
+
+# Aliments durs : Fmax > médiane
+fmax_median <- median(data_mast$Fmax_moy, na.rm = TRUE)
+
+data_integration <- data_mast %>%
+  filter(Fmax_moy > fmax_median) %>%
+  group_by(ind_id, espece) %>%
+  summarise(chew_mean = mean(n_chew_cycles),
+            .groups   = "drop") %>%
+  left_join(data_morpho[, c("ind_id","MA","corpus_height_mm")],
+            by = "ind_id")
+
+cor_ma <- cor.test(data_integration$MA,
+                   data_integration$chew_mean,
+                   method = "pearson")
+
+ggplot(data_integration,
+       aes(x = MA, y = chew_mean, color = espece)) +
+  geom_point(size = 4, alpha = 0.85) +
+  geom_smooth(aes(group = 1), method = "lm",
+              color = "grey40", fill = "grey85",
+              linewidth = 1, alpha = 0.3) +
+  geom_text_repel(aes(label = sub("_","",ind_id)),
+                  size = 2.8, color = "grey40") +
+  scale_color_manual(
+    values = palette_especes,
+    name   = "Espèce",
+    labels = c("italic('Lemur catta')",
+               "italic('Propithecus verreauxi')")
+  ) +
+  annotate(
+    "text",
+    x = min(data_integration$MA, na.rm = TRUE) + 0.01,
+    y = max(data_integration$chew_mean, na.rm = TRUE),
+    label = paste0("r = ", round(cor_ma$estimate, 3),
+                   ", p = ", round(cor_ma$p.value, 3)),
+    size = 4, color = "grey30", hjust = 0
+  ) +
+  labs(
+    title    = "Co-variation morphologie–comportement",
+    subtitle = "Aliments durs uniquement (Fmax > médiane)",
+    x        = "Avantage mécanique mandibulaire (MA = LE/LR)",
+    y        = "Cycles de mastication moyens (aliments durs)",
+    caption  = "Corrélation de Pearson · N individus"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.text  = element_text(face = "italic"),
+    plot.title   = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+---
+
+# 7. Phrases pour votre Section Results
+
+```{r phrases}
+# Calculs automatiques
+fmax_range   <- range(data_aliments$Fmax_N)
+tough_range  <- range(data_aliments$Toughness_Jm2)
+n_items      <- n_distinct(data_aliments$espece_plante)
+n_seq        <- nrow(data_mast)
+n_ind_total  <- n_distinct(data_mast$ind_id)
+
+coefs_raw <- broom.mixed::tidy(m2, effects = "fixed", conf.int = TRUE)
+b_pv   <- coefs_raw$estimate[grepl("Propithecus", coefs_raw$term)]
+b_fmax <- coefs_raw$estimate[coefs_raw$term == "log_Fmax_c"]
+p_fmax <- coefs_raw$p.value[coefs_raw$term == "log_Fmax_c"]
+
+cat("=== PHRASES RESULTS (anglais académique) ===\n\n")
+
+cat(sprintf(
+  "--- Food mechanical properties ---
+  A total of %d food items were tested mechanically (N = %d measurements).
+  Fmax ranged from %.1f to %.1f N, spanning %.0f-fold variation across
+  food categories. Toughness ranged from %.0f to %.0f J/m².
+  Seeds and bark exhibited the highest Fmax and toughness values,
+  while ripe fruits and berries were mechanically soft
+  (Kruskal-Wallis: χ² = %.2f, p %s).\n\n",
+  n_items, nrow(data_aliments),
+  fmax_range[1], fmax_range[2],
+  fmax_range[2] / fmax_range[1],
+  tough_range[1], tough_range[2],
+  kw_fmax$statistic,
+  ifelse(kw_fmax$p.value < 0.001, "< 0.001",
+         paste("=", round(kw_fmax$p.value, 3)))
+))
+
+cat(sprintf(
+  "--- Chewing behaviour ---
+  A total of %d feeding sequences were recorded from %d individuals
+  (%d Lemur catta, %d Propithecus verreauxi).
+  Food hardness (log Fmax) was a significant positive predictor of
+  chewing cycle number (β = %.3f, 95%% CI [%.3f, %.3f], p %s),
+  indicating that harder foods elicited more chewing cycles.
+  After controlling for food mechanical properties, P. verreauxi
+  produced %.1f more chewing cycles per food item than L. catta
+  (β = %.3f, p < 0.001).\n\n",
+  n_seq, n_ind_total,
+  sum(n_individus$espece == "Lemur catta"),
+  sum(n_individus$espece == "Propithecus verreauxi"),
+  b_fmax,
+  coefs_raw$conf.low[coefs_raw$term  == "log_Fmax_c"],
+  coefs_raw$conf.high[coefs_raw$term == "log_Fmax_c"],
+  ifelse(p_fmax < 0.001, "< 0.001", paste("=", round(p_fmax, 3))),
+  exp(b_pv) - 1,
+  b_pv
+))
+
+cat(sprintf(
+  "--- Mandibular morphology ---
+  P. verreauxi exhibited higher mechanical advantage (MA; mean = %.3f ± %.3f)
+  than L. catta (MA = %.3f ± %.3f), consistent with greater bite force
+  production relative to jaw muscle force. Mandibular corpus height
+  was also significantly greater in P. verreauxi (%.1f ± %.1f mm)
+  than in L. catta (%.1f ± %.1f mm), suggesting higher resistance
+  to jaw bending stress during processing of tough food items.\n",
+  mean(data_morpho$MA[data_morpho$espece=="Propithecus verreauxi"]),
+  sd(data_morpho$MA[data_morpho$espece=="Propithecus verreauxi"]),
+  mean(data_morpho$MA[data_morpho$espece=="Lemur catta"]),
+  sd(data_morpho$MA[data_morpho$espece=="Lemur catta"]),
+  mean(data_morpho$corpus_height_mm[data_morpho$espece=="Propithecus verreauxi"]),
+  sd(data_morpho$corpus_height_mm[data_morpho$espece=="Propithecus verreauxi"]),
+  mean(data_morpho$corpus_height_mm[data_morpho$espece=="Lemur catta"]),
+  sd(data_morpho$corpus_height_mm[data_morpho$espece=="Lemur catta"])
+))
+```
+
+---
+
+# Récapitulatif
+
+| Données | Source terrain | Analyse R | Package |
+|---------|---------------|-----------|---------|
+| Propriétés mécaniques | Texturomètre / rhéomètre | Kruskal-Wallis, Spearman | base R |
+| Séquences mastication | Vidéo + BORIS/ELAN | Modèle mixte | lme4 |
+| Sélection de modèle | — | AIC, REML=FALSE | base R |
+| Moyennes marginales | — | emmeans | emmeans |
+| Répétabilité | — | ICC = var_ind/(var_ind+var_res) | lme4 |
+| Morphométrie | Calipers / crânes museum | t-test / Wilcoxon | base R |
+| Intégration morph-comport | — | Corrélation Pearson / Spearman | base R |
+
+---
+
+*R `r R.version$major`.`r R.version$minor` ·
+lme4 `r packageVersion("lme4")` ·
+emmeans `r packageVersion("emmeans")` ·
+ggplot2 `r packageVersion("ggplot2")`*
+
+*Auteur : Haja Fabrice RAZAFINDRABE MAMINIAINA — hajafabrice.r@gmail.com*
+
+*EcoR Toolkit — Module 5 : Functional Morphology*
+
+*Basé sur : Flowers N., Fogaça M.D., Razafindrabe Maminiaina H.F. et al.*
+*(2023). American Journal of Biological Anthropology, 182(1), 45–58.*

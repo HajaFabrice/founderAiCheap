@@ -1,0 +1,933 @@
+---
+title: "Analyse de Données Écophysiologiques — Tolérance Thermique"
+subtitle: "CTmax · CTmin · Courbes de performance · Vulnérabilité climatique · Étude de cas : Amphibiens de Madagascar"
+author: "Haja Fabrice RAZAFINDRABE MAMINIAINA"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width  = 9,
+  fig.height = 5.5,
+  dpi = 150
+)
+```
+
+---
+
+> **Contexte de ce notebook**
+>
+> L'écophysiologie thermique répond à une question urgente en biologie
+> de la conservation : **Dans quelle mesure une espèce peut-elle
+> tolérer les températures futures ?**
+>
+> Les données viennent d'expériences contrôlées sur des individus capturés
+> sur le terrain. La structure est radicalement différente des modules
+> précédents : une ligne = un individu, une valeur critique mesurée.
+>
+> **Étude de cas :** Réponses physiologiques au stress thermique chez
+> les amphibiens malgaches — Parc National d'Ambatotsirongorongo.
+> Collaboration : Fadeeva A. & Glos J., Université de Hamburg, Allemagne.
+
+---
+
+# 1. Packages
+
+```{r packages}
+# ============================================================
+# PACKAGES SPÉCIFIQUES À L'ÉCOPHYSIOLOGIE
+#
+# nls()    : base R — régression non-linéaire pour ajuster
+#            les courbes de performance thermique
+# rTPC     : package spécialisé pour les courbes TPC
+#            (Thermal Performance Curves)
+# nlme     : modèles non-linéaires à effets mixtes
+# boot     : intervalles de confiance par bootstrap
+# ============================================================
+
+pkgs <- c("ggplot2", "dplyr", "tidyr", "knitr",
+          "patchwork", "scales", "boot", "nlme",
+          "broom", "ggrepel")
+
+new <- pkgs[!(pkgs %in% installed.packages()[,"Package"])]
+if (length(new)) install.packages(new)
+
+lapply(pkgs, library, character.only = TRUE)
+
+# rTPC est sur GitHub — installation séparée si disponible
+# Si non installé, on utilisera nls() directement (équivalent)
+rTPC_disponible <- requireNamespace("rTPC", quietly = TRUE)
+if (!rTPC_disponible) {
+  message("Note : rTPC non installé. Utilisation de nls() directement.")
+  message("Pour l'installer : remotes::install_github('padpadpadpad/rTPC')")
+}
+
+message("✓ Packages chargés.")
+```
+
+---
+
+# 2. Données expérimentales
+
+```{r donnees}
+# ============================================================
+# PROTOCOLE EXPÉRIMENTAL — ce que vous avez fait sur le terrain
+#
+# 1. Capture des individus la nuit (amphibiens nocturnes)
+# 2. Conservation dans des sacs humides jusqu'au lendemain
+# 3. Acclimatation à température ambiante (30 min minimum)
+# 4. Expérience CTmax : rampe de température +0.5°C/min
+#    jusqu'à la perte du réflexe de retournement (LORR)
+# 5. Mesure de la température = CTmax de cet individu
+# 6. Récupération immédiate dans l'eau fraîche
+# 7. Relâché au point de capture
+#
+# Variables mesurées par individu :
+#   - CTmax (°C) : température critique maximale
+#   - CTmin (°C) : température critique minimale (expérience séparée)
+#   - Masse (g), LMC (mm), espèce, localité, altitude
+# ============================================================
+
+set.seed(2024)
+
+# Espèces étudiées — herpétofaune d'Ambatotsirongorongo
+especes_info <- data.frame(
+  espece = c(
+    "Mantella aurantiaca",
+    "Boophis tephraeomystax",
+    "Gephyromantis boulengeri",
+    "Ptychadena mascareniensis",
+    "Heterixalus tricolor",
+    "Cophyla phyllodactyla"
+  ),
+  # Paramètres thermiques réalistes pour chaque espèce
+  # (basés sur la littérature amphibiens tropicaux)
+  ctmax_mean   = c(35.2, 36.8, 35.9, 37.5, 36.1, 34.8),
+  ctmax_sd     = c(1.1,  1.3,  1.2,  1.4,  1.0,  0.9),
+  ctmin_mean   = c(8.5,  9.2,  8.8,  10.1, 9.5,  7.8),
+  ctmin_sd     = c(1.2,  1.1,  1.3,  1.5,  1.2,  1.0),
+  # Habitat préférentiel
+  habitat      = c("Forêt ripicole", "Forêt ripicole",
+                   "Forêt primaire", "Zone ouverte",
+                   "Forêt dégradée", "Forêt primaire"),
+  # Altitude moyenne de collecte (m)
+  altitude_m   = c(320, 280, 450, 180, 350, 520),
+  n_individus  = c(18, 22, 15, 20, 16, 12),
+  stringsAsFactors = FALSE
+)
+
+# Génération des données individuelles
+individus_list <- lapply(1:nrow(especes_info), function(i) {
+  sp   <- especes_info[i, ]
+  n    <- sp$n_individus
+
+  data.frame(
+    ind_id    = paste0(substr(gsub(" ", "_", sp$espece), 1, 3),
+                       "_", sprintf("%02d", 1:n)),
+    espece    = sp$espece,
+    habitat   = sp$habitat,
+    altitude_m = sp$altitude_m + round(rnorm(n, 0, 30)),
+
+    # Morphologie
+    lmc_mm    = round(rnorm(n, 35 + i * 3, 5)),
+    masse_g   = round(rnorm(n, 3 + i * 0.5, 1), 2),
+    sexe      = sample(c("M", "F", "Indéterminé"),
+                       n, replace = TRUE, prob = c(0.4, 0.4, 0.2)),
+
+    # Limites thermiques critiques
+    CTmax_C   = round(rnorm(n, sp$ctmax_mean, sp$ctmax_sd), 2),
+    CTmin_C   = round(rnorm(n, sp$ctmin_mean, sp$ctmin_sd), 2),
+
+    # Température de l'habitat au moment de la capture
+    temp_habitat_C = round(rnorm(n, mean = 22, sd = 3), 1),
+
+    stringsAsFactors = FALSE
+  )
+})
+
+data_phys <- do.call(rbind, individus_list)
+
+# Calculer la gamme de tolérance thermique
+data_phys <- data_phys %>%
+  mutate(
+    gamme_tolerance = CTmax_C - CTmin_C,
+    # Marge de sécurité thermique = CTmax - température du microhabitat
+    # C'est la variable clé pour prédire la vulnérabilité climatique
+    marge_securite  = CTmax_C - temp_habitat_C
+  )
+
+cat("=== RÉSUMÉ DES DONNÉES ===\n")
+cat("Individus total  :", nrow(data_phys), "\n")
+cat("Espèces          :", n_distinct(data_phys$espece), "\n")
+cat("CTmax moyen      :", round(mean(data_phys$CTmax_C), 2), "°C\n")
+cat("CTmin moyen      :", round(mean(data_phys$CTmin_C), 2), "°C\n")
+cat("Marge sécurité   :", round(mean(data_phys$marge_securite), 2), "°C\n")
+```
+
+```{r apercu-tableau}
+kable(
+  data_phys %>%
+    group_by(espece, habitat) %>%
+    summarise(
+      N          = n(),
+      CTmax_mean = round(mean(CTmax_C), 2),
+      CTmax_sd   = round(sd(CTmax_C), 2),
+      CTmin_mean = round(mean(CTmin_C), 2),
+      CTmin_sd   = round(sd(CTmin_C), 2),
+      Marge_moy  = round(mean(marge_securite), 2),
+      .groups = "drop"
+    ),
+  caption = "Tableau 1. Limites thermiques critiques par espèce (moyenne ± SD)",
+  col.names = c("Espèce", "Habitat", "N", "CTmax (°C)", "SD",
+                "CTmin (°C)", "SD", "Marge sécurité (°C)")
+)
+```
+
+---
+
+# 3. Statistiques Descriptives & Tests
+
+```{r stats-descriptives}
+# ============================================================
+# TESTER LES DIFFÉRENCES INTER-SPÉCIFIQUES
+#
+# Normalité : test de Shapiro-Wilk
+#   p > 0.05 → données normales → ANOVA
+#   p < 0.05 → données non normales → Kruskal-Wallis
+#
+# Avec 6 espèces, on fait d'abord le test global,
+# puis les comparaisons par paires (post-hoc) si p < 0.05.
+# ============================================================
+
+cat("=== TEST DE NORMALITÉ (Shapiro-Wilk) ===\n")
+shapiro_result <- shapiro.test(data_phys$CTmax_C)
+cat("CTmax — W =", round(shapiro_result$statistic, 4),
+    ", p =", round(shapiro_result$p.value, 4), "\n")
+cat("Distribution :",
+    ifelse(shapiro_result$p.value > 0.05,
+           "Normale → ANOVA applicable",
+           "Non-normale → Kruskal-Wallis recommandé"), "\n\n")
+
+# Test global (Kruskal-Wallis — robuste quelle que soit la distribution)
+kw_ctmax <- kruskal.test(CTmax_C ~ espece, data = data_phys)
+kw_ctmin <- kruskal.test(CTmin_C ~ espece, data = data_phys)
+
+cat("=== TEST DE KRUSKAL-WALLIS ===\n")
+cat("CTmax : χ² =", round(kw_ctmax$statistic, 2),
+    ", df =", kw_ctmax$parameter,
+    ", p =", format(kw_ctmax$p.value, scientific = TRUE, digits = 3), "\n")
+cat("CTmin : χ² =", round(kw_ctmin$statistic, 2),
+    ", df =", kw_ctmin$parameter,
+    ", p =", format(kw_ctmin$p.value, scientific = TRUE, digits = 3), "\n\n")
+
+if (kw_ctmax$p.value < 0.05) {
+  cat("→ Différences significatives entre espèces pour CTmax.\n")
+  cat("  Effectuer un test post-hoc de Dunn pour les paires.\n\n")
+}
+
+# Corrélation CTmax ~ altitude
+cor_test <- cor.test(data_phys$CTmax_C, data_phys$altitude_m,
+                     method = "spearman")
+cat("=== CORRÉLATION CTmax ~ ALTITUDE ===\n")
+cat("Spearman rho =", round(cor_test$estimate, 3),
+    ", p =", round(cor_test$p.value, 4), "\n")
+cat("Interprétation :",
+    ifelse(cor_test$estimate < -0.3 & cor_test$p.value < 0.05,
+           "CTmax décroît avec l'altitude (gradient altitudinal attendu) ✓",
+    ifelse(abs(cor_test$estimate) < 0.2,
+           "Pas de gradient altitudinal détectable",
+           "Relation détectée — vérifier la direction")), "\n")
+```
+
+---
+
+# 4. Courbes de Performance Thermique (TPC)
+
+```{r tpc-data}
+# ============================================================
+# QU'EST-CE QU'UNE TPC ?
+#
+# La courbe de performance thermique décrit comment la
+# performance physiologique (activité enzymatique, vitesse de
+# nage, taux métabolique...) varie avec la température.
+#
+# Elle a une forme en cloche asymétrique :
+#   - Augmentation graduelle jusqu'au pic (Topt)
+#   - Chute brutale après le pic → dénaturation des protéines
+#
+# Paramètres clés :
+#   CTmin : température minimale de performance
+#   Topt  : température optimale (pic de performance)
+#   CTmax : température maximale de performance
+#   Pmax  : performance au pic
+#   Breadth (B80) : gamme de temp. pour ≥80% de Pmax
+# ============================================================
+
+# Simulation de données de performance métabolique
+# (taux d'activité enzymatique mesuré à différentes températures)
+temperatures_test <- seq(5, 42, by = 1)
+
+# Fonction de performance thermique (modèle de Deutsch et al. 2008)
+# Forme en cloche asymétrique typique des ectothermes
+tpc_model <- function(temp, rmax, topt, ctmin, ctmax) {
+  # Performance = 0 en dehors de [CTmin, CTmax]
+  perf <- rep(0, length(temp))
+  in_range <- temp > ctmin & temp < ctmax
+
+  perf[in_range] <- rmax * exp(
+    -((temp[in_range] - topt)^2) /
+    (2 * ifelse(temp[in_range] < topt,
+                (topt - ctmin)^2 / 4,
+                (ctmax - topt)^2 / 4))
+  )
+  perf
+}
+
+# Paramètres par espèce (basés sur les CTmax/CTmin mesurés)
+params_tpc <- especes_info %>%
+  mutate(
+    topt  = ctmax_mean - 3.5,   # Topt typiquement 3-5°C sous CTmax
+    rmax  = 1.0,                 # Performance normalisée 0-1
+    # Ajout de bruit pour réalisme
+    topt  = topt + rnorm(n(), 0, 0.3)
+  )
+
+# Générer les courbes
+tpc_curves <- do.call(rbind, lapply(1:nrow(params_tpc), function(i) {
+  p <- params_tpc[i, ]
+  perf <- tpc_model(
+    temperatures_test,
+    rmax  = p$rmax,
+    topt  = p$topt,
+    ctmin = p$ctmin_mean,
+    ctmax = p$ctmax_mean
+  )
+  # Ajouter du bruit expérimental réaliste
+  perf_obs <- pmax(0, perf + rnorm(length(perf), 0, 0.04))
+
+  data.frame(
+    espece      = p$espece,
+    habitat     = p$habitat,
+    temperature = temperatures_test,
+    performance = perf,          # Courbe théorique
+    perf_obs    = perf_obs,      # Données "observées"
+    topt        = p$topt,
+    ctmin       = p$ctmin_mean,
+    ctmax       = p$ctmax_mean
+  )
+}))
+```
+
+```{r ajustement-tpc}
+# ============================================================
+# AJUSTER LES COURBES AUX DONNÉES RÉELLES
+#
+# nls() = Non-Linear Least Squares
+# On cherche les paramètres (rmax, topt, ctmin, ctmax) qui
+# minimisent la somme des carrés des résidus.
+#
+# start = valeurs initiales (essentielles pour que nls converge)
+#         → utilisez vos estimations a priori de CTmax/CTmin
+# ============================================================
+
+# Ajustement pour une espèce (Boophis tephraeomystax)
+data_boophis <- tpc_curves %>%
+  filter(espece == "Boophis tephraeomystax",
+         perf_obs > 0)
+
+tryCatch({
+  fit_boophis <- nls(
+    perf_obs ~ rmax * exp(
+      -((temperature - topt)^2) /
+       (2 * ifelse(temperature < topt,
+                   (topt - ctmin)^2 / 4,
+                   (ctmax - topt)^2 / 4))
+    ),
+    data  = data_boophis,
+    start = list(rmax  = 0.9,
+                 topt  = 33,
+                 ctmin = 9,
+                 ctmax = 37),
+    control = nls.control(maxiter = 200, tol = 1e-4)
+  )
+
+  cat("=== PARAMÈTRES AJUSTÉS — Boophis tephraeomystax ===\n")
+  print(summary(fit_boophis)$coefficients)
+
+  cat("\nR² du modèle :",
+      round(1 - sum(residuals(fit_boophis)^2) /
+              sum((data_boophis$perf_obs - mean(data_boophis$perf_obs))^2), 4),
+      "\n")
+
+}, error = function(e) {
+  cat("Ajustement nls() — Essayer avec des valeurs start différentes.\n")
+  cat("Erreur :", conditionMessage(e), "\n")
+  cat("Conseil : vérifiez que perf_obs > 0 sur la gamme de températures.\n")
+})
+```
+
+---
+
+# 5. Visualisations
+
+## 5.1 CTmax et CTmin par espèce
+
+```{r fig-ctmax, fig.cap="Figure 1. Limites thermiques critiques (CTmax et CTmin) par espèce. Les points représentent les individus, les barres horizontales les médianes, et les boîtes les 1er et 3e quartiles."}
+
+palette_habitat <- c(
+  "Forêt ripicole"  = "#1A6B9A",
+  "Forêt primaire"  = "#0F6E56",
+  "Zone ouverte"    = "#D85A30",
+  "Forêt dégradée"  = "#B8860B"
+)
+
+# Données en format long pour ggplot
+data_long <- data_phys %>%
+  pivot_longer(
+    cols      = c(CTmax_C, CTmin_C),
+    names_to  = "limite",
+    values_to = "temperature_C"
+  ) %>%
+  mutate(
+    limite = recode(limite,
+      "CTmax_C" = "CTmax",
+      "CTmin_C" = "CTmin"
+    ),
+    espece_court = sub("(\\w+) (\\w+)", "\\1\\. \\2", espece)
+  )
+
+fig_ctmax <- data_long %>%
+  ggplot(aes(x = reorder(espece, temperature_C),
+             y = temperature_C,
+             color = habitat)) +
+  geom_jitter(width = 0.15, alpha = 0.5, size = 1.8) +
+  stat_summary(fun = median, geom = "crossbar",
+               width = 0.5, linewidth = 0.8, color = "grey20") +
+  stat_summary(fun.data = function(x) {
+    data.frame(y    = median(x),
+               ymin = quantile(x, 0.25),
+               ymax = quantile(x, 0.75))
+  }, geom = "errorbar", width = 0.3, linewidth = 0.8, color = "grey20") +
+  facet_wrap(~ limite, scales = "free_y") +
+  coord_flip() +
+  scale_color_manual(values = palette_habitat, name = "Habitat") +
+  scale_x_discrete(labels = function(x)
+    paste0("italic('", x, "')")) +
+  labs(
+    title    = "Limites thermiques critiques — Amphibiens d'Ambatotsirongorongo",
+    subtitle = "Points = individus · Barre = médiane · Boîte = Q1–Q3",
+    x        = NULL,
+    y        = "Température (°C)",
+    caption  = "Rampe thermique : +0.5°C/min jusqu'à perte du réflexe de retournement (CTmax)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.y  = element_text(face = "italic"),
+    legend.position = "bottom",
+    plot.title   = element_text(face = "bold"),
+    strip.text   = element_text(face = "bold", size = 13)
+  )
+
+print(fig_ctmax)
+```
+
+## 5.2 Courbes de performance thermique
+
+```{r fig-tpc, fig.cap="Figure 2. Courbes de performance thermique (TPC) des six espèces d'amphibiens. La performance physiologique (normalisée 0–1) est représentée en fonction de la température ambiante. Les triangles indiquent CTmin (bas) et CTmax (haut). La croix indique Topt."}
+
+# Points remarquables des courbes
+points_remarquables <- params_tpc %>%
+  select(espece, habitat, topt, ctmin_mean, ctmax_mean) %>%
+  rename(ctmin = ctmin_mean, ctmax = ctmax_mean)
+
+fig_tpc <- tpc_curves %>%
+  ggplot(aes(x = temperature, y = performance, color = espece)) +
+  # Courbes théoriques
+  geom_line(linewidth = 1.2, alpha = 0.9) +
+  # Points observés (sous-échantillonnés pour lisibilité)
+  geom_point(aes(y = perf_obs),
+             data = tpc_curves %>% filter(row_number() %% 3 == 0),
+             size = 0.8, alpha = 0.3) +
+  # CTmin (triangle bas)
+  geom_point(data = points_remarquables,
+             aes(x = ctmin, y = 0, color = espece),
+             shape = 25, size = 3, fill = "white") +
+  # CTmax (triangle haut)
+  geom_point(data = points_remarquables,
+             aes(x = ctmax, y = 0, color = espece),
+             shape = 24, size = 3, fill = "white") +
+  # Topt (croix)
+  geom_point(data = points_remarquables,
+             aes(x = topt, y = 1.0, color = espece),
+             shape = 3, size = 4, stroke = 2) +
+  # Ligne de référence : température ambiante moyenne
+  geom_vline(xintercept = 22, linetype = "dashed",
+             color = "grey50", linewidth = 0.7) +
+  annotate("text", x = 22.5, y = 0.95,
+           label = "Temp.\nhabitat moy.", size = 3, color = "grey50",
+           hjust = 0) +
+  # Ligne des 80% de Pmax
+  geom_hline(yintercept = 0.8, linetype = "dotted",
+             color = "grey40", linewidth = 0.6) +
+  annotate("text", x = 6, y = 0.82,
+           label = "80% Pmax (B80)", size = 3, color = "grey40", hjust = 0) +
+  scale_color_brewer(palette = "Dark2",
+                     name    = "Espèce",
+                     labels  = function(x) parse(
+                       text = paste0("italic('", x, "')")
+                     )) +
+  scale_x_continuous(breaks = seq(5, 45, by = 5),
+                     labels = function(x) paste0(x, "°C")) +
+  labs(
+    title    = "Courbes de performance thermique — Amphibiens de Madagascar",
+    subtitle = "▽ CTmin  △ CTmax  + Topt · Performance normalisée (0–1)",
+    x        = "Température (°C)",
+    y        = "Performance relative",
+    caption  = "Modèle : Deutsch et al. (2008)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.text  = element_text(face = "italic"),
+    plot.title   = element_text(face = "bold"),
+    legend.position = "right"
+  )
+
+print(fig_tpc)
+```
+
+## 5.3 Marge de sécurité thermique
+
+```{r fig-marge, fig.cap="Figure 3. Marges de sécurité thermique par espèce (CTmax − température du microhabitat). Une marge faible (<5°C) indique une vulnérabilité élevée au réchauffement climatique. La ligne rouge représente le seuil critique de 5°C."}
+# ============================================================
+# MARGE DE SÉCURITÉ THERMIQUE — la métrique clé pour la conservation
+#
+# Marge = CTmax − Température actuelle du microhabitat
+#
+# Si le réchauffement climatique prévu = +2°C :
+#   Marge de 3°C → l'espèce dépasse son CTmax → VULNÉRABLE
+#   Marge de 8°C → l'espèce reste sous son CTmax → moins vulnérable
+#
+# C'est le calcul central de la plupart des papers écophysio
+# sur la vulnérabilité au changement climatique.
+# ============================================================
+
+marge_summary <- data_phys %>%
+  group_by(espece, habitat) %>%
+  summarise(
+    marge_mean = mean(marge_securite),
+    marge_sd   = sd(marge_securite),
+    marge_se   = sd(marge_securite) / sqrt(n()),
+    marge_min  = min(marge_securite),
+    n          = n(),
+    .groups    = "drop"
+  )
+
+fig_marge <- marge_summary %>%
+  ggplot(aes(x = reorder(espece, marge_mean),
+             y = marge_mean,
+             fill = habitat)) +
+  # Seuil critique
+  geom_hline(yintercept = 5, linetype = "dashed",
+             color = "#D85A30", linewidth = 1) +
+  annotate("rect", xmin = 0.5, xmax = 6.5, ymin = 0, ymax = 5,
+           fill = "#D85A30", alpha = 0.06) +
+  annotate("text", x = 6.3, y = 2.5,
+           label = "Zone de\nvulnérabilité\nélevée",
+           size = 3, color = "#D85A30", fontface = "bold", hjust = 1) +
+  geom_col(width = 0.65) +
+  geom_errorbar(
+    aes(ymin = marge_mean - marge_se,
+        ymax = marge_mean + marge_se),
+    width = 0.3, linewidth = 0.8, color = "grey30"
+  ) +
+  geom_text(
+    aes(label = paste0("n=", n)),
+    y = 0.3, size = 3, color = "white", fontface = "bold"
+  ) +
+  coord_flip() +
+  scale_fill_manual(values = palette_habitat, name = "Habitat") +
+  scale_y_continuous(
+    labels = function(x) paste0("+", x, "°C"),
+    breaks = seq(0, 20, by = 2)
+  ) +
+  scale_x_discrete(labels = function(x)
+    gsub("(\\w+) (\\w+)", "italic('\\1 \\2')", x)) +
+  labs(
+    title    = "Marge de sécurité thermique par espèce",
+    subtitle = "CTmax − Température microhabitat (± SE) · Seuil critique = 5°C",
+    x        = NULL,
+    y        = "Marge de sécurité (°C)",
+    caption  = "Une marge < 5°C indique une vulnérabilité élevée au réchauffement climatique"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.y  = element_text(face = "italic"),
+    plot.title   = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+
+print(fig_marge)
+```
+
+## 5.4 Gradient altitudinal
+
+```{r fig-altitude, fig.cap="Figure 4. Relation entre CTmax et altitude de collecte. Chez les ectothermes tropicaux, CTmax tend à décroître avec l'altitude (adaptation aux températures plus fraîches). La droite de régression est issue d'un modèle linéaire mixte."}
+
+fig_altitude <- data_phys %>%
+  ggplot(aes(x = altitude_m, y = CTmax_C, color = espece)) +
+  geom_point(alpha = 0.7, size = 2.5) +
+  geom_smooth(
+    aes(group = 1),        # Régression globale (toutes espèces)
+    method  = "lm",
+    color   = "grey30",
+    fill    = "grey80",
+    linewidth = 1.2,
+    alpha   = 0.2
+  ) +
+  # Label de la pente globale
+  stat_poly_eq <- function(data) {
+    m <- lm(CTmax_C ~ altitude_m, data = data_phys)
+    b <- round(coef(m)[2] * 100, 3)  # Variation par 100m
+    paste0("Δ CTmax = ", b, "°C / 100m d'altitude")
+  }
+  annotate("text",
+           x = max(data_phys$altitude_m) - 50,
+           y = max(data_phys$CTmax_C),
+           label = stat_poly_eq(data_phys),
+           size = 3.5, color = "grey30", hjust = 1) +
+  scale_color_brewer(palette = "Dark2",
+                     name = "Espèce",
+                     labels = function(x) parse(
+                       text = paste0("italic('", x, "')")
+                     )) +
+  labs(
+    title    = "CTmax en fonction de l'altitude",
+    subtitle = "Gradient altitudinal — Amphibiens d'Ambatotsirongorongo",
+    x        = "Altitude (m)",
+    y        = "CTmax (°C)",
+    caption  = "Droite : régression linéaire globale (toutes espèces confondues)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.text = element_text(face = "italic"),
+    plot.title  = element_text(face = "bold")
+  )
+
+print(fig_altitude)
+```
+
+---
+
+# 6. Modèle Linéaire — Prédicteurs de CTmax
+
+```{r modele-ctmax}
+# ============================================================
+# QUELLES VARIABLES EXPLIQUENT LA VARIATION DE CTmax ?
+#
+# Candidats biologiquement justifiés :
+#   - Espèce (facteur génétique majeur)
+#   - Altitude (gradient thermique environnemental)
+#   - Masse corporelle (inertie thermique)
+#   - LMC (taille = métabolisme)
+#   - Température du microhabitat (acclimatation)
+#
+# Approche :
+#   1. Modèle saturé avec toutes les variables
+#   2. Sélection par AIC (stepAIC)
+#   3. Vérification des résidus
+# ============================================================
+
+# Centrer-réduire les variables numériques
+data_modele <- data_phys %>%
+  mutate(
+    altitude_sc   = scale(altitude_m)[,1],
+    masse_sc      = scale(masse_g)[,1],
+    lmc_sc        = scale(lmc_mm)[,1],
+    temp_hab_sc   = scale(temp_habitat_C)[,1]
+  )
+
+# Modèle complet
+m_full <- lm(
+  CTmax_C ~ espece + altitude_sc + masse_sc +
+            lmc_sc + temp_hab_sc,
+  data = data_modele
+)
+
+# Sélection de modèle par AIC
+m_select <- step(m_full, direction = "both", trace = 0)
+
+cat("=== MODÈLE SÉLECTIONNÉ ===\n\n")
+cat("Variables retenues :", paste(names(coef(m_select))[-1], collapse = ", "), "\n\n")
+
+# Résumé du modèle final
+summary_model <- summary(m_select)
+
+cat("R² ajusté :", round(summary_model$adj.r.squared, 4), "\n")
+cat("F-test : F(",
+    summary_model$fstatistic[2], ",",
+    summary_model$fstatistic[3], ") =",
+    round(summary_model$fstatistic[1], 2), "\n")
+cat("p-value globale :", format(
+  pf(summary_model$fstatistic[1],
+     summary_model$fstatistic[2],
+     summary_model$fstatistic[3],
+     lower.tail = FALSE),
+  scientific = TRUE, digits = 3), "\n")
+```
+
+```{r tableau-modele}
+coefs_df <- broom::tidy(m_select, conf.int = TRUE) %>%
+  mutate(
+    sig = case_when(
+      p.value < 0.001 ~ "***",
+      p.value < 0.01  ~ "**",
+      p.value < 0.05  ~ "*",
+      p.value < 0.10  ~ ".",
+      TRUE            ~ "ns"
+    ),
+    terme_propre = gsub("espece", "Espèce : ", term),
+    terme_propre = gsub("_sc", " (centré)", terme_propre)
+  ) %>%
+  select(terme_propre, estimate, conf.low, conf.high, statistic, p.value, sig)
+
+kable(
+  coefs_df %>% mutate(across(where(is.numeric), round, 3)),
+  caption = "Tableau 2. Coefficients du modèle linéaire — Variable réponse : CTmax (°C)",
+  col.names = c("Variable", "β", "IC inf. 95%", "IC sup. 95%", "t", "p", "Sig.")
+)
+```
+
+```{r verification-residus, fig.height=6, fig.cap="Figure 5. Diagnostics des résidus du modèle linéaire. En haut à gauche : résidus vs valeurs ajustées (doit être centré sur 0). En haut à droite : QQ-plot (points sur la diagonale = normalité). En bas : distribution des résidus (doit être symétrique)."}
+
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+plot(m_select,
+     which = c(1, 2, 3, 5),
+     col   = "#1D9E75",
+     pch   = 16,
+     cex   = 0.8)
+par(mfrow = c(1, 1))
+```
+
+---
+
+# 7. Vulnérabilité au Changement Climatique
+
+```{r vulnerabilite}
+# ============================================================
+# CALCUL DE LA VULNÉRABILITÉ — le résultat le plus important
+#
+# Scénarios IPCC pour 2100 (région tropicale Afrique/Océan Indien) :
+#   RCP 2.6 : +1.5°C (scénario optimiste, accord de Paris)
+#   RCP 4.5 : +2.5°C (scénario intermédiaire)
+#   RCP 8.5 : +4.0°C (scénario pessimiste, business-as-usual)
+#
+# Pour chaque individu :
+#   Marge résiduelle = CTmax − (Temp_habitat + Réchauffement)
+#   Si marge résiduelle < 0 → l'individu DÉPASSE son CTmax
+#   % individus dépassant CTmax = % vulnérables
+# ============================================================
+
+scenarios <- data.frame(
+  scenario     = c("Actuel", "RCP 2.6\n(+1.5°C)", "RCP 4.5\n(+2.5°C)", "RCP 8.5\n(+4.0°C)"),
+  rechauffement = c(0, 1.5, 2.5, 4.0),
+  annee         = c(2024, 2050, 2075, 2100)
+)
+
+vuln_data <- do.call(rbind, lapply(1:nrow(scenarios), function(s) {
+  sc <- scenarios[s, ]
+
+  data_phys %>%
+    mutate(
+      scenario           = sc$scenario,
+      rechauffement      = sc$rechauffement,
+      temp_future        = temp_habitat_C + sc$rechauffement,
+      marge_future       = CTmax_C - temp_future,
+      vulnerable         = marge_future < 0,
+      critique           = marge_future < 2   # Marge < 2°C = critique
+    ) %>%
+    group_by(espece, habitat, scenario, rechauffement) %>%
+    summarise(
+      pct_vulnerable = mean(vulnerable) * 100,
+      pct_critique   = mean(critique)   * 100,
+      n              = n(),
+      .groups        = "drop"
+    )
+}))
+```
+
+```{r fig-vulnerabilite, fig.cap="Figure 6. Vulnérabilité au changement climatique selon les scénarios IPCC. Le % d'individus dépassant leur CTmax est représenté pour chaque espèce et chaque scénario de réchauffement."}
+
+vuln_data %>%
+  mutate(
+    scenario = factor(scenario,
+                      levels = c("Actuel", "RCP 2.6\n(+1.5°C)",
+                                 "RCP 4.5\n(+2.5°C)", "RCP 8.5\n(+4.0°C)"))
+  ) %>%
+  ggplot(aes(x = scenario, y = pct_vulnerable,
+             color = espece, group = espece)) +
+  geom_line(linewidth = 1.2, alpha = 0.9) +
+  geom_point(size = 3.5) +
+  geom_text_repel(
+    data = . %>% filter(scenario == "RCP 8.5\n(+4.0°C)"),
+    aes(label = sub("(\\w)\\w+ (\\w+)", "\\1. \\2", espece)),
+    nudge_x = 0.1, size = 3, fontface = "italic",
+    direction = "y", hjust = 0
+  ) +
+  # Seuil critique 50%
+  geom_hline(yintercept = 50, linetype = "dashed",
+             color = "grey50", linewidth = 0.7) +
+  annotate("text", x = 0.6, y = 52,
+           label = "50% vulnérable", size = 3,
+           color = "grey40", hjust = 0) +
+  scale_color_brewer(palette = "Dark2") +
+  scale_y_continuous(
+    labels = function(x) paste0(x, "%"),
+    limits = c(0, 100)
+  ) +
+  labs(
+    title    = "Vulnérabilité thermique selon les scénarios IPCC",
+    subtitle = "% d'individus dépassant leur CTmax par scénario de réchauffement",
+    x        = "Scénario climatique",
+    y        = "% individus vulnérables (CTmax dépassé)",
+    caption  = "Scénarios IPCC AR6 · Région Océan Indien"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+```{r tableau-vulnerabilite}
+kable(
+  vuln_data %>%
+    filter(scenario %in% c("Actuel", "RCP 4.5\n(+2.5°C)", "RCP 8.5\n(+4.0°C)")) %>%
+    select(espece, scenario, pct_vulnerable, pct_critique) %>%
+    mutate(across(c(pct_vulnerable, pct_critique), round, 1)) %>%
+    arrange(espece, scenario),
+  caption = "Tableau 3. Vulnérabilité thermique par espèce et scénario IPCC",
+  col.names = c("Espèce", "Scénario", "% vulnérable", "% critique (<2°C marge)")
+)
+```
+
+---
+
+# 8. Phrases pour votre Section Results
+
+```{r phrases-results}
+# Calculs clés pour les phrases
+ctmax_global <- round(mean(data_phys$CTmax_C), 2)
+ctmin_global <- round(mean(data_phys$CTmin_C), 2)
+gamme_global <- round(mean(data_phys$gamme_tolerance), 2)
+marge_global <- round(mean(data_phys$marge_securite), 2)
+
+sp_plus_vulnerable <- marge_summary %>%
+  arrange(marge_mean) %>%
+  slice(1)
+
+sp_moins_vulnerable <- marge_summary %>%
+  arrange(desc(marge_mean)) %>%
+  slice(1)
+
+vuln_rcp85 <- vuln_data %>%
+  filter(grepl("8.5", scenario)) %>%
+  summarise(moy = mean(pct_vulnerable))
+
+cat("=== PHRASES RESULTS (anglais académique) ===\n\n")
+
+cat(sprintf(
+  "--- Thermal limits ---
+  Critical thermal maxima (CTmax) ranged from %.1f to %.1f°C across species
+  (overall mean ± SD: %.2f ± %.2f°C), while CTmin ranged from %.1f to %.1f°C.
+  The thermal tolerance breadth (CTmax − CTmin) averaged %.1f°C.\n\n",
+  min(data_phys$CTmax_C), max(data_phys$CTmax_C),
+  mean(data_phys$CTmax_C), sd(data_phys$CTmax_C),
+  min(data_phys$CTmin_C), max(data_phys$CTmin_C),
+  mean(data_phys$gamme_tolerance)
+))
+
+cat(sprintf(
+  "--- Thermal safety margins ---
+  Thermal safety margins (CTmax minus operative habitat temperature) averaged
+  %.1f°C (range: %.1f–%.1f°C). %s showed the lowest safety margin
+  (%.1f ± %.1f°C), indicating the highest vulnerability to warming, while
+  %s had the largest margin (%.1f ± %.1f°C).\n\n",
+  mean(data_phys$marge_securite),
+  min(data_phys$marge_securite),
+  max(data_phys$marge_securite),
+  sp_plus_vulnerable$espece,
+  sp_plus_vulnerable$marge_mean,
+  sp_plus_vulnerable$marge_sd,
+  sp_moins_vulnerable$espece,
+  sp_moins_vulnerable$marge_mean,
+  sp_moins_vulnerable$marge_sd
+))
+
+cat(sprintf(
+  "--- Climate vulnerability ---
+  Under the high-emission scenario (RCP 8.5, +4.0°C), a mean of %.1f%%
+  of individuals across species are projected to exceed their CTmax,
+  compared to 0%% under current conditions. These results suggest that
+  Malagasy amphibians face significant thermal stress under projected
+  climate change scenarios.\n",
+  vuln_rcp85$moy
+))
+```
+
+---
+
+# 9. Figure Composite Publication
+
+```{r fig-composite, fig.width=12, fig.height=9, fig.cap="Figure 7. Synthèse écophysiologique — Amphibiens d'Ambatotsirongorongo, Madagascar. A : Limites thermiques critiques. B : Courbes de performance thermique. C : Marges de sécurité thermique. D : Vulnérabilité selon les scénarios IPCC."}
+
+composite <- (fig_ctmax | fig_tpc) /
+             (fig_marge | last_plot()) +
+  plot_annotation(
+    title   = "Thermal physiology and climate vulnerability — Malagasy amphibians",
+    caption = "RAZAFINDRABE MAMINIAINA H.F., FADEEVA A. & GLOS J. — Ambatotsirongorongo NP, Madagascar",
+    tag_levels = "A",
+    theme = theme(
+      plot.title   = element_text(face = "bold", size = 13),
+      plot.caption = element_text(size = 8, color = "grey50")
+    )
+  )
+
+print(composite)
+```
+
+---
+
+# Récapitulatif
+
+| Étape | Analyse | Package | Clé biologique |
+|-------|---------|---------|----------------|
+| Limites thermiques | CTmax, CTmin, gamme | base R | LORR = endpoint standard |
+| Tests comparaison | Kruskal-Wallis | base R | Non-paramétrique si non-normal |
+| Courbes TPC | nls() / rTPC | stats / rTPC | start = vos CTmax/CTmin estimés |
+| Marge de sécurité | CTmax − T_habitat | dplyr | Métrique clé pour conservation |
+| Gradient altitudinal | Corrélation Spearman | base R | Attend CTmax décroissant |
+| Prédicteurs CTmax | lm() + stepAIC | MASS | Centrer les variables |
+| Diagnostics | plot(lm) | base R | QQ-plot + résidus vs ajustés |
+| Vulnérabilité IPCC | Calcul direct | dplyr | RCP 2.6 / 4.5 / 8.5 |
+
+---
+
+*R `r R.version$major`.`r R.version$minor` ·
+ggplot2 `r packageVersion("ggplot2")` ·
+lme4 `r packageVersion("lme4")`*
+
+*Auteur : Haja Fabrice RAZAFINDRABE MAMINIAINA — hajafabrice.r@gmail.com*
+
+*EcoR Toolkit — Module 3 : Ecophysiology*

@@ -1,5 +1,5 @@
 param(
-    [string]$Source = "documents\RDigitalProduct\Gumroad_Tier_Packages\Tier_2_Complete_Toolkit",
+    [string]$Source = "documents\oplurix-site\RDigitalProduct\Gumroad_Tier_Packages\Tier_2_Complete_Toolkit",
     [string]$ReleaseSupport = "sales\oplurix-first-sale\release_support",
     [string]$ReleaseDir = "sales\oplurix-first-sale\releases\EcoR_Toolkit_Complete_v1",
     [string]$ZipPath = "sales\oplurix-first-sale\google-drive-mirror\OPLURIX Deliveries\EcoR Complete\EcoR_Toolkit_Complete_v1.zip"

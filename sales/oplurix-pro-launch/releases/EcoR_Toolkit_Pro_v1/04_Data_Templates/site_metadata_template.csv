@@ -1,0 +1,4 @@
+site,latitude,longitude,altitude_m,habitat_type,protection_status,region,country,notes
+Foret_Primaire,-18.12345,48.12345,950,foret_primaire,protected,Alaotra-Mangoro,Madagascar,
+Lisiere_Nord,-18.12400,48.12500,910,foret_secondaire,buffer_zone,Alaotra-Mangoro,Madagascar,
+Zone_Degradee,-18.13000,48.13000,880,zone_degradee,unprotected,Alaotra-Mangoro,Madagascar,

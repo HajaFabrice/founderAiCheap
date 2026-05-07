@@ -1,0 +1,199 @@
+
+<h2 class="sr-only">EcoR Toolkit v2 product strategy — updated after all assets built</h2>
+<style>
+  .tab-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.25rem;}
+  .tab{font-size:11px;font-weight:500;padding:4px 11px;border-radius:20px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);}
+  .tab.on{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);}
+  .pane{display:none;}.pane.on{display:block;}
+  .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.9rem 1.1rem;margin-bottom:8px;}
+  .card-hot{border:1.5px solid var(--color-border-info);}
+  .lbl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary);margin:1.1rem 0 .5rem;}
+  .badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:5px;}
+  .b-teal{background:#E1F5EE;color:#0F6E56;}
+  .b-blue{background:#E6F1FB;color:#185FA5;}
+  .b-amber{background:#FAEEDA;color:#854F0B;}
+  .b-coral{background:#FAECE7;color:#993C1D;}
+  .b-purple{background:#EEEDFE;color:#534AB7;}
+  .b-green{background:#EAF3DE;color:#3B6D11;}
+  .stat-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:8px 0;}
+  .stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center;}
+  .stat-n{font-size:22px;font-weight:500;color:var(--color-text-primary);}
+  .stat-l{font-size:10px;color:var(--color-text-secondary);margin-top:2px;}
+  .check-row{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:12px;color:var(--color-text-primary);}
+  .ck{width:16px;height:16px;border-radius:50%;background:#E1F5EE;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .price-tier{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.85rem;text-align:center;}
+  .price-tier.star{border:2px solid var(--color-border-info);}
+  .price-tag{font-size:26px;font-weight:500;color:var(--color-text-primary);margin:4px 0;}
+  .tier-name{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-secondary);}
+  .tier-who{font-size:10px;color:var(--color-text-secondary);margin-top:4px;line-height:1.4;}
+  .row-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px;}
+  .row-item:last-child{border-bottom:none;}
+  .row-val{margin-left:auto;font-weight:500;color:var(--color-text-primary);white-space:nowrap;}
+  .action-btn{display:block;width:100%;margin-top:1rem;padding:9px;font-size:13px;cursor:pointer;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary);text-align:center;}
+  .action-btn:hover{background:var(--color-background-secondary);}
+  .week-row{display:flex;gap:10px;margin:8px 0;align-items:flex-start;}
+  .week-lbl{font-size:10px;font-weight:500;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:3px 7px;flex-shrink:0;color:var(--color-text-secondary);white-space:nowrap;}
+  .week-txt{font-size:12px;color:var(--color-text-primary);line-height:1.5;}
+  .moat-item{display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start;}
+  .moat-item:last-child{border-bottom:none;}
+  .moat-asset{font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1;}
+  .moat-why{font-size:11px;color:var(--color-text-secondary);flex:1.5;line-height:1.5;}
+</style>
+
+<div style="padding:1rem 0;">
+<div class="tab-row">
+  <button class="tab on" onclick="sw(0)">Produit</button>
+  <button class="tab" onclick="sw(1)">Pricing</button>
+  <button class="tab" onclick="sw(2)">Moat</button>
+  <button class="tab" onclick="sw(3)">Launch</button>
+  <button class="tab" onclick="sw(4)">Revenus</button>
+</div>
+
+<div id="p0" class="pane on">
+  <div class="lbl">Ce qui est construit — inventaire complet</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n">5</div><div class="stat-l">notebooks .Rmd</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">pro assets uniques</div></div>
+    <div class="stat"><div class="stat-n">50</div><div class="stat-l">prompts Claude</div></div>
+    <div class="stat"><div class="stat-n" style="color:#0F6E56;">$1,090</div><div class="stat-l">valeur stackée</div></div>
+  </div>
+
+  <div class="lbl">5 notebooks R annotés</div>
+  <div class="card">
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Module 1</b> — Community ecology · Ihofa survey</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Module 2</b> — Behavioural ecology · Zonosaurus thesis</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Module 3</b> — Ecophysiology · Amphibian thermal stress</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Module 4</b> — Population genetics · Tissue samples</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Module 5</b> — Functional morphology · Lemur AJBA 2023</span></div>
+  </div>
+
+  <div class="lbl">Advanced Pro assets</div>
+  <div class="card">
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>5 annotated R notebooks</b> — vos vrais contextes terrain et publication</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Decision Tree HTML</b> — 12 tests R, interactif, mobile</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>1 month email Q&amp;A</b> — aide structurée, sans faux consulting illimité</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span><b>Private WhatsApp access</b> — communauté fondatrice et suivi manuel</span></div>
+  </div>
+</div>
+
+<div id="p1" class="pane">
+  <div class="lbl">4 tiers — structure Hormozi</div>
+  <div class="price-grid">
+    <div class="price-tier">
+      <div class="tier-name">Starter</div>
+      <div class="price-tag">$29</div>
+      <div class="tier-who">10 scripts annotés + 50 prompts · étudiant master</div>
+    </div>
+    <div class="price-tier star">
+      <div style="font-size:9px;background:var(--color-background-info);color:var(--color-text-info);padding:2px 6px;border-radius:20px;display:inline-block;margin-bottom:4px;">Best value</div>
+      <div class="tier-name">Complete</div>
+      <div class="price-tag">$97</div>
+      <div class="tier-who">Scripts + prompts + templates + guides · offre principale</div>
+    </div>
+    <div class="price-tier">
+      <div class="tier-name">Pro</div>
+      <div class="price-tag">$297</div>
+      <div class="tier-who">Tout + notebooks + Decision Tree + Q&A + WhatsApp</div>
+    </div>
+    <div class="price-tier">
+      <div class="tier-name">Institutional</div>
+      <div class="price-tag">$499</div>
+      <div class="tier-who">Licence 5 pers. + onboarding · ONG / labos</div>
+    </div>
+  </div>
+
+  <div class="lbl">Stack de valeur — page Gumroad</div>
+  <div class="card">
+    <div class="row-item"><span>10 scripts R annotés</span><span class="row-val">$120</span></div>
+    <div class="row-item"><span>50 prompts Claude</span><span class="row-val">$150</span></div>
+    <div class="row-item"><span>5 templates terrain</span><span class="row-val">$80</span></div>
+    <div class="row-item"><span>3 thèmes ggplot2</span><span class="row-val">$60</span></div>
+    <div class="row-item"><span>2 guides de workflow</span><span class="row-val">$80</span></div>
+    <div class="row-item"><span>5 notebooks R annotés</span><span class="row-val">$250</span></div>
+    <div class="row-item"><span>Decision Tree interactif</span><span class="row-val">$100</span></div>
+    <div class="row-item"><span>1 mois de Q&amp;A par email</span><span class="row-val">$120</span></div>
+    <div class="row-item"><span>Accès WhatsApp privé</span><span class="row-val">$60</span></div>
+    <div class="row-item" style="font-weight:500;"><span>Valeur totale stackée</span><span class="row-val" style="color:#0F6E56;">$1,020</span></div>
+    <div class="row-item"><span>Votre prix (Pro)</span><span class="row-val" style="font-size:18px;">$297</span></div>
+  </div>
+  <p style="font-size:11px;color:var(--color-text-secondary);text-align:center;margin-top:4px;">Économie de 71% sur le niveau Pro — présenté explicitement sur la page</p>
+</div>
+
+<div id="p2" class="pane">
+  <div class="lbl">Votre fossé concurrentiel — ce que personne ne peut copier</div>
+  <div class="card">
+    <div class="moat-item">
+      <div class="moat-asset">Module 2 — Zonosaurus</div>
+      <div class="moat-why">Votre thèse. Vos données. Votre espèce. Aucun concurrent n'a jamais mis les pieds à Kirindy.</div>
+    </div>
+    <div class="moat-item">
+      <div class="moat-asset">Module 3 — Amphibiens</div>
+      <div class="moat-why">Votre terrain à Ambatotsirongorongo. Vos expériences CTmax. Vos photos.</div>
+    </div>
+    <div class="moat-item">
+      <div class="moat-asset">Module 4 — Génétique</div>
+      <div class="moat-why">Vos échantillons de tissus, vos institutions partenaires, votre protocole.</div>
+    </div>
+    <div class="moat-item">
+      <div class="moat-asset">Module 5 — Lémuriens</div>
+      <div class="moat-why">Votre publication AJBA 2023. Un article publié = crédibilité irréfutable.</div>
+    </div>
+    <div class="moat-item">
+      <div class="moat-asset">Decision Tree interactif</div>
+      <div class="moat-why">Construit pour des workflows d'écologie réels, pas pour un cours de statistiques générique.</div>
+    </div>
+    <div class="moat-item">
+      <div class="moat-asset">Support Pro géré par le fondateur</div>
+      <div class="moat-why">Le suivi email et la voie WhatsApp ajoutent un vrai accompagnement sans prétendre à un consulting illimité.</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--color-text-secondary);margin-top:8px;line-height:1.6;">Le code R et les prompts Claude peuvent être copiés avec le temps. La biologie derrière chaque exemple ne peut pas l'être.</p>
+</div>
+
+<div id="p3" class="pane">
+  <div class="lbl">4 semaines pour le premier revenu</div>
+  <div class="week-row"><div class="week-lbl">Semaine 1</div><div class="week-txt">Gumroad setup · ZIP les 3 tiers · Cover image Canva · Tester le download</div></div>
+  <div class="week-row"><div class="week-lbl">Semaine 2</div><div class="week-txt">GitHub repo (2 scripts gratuits) · README → lien Gumroad · DM 10 chercheurs pour bêta test gratuit → témoignages</div></div>
+  <div class="week-row"><div class="week-lbl">Semaine 3</div><div class="week-txt">LinkedIn post de lancement (storytelling terrain) · ResearchGate · groupes Facebook biologistes malgaches</div></div>
+  <div class="week-row"><div class="week-lbl">Semaine 4</div><div class="week-txt">Ajouter 3–5 témoignages sur Gumroad · Email direct : WWF Madagascar, WCS, Asity, Durrell · "Prix augmente à chaque module ajouté"</div></div>
+
+  <div class="lbl">Sources de trafic passives (après lancement)</div>
+  <div class="card">
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span>GitHub SEO — chercheurs R cherchent "herpetology diversity R scripts"</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span>ResearchGate — votre profil chercheur → produit</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span>LinkedIn compounding — 1 post/semaine · #Rstats #Ecology</span></div>
+    <div class="check-row"><div class="ck"><svg viewBox="0 0 10 10" width="9" height="9"><polyline points="2,5 4.5,7.5 8,3" stroke="#0F6E56" stroke-width="1.5" fill="none"/></svg></div><span>Acheteurs → labmates → effet bouche-à-oreille</span></div>
+  </div>
+  <button class="action-btn" onclick="sendPrompt('Rédige le LinkedIn post de lancement pour EcoR Toolkit v2. Storytelling : commence par une douleur terrain réelle à Madagascar, révèle la solution, prix $97, lien en commentaire. Hashtags #Rstats #Ecology #Madagascar #Conservation.')">Rédiger le post LinkedIn de lancement ↗</button>
+</div>
+
+<div id="p4" class="pane">
+  <div class="lbl">Projections révisées</div>
+  <div class="card">
+    <div class="row-item"><span style="color:var(--color-text-secondary);">Mois 1–2 — conservateur</span><span class="row-val">$1,564/mois</span></div>
+    <div class="row-item"><span style="color:var(--color-text-secondary);">Mois 3–6 — réaliste</span><span class="row-val">$3,924/mois</span></div>
+    <div class="row-item"><span style="color:var(--color-text-secondary);">Mois 6–12 — avec 2ème produit</span><span class="row-val">$5–8k/mois</span></div>
+  </div>
+
+  <div class="lbl">LTV par acheteur (Hormozi upsell)</div>
+  <div class="card">
+    <div class="row-item"><span>Starter → Complete upgrade</span><span class="row-val">+$68</span></div>
+    <div class="row-item"><span>Complete → Pro upgrade</span><span class="row-val">+$200</span></div>
+    <div class="row-item"><span>Continuité 12 mois ($19/mo)</span><span class="row-val">+$228</span></div>
+    <div class="row-item"><span>Session "Done For You" (occasionnel)</span><span class="row-val">+$297</span></div>
+    <div class="row-item" style="font-weight:500;"><span>LTV moyen par acheteur</span><span class="row-val" style="color:#0F6E56;font-size:16px;">~$420</span></div>
+  </div>
+
+  <div class="lbl">Prochain produit — EcoR Mammals & Birds Edition</div>
+  <div class="card">
+    <p style="font-size:12px;color:var(--color-text-secondary);margin:0;line-height:1.6;">Même structure, nouveaux taxa. Utilise vos données camera trap (Ihofa), GPS fosa (Kirindy Mitea), et AudioMoth (nouveau Module 6 — acoustic biodiversity). Les acheteurs existants obtiennent 40% de réduction → construit la communauté, réduit le churn.</p>
+  </div>
+
+  <button class="action-btn" onclick="sendPrompt('Rédige la page de vente Gumroad complète pour EcoR Toolkit v2 Complete à $97. Structure Hormozi : accroche dream outcome, value stack $1090 barré vers $97, garantie risk reversal, témoignages placeholders, FAQ 3 questions. En anglais.')">Rédiger la page Gumroad complète ↗</button>
+</div>
+
+</div>
+<script>
+function sw(i){document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});document.getElementById('p'+i).classList.add('on');document.querySelectorAll('.tab')[i].classList.add('on');}
+</script>

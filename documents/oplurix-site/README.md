@@ -22,7 +22,7 @@ HTML documents behind the OPLURIX storefront.
 
 ## Visible But Not Yet Purchasable
 
-- `EcoR Toolkit Pro Bundle` — request access only
+- `EcoR Toolkit Pro Bundle` — live with manual support handling
 - `Training-to-Quiz Generator` — coming soon
 - `Biodiversity Pitch Deck Builder` — coming soon
 

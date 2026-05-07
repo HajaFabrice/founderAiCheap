@@ -1,0 +1,872 @@
+---
+title: "Analyse de Transects — Herpétofaune de Madagascar"
+subtitle: "Du CSV brut aux figures publication-ready, étape par étape"
+author: "Haja Fabrice RAZAFINDRABE MAMINIAINA"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
+    highlight: tango
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+# Ce bloc "setup" est invisible dans le document final (include=FALSE)
+# Il configure le comportement global de tous les blocs de code suivants
+
+knitr::opts_chunk$set(
+  echo    = TRUE,    # Afficher le code dans le document final
+  message = FALSE,   # Cacher les messages des packages
+  warning = FALSE,   # Cacher les warnings (on les gère nous-mêmes)
+  fig.width  = 8,    # Largeur des figures en pouces
+  fig.height = 5,    # Hauteur des figures en pouces
+  dpi     = 150      # Résolution (300 pour publication, 150 pour web)
+)
+```
+
+---
+
+> **À qui s'adresse ce notebook ?**
+> 
+> Ce document est conçu pour les biologistes et étudiants qui ont des données de terrain
+> et veulent les analyser avec R — sans forcément avoir une formation poussée en statistiques.
+> Chaque étape est expliquée en français, avec le "pourquoi" avant le "comment".
+>
+> **Comment l'utiliser :** Ouvrez ce fichier dans RStudio, cliquez sur **Knit → Knit to HTML**.
+> Vous obtiendrez un rapport complet avec toutes les figures et tous les résultats calculés automatiquement.
+
+---
+
+# 1. Préparation — Charger les packages
+
+```{r packages}
+# ============================================================
+# POURQUOI CE BLOC ?
+# R de base est limité. Les "packages" sont des extensions qui
+# ajoutent des fonctions spécialisées. On les charge une fois
+# au début, comme des outils qu'on pose sur la table de travail.
+# ============================================================
+
+# Liste des packages nécessaires
+packages_requis <- c("vegan", "ggplot2", "dplyr", "tidyr",
+                     "iNEXT", "knitr", "RColorBrewer", "ggrepel")
+
+# Installation automatique si un package manque
+# (pratique quand vous partagez ce notebook avec un collègue)
+packages_manquants <- packages_requis[
+  !(packages_requis %in% installed.packages()[,"Package"])
+]
+
+if (length(packages_manquants) > 0) {
+  message("Installation des packages manquants : ",
+          paste(packages_manquants, collapse = ", "))
+  install.packages(packages_manquants)
+}
+
+# Chargement
+library(vegan)    # Analyses de diversité et écologie des communautés
+library(ggplot2)  # Visualisations élégantes
+library(dplyr)    # Manipulation de données (filter, group_by, summarise...)
+library(tidyr)    # Reshape des données (pivot_wider, pivot_longer)
+library(iNEXT)    # Courbes de raréfaction
+library(knitr)    # Formatage des tableaux dans le document
+library(ggrepel)  # Labels sans chevauchement sur les figures
+
+message("✓ Tous les packages sont chargés.")
+```
+
+---
+
+# 2. Création des données
+
+```{r donnees}
+# ============================================================
+# POURQUOI CE BLOC ?
+# Dans un vrai projet, vous importeriez votre fichier ici :
+#   data <- read.csv("mes_transects.csv")
+# ou depuis Excel :
+#   data <- readxl::read_excel("mes_transects.xlsx")
+#
+# Ici, on simule des données réalistes pour que le notebook
+# soit autonome et que vous puissiez le tester immédiatement.
+# Les patterns sont écologiquement cohérents avec la faune
+# de la forêt de Kirindy, Madagascar.
+# ============================================================
+
+set.seed(42)  # Fixe le générateur aléatoire → résultats reproductibles
+
+# Nos espèces cibles (herpétofaune de Kirindy)
+especes <- c(
+  "Zonosaurus karsteni",
+  "Zonosaurus laticaudatus",
+  "Furcifer labordi",
+  "Oplurus cuvieri",
+  "Chalarodon madagascariensis",
+  "Liophidium apperti",
+  "Mimophis mahfalensis",
+  "Uroplatus ebenaui",
+  "Brookesia brygooi",
+  "Geckolepis typica"
+)
+
+# Nos sites d'étude (5 types d'habitat)
+sites <- c("Foret_Dense",
+           "Foret_Degradee",
+           "Lisiere_Nord",
+           "Savane_Boisee",
+           "Zone_Anthropisee")
+
+# Paramètre lambda = abondance moyenne par espèce selon le site
+# (La forêt dense a naturellement plus d'espèces et d'individus)
+lambda_par_site <- c(
+  Foret_Dense      = 4.5,
+  Foret_Degradee   = 2.8,
+  Lisiere_Nord     = 2.0,
+  Savane_Boisee    = 1.5,
+  Zone_Anthropisee = 0.7
+)
+
+# Génération du jeu de données complet
+transects <- expand.grid(
+  site        = sites,
+  transect_id = paste0("T", 1:6),  # 6 transects par site
+  espece      = especes
+) %>%
+  mutate(
+    # Abondance simulée selon une loi de Poisson (comptages entiers)
+    abondance = rpois(
+      n(),
+      lambda = lambda_par_site[as.character(site)]
+    ),
+    longueur_m    = 200,                          # Tous les transects = 200m
+    date          = as.Date("2024-07-01") +
+                    sample(0:90, n(), replace = TRUE),
+    temperature_c = round(rnorm(n(), mean = 28, sd = 3), 1),
+    habitat       = recode(as.character(site),
+      "Foret_Dense"      = "Forêt primaire",
+      "Foret_Degradee"   = "Forêt dégradée",
+      "Lisiere_Nord"     = "Forêt dégradée",
+      "Savane_Boisee"    = "Savane",
+      "Zone_Anthropisee" = "Savane"
+    )
+  )
+
+# Résumé du jeu de données
+cat("=== APERÇU DES DONNÉES ===\n")
+cat("Nombre d'observations :", nrow(transects), "\n")
+cat("Sites :", length(unique(transects$site)), "\n")
+cat("Espèces :", length(unique(transects$espece)), "\n")
+cat("Transects par site :", length(unique(transects$transect_id)), "\n")
+```
+
+**Aperçu des premières lignes :**
+
+```{r apercu-tableau}
+# kable() formate un dataframe en tableau HTML propre
+# head() prend les 8 premières lignes
+kable(
+  head(transects %>%
+    filter(abondance > 0) %>%
+    select(site, transect_id, espece, abondance, date, temperature_c),
+    8),
+  caption = "Tableau 1. Extrait des données de transects (observations positives uniquement)",
+  col.names = c("Site", "Transect", "Espèce", "N individus", "Date", "Température (°C)")
+)
+```
+
+---
+
+# 3. Nettoyage et Préparation
+
+```{r nettoyage}
+# ============================================================
+# POURQUOI CE BLOC ?
+# Les données brutes de terrain contiennent souvent :
+#   - Des zéros (espèce non détectée lors d'un transect)
+#   - Des NA (données manquantes)
+#   - Des erreurs de saisie
+# On nettoie AVANT d'analyser. Toujours.
+# ============================================================
+
+# Étape 1 : Garder uniquement les observations positives
+obs_positives <- transects %>%
+  filter(abondance > 0)
+
+cat("Observations totales :", nrow(transects), "\n")
+cat("Observations positives :", nrow(obs_positives),
+    "(", round(nrow(obs_positives)/nrow(transects)*100, 1), "% de détection)\n")
+
+# Étape 2 : Vérifier les valeurs manquantes
+cat("\nValeurs manquantes par colonne :\n")
+print(colSums(is.na(transects)))
+
+# Étape 3 : Agréger par site et espèce (somme sur tous les transects)
+agregat <- obs_positives %>%
+  group_by(site, espece, habitat) %>%
+  summarise(
+    total_individus = sum(abondance),
+    nb_transects_detectes = n(),
+    .groups = "drop"
+  )
+
+# Étape 4 : Créer la matrice communauté (format requis par vegan)
+# sites en lignes, espèces en colonnes, abondances comme valeurs
+comm_matrix <- agregat %>%
+  pivot_wider(
+    id_cols    = site,
+    names_from = espece,
+    values_from = total_individus,
+    values_fill = 0           # Les espèces non détectées = 0, pas NA
+  ) %>%
+  column_to_rownames("site")  # Les noms de sites deviennent les noms de lignes
+
+cat("\n=== MATRICE COMMUNAUTÉ ===\n")
+cat("Dimensions :", nrow(comm_matrix), "sites ×", ncol(comm_matrix), "espèces\n")
+cat("Sites :", paste(rownames(comm_matrix), collapse = ", "), "\n")
+```
+
+---
+
+# 4. Statistiques Descriptives
+
+```{r descriptives}
+# ============================================================
+# POURQUOI CE BLOC ?
+# Avant toute analyse statistique complexe, décrivez vos données.
+# Ces chiffres iront directement dans votre section Methods/Results.
+# ============================================================
+
+richesse <- transects %>%
+  filter(abondance > 0) %>%
+  group_by(site, habitat) %>%
+  summarise(
+    nb_especes   = n_distinct(espece),
+    nb_individus = sum(abondance),
+    nb_transects = n_distinct(transect_id),
+    # Densité = individus pour 100m de transect
+    densite_100m = round(sum(abondance) /
+                   (n_distinct(transect_id) * 200) * 100, 2),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(nb_especes))
+
+kable(
+  richesse,
+  caption = "Tableau 2. Richesse spécifique et abondance par site",
+  col.names = c("Site", "Habitat", "Nb espèces", "Nb individus",
+                "Nb transects", "Densité (/100m)")
+)
+```
+
+```{r stats-globales}
+cat("=== STATISTIQUES GLOBALES ===\n\n")
+
+cat("Richesse totale (gamma-diversity) :",
+    n_distinct(obs_positives$espece), "espèces\n")
+
+cat("Site le plus riche :",
+    richesse$site[1], "-",
+    richesse$nb_especes[1], "espèces\n")
+
+cat("Site le moins riche :",
+    richesse$site[nrow(richesse)], "-",
+    richesse$nb_especes[nrow(richesse)], "espèces\n")
+
+cat("Individus total observés :",
+    sum(richesse$nb_individus), "\n")
+
+cat("Espèce la plus abondante :",
+    obs_positives %>%
+      group_by(espece) %>%
+      summarise(n = sum(abondance)) %>%
+      arrange(desc(n)) %>%
+      slice(1) %>%
+      pull(espece), "\n")
+```
+
+---
+
+# 5. Indices de Diversité
+
+```{r diversite}
+# ============================================================
+# POURQUOI CES INDICES ?
+#
+# La RICHESSE SPÉCIFIQUE (nombre d'espèces) ne dit pas tout.
+# Deux sites peuvent avoir 8 espèces chacun, mais dans l'un
+# une espèce représente 95% des individus — c'est moins diversifié.
+#
+# Les indices capturent cette nuance :
+#
+# Shannon (H') : Poids aux espèces rares. Varie de 0 à log(S).
+#   H' = 0 → une seule espèce domine tout
+#   H' élevé → espèces équitablement réparties
+#
+# Simpson (D) : Probabilité que deux individus pris au hasard
+#   appartiennent à des espèces différentes.
+#   D proche de 1 → très diversifié
+#   D proche de 0 → une espèce domine
+#
+# Pielou (J') : Équitabilité. Varie de 0 à 1.
+#   J' = 1 → toutes les espèces ont exactement la même abondance
+#   J' = 0 → une espèce représente presque tout
+# ============================================================
+
+indices <- data.frame(
+  Site     = rownames(comm_matrix),
+  Shannon  = round(diversity(comm_matrix, index = "shannon"), 3),
+  Simpson  = round(diversity(comm_matrix, index = "simpson"), 3),
+  Richesse = specnumber(comm_matrix),
+  Pielou_J = round(
+    diversity(comm_matrix, index = "shannon") /
+    log(specnumber(comm_matrix)), 3
+  )
+)
+
+# Ajouter le type d'habitat
+indices$Habitat <- recode(indices$Site,
+  "Foret_Dense"      = "Forêt primaire",
+  "Foret_Degradee"   = "Forêt dégradée",
+  "Lisiere_Nord"     = "Forêt dégradée",
+  "Savane_Boisee"    = "Savane",
+  "Zone_Anthropisee" = "Savane"
+)
+
+kable(
+  indices[, c("Site","Habitat","Richesse","Shannon","Simpson","Pielou_J")],
+  caption = "Tableau 3. Indices de diversité alpha par site",
+  col.names = c("Site", "Habitat", "Richesse (S)",
+                "Shannon (H')", "Simpson (D)", "Pielou (J')")
+)
+```
+
+```{r interpretation-indices}
+# ============================================================
+# INTERPRÉTATION AUTOMATIQUE
+# Ce bloc génère des phrases d'interprétation prêtes à coller
+# dans votre section Results. Pratique !
+# ============================================================
+
+site_max <- indices$Site[which.max(indices$Shannon)]
+site_min <- indices$Site[which.min(indices$Shannon)]
+h_max    <- max(indices$Shannon)
+h_min    <- min(indices$Shannon)
+
+cat("=== PHRASES POUR SECTION RESULTS ===\n\n")
+
+cat(sprintf(
+  "Shannon diversity was highest at %s (H' = %.2f) and lowest at %s (H' = %.2f),
+  representing a %.0f%% reduction associated with habitat degradation.\n\n",
+  gsub("_", " ", site_max), h_max,
+  gsub("_", " ", site_min), h_min,
+  (1 - h_min/h_max) * 100
+))
+
+cat(sprintf(
+  "Species evenness (Pielou's J') ranged from %.2f (%s) to %.2f (%s),
+  indicating that %s had the most equitable distribution of individuals
+  across species.\n",
+  min(indices$Pielou_J), gsub("_", " ", indices$Site[which.min(indices$Pielou_J)]),
+  max(indices$Pielou_J), gsub("_", " ", indices$Site[which.max(indices$Pielou_J)]),
+  gsub("_", " ", indices$Site[which.max(indices$Pielou_J)])
+))
+```
+
+---
+
+# 6. Visualisations
+
+## 6.1 Richesse spécifique par site
+
+```{r fig-richesse, fig.cap="Figure 1. Richesse spécifique (nombre d'espèces observées) par site d'étude. Les sites sont ordonnés par richesse décroissante."}
+# ============================================================
+# LIRE UNE FIGURE GGPLOT2 :
+# ggplot(données, aes(x=..., y=..., fill=...)) → définit les axes
+# geom_col()   → ajoute les barres
+# coord_flip() → retourne horizontal (plus lisible avec des noms longs)
+# theme_minimal() → fond blanc, pas de cadre gris
+# ============================================================
+
+# Palette de couleurs daltonien-friendly
+palette_habitat <- c(
+  "Forêt primaire"  = "#0F6E56",
+  "Forêt dégradée"  = "#5DCAA5",
+  "Savane"          = "#D85A30"
+)
+
+fig1 <- richesse %>%
+  ggplot(aes(
+    x    = reorder(site, nb_especes),  # Ordonne par richesse
+    y    = nb_especes,
+    fill = habitat
+  )) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = nb_especes),
+    hjust    = -0.3,      # Décale le label à droite de la barre
+    size     = 4,
+    fontface = "bold"
+  ) +
+  coord_flip() +
+  scale_fill_manual(
+    values = palette_habitat,
+    name   = "Type d'habitat"
+  ) +
+  scale_x_discrete(labels = function(x) gsub("_", " ", x)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title    = "Richesse spécifique par site",
+    subtitle = "Herpétofaune — Kirindy, Madagascar · Juillet–Septembre 2024",
+    x        = NULL,
+    y        = "Nombre d'espèces observées",
+    caption  = "Données : RAZAFINDRABE MAMINIAINA H.F., 2024"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position  = "bottom",
+    panel.grid.major.y = element_blank(),  # Pas de grille horizontale
+    plot.title       = element_text(face = "bold")
+  )
+
+print(fig1)
+```
+
+## 6.2 Indices de diversité comparés
+
+```{r fig-diversite, fig.height=6, fig.cap="Figure 2. Indices de diversité alpha par site : Shannon (H'), Simpson (D), et équitabilité de Pielou (J')."}
+# ============================================================
+# pivot_longer() : transforme le tableau "large" (une colonne par indice)
+# en tableau "long" (une ligne par indice) — requis par ggplot2
+# facet_wrap() : crée un sous-graphique par indice
+# ============================================================
+
+indices %>%
+  pivot_longer(
+    cols     = c(Shannon, Simpson, Pielou_J),
+    names_to  = "Indice",
+    values_to = "Valeur"
+  ) %>%
+  mutate(Indice = recode(Indice,
+    Shannon  = "Shannon (H')",
+    Simpson  = "Simpson (D)",
+    Pielou_J = "Pielou (J')"
+  )) %>%
+  ggplot(aes(
+    x    = reorder(Site, Valeur),
+    y    = Valeur,
+    fill = Habitat
+  )) +
+  geom_col(width = 0.7) +
+  coord_flip() +
+  facet_wrap(~ Indice, scales = "free_x") +  # Un panneau par indice
+  scale_fill_manual(values = palette_habitat, name = "Habitat") +
+  scale_x_discrete(labels = function(x) gsub("_", " ", x)) +
+  labs(
+    title = "Indices de diversité alpha par site",
+    x     = NULL,
+    y     = "Valeur de l'indice"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    strip.text      = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+## 6.3 Heatmap — Composition des communautés
+
+```{r fig-heatmap, fig.height=7, fig.cap="Figure 3. Abondance de chaque espèce par site (échelle logarithmique). Les cellules vides indiquent une espèce non détectée sur ce site."}
+# ============================================================
+# La heatmap montre d'un coup d'oeil :
+# - Quelles espèces sont présentes où
+# - Les espèces généralistes vs spécialistes
+# - Les sites de composition similaire
+#
+# log1p(x) = log(x + 1) → transforme les abondances pour
+# que les petites valeurs soient visibles (évite que les
+# espèces abondantes "écrasent" les rares)
+# ============================================================
+
+agregat %>%
+  mutate(
+    espece_it = paste0("italic('", espece, "')"),  # Noms en italique
+    log_abond = log1p(total_individus)
+  ) %>%
+  ggplot(aes(
+    x    = gsub("_", "\n", site),  # Retour à la ligne dans les labels
+    y    = reorder(espece, total_individus),
+    fill = log_abond
+  )) +
+  geom_tile(color = "white", linewidth = 0.5) +
+  geom_text(
+    aes(label = ifelse(total_individus > 0, total_individus, "")),
+    size  = 3,
+    color = "white"
+  ) +
+  scale_fill_gradient(
+    low  = "#E1F5EE",
+    high = "#0A4A38",
+    name = "log(n + 1)"
+  ) +
+  labs(
+    title    = "Composition des communautés — Herpétofaune de Kirindy",
+    subtitle = "Abondance totale par site (échelle log+1)",
+    x        = NULL,
+    y        = NULL,
+    caption  = "Les nombres indiquent les abondances totales observées"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.y  = element_text(face = "italic", size = 9),
+    axis.text.x  = element_text(size = 9),
+    legend.position = "right"
+  )
+```
+
+## 6.4 Courbes d'accumulation d'espèces
+
+```{r fig-rarefaction, fig.cap="Figure 4. Courbes de raréfaction (trait plein) et d'extrapolation (pointillés) par site. Les intervalles de confiance à 95% sont représentés en zones ombrées. Une courbe qui atteint un plateau indique un échantillonnage suffisant."}
+# ============================================================
+# LES COURBES DE RARÉFACTION — pourquoi c'est crucial ?
+#
+# Le problème : si un site a plus d'individus observés qu'un autre,
+# il aura mécaniquement plus d'espèces — même si les deux habitats
+# sont identiques. C'est un biais d'effort d'échantillonnage.
+#
+# La solution : standardiser. iNEXT recalcule combien d'espèces
+# on trouverait si on avait échantillonné le même nombre d'individus
+# dans tous les sites. Comparison équitable.
+#
+# Si votre courbe n'atteint pas le plateau → vous n'avez pas
+# assez échantillonné → dites-le dans vos Limites.
+# ============================================================
+
+# Préparer les données : liste d'abondances par site
+abondances_par_site <- lapply(
+  unique(agregat$site),
+  function(s) {
+    agregat %>%
+      filter(site == s) %>%
+      pull(total_individus)
+  }
+)
+names(abondances_par_site) <- unique(agregat$site)
+
+# Calcul des courbes (nboot = 50 → rapide; mettez 200 pour publication)
+inext_result <- iNEXT(
+  abondances_par_site,
+  q        = 0,           # q=0 : richesse spécifique (ordre 0)
+  datatype = "abundance",
+  nboot    = 50
+)
+
+# Figure avec ggiNEXT (fonction native du package iNEXT)
+fig_raref <- ggiNEXT(inext_result, type = 1, se = TRUE) +
+  scale_color_brewer(palette = "Dark2", name = "Site") +
+  scale_fill_brewer(palette  = "Dark2", name = "Site") +
+  labs(
+    title    = "Courbes d'accumulation d'espèces par site",
+    subtitle = "Raréfaction et extrapolation · IC 95%",
+    x        = "Nombre d'individus échantillonnés",
+    y        = "Richesse spécifique",
+    caption  = "Méthode : iNEXT (Chao et al. 2014)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "right",
+    plot.title      = element_text(face = "bold")
+  )
+
+print(fig_raref)
+```
+
+```{r richesse-estimee}
+# Tableau des richesses estimées (asymptotiques)
+richesse_estimee <- inext_result$AsyEst %>%
+  filter(Diversity == "Species richness") %>%
+  select(Assemblage, Observed, Estimator, LCL, UCL) %>%
+  mutate(across(where(is.numeric), round, 1))
+
+kable(
+  richesse_estimee,
+  caption = "Tableau 4. Richesse observée vs richesse estimée (Chao2) par site",
+  col.names = c("Site", "Observée", "Estimée", "IC inf. 95%", "IC sup. 95%")
+)
+```
+
+---
+
+# 7. Analyse de la Composition — NMDS
+
+```{r nmds}
+# ============================================================
+# QU'EST-CE QUE LE NMDS ?
+#
+# Non-Metric Multidimensional Scaling : une technique d'ordination.
+# Elle prend votre matrice (5 sites × 10 espèces) et la représente
+# en 2 dimensions, de façon à ce que :
+#   → des sites PROCHES sur la figure = communautés SIMILAIRES
+#   → des sites ÉLOIGNÉS = communautés DIFFÉRENTES
+#
+# Distance de Bray-Curtis : mesure la dissimilarité entre sites.
+#   0 = communautés identiques
+#   1 = aucune espèce en commun
+#
+# STRESS : mesure la qualité de la représentation 2D
+#   < 0.05 : excellent
+#   0.05–0.10 : très bon
+#   0.10–0.20 : bon (acceptable pour publication)
+#   > 0.20 : à interpréter avec prudence
+# ============================================================
+
+nmds <- metaMDS(
+  comm_matrix,
+  distance = "bray",
+  k        = 2,       # Réduction en 2 dimensions
+  trymax   = 100,     # Essaie 100 configurations différentes
+  trace    = FALSE    # Pas de sortie verbose
+)
+
+cat("=== RÉSULTATS NMDS ===\n")
+cat("Stress :", round(nmds$stress, 4), "\n")
+cat("Interprétation :",
+    ifelse(nmds$stress < 0.10, "Excellent (< 0.10)",
+    ifelse(nmds$stress < 0.20, "Bon (0.10–0.20)",
+                               "À interpréter avec prudence (> 0.20)")), "\n")
+```
+
+```{r fig-nmds, fig.cap="Figure 5. Ordination NMDS (distance de Bray-Curtis) des communautés d'herpétofaune par site. La proximité entre les points indique une similarité de composition. La valeur de stress indique la qualité de la représentation bidimensionnelle."}
+
+# Extraire les coordonnées des sites
+nmds_coords <- as.data.frame(scores(nmds, display = "sites")) %>%
+  mutate(
+    site    = rownames(.),
+    habitat = recode(site,
+      "Foret_Dense"      = "Forêt primaire",
+      "Foret_Degradee"   = "Forêt dégradée",
+      "Lisiere_Nord"     = "Forêt dégradée",
+      "Savane_Boisee"    = "Savane",
+      "Zone_Anthropisee" = "Savane"
+    )
+  )
+
+ggplot(nmds_coords, aes(x = NMDS1, y = NMDS2, color = habitat)) +
+  geom_point(size = 5, alpha = 0.8) +
+  geom_text_repel(
+    aes(label = gsub("_", " ", site)),
+    size       = 3.5,
+    fontface   = "italic",
+    box.padding = 0.5,
+    max.overlaps = 10
+  ) +
+  scale_color_manual(values = palette_habitat, name = "Habitat") +
+  annotate(
+    "text",
+    x     = min(nmds_coords$NMDS1) + 0.01,
+    y     = max(nmds_coords$NMDS2),
+    label = paste0("Stress = ", round(nmds$stress, 3)),
+    hjust = 0,
+    size  = 3.5,
+    color = "grey40"
+  ) +
+  labs(
+    title    = "Ordination NMDS — Composition des communautés",
+    subtitle = "Distance de Bray-Curtis · Points proches = communautés similaires",
+    x        = "NMDS axe 1",
+    y        = "NMDS axe 2"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+---
+
+# 8. Test Statistique — Les communautés diffèrent-elles ?
+
+```{r anosim}
+# ============================================================
+# ANOSIM : Analysis of Similarities
+#
+# Question : Les sites de forêt primaire ont-ils des communautés
+# significativement différentes des sites de savane ?
+#
+# R de ANOSIM : varie de -1 à 1
+#   R ≈ 0 → pas de différence entre groupes
+#   R ≈ 1 → groupes très distincts
+#   R > 0.5 → différence forte
+#   R > 0.75 → différence très forte
+#
+# p-value : si p < 0.05, la différence est non aléatoire
+#
+# Attention : ANOSIM ne dit pas QUELLES espèces sont responsables.
+# Pour ça, on utilise SIMPER (voir ci-dessous).
+# ============================================================
+
+# Définir les groupes d'habitat pour chaque site
+groupes_habitat <- recode(
+  rownames(comm_matrix),
+  "Foret_Dense"      = "Foret",
+  "Foret_Degradee"   = "Foret",
+  "Lisiere_Nord"     = "Foret",
+  "Savane_Boisee"    = "Savane",
+  "Zone_Anthropisee" = "Savane"
+)
+
+# Test ANOSIM
+anosim_result <- anosim(
+  comm_matrix,
+  grouping     = groupes_habitat,
+  permutations = 999,   # Nombre de permutations (999 standard)
+  distance     = "bray"
+)
+
+cat("=== RÉSULTATS ANOSIM ===\n")
+cat("R =", round(anosim_result$statistic, 3), "\n")
+cat("p =", anosim_result$signif, "\n\n")
+cat("Interprétation :\n")
+
+if (anosim_result$signif < 0.05) {
+  cat(sprintf(
+    "Les communautés d'herpétofaune diffèrent significativement entre\n
+    les forêts et les savanes (ANOSIM : R = %.3f, p = %.3f).\n",
+    anosim_result$statistic, anosim_result$signif
+  ))
+} else {
+  cat("Pas de différence significative détectée entre les groupes (p ≥ 0.05).\n")
+}
+```
+
+```{r simper}
+# ============================================================
+# SIMPER : Similarity Percentages
+# Identifie QUELLES espèces contribuent le plus aux différences
+# entre vos groupes de sites.
+# ============================================================
+
+simper_result <- simper(comm_matrix, groupes_habitat)
+simper_df     <- summary(simper_result)$Foret_Savane
+
+cat("=== ESPÈCES CONTRIBUANT LE PLUS AUX DIFFÉRENCES FORÊT vs SAVANE ===\n")
+
+kable(
+  head(data.frame(
+    Espece       = rownames(simper_df),
+    Contribution = round(simper_df$average * 100, 1),
+    Cumul        = round(simper_df$cumsum * 100, 1)
+  ), 6),
+  caption = "Tableau 5. Espèces contribuant le plus à la dissimilarité entre forêts et savanes (SIMPER)",
+  col.names = c("Espèce", "Contribution (%)", "Contribution cumulée (%)")
+)
+```
+
+---
+
+# 9. Synthèse & Phrases pour votre Article
+
+```{r synthese-finale}
+# ============================================================
+# CE BLOC GÉNÈRE AUTOMATIQUEMENT DES PHRASES PRÊTES À UTILISER
+# dans votre section Results. Adaptez-les selon votre contexte.
+# ============================================================
+
+cat("========================================================\n")
+cat("PHRASES PRÊTES POUR VOTRE SECTION RESULTS (en anglais)\n")
+cat("========================================================\n\n")
+
+# Calculs pour les phrases
+site_plus_riche <- richesse$site[1]
+richesse_max    <- richesse$nb_especes[1]
+site_moins_riche <- richesse$site[nrow(richesse)]
+richesse_min    <- richesse$nb_especes[nrow(richesse)]
+shannon_max     <- round(max(indices$Shannon), 2)
+shannon_min     <- round(min(indices$Shannon), 2)
+
+cat("--- Species richness ---\n")
+cat(sprintf(
+  "A total of %d reptile and amphibian species were recorded across %d sites
+  (n = %d transects, 200 m each). Species richness ranged from %d (%s) to %d (%s).\n\n",
+  n_distinct(obs_positives$espece),
+  n_distinct(obs_positives$site),
+  sum(richesse$nb_transects),
+  richesse_min, gsub("_", " ", site_moins_riche),
+  richesse_max, gsub("_", " ", site_plus_riche)
+))
+
+cat("--- Diversity indices ---\n")
+cat(sprintf(
+  "Shannon diversity (H') was highest at %s (H' = %.2f) and lowest at %s
+  (H' = %.2f), representing a %.0f%% reduction associated with habitat loss.\n\n",
+  gsub("_", " ", indices$Site[which.max(indices$Shannon)]), shannon_max,
+  gsub("_", " ", indices$Site[which.min(indices$Shannon)]), shannon_min,
+  (1 - shannon_min/shannon_max) * 100
+))
+
+cat("--- Community composition ---\n")
+if (anosim_result$signif < 0.05) {
+  cat(sprintf(
+    "Community composition differed significantly between forest and savanna
+    habitats (ANOSIM: R = %.3f, p = %.3f, 999 permutations, Bray-Curtis distance).\n\n",
+    anosim_result$statistic, anosim_result$signif
+  ))
+}
+```
+
+---
+
+# 10. Export des Figures
+
+```{r export, eval=FALSE}
+# ============================================================
+# Ce bloc est marqué eval=FALSE → il ne s'exécute PAS
+# quand vous faites Knit. Pour l'utiliser, passez eval=TRUE
+# ou exécutez les lignes manuellement dans la console.
+#
+# Les figures sont exportées en 300 DPI (requis par la plupart
+# des journaux scientifiques).
+# ============================================================
+
+dir.create("figures", showWarnings = FALSE)
+
+ggsave("figures/fig1_richesse.png",
+       fig1, width = 8, height = 5, dpi = 300)
+
+ggsave("figures/fig2_diversite.png",
+       width = 10, height = 6, dpi = 300)
+
+ggsave("figures/fig4_rarefaction.png",
+       fig_raref, width = 8, height = 6, dpi = 300)
+
+cat("Figures exportées dans le dossier figures/ — prêtes pour soumission.\n")
+```
+
+---
+
+# À retenir
+
+| Étape | Ce qu'on a fait | Pourquoi |
+|-------|----------------|----------|
+| Import | Chargé et vérifié les données | Éviter les erreurs silencieuses |
+| Nettoyage | Retiré les zéros, créé la matrice | vegan exige un format précis |
+| Descriptives | Richesse, densité par site | Ça va dans Methods + Results |
+| Indices | Shannon, Simpson, Pielou | Capture richesse ET équitabilité |
+| Visualisation | 4 figures ggplot2 | Toutes exportables en 300 DPI |
+| NMDS | Ordination des communautés | Visualise les différences globales |
+| ANOSIM + SIMPER | Test statistique + espèces clés | Justifie les différences observées |
+| Synthèse | Phrases Results en anglais | Copier-coller dans votre article |
+
+---
+
+*Notebook créé avec R `r R.version$major`.`r R.version$minor` —
+vegan `r packageVersion("vegan")` — ggplot2 `r packageVersion("ggplot2")`*
+
+*Auteur : Haja Fabrice RAZAFINDRABE MAMINIAINA | hajafabrice.r@gmail.com*
+
+*Pour toute question sur ce notebook, utilisez les 50 prompts Claude inclus
+dans l'EcoR Toolkit.*

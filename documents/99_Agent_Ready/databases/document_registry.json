@@ -440,7 +440,7 @@
     {
       "id": "ecor-toolkit-product-strategy",
       "category": "digital-product-strategy",
-      "canonical_path": "documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md",
+      "canonical_path": "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/digital_products_catalog.json",
       "supersedes": [
         "generic R-toolkit idea fragments"

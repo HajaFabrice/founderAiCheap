@@ -1,6 +1,6 @@
 # EcoR First Sale Launch Pack
 
-Updated: 2026-05-03
+Updated: 2026-05-07
 
 Use this pack for the first paid-download motion for `EcoR Toolkit Complete`.
 This is not for NGO service outreach. It is for warm, independent, human-reviewed
@@ -11,7 +11,7 @@ product launch messages only.
 - First-sale focus: `EcoR Toolkit Complete` at `USD 97`
 - Delivery truth: manual email delivery within `12 hours` after payment confirmation
 - `Starter` can be offered only if the buyer signals price friction
-- `Pro Bundle` stays in request-access mode until the walkthrough assets are real
+- `Pro Bundle` is now a live support-backed tier, but `Complete` remains the main first-sale focus
 - No employer-context leads
 - No hype, no fake urgency, no exaggerated transformation claims
 
@@ -139,6 +139,25 @@ If yes, I would love one quick answer:
 what nearly stopped you from buying, or what made the toolkit feel useful enough to buy now?
 
 That will help me improve the next version and the storefront copy.
+
+Best,
+Haja Fabrice
+```
+
+## Reply When Someone Wants More Support Than Complete
+
+```text
+Hi [Name],
+
+If you want a higher-support version than Complete, EcoR Toolkit Pro Bundle is now the right path.
+
+It keeps the full EcoR workflow and adds:
+- 5 annotated R notebooks
+- the statistical test decision tree
+- 1 month of email Q&A
+- private WhatsApp community access
+
+Checkout still happens through PayPal, but the delivery and support setup are handled manually so I can keep the promise honest.
 
 Best,
 Haja Fabrice

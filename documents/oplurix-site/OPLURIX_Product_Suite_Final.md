@@ -1,6 +1,6 @@
 # OPLURIX Product Suite Final
 
-Updated: 2026-05-04
+Updated: 2026-05-06
 
 This file is the final human-readable source of truth for the OPLURIX product
 suite inside `documents/oplurix-site`.
@@ -20,6 +20,9 @@ suite inside `documents/oplurix-site`.
 
 - Status:
   - live
+- Listing status:
+  - Payhip launch pack prepared
+  - public Payhip URL not published yet
 - Price:
   - `USD 39`
 - Audience:
@@ -30,6 +33,11 @@ suite inside `documents/oplurix-site`.
 - Core promise:
   - turn real field notes, project observations, and research experience into
     clear LinkedIn content that feels credible rather than fake or generic
+- Launch channel:
+  - Payhip direct digital delivery
+- Channel rule:
+  - keep the public storefront button off the Payhip route until the live
+    Payhip product URL exists
 - Source assets:
   - `ExpertToInfluencer.txt`
   - `OPLURIX_Product1_Expert_to_Influencer_Content_Engine.pdf`
@@ -42,17 +50,21 @@ suite inside `documents/oplurix-site`.
 - Public ladder:
   - `Starter`: `USD 29`
   - `Complete`: `USD 97`
-  - `Pro Bundle`: `USD 149`
+  - `Pro Bundle`: `USD 297`
+  - `Institutional`: `USD 499`
 - Launch rule:
   - `Complete` is the main offer
   - `Starter` stays available as the lower-friction entry point
-  - `Pro Bundle` stays visible but non-purchasable until its promised
-    walkthrough assets and support workflow are real
+  - `Pro Bundle` is live with PayPal checkout, but fulfillment, WhatsApp
+    access, and support tracking remain founder-managed
+  - `Institutional` stays contact-led until small-team onboarding and license
+    handling are operational
 - Delivery rule:
   - manual email delivery within `12 hours` after PayPal confirmation
 - Source assets:
-  - `documents/RDigitalProduct/EcoR_Toolkit_Product_Strategy.md`
-  - `documents/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md`
+  - `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+  - `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/Tier_3_Pro_Bundle/README.md`
 
 ## Coming Next
 
@@ -111,7 +123,8 @@ These remain in the folder as source documents, not live storefront products.
 ## Truth Rules
 
 - Do not mix live and planned checkout states.
-- Do not sell `EcoR Pro Bundle` until its support assets are real.
+- Do not sell `EcoR Pro Bundle` until its support workflow is operational.
+- Do not activate direct checkout for `EcoR Toolkit Institutional`.
 - Do not imply instant automated delivery while manual fulfillment is still the
   current process.
 - Do not make the storefront sound like a generic AI-tools marketplace.

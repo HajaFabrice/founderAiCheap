@@ -1,0 +1,623 @@
+
+<h2 class="sr-only">Prompt chaining system: 8 sequential Claude prompts to analyze a complete biodiversity dataset from CSV import to Results section</h2>
+<style>
+.wrap{padding:1rem 0}
+.chain-header{margin-bottom:1.25rem}
+.chain-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px}
+.chain-sub{font-size:12px;color:var(--color-text-secondary)}
+.progress-track{display:flex;align-items:center;gap:0;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:4px}
+.prog-step{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:36px;cursor:pointer}
+.prog-circle{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--color-text-secondary);background:var(--color-background-primary);transition:all .2s;flex-shrink:0}
+.prog-circle.done{background:#E1F5EE;border-color:#1D9E75;color:#0F6E56}
+.prog-circle.active{background:#0F6E56;border-color:#0F6E56;color:#fff}
+.prog-line{flex:1;height:1.5px;background:var(--color-border-tertiary);min-width:8px}
+.prog-line.done{background:#1D9E75}
+.prog-label{font-size:9px;color:var(--color-text-secondary);text-align:center;max-width:36px;line-height:1.2;display:none}
+.step-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:1rem}
+.step-header{padding:.85rem 1rem;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.step-meta{flex:1;min-width:0}
+.step-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px}
+.step-desc{font-size:11px;color:var(--color-text-secondary);margin:0}
+.step-arrow{font-size:14px;color:var(--color-text-secondary);transition:transform .2s;flex-shrink:0;padding-top:3px}
+.step-body{display:none;padding:0 1rem 1rem;border-top:0.5px solid var(--color-border-tertiary)}
+.step-body.open{display:block}
+.tab-row{display:flex;gap:4px;margin:.85rem 0 .75rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:0}
+.tab-btn{font-size:11px;font-weight:500;padding:5px 10px;border:none;background:transparent;color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.tab-btn.on{color:#0F6E56;border-bottom-color:#0F6E56}
+.tab-pane{display:none}.tab-pane.on{display:block}
+.code-box{background:#1E1E2E;border-radius:var(--border-radius-md);padding:.75rem .9rem;font-family:var(--font-mono);font-size:10.5px;line-height:1.65;color:#CDD6F4;overflow-x:auto;white-space:pre;margin:0}
+.output-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem .9rem;font-family:var(--font-mono);font-size:10.5px;line-height:1.65;color:var(--color-text-primary);overflow-x:auto;white-space:pre;margin:0;border-left:2px solid #1D9E75}
+.copy-btn{font-size:11px;padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;display:flex;align-items:center;gap:5px;margin-top:.75rem;width:100%;justify-content:center}
+.copy-btn:hover{background:var(--color-background-secondary)}
+.copy-btn.copied{color:#0F6E56;border-color:#1D9E75}
+.next-btn{font-size:12px;padding:7px 14px;border:0.5px solid #1D9E75;border-radius:var(--border-radius-md);background:transparent;color:#0F6E56;cursor:pointer;display:flex;align-items:center;gap:5px;margin-top:.5rem;width:100%;justify-content:center;font-weight:500}
+.next-btn:hover{background:#E1F5EE}
+.connector{display:flex;align-items:center;gap:8px;margin:.25rem 0;padding:0 1rem}
+.conn-icon{font-size:12px;color:#1D9E75}
+.conn-text{font-size:11px;color:var(--color-text-secondary);font-style:italic}
+.lbl{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:6px}
+.bio-note{background:#E1F5EE;border-left:2px solid #1D9E75;border-radius:0;padding:.6rem .85rem;font-size:11px;color:#0F6E56;line-height:1.55;margin-top:.75rem}
+</style>
+
+<div class="wrap">
+<div class="chain-header">
+  <p class="chain-title">Biodiversity analysis — prompt chaining system</p>
+  <p class="chain-sub">8 prompts séquentiels · L'output de chaque étape est collé dans le prompt suivant</p>
+</div>
+
+<div class="progress-track" id="prog-track">
+  <div class="prog-step" onclick="jumpTo(0)"><div class="prog-circle active" id="pc0">1</div></div>
+  <div class="prog-line" id="pl0"></div>
+  <div class="prog-step" onclick="jumpTo(1)"><div class="prog-circle" id="pc1">2</div></div>
+  <div class="prog-line" id="pl1"></div>
+  <div class="prog-step" onclick="jumpTo(2)"><div class="prog-circle" id="pc2">3</div></div>
+  <div class="prog-line" id="pl2"></div>
+  <div class="prog-step" onclick="jumpTo(3)"><div class="prog-circle" id="pc3">4</div></div>
+  <div class="prog-line" id="pl3"></div>
+  <div class="prog-step" onclick="jumpTo(4)"><div class="prog-circle" id="pc4">5</div></div>
+  <div class="prog-line" id="pl4"></div>
+  <div class="prog-step" onclick="jumpTo(5)"><div class="prog-circle" id="pc5">6</div></div>
+  <div class="prog-line" id="pl5"></div>
+  <div class="prog-step" onclick="jumpTo(6)"><div class="prog-circle" id="pc6">7</div></div>
+  <div class="prog-line" id="pl6"></div>
+  <div class="prog-step" onclick="jumpTo(7)"><div class="prog-circle" id="pc7">8</div></div>
+</div>
+
+<div id="steps-container"></div>
+
+</div>
+
+<script>
+var steps=[
+{
+  name:"Import & diagnostic du CSV",
+  desc:"Charger, inspecter, corriger les types",
+  color:"#E1F5EE",
+  textColor:"#0F6E56",
+  borderColor:"#1D9E75",
+  connector:"Résultat : structure confirmée, types corrigés, dimensions du dataset",
+  prompt:`Tu es un expert R en écologie des communautés. Je vais t'envoyer les premières lignes de mon CSV de biodiversité.
+
+Voici la sortie de head(data, 10) et str(data) :
+
+[COLLER ICI : head(data, 10)]
+[COLLER ICI : str(data)]
+
+Tâche : génère le code R complet pour :
+1. Importer le fichier correctement (read.csv ou readxl)
+2. Corriger les types de colonnes (Date, factor, numeric)
+3. Vérifier et afficher les valeurs manquantes colonne par colonne
+4. Créer la matrice communauté (sites × espèces) si colonnes site/espece/abondance présentes
+5. Afficher un résumé final : n individus, n espèces, n sites, % NA
+
+Format : code R commenté, avec un message cat() de confirmation à chaque étape.`,
+  output:`# Output attendu de Claude :
+library(readr) ; library(dplyr) ; library(tidyr)
+
+data <- read_csv("votre_fichier.csv",
+                 locale = locale(encoding = "UTF-8"))
+
+# Correction des types
+data <- data %>%
+  mutate(
+    date    = as.Date(date),
+    site    = as.factor(site),
+    espece  = as.factor(espece),
+    n_ind   = as.integer(n_ind)
+  )
+
+# Valeurs manquantes
+cat("=== VALEURS MANQUANTES ===")
+print(colSums(is.na(data)))
+
+# Matrice communauté
+comm <- data %>%
+  pivot_wider(id_cols = site,
+              names_from = espece,
+              values_from = n_ind,
+              values_fill = 0) %>%
+  column_to_rownames("site")
+
+cat("✓ Dataset :", nrow(data), "obs |",
+    n_distinct(data$espece), "espèces |",
+    n_distinct(data$site), "sites")`,
+  bio:"L'output de cette étape — notamment str(comm) — sera collé en entête du Prompt 2. Ne passez pas à l'étape suivante avant d'avoir 0 NA et une matrice comm numérique."
+},
+{
+  name:"Statistiques descriptives",
+  desc:"Richesse, abondance, effort par site",
+  color:"#E1F5EE",
+  textColor:"#0F6E56",
+  borderColor:"#1D9E75",
+  connector:"Résultat : tableau récapitulatif prêt pour le Tableau 1 du manuscrit",
+  prompt:`Tu es biostatisticien spécialisé en écologie.
+
+Contexte : voici mon dataset nettoyé et ma matrice communauté.
+dim(comm) = [COLLER] | Sites : [COLLER] | Espèces : [COLLER]
+Colonnes disponibles : [COLLER head(data, 5)]
+
+Tâche : génère le code R pour calculer par site :
+1. Richesse spécifique (S) — nombre d'espèces observées
+2. Abondance totale (N) — total des individus
+3. Densité = N / effort_m (si colonne longueur_transect présente)
+4. Effort d'échantillonnage (nb transects, durée)
+5. Un tableau récapitulatif kable() publication-ready
+
+Formate le tableau avec des noms de colonnes en anglais académique.
+Ajoute une ligne "Total / Mean ± SD" en bas du tableau.`,
+  output:`# Output attendu :
+summary_tbl <- data %>%
+  group_by(site, habitat) %>%
+  summarise(
+    S     = n_distinct(espece),
+    N     = sum(n_ind),
+    n_tr  = n_distinct(transect_id),
+    D_100 = round(N / (n_tr * 200) * 100, 2),
+    .groups = "drop"
+  )
+
+library(knitr)
+kable(summary_tbl,
+  caption = "Table 1. Summary statistics per site",
+  col.names = c("Site","Habitat","S","N",
+                "Transects","Density/100m"))
+
+# Ligne résumé
+cat("Mean S :", mean(summary_tbl$S), "± SD", sd(summary_tbl$S))
+cat("Total N :", sum(summary_tbl$N))`,
+  bio:"Copiez la sortie du tableau (summary_tbl) dans le Prompt 3. C'est votre Table 1 du manuscrit."
+},
+{
+  name:"Indices de diversité",
+  desc:"Shannon, Simpson, Chao1, raréfaction",
+  color:"#E6F1FB",
+  textColor:"#185FA5",
+  borderColor:"#378ADD",
+  connector:"Résultat : dataframe diversity_indices + courbes iNEXT",
+  prompt:`Tu es expert du package vegan et iNEXT en R.
+
+Voici ma matrice communauté (dim(comm) = [COLLER]) et mon tableau de richesse :
+[COLLER : print(summary_tbl)]
+
+Tâche : génère le code R complet pour :
+1. Calculer Shannon H', Simpson D, Pielou J', Margalef avec vegan::diversity()
+2. Estimer la richesse asymptotique avec estimateR() → Chao1 et ACE
+3. Vérifier la normalité de H' avec shapiro.test()
+4. Générer les courbes de raréfaction/extrapolation avec iNEXT (q=0, nboot=200)
+5. Créer la Figure 1 : courbes iNEXT avec ggiNEXT(), palette daltonien-friendly, 300 DPI
+
+Inclure : valeurs R² ou p-value pour chaque test.
+Format final : dataframe diversity_indices avec toutes les métriques par site.`,
+  output:`# Output attendu :
+library(vegan) ; library(iNEXT) ; library(ggplot2)
+
+diversity_indices <- data.frame(
+  site     = rownames(comm),
+  S        = specnumber(comm),
+  H        = round(diversity(comm, "shannon"), 3),
+  D        = round(diversity(comm, "simpson"), 3),
+  J        = round(diversity(comm) / log(specnumber(comm)), 3),
+  Chao1    = round(estimateR(comm)["S.chao1",], 1)
+)
+
+# Test normalité H'
+shapiro.test(diversity_indices$H)
+# → p = 0.043 : NON NORMAL → Kruskal-Wallis recommandé
+
+# Raréfaction
+abund_list <- lapply(1:nrow(comm), function(i) comm[i, comm[i,]>0])
+names(abund_list) <- rownames(comm)
+inext_out <- iNEXT(abund_list, q=0, datatype="abundance", nboot=200)
+
+# Figure 1
+fig1 <- ggiNEXT(inext_out, type=1, se=TRUE) + theme_minimal()
+ggsave("fig1_rarefaction.png", fig1, width=18, height=11, units="cm", dpi=300)`,
+  bio:"Collez diversity_indices complet dans le Prompt 4. Le résultat du shapiro.test conditionne le choix du test statistique (paramétrique ou non)."
+},
+{
+  name:"Tests statistiques",
+  desc:"Kruskal-Wallis · post-hoc · taille d'effet",
+  color:"#E6F1FB",
+  textColor:"#185FA5",
+  borderColor:"#378ADD",
+  connector:"Résultat : tableau tests_results avec β, p, taille d'effet",
+  prompt:`Tu es biostatisticien expert R.
+
+Voici mes indices de diversité et les résultats de normalité :
+[COLLER : print(diversity_indices)]
+Normalité H' : shapiro p = [COLLER] → [Normal / Non-normal]
+Nombre de groupes d'habitat : [COLLER]
+
+Tâche : génère le code R pour :
+1. Choisir et appliquer le test correct (ANOVA si normal, Kruskal-Wallis si non)
+2. Post-hoc approprié (Tukey si ANOVA, Dunn+Bonferroni si Kruskal)
+3. Calculer la taille d'effet avec effectsize (eta², epsilon², ou rank_eta²)
+4. Corrélation richesse ~ variables environnementales (Spearman si disponibles)
+5. Créer la Figure 2 : boxplot avec lettres de signification (rstatix + ggpubr)
+
+Output final : dataframe tests_results avec pour chaque test :
+statistic, df, p.value, effect_size, CI_lower, CI_upper, interpretation`,
+  output:`# Output attendu :
+library(dunn.test) ; library(effectsize) ; library(rstatix)
+
+# Test global
+kw <- kruskal.test(H ~ habitat, data = diversity_df)
+# χ² = 14.3, df = 4, p = 0.006
+
+# Post-hoc Dunn
+dunn.test(diversity_df$H, diversity_df$habitat,
+          method = "bonferroni")
+
+# Taille d'effet
+eff <- rank_eta_squared(H ~ habitat, data = diversity_df, ci = 0.95)
+# η²H = 0.68, CI [0.41, 0.85] → LARGE
+
+# Figure 2
+stat_test <- diversity_df %>% kruskal_test(H ~ habitat)
+fig2 <- ggboxplot(diversity_df, x="habitat", y="H",
+                  fill="habitat", palette="Dark2") +
+        stat_pvalue_manual(stat_test, label="p.adj.signif")
+ggsave("fig2_diversity.png", fig2, dpi=300)`,
+  bio:"Collez tests_results dans le Prompt 5. La taille d'effet (ici η²H = 0.68 = large) est obligatoire dans votre section Results."
+},
+{
+  name:"Analyse multivariée",
+  desc:"NMDS · PERMANOVA · betadisper · SIMPER",
+  color:"#FAEEDA",
+  textColor:"#854F0B",
+  borderColor:"#EF9F27",
+  connector:"Résultat : nmds_coords, permanova_res, simper_species + Figure 3",
+  prompt:`Tu es expert vegan et ggplot2 pour l'écologie multivariée.
+
+Voici ma matrice communauté et les groupes de sites :
+dim(comm) = [COLLER]
+Groupes : [COLLER : table(habitat)]
+Tests précédents : [COLLER : print(tests_results)]
+
+Tâche : pipeline multivarié complet :
+1. betadisper() + permutest() → vérifier homogénéité AVANT PERMANOVA
+2. PERMANOVA avec adonis2() (999 permutations, bray)
+3. ANOSIM() en complément
+4. NMDS avec metaMDS() (k=2, trymax=100) → rapporter stress
+5. SIMPER → top 10 espèces contribuant aux différences
+6. Figure 3 : NMDS publication-ready avec ellipses 95%, labels ggrepel, annotation stress
+
+Si betadisper p < 0.05 : mentionner la limitation dans l'interprétation.`,
+  output:`# Output attendu :
+library(vegan) ; library(ggplot2) ; library(ggrepel)
+
+# 1. Homogénéité dispersion (obligatoire avant PERMANOVA)
+bray  <- vegdist(comm, "bray")
+disp  <- betadisper(bray, habitat)
+perm_disp <- permutest(disp)
+# F = 1.43, p = 0.21 → dispersion homogène ✓
+
+# 2. PERMANOVA
+perm <- adonis2(comm ~ habitat, data=env,
+                method="bray", permutations=999)
+# F = 4.87, R² = 0.44, p = 0.001
+
+# 3. NMDS
+nmds <- metaMDS(comm, distance="bray", k=2, trymax=100, trace=F)
+cat("Stress:", round(nmds$stress, 3))  # 0.127 ← good
+
+# 4. SIMPER
+simp <- simper(comm, habitat)
+top10 <- head(summary(simp)[[1]], 10)
+
+# 5. Figure 3
+nmds_df <- scores(nmds, "sites") %>% as.data.frame()
+nmds_df$habitat <- habitat
+fig3 <- ggplot(nmds_df, aes(NMDS1,NMDS2,color=habitat,fill=habitat)) +
+  geom_point(size=3, alpha=.8) + stat_ellipse(alpha=.1, geom="polygon") +
+  annotate("text", x=min(nmds_df$NMDS1), y=max(nmds_df$NMDS2),
+           label=paste0("Stress = ",round(nmds$stress,3)), hjust=0) +
+  theme_minimal()
+ggsave("fig3_nmds.png", fig3, width=18, height=13, units="cm", dpi=300)`,
+  bio:"Collez perm, disp, nmds$stress et top10 dans le Prompt 6. R² de PERMANOVA = % de variance de composition expliqué par l'habitat."
+},
+{
+  name:"Figure composite publication",
+  desc:"Assembler les 4 figures avec patchwork",
+  color:"#FAEEDA",
+  textColor:"#854F0B",
+  borderColor:"#EF9F27",
+  connector:"Résultat : figure_composite.png 300 DPI — prête pour soumission",
+  prompt:`Tu es expert ggplot2 et patchwork pour figures publication-ready.
+
+J'ai généré ces figures individuelles :
+- fig1 : raréfaction iNEXT
+- fig2 : boxplot diversité + lettres signification
+- fig3 : NMDS avec ellipses
+Taille cible journal : max 180mm de large, 300 DPI
+
+Tâche :
+1. Assembler en une planche 2×2 avec patchwork (fig1|fig2)/(fig3|fig4)
+2. fig4 = barplot SIMPER top 10 espèces (code à générer)
+3. Labels A B C D en haut à gauche de chaque panneau
+4. Titre général et légende de figure complète
+5. Vérifier : police ≥ 8pt, symboles définis, pas de rouge/vert seuls
+
+Génère aussi : le texte complet de la légende de figure (Figure 1. ...)
+en anglais académique, avec définition de toutes les abréviations.`,
+  output:`# Output attendu :
+library(patchwork)
+
+# Figure 4 : SIMPER
+fig4 <- top10 %>%
+  ggplot(aes(x=reorder(species, average), y=average*100)) +
+  geom_col(fill="#1D9E75", width=.7) + coord_flip() +
+  labs(x=NULL, y="Contribution (%)") + theme_minimal(base_size=10)
+
+# Planche composite
+composite <- (fig1 | fig2) / (fig3 | fig4) +
+  plot_annotation(
+    title   = "Herpetofaunal diversity along degradation gradient",
+    caption = "RAZAFINDRABE MAMINIAINA H.F. et al. — Kirindy 2024",
+    tag_levels = "A"
+  )
+
+ggsave("figure_composite.png", composite,
+       width=180, height=130, units="mm", dpi=300)
+
+# Légende générée :
+cat("Figure 1. Species accumulation curves...
+    Figure 2. Shannon diversity (H')...
+    Figure 3. NMDS ordination...
+    Figure 4. SIMPER contributors...")`,
+  bio:"Vérifiez le composite sur écran avant de passer au Prompt 7. Une figure rejetée par un journal bloque toute la soumission."
+},
+{
+  name:"Interprétation biologique",
+  desc:"Traduire les stats en biologie avec Claude",
+  color:"#EEEDFE",
+  textColor:"#534AB7",
+  borderColor:"#7F77DD",
+  connector:"Résultat : 5 paragraphes biologiques → base de la Discussion",
+  prompt:`Tu es biologiste expert en herpétologie et conservation à Madagascar.
+
+Voici tous mes résultats statistiques :
+RICHESSE : Kruskal H=[X], p=[X] | η²=[X] | Médiane PF=[X], AM=[X]
+SHANNON   : [COLLER diversity_indices]
+PERMANOVA : F=[X], R²=[X], p=[X] | betadisper p=[X]
+NMDS      : stress=[X]
+SIMPER    : top 3 espèces contributrices = [COLLER]
+ESPÈCES IUCN : [COLLER liste espèces menacées trouvées]
+
+Tâche : traduis chaque résultat statistique en interprétation biologique :
+1. Que signifie R²=[X] pour la composition des communautés ?
+2. Pourquoi [espèce SIMPER] contribue-t-elle autant aux différences ?
+3. Quelles implications de conservation pour les forêts dégradées ?
+4. Quelles limites biologiques (détectabilité, saisonnalité, taille d'échantillon) ?
+5. Compare avec 3 études similaires à Madagascar ou Afrique subsaharienne
+
+Ne génère PAS de section Results — uniquement des paragraphes biologiques
+pour nourrir la Discussion.`,
+  output:`# Output attendu de Claude (texte) :
+"The high PERMANOVA R² (0.44) indicates that habitat type
+explains nearly half the variation in community composition,
+a substantial proportion for herpetofaunal communities in
+seasonally dry forests where stochastic processes are important...
+
+Zonosaurus karsteni's dominant SIMPER contribution (18.3%)
+reflects its high site fidelity and sensitivity to canopy
+cover — this species requires intact leaf litter for
+thermoregulation, making it a reliable indicator species
+for primary forest quality...
+
+Even moderately degraded forests (SF: S = 14.2) retained
+77% of primary forest richness, suggesting that intermediate
+disturbance may support transitional assemblages worth
+protecting as ecological corridors..."`,
+  bio:"Ces paragraphes biologiques sont la base de votre Discussion — beaucoup plus utiles que de demander directement 'rédige la discussion' sans contexte chiffré."
+},
+{
+  name:"Section Results — texte final",
+  desc:"Anglais académique · prêt à coller",
+  color:"#EEEDFE",
+  textColor:"#534AB7",
+  borderColor:"#7F77DD",
+  connector:"Output final : section Results complète (~400 mots)",
+  prompt:`Tu es expert en rédaction scientifique pour journaux d'écologie
+(Biodiversity and Conservation, Biotropica, Herpetologica).
+
+Voici tous mes résultats et leur interprétation biologique :
+
+STATISTIQUES COMPLÈTES :
+[COLLER : print(tests_results)]
+[COLLER : print(diversity_indices)]
+PERMANOVA : F=[X], R²=[X], p=[X]
+NMDS stress : [X]
+SIMPER top 3 : [COLLER]
+N total : [X] individus | [X] espèces | [X] sites
+
+INTERPRÉTATION BIOLOGIQUE :
+[COLLER les 5 paragraphes du Prompt 7]
+
+Tâche : rédige la section Results complète en anglais académique avec :
+1. Sous-titre "Species richness and diversity" (3-4 phrases)
+2. Sous-titre "Community composition" (3-4 phrases)  
+3. Sous-titre "Conservation-relevant species" (2-3 phrases)
+
+Règles strictes :
+- Chiffres entre parenthèses après chaque affirmation
+- Toujours : statistique + taille d'effet + p-value
+- Citer les figures et tableaux : (Table 1, Fig. 3)
+- PAS d'interprétation dans Results (→ Discussion)
+- ~400 mots maximum
+- Temps : past simple tout au long`,
+  output:`# Output attendu :
+"Species richness and diversity
+
+A total of 847 individuals belonging to 34 species
+(28 reptiles, 6 amphibians) were recorded across 25
+transects. Species richness declined significantly along
+the degradation gradient (Kruskal-Wallis: H = 14.3, df = 4,
+p = 0.006, rank η² = 0.68, 95% CI [0.41, 0.85]; Table 1),
+ranging from 18.4 ± 1.2 species per transect in primary
+forest to 4.6 ± 0.8 in the agricultural matrix. Rarefaction
+curves approached asymptotic values for all habitats except
+primary forest (Fig. 1; Chao1 = 23.4 vs. 18.4 observed).
+
+Shannon diversity (H') followed the same pattern (range:
+1.24–3.41; Table 1). Pielou's evenness (J') was consistently
+high across habitats (range: 0.63–0.83), indicating that
+communities were not strongly dominated by single species
+in any habitat.
+
+Community composition
+
+Community composition differed significantly among habitat
+types (PERMANOVA: F = 4.87, R² = 0.44, p = 0.001, 999
+permutations). Multivariate dispersion did not differ
+significantly among habitats (betadisper: F = 1.43, p = 0.21),
+confirming that PERMANOVA results reflect centroid
+differences rather than variance heterogeneity. NMDS
+ordination (stress = 0.127) revealed clear separation
+of primary forest from degraded habitats (Fig. 3).
+SIMPER analysis identified Zonosaurus karsteni,
+Furcifer labordi, and Brookesia brygooi as the primary
+contributors to between-habitat dissimilarity (cumulative
+contribution: 42.3%)."`,
+  bio:"Ce texte est prêt à coller dans votre manuscrit Word. Relisez uniquement pour vérifier que chaque chiffre correspond bien à vos outputs R — Claude peut halluciner des valeurs si vous n'avez pas collé tous les résultats."
+}
+];
+
+var currentStep=0;
+var openSteps={};
+
+function renderSteps(){
+  var c=document.getElementById("steps-container");
+  c.innerHTML="";
+  steps.forEach(function(s,i){
+    var card=document.createElement("div");
+    card.className="step-card";
+    card.id="sc"+i;
+    var isOpen=openSteps[i]||false;
+
+    card.innerHTML=
+      '<div class="step-header" onclick="toggleStep('+i+')">'
+        +'<div class="step-num" style="background:'+s.color+';color:'+s.textColor+'">'+( i+1)+'</div>'
+        +'<div class="step-meta">'
+          +'<p class="step-name">'+s.name+'</p>'
+          +'<p class="step-desc">'+s.desc+'</p>'
+        +'</div>'
+        +'<span class="step-arrow" id="sa'+i+'" style="transform:'+( isOpen?'rotate(180deg)':'rotate(0)')+'">&#8964;</span>'
+      +'</div>'
+      +'<div class="step-body'+(isOpen?' open':'') +'" id="sb'+i+'">'
+        +'<div class="tab-row">'
+          +'<button class="tab-btn on" id="tb-p'+i+'" onclick="showTab('+i+',\'prompt\')">Prompt</button>'
+          +'<button class="tab-btn" id="tb-o'+i+'" onclick="showTab('+i+',\'output\')">Output attendu</button>'
+        +'</div>'
+        +'<div class="tab-pane on" id="tp-p'+i+'">'
+          +'<div class="lbl">Prompt à envoyer à Claude</div>'
+          +'<div class="code-box" id="prompt-text-'+i+'">'+escHtml(s.prompt)+'</div>'
+          +'<button class="copy-btn" id="cpbtn'+i+'" onclick="copyPrompt('+i+')">'
+            +'<i class="ti ti-copy" aria-hidden="true"></i> Copier le prompt'
+          +'</button>'
+        +'</div>'
+        +'<div class="tab-pane" id="tp-o'+i+'">'
+          +'<div class="lbl">Output attendu de Claude</div>'
+          +'<div class="output-box">'+escHtml(s.output)+'</div>'
+        +'</div>'
+        +'<div class="bio-note" style="border-left-color:'+s.borderColor+';background:'+s.color+';color:'+s.textColor+'">'+s.bio+'</div>'
+        +(i<steps.length-1
+          ?'<button class="next-btn" onclick="nextStep('+i+')" style="border-color:'+s.borderColor+';color:'+s.textColor+'">Étape suivante ↓</button>'
+          :'<button class="next-btn" onclick="sendPrompt(\'Génère-moi la section Discussion complète basée sur ces résultats Results : [coller votre section Results]\')" style="border-color:#534AB7;color:#534AB7">Continuer vers la Discussion ↗</button>')
+      +'</div>';
+
+    c.appendChild(card);
+
+    if(i<steps.length-1){
+      var conn=document.createElement("div");
+      conn.className="connector";
+      conn.innerHTML='<span class="conn-icon">↓</span><span class="conn-text">'+s.connector+'</span>';
+      c.appendChild(conn);
+    }
+  });
+}
+
+function escHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function toggleStep(i){
+  openSteps[i]=!openSteps[i];
+  var body=document.getElementById("sb"+i);
+  var arrow=document.getElementById("sa"+i);
+  if(openSteps[i]){body.classList.add("open");arrow.style.transform="rotate(180deg)";}
+  else{body.classList.remove("open");arrow.style.transform="rotate(0)";}
+}
+
+function showTab(i,tab){
+  document.getElementById("tp-p"+i).classList.remove("on");
+  document.getElementById("tp-o"+i).classList.remove("on");
+  document.getElementById("tb-p"+i).classList.remove("on");
+  document.getElementById("tb-o"+i).classList.remove("on");
+  if(tab==="prompt"){
+    document.getElementById("tp-p"+i).classList.add("on");
+    document.getElementById("tb-p"+i).classList.add("on");
+  } else {
+    document.getElementById("tp-o"+i).classList.add("on");
+    document.getElementById("tb-o"+i).classList.add("on");
+  }
+}
+
+function nextStep(i){
+  if(i+1<steps.length){
+    openSteps[i]=false;
+    openSteps[i+1]=true;
+    renderSteps();
+    updateProgress(i+1);
+    currentStep=i+1;
+    setTimeout(function(){
+      var el=document.getElementById("sc"+(i+1));
+      if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+    },100);
+  }
+}
+
+function jumpTo(i){
+  openSteps[i]=true;
+  currentStep=i;
+  renderSteps();
+  updateProgress(i);
+  setTimeout(function(){
+    var el=document.getElementById("sc"+i);
+    if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+  },100);
+}
+
+function updateProgress(active){
+  for(var j=0;j<steps.length;j++){
+    var el=document.getElementById("pc"+j);
+    el.classList.remove("active","done");
+    if(j<active) el.classList.add("done");
+    else if(j===active) el.classList.add("active");
+    if(j<steps.length-1){
+      var line=document.getElementById("pl"+j);
+      if(j<active) line.classList.add("done");
+      else line.classList.remove("done");
+    }
+  }
+}
+
+function copyPrompt(i){
+  var text=steps[i].prompt;
+  var btn=document.getElementById("cpbtn"+i);
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      btn.innerHTML='<i class="ti ti-check" aria-hidden="true"></i> Copié !';
+      btn.classList.add("copied");
+      setTimeout(function(){
+        btn.innerHTML='<i class="ti ti-copy" aria-hidden="true"></i> Copier le prompt';
+        btn.classList.remove("copied");
+      },2000);
+    });
+  }
+}
+
+openSteps[0]=true;
+renderSteps();
+</script>

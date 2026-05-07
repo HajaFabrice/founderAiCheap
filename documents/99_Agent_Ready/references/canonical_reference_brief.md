@@ -17,12 +17,16 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - OPLURIX is the commercial brand for the independent side of the system.
 - Two current digital products now sit inside that revenue engine:
   - `Expert-to-Influencer Content Engine` at `USD 39`
-  - `EcoR Toolkit` with a three-tier ladder:
+    - Payhip launch pack prepared
+    - keep the public CTA off Payhip until the listing URL is published
+  - `EcoR Toolkit` with a four-tier ladder:
     - `Starter` at `USD 29`
     - `Complete` at `USD 97`
-    - `Pro Bundle` at `USD 149`
+    - `Pro Bundle` at `USD 297`
+    - `Institutional` at `USD 499`
     - `Complete` is the first-sale focus
-    - `Pro Bundle` is a public anchor, not a live checkout until its walkthrough assets exist
+    - `Pro Bundle` is a live support-backed tier with manual fulfillment and WhatsApp onboarding
+    - `Institutional` is contact-led, not a live checkout
 - Behind the live storefront, the OPLURIX source library already defines a
   broader 10-product suite. Only the founder-approved live and waitlist
   products should be discussed as publicly launchable today.
@@ -131,6 +135,7 @@ attached V4/V5 strategy texts plus the latest operational documents.
   - bounded data-cleanup or reporting support after sample review
 - Digital products:
   - `Expert-to-Influencer Content Engine`
+    - prepared for Payhip direct delivery
   - `EcoR Toolkit Starter`
   - `EcoR Toolkit Complete`
   - `EcoR Toolkit Pro Bundle`

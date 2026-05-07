@@ -1,6 +1,6 @@
 # Digital Products Sales Brief
 
-Updated: 2026-05-04
+Updated: 2026-05-07
 
 This is the compact sales and positioning brief for the digital products inside
 the OPLURIX revenue ladder. Two products are live; two are documented and
@@ -22,6 +22,11 @@ Canonical source folder reference:
 ### 1. Expert-to-Influencer Content Engine
 
 - Price: `USD 39`
+- Sales channel:
+  - Payhip direct digital delivery
+- Listing state:
+  - launch pack prepared
+  - public listing not yet published
 - Audience:
   - biodiversity researchers
   - conservation NGO workers
@@ -40,17 +45,20 @@ Canonical source folder reference:
 - Public product logic:
   - not a generic writing assistant
   - a translation system from field expertise to visible professional authority
+  - switch the public CTA to Payhip only after the live listing URL exists
 
 ### 2. EcoR Toolkit
 
-- Hormozi-aligned public ladder:
+- Updated public ladder:
   - `Starter`: `USD 29`
   - `Complete`: `USD 97`
-  - `Pro Bundle`: `USD 149`
+  - `Pro Bundle`: `USD 297`
+  - `Institutional`: `USD 499`
 - Positioning:
   - `Starter` is the entry point
   - `Complete` is the main tier the storefront should sell most often and the first-sale target
-  - `Pro Bundle` is the higher anchor tier, but it stays off checkout until the walkthrough assets are real
+  - `Pro Bundle` is the higher-support live tier with manual founder-managed fulfillment
+  - `Institutional` is a contact-led tier for NGOs, departments, and research teams
 - Audience:
   - ecology and biology graduate students
   - early-career researchers
@@ -60,11 +68,13 @@ Canonical source folder reference:
   - help buyers move from raw field data to clean tables, figures, and
     Results-section-ready outputs faster
 - Core components:
-  - annotated R scripts
+  - annotated R scripts and ecology notebooks
   - Claude prompt library
   - field data templates
   - figure templates
   - workflow guides
+  - guided support and upgrade assets in upper tiers
+  - WhatsApp community access and email Q&A in Pro
 - Truthful framing:
   - built by a field biologist with real Madagascar field and analysis context
   - not a substitute for statistical judgment
@@ -129,29 +139,32 @@ Canonical source folder reference:
 ## Recommended Checkout Structure
 
 - Frontend: Netlify static site
-- Checkout: PayPal payment links or buy buttons
+- Checkout: mixed checkout paths depending on product readiness and channel
 - Delivery: manual follow-up for the first sales wave
 - Delivery window target: `within 12 hours after payment confirmation`
 - Buyer confirmation path:
   - product page
-  - PayPal checkout
+- PayPal checkout for current EcoR flows
+- Payhip direct digital delivery for the prepared Expert-to-Influencer launch
   - thank-you page
   - manual email delivery within a bounded founder-controlled window
 
 ## Pricing Discipline
 
 - Use one clean headline price per product on the public storefront:
-  - `Expert-to-Influencer Content Engine`: `USD 39` — live
-  - `EcoR Toolkit Starter`: `USD 29` — live
-  - `EcoR Toolkit Complete`: `USD 97` — live
-  - `EcoR Toolkit Pro Bundle`: `USD 149` — anchor only, no active checkout
-  - `Training-to-Quiz Generator`: `USD 29` — coming soon, no active checkout
-  - `Biodiversity Pitch Deck Builder`: `USD 69` — coming soon, no active checkout
+- `Expert-to-Influencer Content Engine`: `USD 39` — live
+- `EcoR Toolkit Starter`: `USD 29` — live
+- `EcoR Toolkit Complete`: `USD 97` — live
+- `EcoR Toolkit Pro Bundle`: `USD 297` — live checkout with manual support handling
+- `EcoR Toolkit Institutional`: `USD 499` — contact-led team quote, no direct checkout
+- `Training-to-Quiz Generator`: `USD 29` — coming soon, no active checkout
+- `Biodiversity Pitch Deck Builder`: `USD 69` — coming soon, no active checkout
 - Hormozi-style pricing and upsell notes are useful, but should be applied with
   delivery discipline:
   - keep the live storefront on truthful deliverables only
   - keep `Complete` as the obvious best-value target
-  - keep `Pro Bundle` meaningfully higher so it works as an anchor, but not as an active checkout until its assets are ready
+  - keep `Pro Bundle` meaningfully higher and support-backed, with manual delivery and support tracking staying explicit
+  - keep `Institutional` visible only as a contact-led path until small-team onboarding and licensing are operational
   - tie any future increase to added proof, delivery assets, or stronger support
 
 ## Proof And Credibility To Use
@@ -171,7 +184,8 @@ Canonical source folder reference:
 - do not imply passive automated delivery if delivery is still manual
 - do not mix Techni-Drones employer promotion with product checkout copy
 - do not overstate ERIS readiness just because the storefront exists
-- do not take payment for `EcoR Toolkit Pro Bundle` until the promised walkthrough assets are actually present
+- do not leave `EcoR Toolkit Pro Bundle` checkout live if the support tracker or WhatsApp onboarding path is not being maintained
+- do not activate direct checkout for `EcoR Toolkit Institutional`
 
 ## Public Contact For Launch
 
