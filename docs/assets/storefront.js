@@ -150,29 +150,6 @@
       : `Secure PayPal checkout when available. Manual delivery follows by email within ${deliveryWindow} hours after payment confirmation.`;
   }
 
-  function wirePayhipButtons(lang) {
-    document.querySelectorAll(".paypal-button").forEach((button) => {
-      const product = store.products[button.dataset.paypalProduct];
-      if (!product || !product.payhipUrl) {
-        return;
-      }
-      const note = document.querySelector(`[data-product-note="${button.dataset.paypalProduct}"]`);
-      button.href = product.payhipUrl;
-      button.target = "_blank";
-      button.rel = "noopener";
-      button.textContent =
-        lang === "fr"
-          ? `Acheter maintenant — $${product.priceUsd} via Payhip`
-          : `Buy now — $${product.priceUsd} via Payhip`;
-      if (note) {
-        note.textContent =
-          lang === "fr"
-            ? "Paiement securise via Payhip. Livraison automatique par email apres paiement."
-            : "Secure checkout via Payhip. Automatic delivery by email after payment.";
-      }
-    });
-  }
-
   function wireFallbackLinks() {
     const lang = document.body.dataset.lang || getLanguage();
     document.querySelectorAll(".paypal-button").forEach((button) => {
@@ -312,7 +289,6 @@
   document.addEventListener("DOMContentLoaded", function () {
     const lang = getLanguage();
     setLanguage(lang);
-    wirePayhipButtons(lang);
     wireFallbackLinks();
     loadPayPalSdk().then(function (loaded) {
       if (loaded) {
@@ -321,9 +297,7 @@
     });
     document.querySelectorAll("[data-set-lang]").forEach((button) => {
       button.addEventListener("click", function () {
-        const newLang = button.dataset.setLang;
-        setLanguage(newLang);
-        wirePayhipButtons(newLang);
+        setLanguage(button.dataset.setLang);
         wireFallbackLinks();
       });
     });
