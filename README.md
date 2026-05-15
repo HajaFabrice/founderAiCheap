@@ -146,6 +146,7 @@ Non-goals:
 - [Cloud deployment](docs/cloud-deployment.md)
 - [Cloud operations](docs/cloud-operations.md)
 - [Continuous improvement](docs/continuous-improvement.md)
+- [AI-assisted development safety](docs/ai-assisted-development-safety.md)
 - [Independent services landing page (EN)](docs/independent-services-en.md)
 - [Independent services landing page (FR)](docs/services-fr.md)
 - [Independent services one-pager](docs/services-one-pager.md)

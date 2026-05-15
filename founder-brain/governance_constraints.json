@@ -9,7 +9,11 @@
     "publish",
     "financial",
     "destructive-write",
-    "calendar-commitment"
+    "calendar-commitment",
+    "code-change",
+    "security-sensitive",
+    "dependency-change",
+    "schema-change"
   ],
   "hard_rules": [
     "No autonomous external sends.",
@@ -17,7 +21,9 @@
     "Do not accept work that advances extractive land use.",
     "Do not promise capabilities that are not already operational.",
     "Do not remove or bypass approval gates.",
-    "Do not pursue generic IT or data work outside conservation and ecological stewardship."
+    "Do not pursue generic IT or data work outside conservation and ecological stewardship.",
+    "Do not merge AI-generated code that nobody on the team can explain clearly.",
+    "Do not treat AI output as a substitute for security review, bounded verification, or human ownership."
   ],
   "transparent_signature_required_agents": [
     "anthony",

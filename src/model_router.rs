@@ -181,11 +181,7 @@ pub fn resolve_worker(
     };
     let primary = worker_for_mode(config, route, primary_mode);
 
-    let secondary = if fallback_mode == "none" {
-        None
-    } else if should_flip {
-        None
-    } else if fallback_mode == preferred_mode {
+    let secondary = if fallback_mode == "none" || should_flip || fallback_mode == preferred_mode {
         None
     } else {
         Some(worker_for_mode(config, route, &fallback_mode))

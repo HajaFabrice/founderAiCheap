@@ -242,14 +242,12 @@ fn normalize_tracking(lead: &IndependentLead) -> FunnelTrackingRecord {
         lead_id: tracking
             .lead_id
             .or_else(|| Some(lead.organization_id.clone())),
-        ownership_classification: tracking
-            .ownership_classification
-            .or_else(|| Some(default_owner)),
-        language: tracking.language.or_else(|| Some(default_language)),
-        segment: tracking.segment.or_else(|| Some(default_segment)),
+        ownership_classification: tracking.ownership_classification.or(Some(default_owner)),
+        language: tracking.language.or(Some(default_language)),
+        segment: tracking.segment.or(Some(default_segment)),
         offer_used: tracking.offer_used,
         proof_asset_used: tracking.proof_asset_used,
-        current_stage: tracking.current_stage.or_else(|| Some(default_stage)),
+        current_stage: tracking.current_stage.or(Some(default_stage)),
         last_touch_at: tracking.last_touch_at,
         next_action_at: tracking.next_action_at,
         outcome: tracking.outcome,

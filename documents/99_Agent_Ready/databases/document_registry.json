@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05",
+  "generated_at": "2026-05-11",
   "selection_rule": [
     "User-attached text exports override older mirrors when they cover the same document family.",
     "Otherwise, the highest explicit version number wins.",
@@ -96,6 +96,21 @@
         "inbox outbox expectations",
         "human collaborator onboarding",
         "operational safety"
+      ]
+    },
+    {
+      "id": "ai-assisted-development-safety",
+      "category": "engineering-governance",
+      "canonical_path": "documents/99_Agent_Ready/references/ai_assisted_development_safety.md",
+      "repo_mirror_path": "documents/99_Agent_Ready/references/ai_assisted_development_safety.md",
+      "supersedes": [
+        "ad hoc vibecoding warnings in chat"
+      ],
+      "agent_uses": [
+        "code-review discipline",
+        "security boundary review",
+        "bounded self-improvement",
+        "ownership and maintainability checks"
       ]
     },
     {

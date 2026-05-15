@@ -90,7 +90,7 @@ pub enum SequenceAction {
         sequence_id: String,
         step_id: String,
         channel: String,
-        job: JobConfig,
+        job: Box<JobConfig>,
     },
     PhoneFlag {
         sequence_id: String,
@@ -364,7 +364,7 @@ pub fn collect_due_actions(config: &AppConfig, now: DateTime<Utc>) -> Result<Vec
             sequence_id: sequence.sequence_id.clone(),
             step_id: step.step_id.clone(),
             channel: step.channel.clone(),
-            job: JobConfig {
+            job: Box::new(JobConfig {
                 job_id: format!("perpetua-{}-{}", sequence.sequence_id, step.step_id),
                 description: format!("Perpetua nurture step {}", step.step_id),
                 enabled: true,
@@ -383,7 +383,7 @@ pub fn collect_due_actions(config: &AppConfig, now: DateTime<Utc>) -> Result<Vec
                 metric_value: Some(1),
                 task_type: Some(step.task_type.clone()),
                 agent_id: Some("perpetua".to_string()),
-            },
+            }),
         });
     }
 

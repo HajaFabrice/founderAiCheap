@@ -179,7 +179,11 @@
       "publish",
       "financial",
       "destructive-write",
-      "calendar-commitment"
+      "calendar-commitment",
+      "code-change",
+      "security-sensitive",
+      "dependency-change",
+      "schema-change"
     ],
     "default_policy": "after_run"
   },

@@ -6,7 +6,7 @@ use crate::agents::pio::collect_due_alerts;
 use crate::agents::zacchaeus::{build_zacchaeus_job, collect_inbound_lead_requests};
 use crate::approvals::{
     approval_decision, create_approval_request, decide_approval, ensure_approval_dirs,
-    list_pending_approvals, ApprovalDecision,
+    list_pending_approvals, ApprovalDecision, ApprovalRequestSpec,
 };
 use crate::config::{AppConfig, JobConfig, TeamRoleConfig};
 use crate::improvement::{ensure_improvement_dirs, sync_improvement_state};
@@ -18,8 +18,10 @@ use crate::offline::{
 };
 use crate::singleton::DaemonLock;
 use crate::state::{load_state, save_state, AppState, ProcessedInboxRequest};
-use crate::team_logging::{append_team_activity, ensure_log_files};
-use crate::worker::{provider_status, run_worker, ProviderStatus, WorkerRunResult};
+use crate::team_logging::{append_team_activity, ensure_log_files, TeamActivityEntry};
+use crate::worker::{
+    provider_status, run_worker, ProviderStatus, WorkerExecutionContext, WorkerRunResult,
+};
 use anyhow::{Context, Result};
 use chrono::{DateTime, Datelike, Local, NaiveTime, Utc, Weekday};
 use serde::{Deserialize, Serialize};
@@ -97,6 +99,45 @@ struct InboxRequestPayload {
     role_id: Option<String>,
     task_type: Option<String>,
     agent_id: Option<String>,
+}
+
+struct LoadedInboxRequest {
+    title: String,
+    body: String,
+    risk_tags: Vec<String>,
+    approval_policy: String,
+    requires_internet: bool,
+    role_id: Option<String>,
+    task_type: Option<String>,
+    agent_id: Option<String>,
+}
+
+struct StructuredInboxRequest<'a> {
+    title: &'a str,
+    body: &'a str,
+    approval_policy: &'a str,
+    risk_tags: &'a [String],
+    requires_internet: bool,
+    role_id: Option<&'a str>,
+    task_type: Option<&'a str>,
+    agent_id: Option<&'a str>,
+}
+
+struct RunRecordContext<'a> {
+    trigger: &'a str,
+    role: Option<&'a TeamRoleConfig>,
+    metric_value: i64,
+    task_label: &'a str,
+    schedule_key: Option<&'a str>,
+}
+
+#[derive(Clone)]
+struct JobDispatchContext<'a> {
+    trigger: &'a str,
+    current_internet: bool,
+    now_local: DateTime<Local>,
+    request_source: Option<&'a Path>,
+    role: Option<&'a TeamRoleConfig>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -388,13 +429,15 @@ impl AutonomyApp {
         let summary = self.approval_summary(job, trigger, result, role);
         create_approval_request(
             &self.config.runtime_dir,
-            &approval_id,
-            &job.job_id,
-            phase,
-            &summary,
-            &summary,
-            &artifacts,
-            &self.effective_risk_tags(job, role),
+            ApprovalRequestSpec {
+                approval_id: &approval_id,
+                job_id: &job.job_id,
+                phase,
+                reason: &summary,
+                summary: &summary,
+                artifacts: &artifacts,
+                risk_tags: &self.effective_risk_tags(job, role),
+            },
             &self.config.config_path,
             &self.executable_path,
         )?;
@@ -562,28 +605,24 @@ impl AutonomyApp {
         &self,
         state: &mut AppState,
         job: &JobConfig,
-        trigger: &str,
         result: &WorkerRunResult,
-        role: Option<&TeamRoleConfig>,
-        metric_value: i64,
-        task_label: &str,
-        schedule_key: Option<&str>,
+        context: RunRecordContext<'_>,
     ) {
         {
             let job_state = state.ensure_job_state(&job.job_id);
             job_state.last_started_at = Some(result.started_at.clone());
             job_state.last_finished_at = Some(result.finished_at.clone());
-            job_state.last_trigger = Some(trigger.to_string());
+            job_state.last_trigger = Some(context.trigger.to_string());
             job_state.last_run_id = Some(result.run_id.clone());
             job_state.last_exit_code = Some(result.exit_code);
             job_state.last_summary = Some(result.summary.clone());
-            job_state.role_id = role.map(|role| role.role_id.clone());
-            if let Some(schedule_key) = schedule_key {
+            job_state.role_id = context.role.map(|role| role.role_id.clone());
+            if let Some(schedule_key) = context.schedule_key {
                 job_state.last_schedule_key = Some(schedule_key.to_string());
             }
         }
 
-        if let Some(role) = role {
+        if let Some(role) = context.role {
             let status = if result.exit_code == 0 {
                 "Completed"
             } else {
@@ -597,11 +636,11 @@ impl AutonomyApp {
                 .to_string();
             {
                 let role_state = state.ensure_role_state(&role.role_id);
-                role_state.last_job_id = Some(task_label.to_string());
+                role_state.last_job_id = Some(context.task_label.to_string());
                 role_state.last_run_id = Some(result.run_id.clone());
                 role_state.last_summary = Some(result.summary.clone());
                 role_state.last_status = Some(status.to_string());
-                role_state.last_metric_value = Some(metric_value);
+                role_state.last_metric_value = Some(context.metric_value);
                 role_state.last_output_file = Some(output_path.clone());
                 role_state.last_finished_at = Some(result.finished_at.clone());
             }
@@ -622,13 +661,15 @@ impl AutonomyApp {
             extra.insert("output_file".to_string(), Value::String(output_path));
             if let Err(err) = append_team_activity(
                 &self.config.runtime_dir,
-                &role.team,
-                &role.role,
-                task_label,
-                status,
-                &result.summary,
-                metric_value,
-                Some(extra),
+                TeamActivityEntry {
+                    team: &role.team,
+                    role: &role.role,
+                    task: context.task_label,
+                    status,
+                    notes: &result.summary,
+                    metric_value: context.metric_value,
+                    extra: Some(extra),
+                },
             ) {
                 self.log(&format!(
                     "Failed to append team activity for {}: {err:#}",
@@ -638,19 +679,7 @@ impl AutonomyApp {
         }
     }
 
-    fn load_inbox_request(
-        &self,
-        file_path: &Path,
-    ) -> Result<(
-        String,
-        String,
-        Vec<String>,
-        String,
-        bool,
-        Option<String>,
-        Option<String>,
-        Option<String>,
-    )> {
+    fn load_inbox_request(&self, file_path: &Path) -> Result<LoadedInboxRequest> {
         if file_path
             .extension()
             .and_then(|value| value.to_str())
@@ -662,48 +691,49 @@ impl AutonomyApp {
             let payload: InboxRequestPayload = serde_json::from_str(&raw).with_context(|| {
                 format!("failed to parse inbox request {}", file_path.display())
             })?;
-            return Ok((
-                payload.title.unwrap_or_else(|| {
+            return Ok(LoadedInboxRequest {
+                title: payload.title.unwrap_or_else(|| {
                     file_path
                         .file_stem()
                         .and_then(|stem| stem.to_str())
                         .unwrap_or("request")
                         .to_string()
                 }),
-                payload.body.unwrap_or_default().trim().to_string(),
-                payload.risk_tags,
-                payload
+                body: payload.body.unwrap_or_default().trim().to_string(),
+                risk_tags: payload.risk_tags,
+                approval_policy: payload
                     .approval_policy
                     .unwrap_or_else(|| self.config.inbox_request_defaults.approval_policy.clone()),
-                payload
+                requires_internet: payload
                     .requires_internet
                     .unwrap_or(self.config.inbox_request_defaults.requires_internet),
-                payload.role_id,
-                payload.task_type,
-                payload.agent_id,
-            ));
+                role_id: payload.role_id,
+                task_type: payload.task_type,
+                agent_id: payload.agent_id,
+            });
         }
 
         let text = fs::read_to_string(file_path)
             .with_context(|| format!("failed to read inbox request {}", file_path.display()))?;
-        Ok((
-            file_path
+        Ok(LoadedInboxRequest {
+            title: file_path
                 .file_stem()
                 .and_then(|stem| stem.to_str())
                 .unwrap_or("request")
                 .to_string(),
-            text.trim().to_string(),
-            self.config.inbox_request_defaults.risk_tags.clone(),
-            self.config.inbox_request_defaults.approval_policy.clone(),
-            self.config.inbox_request_defaults.requires_internet,
-            None,
-            None,
-            None,
-        ))
+            body: text.trim().to_string(),
+            risk_tags: self.config.inbox_request_defaults.risk_tags.clone(),
+            approval_policy: self.config.inbox_request_defaults.approval_policy.clone(),
+            requires_internet: self.config.inbox_request_defaults.requires_internet,
+            role_id: None,
+            task_type: None,
+            agent_id: None,
+        })
     }
 
     fn build_inbox_job(&self, file_path: &Path) -> Result<(JobConfig, Option<TeamRoleConfig>)> {
-        let (
+        let request = self.load_inbox_request(file_path)?;
+        let LoadedInboxRequest {
             title,
             body,
             risk_tags,
@@ -712,7 +742,7 @@ impl AutonomyApp {
             role_id,
             task_type,
             agent_id,
-        ) = self.load_inbox_request(file_path)?;
+        } = request;
         let role = role_id
             .as_deref()
             .and_then(|role_id| self.config.team_roles.get(role_id))
@@ -818,40 +848,33 @@ impl AutonomyApp {
     fn create_structured_inbox_request(
         &self,
         prefix: &str,
-        title: &str,
-        body: &str,
-        approval_policy: &str,
-        risk_tags: &[String],
-        requires_internet: bool,
-        role_id: Option<&str>,
-        task_type: Option<&str>,
-        agent_id: Option<&str>,
+        request: StructuredInboxRequest<'_>,
     ) -> Result<PathBuf> {
         let file_name = format!(
             "{}-{}-{}.json",
             prefix,
             utc_now().format("%Y%m%dT%H%M%SZ"),
-            slugify(title)
+            slugify(request.title)
         );
         let path = self.config.inbox_dir.join(file_name);
         let mut payload = serde_json::json!({
-            "title": title,
-            "body": body,
-            "approval_policy": approval_policy,
-            "risk_tags": risk_tags,
-            "requires_internet": requires_internet,
+            "title": request.title,
+            "body": request.body,
+            "approval_policy": request.approval_policy,
+            "risk_tags": request.risk_tags,
+            "requires_internet": request.requires_internet,
         });
         if let Some(object) = payload.as_object_mut() {
-            if let Some(role_id) = role_id {
+            if let Some(role_id) = request.role_id {
                 object.insert("role_id".to_string(), Value::String(role_id.to_string()));
             }
-            if let Some(task_type) = task_type {
+            if let Some(task_type) = request.task_type {
                 object.insert(
                     "task_type".to_string(),
                     Value::String(task_type.to_string()),
                 );
             }
-            if let Some(agent_id) = agent_id {
+            if let Some(agent_id) = request.agent_id {
                 object.insert("agent_id".to_string(), Value::String(agent_id.to_string()));
             }
         }
@@ -923,11 +946,13 @@ impl AutonomyApp {
             self.run_single_job(
                 state,
                 &job,
-                "inbox_request",
-                current_internet,
-                now_local,
-                Some(&request_path),
-                None,
+                JobDispatchContext {
+                    trigger: "inbox_request",
+                    current_internet,
+                    now_local,
+                    request_source: Some(&request_path),
+                    role: None,
+                },
             )?;
 
             if let Some(sequence_id) =
@@ -968,12 +993,14 @@ impl AutonomyApp {
                     ));
                     self.run_single_job(
                         state,
-                        &job,
-                        "periodic",
-                        current_internet,
-                        now_local,
-                        None,
-                        None,
+                        job.as_ref(),
+                        JobDispatchContext {
+                            trigger: "periodic",
+                            current_internet,
+                            now_local,
+                            request_source: None,
+                            role: None,
+                        },
                     )?;
                     let latest_run_id = state
                         .jobs
@@ -1062,14 +1089,16 @@ impl AutonomyApp {
                 self.resolve_deadline_assignment(&alert.assigned_to);
             let request_path = self.create_structured_inbox_request(
                 "pio-alert",
-                &alert.title,
-                &alert.body,
-                "never",
-                &[],
-                false,
-                role_id.as_deref(),
-                task_type.as_deref(),
-                agent_id.as_deref(),
+                StructuredInboxRequest {
+                    title: &alert.title,
+                    body: &alert.body,
+                    approval_policy: "never",
+                    risk_tags: &[],
+                    requires_internet: false,
+                    role_id: role_id.as_deref(),
+                    task_type: task_type.as_deref(),
+                    agent_id: agent_id.as_deref(),
+                },
             )?;
             state
                 .processed_deadline_alerts
@@ -1207,13 +1236,15 @@ impl AutonomyApp {
             );
             if let Err(err) = append_team_activity(
                 &self.config.runtime_dir,
-                &role.team,
-                &role.role,
-                "Daily Orchestration",
-                "Queued",
-                &format!("Daily packet created at {}", request_name),
-                role.daily_quota,
-                Some(extra),
+                TeamActivityEntry {
+                    team: &role.team,
+                    role: &role.role,
+                    task: "Daily Orchestration",
+                    status: "Queued",
+                    notes: &format!("Daily packet created at {}", request_name),
+                    metric_value: role.daily_quota,
+                    extra: Some(extra),
+                },
             ) {
                 self.log(&format!(
                     "Failed to append orchestration activity for {}: {err:#}",
@@ -1251,11 +1282,7 @@ impl AutonomyApp {
         &self,
         state: &mut AppState,
         job: &JobConfig,
-        trigger: &str,
-        current_internet: bool,
-        now_local: DateTime<Local>,
-        request_source: Option<&Path>,
-        role: Option<&TeamRoleConfig>,
+        context: JobDispatchContext<'_>,
     ) -> Result<()> {
         {
             let job_state = state.ensure_job_state(&job.job_id);
@@ -1268,24 +1295,30 @@ impl AutonomyApp {
                         .to_string(),
                 );
             }
-            job_state.role_id = role.map(|item| item.role_id.clone());
+            job_state.role_id = context.role.map(|item| item.role_id.clone());
         }
 
         let (is_due, schedule_key) = {
             let job_state = state.ensure_job_state(&job.job_id).clone();
-            self.job_is_due(job, &job_state, current_internet, trigger, now_local)
+            self.job_is_due(
+                job,
+                &job_state,
+                context.current_internet,
+                context.trigger,
+                context.now_local,
+            )
         };
         if !is_due {
             return Ok(());
         }
 
-        if job.requires_internet && !current_internet {
+        if job.requires_internet && !context.current_internet {
             let queue_key = enqueue_offline_job(
                 &self.config,
                 job,
-                trigger,
-                role,
-                request_source,
+                context.trigger,
+                context.role,
+                context.request_source,
                 "Connectivity unavailable for internet-required work.",
             )?;
             self.log(&format!(
@@ -1299,27 +1332,33 @@ impl AutonomyApp {
                     job.job_id
                 ),
             );
-            if let Some(request_source) = request_source {
+            if let Some(request_source) = context.request_source {
                 self.mark_request_processed(state, request_source, "queued_offline");
             }
             return Ok(());
         }
 
-        let approval_phase = self.consume_pending_approval(state, job, role);
-        let resolved_policy = self.resolved_approval_policy(job, role);
+        let approval_phase = self.consume_pending_approval(state, job, context.role);
+        let resolved_policy = self.resolved_approval_policy(job, context.role);
         if approval_phase.as_deref() == Some("pending") {
             self.log(&format!("Job {} is waiting for approval.", job.job_id));
             return Ok(());
         }
         if approval_phase.as_deref() == Some("rejected") {
-            if let Some(request_source) = request_source {
+            if let Some(request_source) = context.request_source {
                 self.mark_request_processed(state, request_source, "rejected");
             }
             return Ok(());
         }
         if resolved_policy == "before_run" && approval_phase.as_deref() != Some("before_run") {
-            let approval_id =
-                self.request_approval(state, job, trigger, "before_run", role, None)?;
+            let approval_id = self.request_approval(
+                state,
+                job,
+                context.trigger,
+                "before_run",
+                context.role,
+                None,
+            )?;
             self.log(&format!(
                 "Created before-run approval {} for {}.",
                 approval_id, job.job_id
@@ -1345,23 +1384,25 @@ impl AutonomyApp {
 
         self.log(&format!(
             "Running job {} from trigger {}.",
-            job.job_id, trigger
+            job.job_id, context.trigger
         ));
         let result = run_worker(
             &self.config,
             job,
-            trigger,
-            &self.config.runtime_dir,
-            request_source,
-            role,
-            &self.effective_risk_tags(job, role),
-            &resolved_policy,
-            current_internet,
+            WorkerExecutionContext {
+                trigger: context.trigger,
+                runtime_dir: &self.config.runtime_dir,
+                request_source: context.request_source,
+                role: context.role,
+                effective_risk_tags: &self.effective_risk_tags(job, context.role),
+                resolved_approval_policy: &resolved_policy,
+                current_internet: context.current_internet,
+            },
         );
 
         let metric_value = job
             .metric_value
-            .or_else(|| role.map(|role| role.daily_quota))
+            .or_else(|| context.role.map(|role| role.daily_quota))
             .unwrap_or(1);
         let task_label = if job.task_label.is_empty() {
             if job.description.is_empty() {
@@ -1375,12 +1416,14 @@ impl AutonomyApp {
         self.record_run(
             state,
             job,
-            trigger,
             &result,
-            role,
-            metric_value,
-            &task_label,
-            schedule_key.as_deref(),
+            RunRecordContext {
+                trigger: context.trigger,
+                role: context.role,
+                metric_value,
+                task_label: &task_label,
+                schedule_key: schedule_key.as_deref(),
+            },
         );
 
         let outbox_copy = self.config.outbox_dir.join(format!("{}.md", result.run_id));
@@ -1400,13 +1443,19 @@ impl AutonomyApp {
             ));
         }
 
-        if let Some(request_source) = request_source {
+        if let Some(request_source) = context.request_source {
             self.mark_request_processed(state, request_source, "completed");
         }
 
         if resolved_policy == "after_run" {
-            let approval_id =
-                self.request_approval(state, job, trigger, "after_run", role, Some(&result))?;
+            let approval_id = self.request_approval(
+                state,
+                job,
+                context.trigger,
+                "after_run",
+                context.role,
+                Some(&result),
+            )?;
             self.log(&format!(
                 "Created after-run approval {} for {}.",
                 approval_id, job.job_id
@@ -1419,7 +1468,7 @@ impl AutonomyApp {
                 &format!(
                     "{} failed during '{}' and wrote artifacts to {}.",
                     job.job_id,
-                    trigger,
+                    context.trigger,
                     result.output_file.display()
                 ),
             );
@@ -1432,14 +1481,10 @@ impl AutonomyApp {
         &self,
         state: &mut AppState,
         job: &JobConfig,
-        trigger: &str,
-        current_internet: bool,
-        now_local: DateTime<Local>,
-        request_source: Option<&Path>,
-        role: Option<&TeamRoleConfig>,
+        context: JobDispatchContext<'_>,
     ) -> Result<()> {
-        if role.is_none()
-            && current_internet
+        if context.role.is_none()
+            && context.current_internet
             && self.config.offline_queue.enabled
             && !self
                 .config
@@ -1452,25 +1497,23 @@ impl AutonomyApp {
                 .replay_trigger
                 .eq_ignore_ascii_case(&job.job_id)
         {
-            self.replay_offline_queue(state, current_internet, now_local)?;
+            self.replay_offline_queue(state, context.current_internet, context.now_local)?;
         }
 
-        if role.is_some() {
-            return self.run_single_job(
-                state,
-                job,
-                trigger,
-                current_internet,
-                now_local,
-                request_source,
-                role,
-            );
+        if context.role.is_some() {
+            return self.run_single_job(state, job, context);
         }
 
         if job.mode == "daily_orchestration" {
             let (is_due, schedule_key) = {
                 let job_state = state.ensure_job_state(&job.job_id).clone();
-                self.job_is_due(job, &job_state, current_internet, trigger, now_local)
+                self.job_is_due(
+                    job,
+                    &job_state,
+                    context.current_internet,
+                    context.trigger,
+                    context.now_local,
+                )
             };
             if is_due {
                 self.log(&format!("Creating daily team packets for {}.", job.job_id));
@@ -1501,11 +1544,11 @@ impl AutonomyApp {
                 self.run_single_job(
                     state,
                     &role_job,
-                    trigger,
-                    current_internet,
-                    now_local,
-                    None,
-                    Some(&team_role),
+                    JobDispatchContext {
+                        role: Some(&team_role),
+                        request_source: None,
+                        ..context.clone()
+                    },
                 )?;
                 if let Some(role_state) = state.jobs.get(&role_job.job_id) {
                     if role_state.last_run_id != previous_run_id {
@@ -1541,11 +1584,10 @@ impl AutonomyApp {
         self.run_single_job(
             state,
             job,
-            trigger,
-            current_internet,
-            now_local,
-            request_source,
-            None,
+            JobDispatchContext {
+                role: None,
+                ..context
+            },
         )
     }
 
@@ -1565,11 +1607,13 @@ impl AutonomyApp {
             self.dispatch_job(
                 state,
                 &entry.job,
-                &entry.trigger,
-                current_internet,
-                now_local,
-                request_source,
-                role.as_ref(),
+                JobDispatchContext {
+                    trigger: &entry.trigger,
+                    current_internet,
+                    now_local,
+                    request_source,
+                    role: role.as_ref(),
+                },
             )
         })?;
 
@@ -1607,11 +1651,13 @@ impl AutonomyApp {
                 if let Err(err) = self.dispatch_job(
                     &mut state,
                     job,
-                    "startup",
-                    current_internet,
-                    now_local,
-                    None,
-                    None,
+                    JobDispatchContext {
+                        trigger: "startup",
+                        current_internet,
+                        now_local,
+                        request_source: None,
+                        role: None,
+                    },
                 ) {
                     self.log(&format!(
                         "Job {} failed during startup trigger: {err:#}",
@@ -1626,11 +1672,13 @@ impl AutonomyApp {
                 if let Err(err) = self.dispatch_job(
                     &mut state,
                     job,
-                    trigger,
-                    current_internet,
-                    now_local,
-                    None,
-                    None,
+                    JobDispatchContext {
+                        trigger,
+                        current_internet,
+                        now_local,
+                        request_source: None,
+                        role: None,
+                    },
                 ) {
                     self.log(&format!(
                         "Job {} failed during trigger {}: {err:#}",
@@ -1644,11 +1692,13 @@ impl AutonomyApp {
             if let Err(err) = self.dispatch_job(
                 &mut state,
                 job,
-                "periodic",
-                current_internet,
-                now_local,
-                None,
-                None,
+                JobDispatchContext {
+                    trigger: "periodic",
+                    current_internet,
+                    now_local,
+                    request_source: None,
+                    role: None,
+                },
             ) {
                 self.log(&format!(
                     "Job {} failed during periodic trigger: {err:#}",
@@ -1673,11 +1723,13 @@ impl AutonomyApp {
                 if let Err(err) = self.dispatch_job(
                     &mut state,
                     job,
-                    "internet_up",
-                    current_internet,
-                    now_local,
-                    None,
-                    None,
+                    JobDispatchContext {
+                        trigger: "internet_up",
+                        current_internet,
+                        now_local,
+                        request_source: None,
+                        role: None,
+                    },
                 ) {
                     self.log(&format!(
                         "Job {} failed during internet_up trigger: {err:#}",
@@ -1707,11 +1759,13 @@ impl AutonomyApp {
                     if let Err(err) = self.dispatch_job(
                         &mut state,
                         &inbox_job,
-                        "inbox_request",
-                        current_internet,
-                        now_local,
-                        Some(&request_file),
-                        role.as_ref(),
+                        JobDispatchContext {
+                            trigger: "inbox_request",
+                            current_internet,
+                            now_local,
+                            request_source: Some(&request_file),
+                            role: role.as_ref(),
+                        },
                     ) {
                         self.log(&format!(
                             "Inbox request {} failed: {err:#}",
@@ -2111,5 +2165,190 @@ impl AutonomyApp {
         fs::write(&file_path, payload_text)
             .with_context(|| format!("failed to write inbox request {}", file_path.display()))?;
         Ok(file_path)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::{
+        InboxDefaults, InternetCheckConfig, ModelRouterConfig, NotifierConfig, OfflineQueueConfig,
+        StrategicValidationConfig, WorkerConfig,
+    };
+    use crate::state::AppState;
+    use std::collections::BTreeMap;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn unique_test_dir() -> PathBuf {
+        let mut dir = std::env::temp_dir();
+        let stamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        dir.push(format!("founderai-app-test-{stamp}"));
+        dir
+    }
+
+    fn test_app() -> (AutonomyApp, PathBuf) {
+        let root = unique_test_dir();
+        let runtime_dir = root.join("runtime");
+        let inbox_dir = root.join("inbox");
+        let outbox_dir = root.join("outbox");
+        let founder_brain_path = root.join("founder-brain");
+        fs::create_dir_all(&founder_brain_path).unwrap();
+
+        let role = TeamRoleConfig {
+            role_id: "A-Outreach".to_string(),
+            team: "A".to_string(),
+            role: "Outreach".to_string(),
+            display_name: "Outreach".to_string(),
+            saint_name: "Anthony".to_string(),
+            agent_id: "anthony".to_string(),
+            daily_quota: 3,
+            metric_unit: "messages".to_string(),
+            focus: "Warm leads".to_string(),
+            responsibilities: vec!["Draft outreach".to_string()],
+            default_risk_tags: vec!["external-send".to_string()],
+            default_approval_policy: "inherit".to_string(),
+        };
+
+        let config = AppConfig {
+            config_path: root.join("config").join("founderai.json"),
+            workspace_root: root.clone(),
+            founder_brain_path,
+            runtime_dir,
+            inbox_dir,
+            outbox_dir,
+            agent_roster_path: root.join("config").join("agents.json"),
+            deadline_tracker_path: root.join("deadlines.json"),
+            poll_interval_seconds: 60,
+            internet_check: InternetCheckConfig::default(),
+            worker: WorkerConfig::default(),
+            strategic_validation: StrategicValidationConfig::default(),
+            inbox_request_defaults: InboxDefaults::default(),
+            team_roles: BTreeMap::from([(role.role_id.clone(), role)]),
+            agent_profiles: BTreeMap::new(),
+            model_router: ModelRouterConfig::default(),
+            offline_queue: OfflineQueueConfig::default(),
+            notifier: NotifierConfig::default(),
+            jobs: Vec::new(),
+        };
+
+        (AutonomyApp::new(config, root.join("founderai.exe")), root)
+    }
+
+    #[test]
+    fn create_request_file_slugifies_title_and_keeps_writes_in_inbox() {
+        let (app, root) = test_app();
+
+        let path = app
+            .create_request_file(
+                "../../Need Review Now",
+                "Check this carefully",
+                "before_run",
+                &["publish".to_string(), "financial".to_string()],
+                true,
+                Some("A-Outreach"),
+            )
+            .unwrap();
+
+        assert_eq!(path.parent(), Some(app.config.inbox_dir.as_path()));
+        assert_eq!(
+            path.file_name().and_then(|value| value.to_str()),
+            Some("need-review-now.json")
+        );
+
+        let payload: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+        assert_eq!(
+            payload.get("role_id").and_then(Value::as_str),
+            Some("A-Outreach")
+        );
+        assert_eq!(
+            payload.get("approval_policy").and_then(Value::as_str),
+            Some("before_run")
+        );
+        assert_eq!(
+            payload
+                .get("risk_tags")
+                .and_then(Value::as_array)
+                .map(|items| items.len()),
+            Some(2)
+        );
+
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn build_inbox_job_reads_structured_request_metadata() {
+        let (app, root) = test_app();
+        app.ensure_runtime().unwrap();
+
+        let request_path = app.config.inbox_dir.join("structured-request.json");
+        fs::write(
+            &request_path,
+            serde_json::json!({
+                "title": "Warm outreach draft",
+                "body": "Draft a response",
+                "approval_policy": "before_run",
+                "risk_tags": ["external-send"],
+                "requires_internet": true,
+                "role_id": "A-Outreach",
+                "task_type": "draft",
+                "agent_id": "anthony"
+            })
+            .to_string(),
+        )
+        .unwrap();
+
+        let (job, role) = app.build_inbox_job(&request_path).unwrap();
+        assert_eq!(job.task_label, "Warm outreach draft");
+        assert_eq!(job.prompt, "Draft a response");
+        assert_eq!(job.approval_policy, "before_run");
+        assert!(job.requires_internet);
+        assert_eq!(job.task_type.as_deref(), Some("draft"));
+        assert_eq!(job.agent_id.as_deref(), Some("anthony"));
+        assert_eq!(
+            role.as_ref().map(|item| item.role_id.as_str()),
+            Some("A-Outreach")
+        );
+
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn iter_new_inbox_requests_ignores_unsupported_extensions() {
+        let (app, root) = test_app();
+        app.ensure_runtime().unwrap();
+        fs::write(app.config.inbox_dir.join("ok.md"), "hello").unwrap();
+        fs::write(app.config.inbox_dir.join("ok.json"), "{\"title\":\"x\"}").unwrap();
+        fs::write(app.config.inbox_dir.join("ignore.exe"), "binary").unwrap();
+
+        let mut state = AppState::default();
+        state.processed_inbox_requests.insert(
+            app.config.inbox_dir.join("ok.md").display().to_string(),
+            ProcessedInboxRequest {
+                status: "done".to_string(),
+                processed_at: utc_now().to_rfc3339(),
+            },
+        );
+
+        let found = app.iter_new_inbox_requests(&state).unwrap();
+        assert_eq!(found.len(), 1);
+        assert_eq!(
+            found[0].file_name().and_then(|value| value.to_str()),
+            Some("ok.json")
+        );
+
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn run_detail_rejects_path_traversal_run_ids() {
+        let (app, root) = test_app();
+
+        let err = app.run_detail("../secret").unwrap_err();
+        assert!(err.to_string().contains("invalid run id"));
+
+        let _ = fs::remove_dir_all(root);
     }
 }

@@ -25,7 +25,7 @@ fn pid_is_running(pid: u32) -> bool {
             String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)
         );
-        return combined.contains(&pid.to_string());
+        combined.contains(&pid.to_string())
     }
 
     #[cfg(not(windows))]

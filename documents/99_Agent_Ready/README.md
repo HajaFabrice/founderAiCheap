@@ -1,6 +1,6 @@
 # Agent-Ready Document Layer
 
-Updated: 2026-05-05
+Updated: 2026-05-11
 
 This folder is the curated, plain-text mirror of the broader `documents/`
 library. Agents should use this layer first during conversations and
@@ -67,6 +67,7 @@ operations instead of relying on raw mixed-version source files.
 - `references/collaboration_charter.md`
 - `references/eris_metadata_governance.md`
 - `references/digital_products_sales_brief.md`
+- `references/ai_assisted_development_safety.md`
 - `references/ecor_pro_launch_operations.md`
 - `references/ecor_institutional_path.md`
 - `references/oplurix_agent_mission_map.md`

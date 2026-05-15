@@ -28,6 +28,8 @@ Instead, contact the maintainer privately and include:
 - secret leakage into logs, prompt packets, or artifacts
 - unsafe file writes outside the expected runtime structure
 - remote provider request handling
+- AI-generated code that changes auth, input handling, runtime writes, or
+  approval-sensitive behavior without explicit review
 
 ## Hardening Expectations
 
@@ -35,3 +37,5 @@ Instead, contact the maintainer privately and include:
 - Keep `runtime/` out of git
 - Keep founder-brain and config readable but controlled
 - Preserve safe fallback artifacts when generation fails
+- Do not trust AI-generated code by default; require bounded review, concrete
+  verification, and a human who can explain the final behavior

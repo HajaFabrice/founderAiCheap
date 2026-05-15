@@ -1,6 +1,6 @@
 # Source Priority
 
-Updated: 2026-05-05
+Updated: 2026-05-11
 
 The attached text exports are the canonical strategy sources for this sync.
 They should override older repo mirrors if a conflict appears.
@@ -39,13 +39,16 @@ They should override older repo mirrors if a conflict appears.
 8. Live sales and feedback evidence:
    - `sales/oplurix-first-sale/delivery_log.csv`
    - `sales/customer_feedback_log.csv`
-9. Filtered helper documents from `C:/Users/Student/Desktop/perso/Plans/` only
+9. Repo safety and governance mirrors:
+   - `docs/ai-assisted-development-safety.md`
+   - `documents/99_Agent_Ready/references/ai_assisted_development_safety.md`
+10. Filtered helper documents from `C:/Users/Student/Desktop/perso/Plans/` only
    when they strengthen the V4 strategy without changing it:
    - conversation-reference planning notes
    - new-contact FAQ planning notes
    - MEP Appendix B on scoring parameters
    - MEP Appendix C on metadata and governance
-10. Older versions and archives only if the newer files omit a needed detail.
+11. Older versions and archives only if the newer files omit a needed detail.
 
 ## Duplicate Resolution
 

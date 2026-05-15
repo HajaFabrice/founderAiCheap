@@ -10,6 +10,7 @@
 | Docs drift | Strategy docs and repo behavior diverge | Maintain repo-synced mirrors and update README with runtime changes | Commands or roles mismatch between docs and code |
 | Provider instability | Local and hosted inference may fail differently | Keep Ollama-first, OpenAI-ready routing and clear failure artifacts | Repeated provider failures with no clear fallback |
 | Hidden cloud rewrite | Portability work mutates into a product redesign | Treat cloud work as an extension of the same daemon shape | New services appear without preserving file auditability |
+| Vibecoding drift | AI-generated code can add security flaws, black-box logic, and ownership gaps | Require bounded patches, explicit code-path explanation, QA review, and concrete verification before merge | PRs or runtime changes land without tests, boundary review, or a human who can explain them |
 
 ## Review Cadence
 

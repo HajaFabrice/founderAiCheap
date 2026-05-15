@@ -16,6 +16,16 @@ const CSV_HEADERS: [&str; 7] = [
     "MetricValue",
 ];
 
+pub struct TeamActivityEntry<'a> {
+    pub team: &'a str,
+    pub role: &'a str,
+    pub task: &'a str,
+    pub status: &'a str,
+    pub notes: &'a str,
+    pub metric_value: i64,
+    pub extra: Option<Map<String, Value>>,
+}
+
 pub fn ensure_log_files(runtime_dir: &Path) -> Result<(PathBuf, PathBuf)> {
     let logs_dir = runtime_dir.join("logs");
     fs::create_dir_all(&logs_dir)
@@ -48,16 +58,7 @@ pub fn ensure_log_files(runtime_dir: &Path) -> Result<(PathBuf, PathBuf)> {
     Ok((csv_path, jsonl_path))
 }
 
-pub fn append_team_activity(
-    runtime_dir: &Path,
-    team: &str,
-    role: &str,
-    task: &str,
-    status: &str,
-    notes: &str,
-    metric_value: i64,
-    extra: Option<Map<String, Value>>,
-) -> Result<()> {
+pub fn append_team_activity(runtime_dir: &Path, entry: TeamActivityEntry<'_>) -> Result<()> {
     let (csv_path, jsonl_path) = ensure_log_files(runtime_dir)?;
     let date_value = Utc::now().date_naive().to_string();
 
@@ -71,12 +72,12 @@ pub fn append_team_activity(
     writer
         .write_record([
             &date_value,
-            team,
-            role,
-            task,
-            status,
-            notes,
-            &metric_value.to_string(),
+            entry.team,
+            entry.role,
+            entry.task,
+            entry.status,
+            entry.notes,
+            &entry.metric_value.to_string(),
         ])
         .with_context(|| format!("failed to append {}", csv_path.display()))?;
     writer
@@ -85,20 +86,23 @@ pub fn append_team_activity(
 
     let mut payload = Map::new();
     payload.insert("Date".to_string(), Value::String(date_value));
-    payload.insert("Team".to_string(), Value::String(team.to_string()));
-    payload.insert("Role".to_string(), Value::String(role.to_string()));
-    payload.insert("Task".to_string(), Value::String(task.to_string()));
-    payload.insert("Status".to_string(), Value::String(status.to_string()));
-    payload.insert("Notes".to_string(), Value::String(notes.to_string()));
+    payload.insert("Team".to_string(), Value::String(entry.team.to_string()));
+    payload.insert("Role".to_string(), Value::String(entry.role.to_string()));
+    payload.insert("Task".to_string(), Value::String(entry.task.to_string()));
+    payload.insert(
+        "Status".to_string(),
+        Value::String(entry.status.to_string()),
+    );
+    payload.insert("Notes".to_string(), Value::String(entry.notes.to_string()));
     payload.insert(
         "MetricValue".to_string(),
-        Value::Number(metric_value.into()),
+        Value::Number(entry.metric_value.into()),
     );
     payload.insert(
         "timestamp_utc".to_string(),
         Value::String(Utc::now().to_rfc3339()),
     );
-    if let Some(extra_map) = extra {
+    if let Some(extra_map) = entry.extra {
         for (key, value) in extra_map {
             payload.insert(key, value);
         }

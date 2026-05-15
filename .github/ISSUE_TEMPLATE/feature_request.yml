@@ -29,6 +29,7 @@ body:
         - label: This request preserves approval gating for protected actions.
         - label: This request preserves file-based auditability.
         - label: This request avoids unnecessary new infrastructure.
+        - label: This request can be implemented without relying on unexplained AI-generated code.
 
   - type: textarea
     id: alternatives
@@ -43,6 +44,7 @@ body:
       options:
         - reliability
         - developer experience
+        - security
         - docs and onboarding
         - Windows portability
         - Linux portability

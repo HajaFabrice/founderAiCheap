@@ -93,3 +93,26 @@ Fail if any are true:
 - The review becomes motivational fluff.
 - Red metrics are softened or hidden.
 - Mission breaches are described as trade-offs instead of violations.
+
+## Code Change Rubric
+
+Pass only if all are true:
+
+- The contributor can explain the changed code path and touched invariants
+  plainly.
+- The patch is bounded and does not hide major behavior change inside broad
+  churn.
+- Input handling, file writes, secret paths, approval boundaries, and external
+  calls were reviewed when relevant.
+- Verification commands match the actual risk of the change.
+- Known gaps are named explicitly when full verification was not possible.
+
+Fail if any are true:
+
+- The change relies on “the AI generated it” instead of human explanation.
+- Security-sensitive behavior changed without boundary review.
+- The patch mixes refactor noise and behavior change in a way that blocks safe
+  review.
+- No meaningful verification was run for a risky change.
+- The final code is hard to maintain, inconsistent with repo patterns, or not
+  understandable by the reviewer.

@@ -684,32 +684,33 @@ fn build_customer_feedback_value(
     )
 }
 
-fn push_backlog_item(
-    items: &mut Vec<Value>,
-    backlog_id: &str,
-    title: &str,
-    priority: &str,
-    source_type: &str,
-    source_refs: Vec<String>,
-    rationale: &str,
-    recommended_owner: &str,
-    recommended_agent_id: &str,
-    target_area: &str,
-    next_step: &str,
-) {
+fn push_backlog_item(items: &mut Vec<Value>, input: BacklogItemInput<'_>) {
     items.push(json!({
-        "backlog_id": backlog_id,
-        "title": title,
-        "priority": priority,
-        "source_type": source_type,
-        "source_refs": source_refs,
-        "rationale": rationale,
-        "recommended_owner": recommended_owner,
-        "recommended_agent_id": recommended_agent_id,
-        "target_area": target_area,
-        "next_step": next_step,
+        "backlog_id": input.backlog_id,
+        "title": input.title,
+        "priority": input.priority,
+        "source_type": input.source_type,
+        "source_refs": input.source_refs,
+        "rationale": input.rationale,
+        "recommended_owner": input.recommended_owner,
+        "recommended_agent_id": input.recommended_agent_id,
+        "target_area": input.target_area,
+        "next_step": input.next_step,
         "status": "open"
     }));
+}
+
+struct BacklogItemInput<'a> {
+    backlog_id: &'a str,
+    title: &'a str,
+    priority: &'a str,
+    source_type: &'a str,
+    source_refs: Vec<String>,
+    rationale: &'a str,
+    recommended_owner: &'a str,
+    recommended_agent_id: &'a str,
+    target_area: &'a str,
+    next_step: &'a str,
 }
 
 fn build_improvement_backlog_value(
@@ -723,96 +724,108 @@ fn build_improvement_backlog_value(
     if funnel.signal_status == INSUFFICIENT_LIVE_SIGNAL || funnel.summary.sent_count == 0 {
         push_backlog_item(
             &mut items,
-            "generate-live-signal",
-            "Generate the first real outreach signal before over-interpreting performance",
-            "high",
-            "data-gap",
-            vec![funnel_snapshot_path(&config.runtime_dir).display().to_string()],
-            "The funnel still lacks enough live outreach data to support strong conclusions or message tuning.",
-            "Founder plus Hildegard",
-            "hildegard",
-            "go-to-market",
-            "Human-verify 5-8 warm leads, send the first bounded outreach batch, and log every reply or non-reply honestly.",
+            BacklogItemInput {
+                backlog_id: "generate-live-signal",
+                title: "Generate the first real outreach signal before over-interpreting performance",
+                priority: "high",
+                source_type: "data-gap",
+                source_refs: vec![funnel_snapshot_path(&config.runtime_dir).display().to_string()],
+                rationale: "The funnel still lacks enough live outreach data to support strong conclusions or message tuning.",
+                recommended_owner: "Founder plus Hildegard",
+                recommended_agent_id: "hildegard",
+                target_area: "go-to-market",
+                next_step: "Human-verify 5-8 warm leads, send the first bounded outreach batch, and log every reply or non-reply honestly.",
+            },
         );
     }
 
     if funnel.summary.ready_for_human_review > 0 && funnel.summary.sent_count == 0 {
         push_backlog_item(
             &mut items,
-            "verify-and-send-warm-list",
-            "Move review-ready leads from candidate state into real human-reviewed outreach",
-            "high",
-            "pipeline-gap",
-            vec![funnel_snapshot_path(&config.runtime_dir).display().to_string()],
-            "There are leads ready for human review, but none have yet produced live signal.",
-            "Founder plus Anthony",
-            "anthony",
-            "pipeline-activation",
-            "Verify ownership and contact details for the top shortlist, then send the first warm messages instead of generating more draft-only work.",
+            BacklogItemInput {
+                backlog_id: "verify-and-send-warm-list",
+                title: "Move review-ready leads from candidate state into real human-reviewed outreach",
+                priority: "high",
+                source_type: "pipeline-gap",
+                source_refs: vec![funnel_snapshot_path(&config.runtime_dir).display().to_string()],
+                rationale: "There are leads ready for human review, but none have yet produced live signal.",
+                recommended_owner: "Founder plus Anthony",
+                recommended_agent_id: "anthony",
+                target_area: "pipeline-activation",
+                next_step: "Verify ownership and contact details for the top shortlist, then send the first warm messages instead of generating more draft-only work.",
+            },
         );
     }
 
     if feedback_stats.paid_orders == 0 {
         push_backlog_item(
             &mut items,
-            "first-paid-download-proof",
-            "Close the first paid product-download loop and record proof cleanly",
-            "high",
-            "achievement-gap",
-            vec![delivery_log_path(config).display().to_string()],
-            "The launch workspace exists, but the project still has no logged paid download outcome to learn from.",
-            "Founder plus OPLURIX launch workflow",
-            "juniper",
-            "product-launch",
-            "Push EcoR Complete through the first warm-buyer cycle, then log payment confirmation, delivery sent, access confirmation, and download confirmation in the delivery log.",
+            BacklogItemInput {
+                backlog_id: "first-paid-download-proof",
+                title: "Close the first paid product-download loop and record proof cleanly",
+                priority: "high",
+                source_type: "achievement-gap",
+                source_refs: vec![delivery_log_path(config).display().to_string()],
+                rationale: "The launch workspace exists, but the project still has no logged paid download outcome to learn from.",
+                recommended_owner: "Founder plus OPLURIX launch workflow",
+                recommended_agent_id: "juniper",
+                target_area: "product-launch",
+                next_step: "Push EcoR Complete through the first warm-buyer cycle, then log payment confirmation, delivery sent, access confirmation, and download confirmation in the delivery log.",
+            },
         );
     }
 
     if feedback_stats.total_entries == 0 {
         push_backlog_item(
             &mut items,
-            "capture-real-feedback",
-            "Capture explicit buyer or reviewer feedback instead of relying only on internal inference",
-            "high",
-            "feedback-gap",
-            vec![customer_feedback_log_path(config).display().to_string()],
-            "The system cannot improve from feedback that is never written down, especially after launch messages or product delivery.",
-            "Founder plus Juniper",
-            "juniper",
-            "feedback-capture",
-            "After each launch message, reply, or delivery, add one honest row to sales/customer_feedback_log.csv with the objection, reaction, or requested change.",
+            BacklogItemInput {
+                backlog_id: "capture-real-feedback",
+                title: "Capture explicit buyer or reviewer feedback instead of relying only on internal inference",
+                priority: "high",
+                source_type: "feedback-gap",
+                source_refs: vec![customer_feedback_log_path(config).display().to_string()],
+                rationale: "The system cannot improve from feedback that is never written down, especially after launch messages or product delivery.",
+                recommended_owner: "Founder plus Juniper",
+                recommended_agent_id: "juniper",
+                target_area: "feedback-capture",
+                next_step: "After each launch message, reply, or delivery, add one honest row to sales/customer_feedback_log.csv with the objection, reaction, or requested change.",
+            },
         );
     }
 
     if feedback_stats.open_delivery_loops > 0 {
         push_backlog_item(
             &mut items,
-            "close-delivery-loop",
-            "Close open delivery loops for paid or delivered buyers",
-            "high",
-            "delivery-risk",
-            vec![delivery_log_path(config).display().to_string()],
-            "A paid order without confirmed download is both a customer-risk and a missing learning loop.",
-            "Founder plus Juniper",
-            "juniper",
-            "customer-success",
-            "Check the delivery link, follow up manually, and record whether the buyer accessed and downloaded the package successfully.",
+            BacklogItemInput {
+                backlog_id: "close-delivery-loop",
+                title: "Close open delivery loops for paid or delivered buyers",
+                priority: "high",
+                source_type: "delivery-risk",
+                source_refs: vec![delivery_log_path(config).display().to_string()],
+                rationale: "A paid order without confirmed download is both a customer-risk and a missing learning loop.",
+                recommended_owner: "Founder plus Juniper",
+                recommended_agent_id: "juniper",
+                target_area: "customer-success",
+                next_step: "Check the delivery link, follow up manually, and record whether the buyer accessed and downloaded the package successfully.",
+            },
         );
     }
 
     if !funnel.stalled_leads.is_empty() {
         push_backlog_item(
             &mut items,
-            "unstall-active-leads",
-            "Resolve stalled leads before generating new campaign complexity",
-            "medium",
-            "pipeline-friction",
-            vec![funnel_snapshot_path(&config.runtime_dir).display().to_string()],
-            "Stalled leads already contain more information than fresh cold prospects and should usually be cleared first.",
-            "Founder plus Perpetua",
-            "perpetua",
-            "follow-up",
-            "Review the stalled lead list, decide whether each lead gets a follow-up, a holding reply, or a stop condition, and log the outcome.",
+            BacklogItemInput {
+                backlog_id: "unstall-active-leads",
+                title: "Resolve stalled leads before generating new campaign complexity",
+                priority: "medium",
+                source_type: "pipeline-friction",
+                source_refs: vec![funnel_snapshot_path(&config.runtime_dir).display().to_string()],
+                rationale: "Stalled leads already contain more information than fresh cold prospects and should usually be cleared first.",
+                recommended_owner: "Founder plus Perpetua",
+                recommended_agent_id: "perpetua",
+                target_area: "follow-up",
+                next_step: "Review the stalled lead list, decide whether each lead gets a follow-up, a holding reply, or a stop condition, and log the outcome.",
+            },
         );
     }
 
@@ -831,16 +844,18 @@ fn build_improvement_backlog_value(
     if recent_failures >= 3 {
         push_backlog_item(
             &mut items,
-            "stabilize-provider-path",
-            "Stabilize provider reliability before trusting the automation rhythm",
-            "medium",
-            "runtime-failure",
-            vec![config.runtime_dir.join("runs").display().to_string()],
-            "Repeated failed runs in the last week mean the system is losing learning opportunities and creating noisy artifacts.",
-            "Founder plus Columban",
-            "columban",
-            "runtime-reliability",
-            "Inspect the failed run artifacts, choose the smallest reliability fix, and keep the change bounded so approvals and auditability stay intact.",
+            BacklogItemInput {
+                backlog_id: "stabilize-provider-path",
+                title: "Stabilize provider reliability before trusting the automation rhythm",
+                priority: "medium",
+                source_type: "runtime-failure",
+                source_refs: vec![config.runtime_dir.join("runs").display().to_string()],
+                rationale: "Repeated failed runs in the last week mean the system is losing learning opportunities and creating noisy artifacts.",
+                recommended_owner: "Founder plus Columban",
+                recommended_agent_id: "columban",
+                target_area: "runtime-reliability",
+                next_step: "Inspect the failed run artifacts, choose the smallest reliability fix, and keep the change bounded so approvals and auditability stay intact.",
+            },
         );
     }
 
@@ -857,32 +872,40 @@ fn build_improvement_backlog_value(
     if !retrospective_recent {
         push_backlog_item(
             &mut items,
-            "protect-review-cadence",
-            "Protect weekly retrospective cadence so lessons actually compound",
-            "medium",
-            "process-drift",
-            vec![latest_weekly_retrospective_path(&config.runtime_dir).display().to_string()],
-            "Without a recent retrospective, the system can produce work but still fail to learn from it.",
-            "Founder plus Francis",
-            "francis",
-            "governance",
-            "Run the weekly retrospective, decide the top three improvements, and keep the backlog current instead of letting insight stay implicit.",
+            BacklogItemInput {
+                backlog_id: "protect-review-cadence",
+                title: "Protect weekly retrospective cadence so lessons actually compound",
+                priority: "medium",
+                source_type: "process-drift",
+                source_refs: vec![
+                    latest_weekly_retrospective_path(&config.runtime_dir)
+                        .display()
+                        .to_string(),
+                ],
+                rationale: "Without a recent retrospective, the system can produce work but still fail to learn from it.",
+                recommended_owner: "Founder plus Francis",
+                recommended_agent_id: "francis",
+                target_area: "governance",
+                next_step: "Run the weekly retrospective, decide the top three improvements, and keep the backlog current instead of letting insight stay implicit.",
+            },
         );
     }
 
     if feedback_stats.negative_entries > 0 {
         push_backlog_item(
             &mut items,
-            "act-on-negative-feedback",
-            "Translate negative or friction-heavy feedback into one concrete change",
-            "medium",
-            "feedback",
-            vec![customer_feedback_log_path(config).display().to_string()],
-            "Negative feedback only creates value when it changes copy, delivery, packaging, or QA rules.",
-            "Founder plus Francis",
-            "francis",
-            "offer-optimization",
-            "Review the negative feedback entries, name the repeated friction plainly, and convert it into one bounded revision to the page, package, or follow-up flow.",
+            BacklogItemInput {
+                backlog_id: "act-on-negative-feedback",
+                title: "Translate negative or friction-heavy feedback into one concrete change",
+                priority: "medium",
+                source_type: "feedback",
+                source_refs: vec![customer_feedback_log_path(config).display().to_string()],
+                rationale: "Negative feedback only creates value when it changes copy, delivery, packaging, or QA rules.",
+                recommended_owner: "Founder plus Francis",
+                recommended_agent_id: "francis",
+                target_area: "offer-optimization",
+                next_step: "Review the negative feedback entries, name the repeated friction plainly, and convert it into one bounded revision to the page, package, or follow-up flow.",
+            },
         );
     }
 

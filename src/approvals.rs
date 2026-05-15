@@ -42,6 +42,16 @@ pub struct PendingApproval {
     pub summary_path: PathBuf,
 }
 
+pub struct ApprovalRequestSpec<'a> {
+    pub approval_id: &'a str,
+    pub job_id: &'a str,
+    pub phase: &'a str,
+    pub reason: &'a str,
+    pub summary: &'a str,
+    pub artifacts: &'a [String],
+    pub risk_tags: &'a [String],
+}
+
 pub fn approvals_root(runtime_dir: &Path) -> PathBuf {
     runtime_dir.join("approvals")
 }
@@ -65,6 +75,19 @@ fn command_path(runtime_dir: &Path, approval_id: &str, action: &str) -> PathBuf 
     approvals_root(runtime_dir)
         .join("pending")
         .join(format!("{approval_id}.{action}.{extension}"))
+}
+
+fn validate_approval_id(approval_id: &str) -> Result<&str> {
+    let candidate = approval_id.trim();
+    if candidate.is_empty()
+        || candidate == "."
+        || candidate == ".."
+        || candidate.contains('/')
+        || candidate.contains('\\')
+    {
+        anyhow::bail!("invalid approval id '{}'", approval_id);
+    }
+    Ok(candidate)
 }
 
 fn quoted_windows_path(path: &Path) -> String {
@@ -183,26 +206,21 @@ fn write_summary_files(
 
 pub fn create_approval_request(
     runtime_dir: &Path,
-    approval_id: &str,
-    job_id: &str,
-    phase: &str,
-    reason: &str,
-    summary: &str,
-    artifacts: &[String],
-    risk_tags: &[String],
+    spec: ApprovalRequestSpec<'_>,
     config_path: &Path,
     executable_path: &Path,
 ) -> Result<PathBuf> {
+    let approval_id = validate_approval_id(spec.approval_id)?;
     ensure_approval_dirs(runtime_dir)?;
     let payload = ApprovalRecord {
         approval_id: approval_id.to_string(),
-        job_id: job_id.to_string(),
-        phase: phase.to_string(),
+        job_id: spec.job_id.to_string(),
+        phase: spec.phase.to_string(),
         status: ApprovalDecision::Pending.as_str().to_string(),
-        reason: reason.to_string(),
-        summary: summary.to_string(),
-        artifacts: artifacts.to_vec(),
-        risk_tags: risk_tags.to_vec(),
+        reason: spec.reason.to_string(),
+        summary: spec.summary.to_string(),
+        artifacts: spec.artifacts.to_vec(),
+        risk_tags: spec.risk_tags.to_vec(),
         created_at: Utc::now().to_rfc3339(),
         decision_notes: None,
         decided_at: None,
@@ -250,6 +268,7 @@ pub fn list_pending_approvals(runtime_dir: &Path) -> Result<Vec<PendingApproval>
 }
 
 pub fn approval_decision(runtime_dir: &Path, approval_id: &str) -> Option<ApprovalDecision> {
+    let approval_id = validate_approval_id(approval_id).ok()?;
     let root = approvals_root(runtime_dir);
     if root
         .join("approved")
@@ -281,6 +300,7 @@ pub fn decide_approval(
     decision: ApprovalDecision,
     notes: &str,
 ) -> Result<PathBuf> {
+    let approval_id = validate_approval_id(approval_id)?;
     ensure_approval_dirs(runtime_dir)?;
     let pending_path = approvals_root(runtime_dir)
         .join("pending")
@@ -315,4 +335,86 @@ pub fn decide_approval(
     fs::remove_file(command_path(runtime_dir, approval_id, "reject")).ok();
 
     Ok(destination)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn unique_test_dir() -> PathBuf {
+        let mut dir = std::env::temp_dir();
+        let stamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        dir.push(format!("founderai-approvals-test-{stamp}"));
+        dir
+    }
+
+    #[test]
+    fn approval_request_round_trip_writes_and_moves_files() {
+        let runtime_dir = unique_test_dir();
+        let config_path = runtime_dir.join("config.json");
+        let executable_path = runtime_dir.join("founderai.exe");
+        fs::create_dir_all(&runtime_dir).unwrap();
+
+        let approval_path = create_approval_request(
+            &runtime_dir,
+            ApprovalRequestSpec {
+                approval_id: "approval-1",
+                job_id: "job-1",
+                phase: "before_run",
+                reason: "Need review",
+                summary: "Need review",
+                artifacts: &["runtime/runs/run-1/output.md".to_string()],
+                risk_tags: &["publish".to_string()],
+            },
+            &config_path,
+            &executable_path,
+        )
+        .unwrap();
+
+        assert!(approval_path.exists());
+        assert!(summary_path(&runtime_dir, "approval-1").exists());
+        assert!(command_path(&runtime_dir, "approval-1", "approve").exists());
+        assert!(command_path(&runtime_dir, "approval-1", "reject").exists());
+        assert_eq!(list_pending_approvals(&runtime_dir).unwrap().len(), 1);
+
+        let decided_path = decide_approval(
+            &runtime_dir,
+            "approval-1",
+            ApprovalDecision::Approved,
+            "Ship it",
+        )
+        .unwrap();
+        assert!(decided_path.exists());
+        assert!(!approval_path.exists());
+        assert!(!summary_path(&runtime_dir, "approval-1").exists());
+        assert!(!command_path(&runtime_dir, "approval-1", "approve").exists());
+        assert_eq!(
+            approval_decision(&runtime_dir, "approval-1"),
+            Some(ApprovalDecision::Approved)
+        );
+
+        let raw = fs::read_to_string(decided_path).unwrap();
+        let payload: ApprovalRecord = serde_json::from_str(&raw).unwrap();
+        assert_eq!(payload.status, "approved");
+        assert_eq!(payload.decision_notes.as_deref(), Some("Ship it"));
+
+        let _ = fs::remove_dir_all(runtime_dir);
+    }
+
+    #[test]
+    fn approval_decision_rejects_path_traversal_ids() {
+        let runtime_dir = unique_test_dir();
+        fs::create_dir_all(&runtime_dir).unwrap();
+
+        let err =
+            decide_approval(&runtime_dir, "../escape", ApprovalDecision::Rejected, "").unwrap_err();
+        assert!(err.to_string().contains("invalid approval id"));
+        assert_eq!(approval_decision(&runtime_dir, "../escape"), None);
+
+        let _ = fs::remove_dir_all(runtime_dir);
+    }
 }

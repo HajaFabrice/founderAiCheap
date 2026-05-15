@@ -46,6 +46,25 @@ struct ProviderCallResponse {
     usage: Option<Value>,
 }
 
+pub struct PromptBuildContext<'a> {
+    pub trigger: &'a str,
+    pub run_dir: &'a Path,
+    pub request_source: Option<&'a Path>,
+    pub role: Option<&'a TeamRoleConfig>,
+    pub effective_risk_tags: &'a [String],
+    pub resolved_approval_policy: &'a str,
+}
+
+pub struct WorkerExecutionContext<'a> {
+    pub trigger: &'a str,
+    pub runtime_dir: &'a Path,
+    pub request_source: Option<&'a Path>,
+    pub role: Option<&'a TeamRoleConfig>,
+    pub effective_risk_tags: &'a [String],
+    pub resolved_approval_policy: &'a str,
+    pub current_internet: bool,
+}
+
 fn read_founder_file(path: &Path) -> String {
     fs::read_to_string(path)
         .unwrap_or_else(|_| format!("[Missing context file: {}]", path.display()))
@@ -386,8 +405,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Agent Conversation Reference",
@@ -511,8 +529,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Independent CRM Database",
@@ -622,8 +639,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Independent CRM Database",
@@ -713,8 +729,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Digital Products Catalog Database",
@@ -730,7 +745,8 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Hybrid Delivery Package Map",
-                config.workspace_root
+                config
+                    .workspace_root
                     .join("sales")
                     .join("oplurix-product-suite")
                     .join("README.md"),
@@ -755,6 +771,11 @@ fn render_agent_ready_documents(
                 root.join("references").join("collaboration_charter.md"),
             ),
             (
+                "AI-Assisted Development Safety",
+                root.join("references")
+                    .join("ai_assisted_development_safety.md"),
+            ),
+            (
                 "Digital Products Sales Brief",
                 root.join("references")
                     .join("digital_products_sales_brief.md"),
@@ -766,8 +787,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Digital Products Catalog Database",
@@ -783,7 +803,8 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Hybrid Delivery Package Map",
-                config.workspace_root
+                config
+                    .workspace_root
                     .join("sales")
                     .join("oplurix-product-suite")
                     .join("README.md"),
@@ -831,8 +852,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Document Registry Database",
@@ -878,8 +898,7 @@ fn render_agent_ready_documents(
             ),
             (
                 "OPLURIX Launch Matrix",
-                root.join("references")
-                    .join("oplurix_launch_matrix.md"),
+                root.join("references").join("oplurix_launch_matrix.md"),
             ),
             (
                 "Document Registry Database",
@@ -1115,12 +1134,7 @@ fn render_selected_agent_context(
 pub fn build_prompt(
     config: &AppConfig,
     job: &JobConfig,
-    trigger: &str,
-    run_dir: &Path,
-    request_source: Option<&Path>,
-    role: Option<&TeamRoleConfig>,
-    effective_risk_tags: &[String],
-    resolved_approval_policy: &str,
+    context: &PromptBuildContext<'_>,
 ) -> String {
     let founder_brain = &config.founder_brain_path;
     let founder_brain_overview = read_founder_file(&founder_brain.join("founder_brain.md"));
@@ -1131,7 +1145,7 @@ pub fn build_prompt(
     let workflows = read_founder_file(&founder_brain.join("references").join("workflows.md"));
     let patterns = read_founder_file(&founder_brain.join("references").join("output-patterns.md"));
     let cloud_migration_plan = read_founder_file(&founder_brain.join("cloud_migration_plan.md"));
-    let agent_ready_documents = render_agent_ready_documents(config, job, role);
+    let agent_ready_documents = render_agent_ready_documents(config, job, context.role);
     let eris_knowledge = read_founder_file(&founder_brain.join("eris_knowledge.md"));
     let hormozi_protocols = read_founder_file(&founder_brain.join("hormozi_protocols.md"));
     let qa_rubrics = read_founder_file(&founder_brain.join("qa_rubrics.md"));
@@ -1142,11 +1156,12 @@ pub fn build_prompt(
         read_founder_file(&founder_brain.join("governance_constraints.json"));
     let strategic_roadmap = read_founder_file(&founder_brain.join("strategic_roadmap.md"));
 
-    let request_note = request_source
+    let request_note = context
+        .request_source
         .map(|source| format!("\nSource request file: {}\n", source.display()))
         .unwrap_or_default();
 
-    let role_note = if let Some(role) = role {
+    let role_note = if let Some(role) = context.role {
         let responsibilities = if role.responsibilities.is_empty() {
             "- None provided".to_string()
         } else {
@@ -1175,7 +1190,7 @@ pub fn build_prompt(
 
     format!(
         "# FounderAI Autonomous Run Packet\n\nYou are running a bounded FounderAI background cycle.\n\nNon-negotiables:\n- Stay in the founder's exact voice.\n- Protect survival-first priorities.\n- Never send, publish, spend, delete, or commit externally without explicit approval.\n- If the task touches protected categories, draft the work and stop for validation.\n- Keep the founder's Franciscan mission and anti-hype discipline intact.\n\nRun metadata:\n- Trigger: {trigger}\n- Job ID: {job_id}\n- Job description: {job_description}\n- Workspace root: {workspace_root}\n- Runtime directory: {runtime_dir}\n- Outbox directory: {outbox_dir}\n- Output target for this run: {output_target}{request_note}\n\n## Founder Brain\n\n{founder_brain_overview}\n\n## Founder Identity\n\n{identity}\n\n## Founder Knowledge Pack\n\n{knowledge}\n\n## ERIS Knowledge\n\n{eris_knowledge}\n\n## Hormozi Protocols\n\n{hormozi_protocols}\n\n## Team Structure\n\n{team_structure}\n\n## Founder Workflows\n\n{workflows}\n\n## Cloud Migration Context\n\n{cloud_migration_plan}\n\n## Agent-Ready Documents\n\n{agent_ready_documents}\n\n## Founder Output Patterns\n\n{patterns}\n\n## Strategic Roadmap\n\n{strategic_roadmap}\n\n## Risk Register\n\n{risk_register}\n\n## KPI Thresholds\n\n{kpi_thresholds}\n\n## QA Rubrics\n\n{qa_rubrics}\n\n## Forbidden Patterns\n\n{forbidden_patterns}\n\n## Governance Constraints\n\n{governance_constraints}\n\n## Agent Roster\n\n{agent_roster}\n\n## Selected Agent Context\n\n{selected_agent_context}\n\n## Team Role Context\n\n{role_note}\n\n## Requested Work\n\n{requested_work}\n\n## Strategic Validation\n\n- Protected tags for this run: {risk_tags}\n- Resolved approval policy: {approval_policy}\n- If an action would create outside consequences, stop and prepare a validation-ready draft.\n- Transparent AI signatures are mandatory for any client-facing draft.\n\n## Delivery Requirements\n\n- Write the primary output to the designated output file.\n- Output the deliverable itself, not commentary about the deliverable.\n- Keep the output concise, useful, and immediately reviewable.\n- Prefer a finished draft, brief, checklist, or structured note that the founder can validate quickly.\n- Do not add meta wrappers like `Draft`, `Output File`, or `Ready for review` unless the request explicitly asks for them.\n- Do not add markdown emphasis, separator lines, or decorative formatting unless the request explicitly asks for markdown presentation.\n- Do not use bracket placeholders in the main body of a draft when `NEEDS_HUMAN_VERIFICATION` would be more honest.\n- Never invent a concrete fact to make the draft feel complete.\n- If a date, budget, collaborator, site, contact, requirement, or institutional fact is missing, write `NEEDS_HUMAN_VERIFICATION`.\n- If this run fails QA or governance constraints, explain why clearly instead of pretending success.\n",
-        trigger = trigger,
+        trigger = context.trigger,
         job_id = job.job_id,
         job_description = if job.description.is_empty() {
             "n/a".to_string()
@@ -1185,7 +1200,7 @@ pub fn build_prompt(
         workspace_root = config.workspace_root.display(),
         runtime_dir = config.runtime_dir.display(),
         outbox_dir = config.outbox_dir.display(),
-        output_target = run_dir.join("output.md").display(),
+        output_target = context.run_dir.join("output.md").display(),
         request_note = request_note,
         founder_brain_overview = founder_brain_overview,
         identity = identity,
@@ -1204,15 +1219,15 @@ pub fn build_prompt(
         forbidden_patterns = forbidden_patterns,
         governance_constraints = governance_constraints,
         agent_roster = render_agent_roster(config),
-        selected_agent_context = render_selected_agent_context(config, job, role),
+        selected_agent_context = render_selected_agent_context(config, job, context.role),
         role_note = role_note,
         requested_work = job.prompt,
-        risk_tags = if effective_risk_tags.is_empty() {
+        risk_tags = if context.effective_risk_tags.is_empty() {
             "none".to_string()
         } else {
-            effective_risk_tags.join(", ")
+            context.effective_risk_tags.join(", ")
         },
-        approval_policy = resolved_approval_policy
+        approval_policy = context.resolved_approval_policy
     )
 }
 
@@ -1568,10 +1583,7 @@ fn call_claude(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallR
         })
     });
 
-    Ok(ProviderCallResponse {
-        output_text,
-        usage,
-    })
+    Ok(ProviderCallResponse { output_text, usage })
 }
 
 fn call_provider(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCallResponse> {
@@ -1625,24 +1637,18 @@ fn failure_output(worker: &WorkerConfig, reason: &str) -> String {
 pub fn run_worker(
     config: &AppConfig,
     job: &JobConfig,
-    trigger: &str,
-    runtime_dir: &Path,
-    request_source: Option<&Path>,
-    role: Option<&TeamRoleConfig>,
-    effective_risk_tags: &[String],
-    resolved_approval_policy: &str,
-    current_internet: bool,
+    context: WorkerExecutionContext<'_>,
 ) -> WorkerRunResult {
     let timestamp = Utc::now();
     let mut run_id_parts = vec![
         timestamp.format("%Y%m%dT%H%M%SZ").to_string(),
         job.job_id.clone(),
     ];
-    if let Some(role) = role {
+    if let Some(role) = context.role {
         run_id_parts.push(role.role_id.clone());
     }
     let run_id = run_id_parts.join("-");
-    let run_dir = runtime_dir.join("runs").join(&run_id);
+    let run_dir = context.runtime_dir.join("runs").join(&run_id);
     fs::create_dir_all(&run_dir).ok();
 
     let prompt_file = run_dir.join("prompt.md");
@@ -1654,29 +1660,32 @@ pub fn run_worker(
     let prompt_text = build_prompt(
         config,
         job,
-        trigger,
-        &run_dir,
-        request_source,
-        role,
-        effective_risk_tags,
-        resolved_approval_policy,
+        &PromptBuildContext {
+            trigger: context.trigger,
+            run_dir: &run_dir,
+            request_source: context.request_source,
+            role: context.role,
+            effective_risk_tags: context.effective_risk_tags,
+            resolved_approval_policy: context.resolved_approval_policy,
+        },
     );
     fs::write(&prompt_file, &prompt_text).ok();
     let prompt_chars = prompt_text.chars().count();
     let prompt_words = prompt_word_count(&prompt_text);
 
-    let routed_worker = resolve_worker(config, job, role, current_internet);
-    let team_output_file =
-        team_output_dir(runtime_dir, role).map(|dir| dir.join(format!("{run_id}.md")));
+    let routed_worker = resolve_worker(config, job, context.role, context.current_internet);
+    let team_output_file = team_output_dir(context.runtime_dir, context.role)
+        .map(|dir| dir.join(format!("{run_id}.md")));
     let grant_output_file =
         if routed_worker.task_type == "grant" || job.agent_id.as_deref() == Some("bartholomew") {
-            Some(grant_output_dir(runtime_dir).join(format!("{run_id}.md")))
+            Some(grant_output_dir(context.runtime_dir).join(format!("{run_id}.md")))
         } else {
             None
         };
-    let marketing_brief_file = marketing_brief_output_file(runtime_dir, job, &run_id);
-    let funnel_review_file = funnel_review_output_file(runtime_dir, job, &run_id);
-    let weekly_retrospective_file = weekly_retrospective_output_file(runtime_dir, job, &run_id);
+    let marketing_brief_file = marketing_brief_output_file(context.runtime_dir, job, &run_id);
+    let funnel_review_file = funnel_review_output_file(context.runtime_dir, job, &run_id);
+    let weekly_retrospective_file =
+        weekly_retrospective_output_file(context.runtime_dir, job, &run_id);
 
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
@@ -1792,21 +1801,27 @@ pub fn run_worker(
     if let Some(marketing_brief_file) = &marketing_brief_file {
         if let Ok(output_text) = fs::read_to_string(&output_file) {
             let _ = fs::write(marketing_brief_file, &output_text);
-            let _ = fs::write(latest_marketing_brief_path(runtime_dir), output_text);
+            let _ = fs::write(
+                latest_marketing_brief_path(context.runtime_dir),
+                output_text,
+            );
         }
     }
 
     if let Some(funnel_review_file) = &funnel_review_file {
         if let Ok(output_text) = fs::read_to_string(&output_file) {
             let _ = fs::write(funnel_review_file, &output_text);
-            let _ = fs::write(latest_funnel_review_path(runtime_dir), output_text);
+            let _ = fs::write(latest_funnel_review_path(context.runtime_dir), output_text);
         }
     }
 
     if let Some(weekly_retrospective_file) = &weekly_retrospective_file {
         if let Ok(output_text) = fs::read_to_string(&output_file) {
             let _ = fs::write(weekly_retrospective_file, &output_text);
-            let _ = fs::write(latest_weekly_retrospective_path(runtime_dir), output_text);
+            let _ = fs::write(
+                latest_weekly_retrospective_path(context.runtime_dir),
+                output_text,
+            );
         }
     }
 
@@ -1816,7 +1831,7 @@ pub fn run_worker(
     let metadata = serde_json::json!({
         "run_id": run_id,
         "job_id": job.job_id,
-        "trigger": trigger,
+        "trigger": context.trigger,
         "started_at": started_at,
         "finished_at": finished_at,
         "exit_code": exit_code,
@@ -1825,12 +1840,12 @@ pub fn run_worker(
         "worker_timeout_seconds": active_worker.timeout_seconds,
         "task_type": routed_worker.task_type,
         "route_summary": routed_worker.route_summary,
-        "request_source": request_source.map(|path| path.display().to_string()),
+        "request_source": context.request_source.map(|path| path.display().to_string()),
         "prompt_chars": prompt_chars,
         "prompt_words": prompt_words,
         "usage": usage,
-        "role_id": role.map(|item| item.role_id.clone()),
-        "agent_id": role
+        "role_id": context.role.map(|item| item.role_id.clone()),
+        "agent_id": context.role
             .map(|item| item.agent_id.clone())
             .or_else(|| job.agent_id.clone()),
         "team_output_file": team_output_file.as_ref().map(|path| path.display().to_string()),

@@ -37,6 +37,19 @@ inspectable runtime artifacts while making the runtime portable and affordable.
 - Keep Windows support intact while improving Linux portability.
 - If you simplify something, preserve founder voice fidelity, approvals, team routing, and inspectable artifacts first.
 
+## AI-Assisted Contribution Expectations
+
+- AI-assisted drafting is allowed; black-box changes are not.
+- If AI helped with a change, the contributor must still be able to explain:
+  - the touched entrypoint
+  - the control flow change
+  - the main security boundary
+  - the verification result
+- Prefer small, reviewable patches over large AI-shaped rewrites.
+- If a change touches approvals, auth, web request handling, runtime writes, or
+  provider secrets, review those boundaries explicitly in the PR.
+- Never merge code only because “the model said it was correct.”
+
 ## Documentation Expectations
 
 - Update docs when behavior, commands, or deployment assumptions change.
@@ -59,6 +72,8 @@ inspectable runtime artifacts while making the runtime portable and affordable.
 - List commands you ran
 - Mention anything not verified yet
 - Link related issues where possible
+- If AI assisted the implementation, include a short human explanation of the
+  changed code path and why the reviewer should trust it
 
 ## Communication
 
