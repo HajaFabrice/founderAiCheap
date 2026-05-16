@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07",
+  "generated_at": "2026-05-16",
   "brand": {
     "name": "OPLURIX",
     "tagline": "Ecological Intelligence for Conservation Finance",
@@ -12,12 +12,12 @@
   },
   "sales_channels": {
     "primary_frontend": "Netlify static storefront",
-    "checkout": "PayPal payment links or buy buttons",
-    "delivery_mode": "Manual email delivery after payment confirmation during the first sales cycle",
+    "checkout": "Mixed: Payhip direct delivery where live; founder-managed checkout on the current storefront where public product URLs are not yet switched",
+    "delivery_mode": "Mixed: direct digital delivery where configured; otherwise founder-managed fulfillment during the current transition",
     "manual_delivery_window_hours": 12,
-    "checkout_status": "PAYPAL_SMART_BUTTONS_WITH_MANUAL_FALLBACK",
+    "checkout_status": "MIXED_CHECKOUT_TRANSITION",
     "non_goals": [
-      "Do not imply instant automated digital delivery if manual delivery is still in use.",
+      "Do not imply instant automated digital delivery for products whose current public flow is still founder-managed.",
       "Do not require Gumroad for the first launch if Netlify plus PayPal is sufficient.",
       "Do not mix Techni-Drones employer promotion with product checkout copy."
     ]
@@ -26,14 +26,14 @@
     {
       "id": "expert_to_influencer_content_engine",
       "status": "live",
-      "listing_status": "prepared_not_published",
+      "listing_status": "published_live",
       "sales_channel": "payhip_direct_digital_delivery",
       "headline": "Turn field notes, research, and conservation work into clear LinkedIn content.",
       "price_usd": 39,
-      "launch_pricing_note": "Fixed-price Payhip launch at USD 39 for a warm audience. Launch assets are prepared, but the public Payhip listing still needs to be published.",
+      "launch_pricing_note": "Fixed-price Payhip launch at USD 39 for a warm audience. The live Payhip listing is active and the launch assets remain the editable source pack.",
       "primary_cta": "Buy on Payhip",
       "fallback_cta": "Request the Payhip link",
-      "launch_channel_note": "Payhip launch pack is prepared in C:/Users/Student/Downloads/payhipLaunch. Do not switch the public storefront CTA until the live Payhip URL exists.",
+      "launch_channel_note": "Payhip launch pack is prepared in C:/Users/Student/Downloads/payhipLaunch and the public storefront already points to the live Payhip listing.",
       "audience": [
         "biodiversity researchers",
         "conservation NGO workers",
@@ -81,6 +81,7 @@
         {
           "id": "ecor_toolkit_tier_1_starter",
           "legacy_package_name": "EcoR_Toolkit_Tier_1_Starter_19USD",
+          "current_upload_zip_name": "EcoR_Toolkit_Starter_29USD.zip",
           "public_label": "EcoR Toolkit Starter",
           "status": "live",
           "checkout_enabled": true,
@@ -93,6 +94,7 @@
         {
           "id": "ecor_toolkit_tier_2_complete_toolkit",
           "legacy_package_name": "EcoR_Toolkit_Tier_2_Complete_Toolkit_39USD",
+          "current_upload_zip_name": "EcoR_Toolkit_Complete_97USD.zip",
           "public_label": "EcoR Toolkit Complete",
           "status": "live",
           "checkout_enabled": true,
@@ -105,6 +107,7 @@
         {
           "id": "ecor_toolkit_tier_3_pro_bundle",
           "legacy_package_name": "EcoR_Toolkit_Tier_3_Pro_Bundle_69USD",
+          "current_upload_zip_name": "EcoR_Toolkit_Pro_297USD.zip",
           "public_label": "EcoR Toolkit Pro Bundle",
           "status": "live",
           "checkout_enabled": true,
@@ -126,7 +129,7 @@
           "truthful_positioning": "Contact-led team offer for organizations. Keep it off direct checkout while quotes, onboarding, and license handling remain manual."
         }
       ],
-      "fallback_cta": "Request a PayPal checkout link",
+      "fallback_cta": "Request the current EcoR checkout link",
       "audience": [
         "ecology and biology graduate students",
         "early-career researchers",
@@ -150,18 +153,20 @@
         "clearer upgrade path from solo workflow to supported or team use"
       ],
       "future_pricing_strategy_note": "Future price increases should be tied to added proof, new assets, or stronger support rather than arbitrary repositioning.",
-      "first_sale_delivery_rule": "Verify payment in PayPal first, then send the Google Drive delivery link manually by email and log the fulfillment event.",
+      "first_sale_delivery_rule": "Canonical sellable packages now live in `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/`. Until live EcoR Payhip variant URLs are published and tested, keep the current public storefront on founder-managed checkout, delivery, and fulfillment logging.",
       "source_documents": [
         "documents/oplurix-site/OPLURIX_Product_Suite_Final.md",
-        "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md",
-        "documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md",
-        "documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/Tier_3_Pro_Bundle/README.md"
+        "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/README.md",
+        "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/EcoR_Toolkit_Strategy_v2.md",
+        "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/PAYHIP_PRODUCT_PAGE_COPY.md",
+        "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/FINAL_PREUPLOAD_QA_REPORT.md"
       ],
       "delivery_assets": [
+        "Payhip-ready ZIP variants for Starter, Complete, and Pro",
         "script bundle",
         "prompt bundle",
         "template files",
-        "workflow guide",
+        "workflow guides",
         "advanced tier support assets",
         "manual WhatsApp community access path"
       ]

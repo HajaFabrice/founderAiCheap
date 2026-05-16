@@ -1,6 +1,6 @@
 # Source Priority
 
-Updated: 2026-05-11
+Updated: 2026-05-16
 
 The attached text exports are the canonical strategy sources for this sync.
 They should override older repo mirrors if a conflict appears.
@@ -34,8 +34,10 @@ They should override older repo mirrors if a conflict appears.
    - `documents/oplurix-site/OPLURIX_Product_Suite_Final.md`
    - `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
    - `documents/oplurix-site/ExpertToInfluencer.txt`
-   - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md`
-   - `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+   - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/README.md`
+   - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/EcoR_Toolkit_Strategy_v2.md`
+   - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/PAYHIP_PRODUCT_PAGE_COPY.md`
+   - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/FINAL_PREUPLOAD_QA_REPORT.md`
 8. Live sales and feedback evidence:
    - `sales/oplurix-first-sale/delivery_log.csv`
    - `sales/customer_feedback_log.csv`
@@ -66,7 +68,7 @@ They should override older repo mirrors if a conflict appears.
 | Full OPLURIX 10-product suite | `documents/oplurix-site/OPLURIX_Product_Suite_Final.md` plus the per-product files in `documents/oplurix-site/` | older fragmented product notes or ad hoc interpretations of the product ladder | Use for the complete 10-product map, product status, public-safe sequencing, and format decisions. |
 | OPLURIX launch prioritization | `documents/99_Agent_Ready/references/oplurix_launch_matrix.md` plus `documents/99_Agent_Ready/databases/oplurix_launch_matrix.json` | improvised assumptions about which product should launch next | Use for activation order, waitlist decisions, source-only discipline, and next-launch sequencing. |
 | Expert-to-Influencer product | `documents/oplurix-site/ExpertToInfluencer.txt` | older generic content-engine snippets | Use for promise, pain points, product structure, and landing-page copy for the content product. |
-| EcoR toolkit main offer | `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md` plus `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md` | generic R-toolkit fragments and marketplace-specific draft language | Use for EcoR positioning, tier ladder, and truthful public outcomes while keeping only ready tiers on active checkout. |
+| EcoR toolkit main offer | `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/README.md` plus `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/EcoR_Toolkit_Strategy_v2.md`, `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/PAYHIP_PRODUCT_PAGE_COPY.md`, and `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/FINAL_PREUPLOAD_QA_REPORT.md` | older Gumroad-era package notes and generic R-toolkit fragments | Use for EcoR positioning, tier ladder, Payhip-ready package truth, and public checkout wording while avoiding claims that the live EcoR Payhip URLs already exist. |
 | Live delivery proof | `sales/oplurix-first-sale/delivery_log.csv` | unlogged verbal recollection of launch outcomes | Use for buyer-payment, delivery, access, and download confirmation before claiming product traction. |
 | Customer feedback | `sales/customer_feedback_log.csv` | vague memory of objections or reactions | Use for post-launch learning, objections, buyer friction, and packaging adjustments. |
 | Independent proof assets | `documents/Plans/Freelance/Cleaning Summary.docx` plus `documents/Plans/Freelance/cleaned_data.csv` | older abstract service claims without sample work | Use to ground dataset-cleaning capability in a real, inspectable sample. |
@@ -86,8 +88,9 @@ They should override older repo mirrors if a conflict appears.
   before they become final send-ready assets.
 - Founder confirmed the independent public contact channel on `2026-04-27`:
   `hajafabriceeris@gmail.com` and `+261349414112`.
-- Product checkout copy still needs the exact PayPal links or button snippets
-  before the public storefront can point to live checkout URLs.
+- Product checkout copy still needs the exact live EcoR Payhip variant URLs
+  before the public storefront can switch EcoR off the current founder-managed
+  checkout path.
 - The M350 RTK pathway is canonical for first grants. Do not upgrade the
   narrative to an M400-first ask.
 - The freelance 30-day plan is a tactical planning artifact. Do not treat its

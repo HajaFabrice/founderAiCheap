@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11",
+  "generated_at": "2026-05-16",
   "selection_rule": [
     "User-attached text exports override older mirrors when they cover the same document family.",
     "Otherwise, the highest explicit version number wins.",
@@ -455,7 +455,7 @@
     {
       "id": "ecor-toolkit-product-strategy",
       "category": "digital-product-strategy",
-      "canonical_path": "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md",
+      "canonical_path": "documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/README.md",
       "repo_mirror_path": "documents/99_Agent_Ready/databases/digital_products_catalog.json",
       "supersedes": [
         "generic R-toolkit idea fragments"
@@ -464,7 +464,8 @@
         "EcoR main-offer framing",
         "product stack decisions",
         "buyer-fit guidance",
-        "truthful public copy"
+        "truthful public copy",
+        "Payhip-ready package source"
       ]
     },
     {

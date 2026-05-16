@@ -1,6 +1,6 @@
 # OPLURIX Product Suite Final
 
-Updated: 2026-05-06
+Updated: 2026-05-16
 
 This file is the final human-readable source of truth for the OPLURIX product
 suite inside `documents/oplurix-site`.
@@ -22,7 +22,7 @@ suite inside `documents/oplurix-site`.
   - live
 - Listing status:
   - Payhip launch pack prepared
-  - public Payhip URL not published yet
+  - public Payhip URL is live
 - Price:
   - `USD 39`
 - Audience:
@@ -36,8 +36,7 @@ suite inside `documents/oplurix-site`.
 - Launch channel:
   - Payhip direct digital delivery
 - Channel rule:
-  - keep the public storefront button off the Payhip route until the live
-    Payhip product URL exists
+  - the public storefront may point directly to the live Payhip route
 - Source assets:
   - `ExpertToInfluencer.txt`
   - `OPLURIX_Product1_Expert_to_Influencer_Content_Engine.pdf`
@@ -55,16 +54,25 @@ suite inside `documents/oplurix-site`.
 - Launch rule:
   - `Complete` is the main offer
   - `Starter` stays available as the lower-friction entry point
-  - `Pro Bundle` is live with PayPal checkout, but fulfillment, WhatsApp
+  - the canonical sellable EcoR package layer now lives in `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/`
+  - `Pro Bundle` is live as a support-backed tier, but fulfillment, WhatsApp
     access, and support tracking remain founder-managed
+  - keep the current public storefront on founder-managed checkout until live
+    EcoR Payhip variant URLs are published and tested
   - `Institutional` stays contact-led until small-team onboarding and license
     handling are operational
 - Delivery rule:
-  - manual email delivery within `12 hours` after PayPal confirmation
+  - the upload-ready EcoR buyer files are the three Payhip variant ZIPs in
+    `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/`
+  - automatic digital delivery may be claimed only after the live EcoR Payhip
+    variant URLs are published and tested end to end
+  - until then, the current public storefront remains founder-managed with
+    manual delivery language
 - Source assets:
-  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md`
-  - `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
-  - `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/Tier_3_Pro_Bundle/README.md`
+  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/README.md`
+  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/EcoR_Toolkit_Strategy_v2.md`
+  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/PAYHIP_PRODUCT_PAGE_COPY.md`
+  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/FINAL_PREUPLOAD_QA_REPORT.md`
 
 ## Coming Next
 
@@ -125,8 +133,10 @@ These remain in the folder as source documents, not live storefront products.
 - Do not mix live and planned checkout states.
 - Do not sell `EcoR Pro Bundle` until its support workflow is operational.
 - Do not activate direct checkout for `EcoR Toolkit Institutional`.
-- Do not imply instant automated delivery while manual fulfillment is still the
-  current process.
+- Do not describe EcoR as publicly switched to Payhip until the live EcoR URLs
+  exist and the checkout/download flow is tested.
+- Do not imply instant automated delivery while the current public EcoR flow is
+  still founder-managed.
 - Do not make the storefront sound like a generic AI-tools marketplace.
 - Do not mix Techni-Drones employer promotion with OPLURIX checkout copy.
 

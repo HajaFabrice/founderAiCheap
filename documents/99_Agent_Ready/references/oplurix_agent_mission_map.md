@@ -1,6 +1,6 @@
 # OPLURIX Agent Mission Map
 
-Updated: 2026-05-07
+Updated: 2026-05-16
 
 This reference tells the agents how the OPLURIX products support the broader
 FounderAI mission without drifting into fake checkout, fake delivery, or
@@ -58,15 +58,21 @@ product sprawl.
 
 ## Delivery Rule
 
-- OPLURIX currently sells through HTML pages and delivers through bounded
-  package files.
+- OPLURIX currently uses a mixed-channel delivery stack.
 - The sellable pages live in:
   - `docs/products/`
 - The deliverable bundles live in:
   - `sales/oplurix-product-suite/packages/`
 - ZIP previews live in:
   - `sales/oplurix-product-suite/zips/`
-- Manual fulfillment and truthful delivery boundaries remain the default.
+- Expert-to-Influencer is the current direct-delivery Payhip product when the
+  live listing URL is available.
+- EcoR's canonical buyer-package source now lives in:
+  - `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/`
+- Until live EcoR Payhip URLs are published and tested, agents must describe
+  EcoR public checkout as founder-managed and keep delivery language manual.
+- Manual fulfillment and truthful delivery boundaries remain the default for
+  support-backed and institutional paths.
 
 ## Agent Mission Use
 
@@ -162,5 +168,7 @@ product sprawl.
 - Do not imply automatic delivery if the real workflow is manual.
 - Do not present waitlist products as instantly deliverable.
 - Do not present `EcoR Toolkit Institutional` as instant checkout.
+- Do not describe EcoR as publicly switched to Payhip until the live EcoR URLs
+  exist and the checkout/download flow has been tested.
 - Do not claim traction, downloads, or buyer success that is not grounded in
   the logs.

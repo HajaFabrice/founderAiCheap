@@ -1,9 +1,13 @@
 # OPLURIX First Sale Workspace
 
-Updated: 2026-05-07
+Updated: 2026-05-16
 
 This folder is the operational workspace for the first paid product download.
 It is centered on `EcoR Toolkit Complete` at `USD 97`.
+
+Current sync note:
+- the canonical EcoR buyer-package source is now `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/`
+- this workspace still documents the current founder-managed storefront path until live EcoR Payhip URLs are published and tested
 
 The broader EcoR ladder is now:
 - `Starter` at `USD 29` — live

@@ -1,6 +1,6 @@
 # Agent-Ready Document Layer
 
-Updated: 2026-05-11
+Updated: 2026-05-16
 
 This folder is the curated, plain-text mirror of the broader `documents/`
 library. Agents should use this layer first during conversations and
@@ -37,8 +37,10 @@ operations instead of relying on raw mixed-version source files.
 - `documents/oplurix-site/OPLURIX_Product_Suite_Final.md`
 - `documents/oplurix-site/OPLURIX_Master_Context_Brief.md`
 - `documents/oplurix-site/ExpertToInfluencer.txt`
-- `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_Strategy_v2.md`
-- `documents/oplurix-site/RDigitalProduct/Gumroad_Tier_Packages/TIER_PRODUCT_PAGE_COPY.md`
+- `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/README.md`
+- `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/EcoR_Toolkit_Strategy_v2.md`
+- `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/PAYHIP_PRODUCT_PAGE_COPY.md`
+- `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/FINAL_PREUPLOAD_QA_REPORT.md`
 
 ## Current Canonical Freelance Sources
 

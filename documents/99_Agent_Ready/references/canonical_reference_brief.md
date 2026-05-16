@@ -1,6 +1,6 @@
 # Canonical Reference Brief
 
-Updated: 2026-04-27
+Updated: 2026-05-16
 
 This is the shortest trustworthy briefing for FounderAI agents. It reflects the
 attached V4/V5 strategy texts plus the latest operational documents.
@@ -18,14 +18,16 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - Two current digital products now sit inside that revenue engine:
   - `Expert-to-Influencer Content Engine` at `USD 39`
     - Payhip launch pack prepared
-    - keep the public CTA off Payhip until the listing URL is published
+    - public Payhip listing is live
   - `EcoR Toolkit` with a four-tier ladder:
     - `Starter` at `USD 29`
     - `Complete` at `USD 97`
     - `Pro Bundle` at `USD 297`
     - `Institutional` at `USD 499`
-    - `Complete` is the first-sale focus
+    - canonical sellable packages now live in `documents/oplurix-site/RDigitalProduct/EcoR_Toolkit_v3/Payhip_Product_Packages/`
+    - `Complete` remains the main offer and first-sale focus
     - `Pro Bundle` is a live support-backed tier with manual fulfillment and WhatsApp onboarding
+    - public EcoR checkout should stay on the current founder-managed route until live EcoR Payhip variant URLs are published and tested
     - `Institutional` is contact-led, not a live checkout
 - Behind the live storefront, the OPLURIX source library already defines a
   broader 10-product suite. Only the founder-approved live and waitlist
@@ -57,7 +59,7 @@ attached V4/V5 strategy texts plus the latest operational documents.
 2. Pitch and formalize the biodiversity vertical inside Techni-Drones.
 3. Sign one independent non-Techni client or pilot.
 4. Launch and validate the first two OPLURIX digital products with clean
-   checkout and truthful manual delivery.
+   checkout truth and truthful delivery boundaries.
 5. Keep equity or commission conversations human-led and written.
 6. Maintain active PhD applications without breaking the survival engine.
 
@@ -139,6 +141,8 @@ attached V4/V5 strategy texts plus the latest operational documents.
   - `EcoR Toolkit Starter`
   - `EcoR Toolkit Complete`
   - `EcoR Toolkit Pro Bundle`
+    - canonical v3 Payhip-ready packages exist internally even while the public
+      EcoR checkout remains on the current storefront route
 
 ## Proof Assets
 
@@ -165,8 +169,8 @@ attached V4/V5 strategy texts plus the latest operational documents.
 - Do not mix Techni-Drones promotion with a personal-service CTA in the same
   message
 - Do not pitch ERIS in first-cycle independent freelance outreach
-- Do not imply automated digital fulfillment if the current delivery path is
-  still manual by email after payment confirmation
+- Do not imply automated digital fulfillment for any product whose current
+  public flow is still founder-managed after payment confirmation
 - Do not sell a higher tier that promises assets the founder has not yet
   finished
 - Use the shared conversation reference and answer bank for external drafts
