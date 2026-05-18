@@ -80,7 +80,7 @@ Non-goals:
   - `claude` over `https://api.anthropic.com/v1`
   - `ollama` over `http://localhost:11434`
   - `openai` over `https://api.openai.com/v1`
-- The default hosted model is `claude-sonnet-4-20250514`.
+- The default hosted model is `claude-sonnet-4-6`.
 - Provider settings can be overridden by environment variables for cloud deployment.
 - Linux launch scripts, Docker assets, and GitHub Actions build verification are included.
 - A private browser control surface is available through `serve` for cloud use.
@@ -165,7 +165,7 @@ Claude-first mode in `config/founderai.json`:
 "worker": {
   "provider": "claude",
   "base_url": "https://api.anthropic.com/v1",
-  "model": "claude-sonnet-4-20250514",
+  "model": "claude-sonnet-4-6",
   "timeout_seconds": 600,
   "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
   "api_key_env": "ANTHROPIC_API_KEY"
@@ -177,7 +177,7 @@ Temporary Ollama mode via environment override:
 ```powershell
 $env:FOUNDERAI_PROVIDER="ollama"
 $env:FOUNDERAI_BASE_URL="http://localhost:11434"
-$env:FOUNDERAI_MODEL="qwen2.5:7b-instruct"
+$env:FOUNDERAI_MODEL="qwen2.5:3b-instruct"
 $env:FOUNDERAI_TIMEOUT_SECONDS="900"
 ```
 
@@ -300,7 +300,7 @@ Windows:
 ```powershell
 $env:FOUNDERAI_PROVIDER="claude"
 $env:FOUNDERAI_BASE_URL="https://api.anthropic.com/v1"
-$env:FOUNDERAI_MODEL="claude-sonnet-4-20250514"
+$env:FOUNDERAI_MODEL="claude-sonnet-4-6"
 $env:ANTHROPIC_API_KEY="your-key"
 ```
 
@@ -309,7 +309,7 @@ Linux:
 ```bash
 export FOUNDERAI_PROVIDER="claude"
 export FOUNDERAI_BASE_URL="https://api.anthropic.com/v1"
-export FOUNDERAI_MODEL="claude-sonnet-4-20250514"
+export FOUNDERAI_MODEL="claude-sonnet-4-6"
 export ANTHROPIC_API_KEY="your-key"
 ```
 
@@ -370,7 +370,7 @@ Ollama-backed container stack:
 
 ```bash
 docker compose -f docker-compose.ollama.yml up -d --build
-docker exec -it founderai-ollama ollama pull qwen2.5:7b-instruct
+docker exec -it founderai-ollama ollama pull qwen2.5:3b-instruct
 ```
 
 The compose files keep `inbox/`, `outbox/`, and `runtime/` mounted as host directories so FounderAI remains file-auditable in the cloud.

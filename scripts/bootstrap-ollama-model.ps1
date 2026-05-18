@@ -1,5 +1,5 @@
 param(
-    [string]$Model = "qwen2.5:7b-instruct"
+[string]$Model = "qwen2.5:3b-instruct"
 )
 
 $ollama = Get-Command ollama -ErrorAction SilentlyContinue

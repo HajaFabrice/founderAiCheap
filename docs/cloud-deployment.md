@@ -110,11 +110,15 @@ For Anthropic Claude (recommended):
 ```
 FOUNDERAI_PROVIDER=claude
 FOUNDERAI_BASE_URL=https://api.anthropic.com/v1
-FOUNDERAI_MODEL=claude-sonnet-4-20250514
+FOUNDERAI_MODEL=claude-sonnet-4-6
 FOUNDERAI_API_KEY_ENV=ANTHROPIC_API_KEY
 ANTHROPIC_API_KEY=sk-ant-...your-key-here...
 CLOUDFLARE_TUNNEL_TOKEN=...fill-in-step-6...
 ```
+
+Hybrid cloud mode now uses local Ollama on the VPS for cheaper draft,
+briefing, proposal, and scheduler work. Keep the Anthropic key configured so
+grant, review, and fallback paths still work.
 
 For OpenAI:
 ```
@@ -183,6 +187,15 @@ docker exec founderai-daemon \
   --config /srv/founderai/config/founderai.cloud.json
 ```
 
+Pull the default Hetzner-friendly Ollama model once:
+```bash
+docker exec founderai-ollama ollama pull qwen2.5:3b-instruct
+docker exec founderai-ollama ollama list
+```
+
+`qwen2.5:3b-instruct` is the default offline model because it is a more
+realistic fit for a 4 GB CPU-only VPS than the older 7B default.
+
 ---
 
 ## Step 8 — Verify Everything Works
@@ -191,8 +204,8 @@ docker exec founderai-daemon \
 ```bash
 docker compose -f docker-compose.cloud.yml ps
 ```
-All three services (`founderai-daemon`, `founderai-web`, `cloudflared`) should
-show `healthy` or `running`.
+All four services (`founderai-ollama`, `founderai-daemon`, `founderai-web`,
+`cloudflared`) should show `healthy` or `running`.
 
 **Daemon tick:**
 ```bash

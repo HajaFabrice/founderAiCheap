@@ -241,9 +241,8 @@ mod tests {
 
     #[test]
     fn parse_env_assignment_strips_matching_quotes() {
-        let parsed =
-            parse_env_assignment("export FOUNDERAI_MODEL=\"claude-sonnet-4-20250514\"").unwrap();
+        let parsed = parse_env_assignment("export FOUNDERAI_MODEL=\"claude-sonnet-4-6\"").unwrap();
         assert_eq!(parsed.0, "FOUNDERAI_MODEL");
-        assert_eq!(parsed.1, "claude-sonnet-4-20250514");
+        assert_eq!(parsed.1, "claude-sonnet-4-6");
     }
 }

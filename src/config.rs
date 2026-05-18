@@ -52,7 +52,7 @@ fn default_worker_base_url() -> String {
 }
 
 fn default_worker_model() -> String {
-    "claude-sonnet-4-20250514".to_string()
+    "claude-sonnet-4-6".to_string()
 }
 
 fn default_worker_timeout() -> u64 {
@@ -559,7 +559,7 @@ fn default_ollama_override() -> WorkerOverride {
     WorkerOverride {
         provider: Some("ollama".to_string()),
         base_url: Some("http://localhost:11434".to_string()),
-        model: Some("qwen2.5:7b-instruct".to_string()),
+        model: Some("qwen2.5:3b-instruct".to_string()),
         timeout_seconds: Some(900),
         system_prompt: None,
         api_key_env: None,
@@ -571,7 +571,7 @@ pub fn default_claude_override() -> WorkerOverride {
     WorkerOverride {
         provider: Some("claude".to_string()),
         base_url: Some("https://api.anthropic.com/v1".to_string()),
-        model: Some("claude-sonnet-4-20250514".to_string()),
+        model: Some("claude-sonnet-4-6".to_string()),
         timeout_seconds: Some(300),
         system_prompt: None,
         api_key_env: Some("ANTHROPIC_API_KEY".to_string()),

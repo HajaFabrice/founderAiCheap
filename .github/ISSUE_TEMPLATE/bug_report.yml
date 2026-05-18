@@ -63,4 +63,4 @@ body:
     attributes:
       label: Environment
       description: Include OS, provider, model, and version details if known.
-      placeholder: Windows 11, ollama, qwen2.5:7b-instruct, release build
+        placeholder: Windows 11, ollama, qwen2.5:3b-instruct, release build

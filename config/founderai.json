@@ -24,7 +24,7 @@
   "worker": {
     "provider": "claude",
     "base_url": "https://api.anthropic.com/v1",
-    "model": "claude-sonnet-4-20250514",
+    "model": "claude-sonnet-4-6",
     "timeout_seconds": 600,
     "system_prompt": "You are FounderAI's autonomous provider worker. Follow the prompt packet exactly and write only the requested final deliverable.",
     "api_key_env": "ANTHROPIC_API_KEY"
@@ -40,13 +40,13 @@
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         },
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
@@ -56,13 +56,13 @@
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         },
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         }
       },
@@ -72,13 +72,13 @@
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         },
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
@@ -88,13 +88,13 @@
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         },
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
@@ -104,13 +104,13 @@
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         },
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
@@ -120,13 +120,13 @@
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         },
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
@@ -136,13 +136,13 @@
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         },
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         }
       },
@@ -152,13 +152,13 @@
         "online": {
           "provider": "claude",
           "base_url": "https://api.anthropic.com/v1",
-          "model": "claude-sonnet-4-20250514",
+          "model": "claude-sonnet-4-6",
           "api_key_env": "ANTHROPIC_API_KEY"
         },
         "offline": {
           "provider": "ollama",
           "base_url": "http://localhost:11434",
-          "model": "qwen2.5:7b-instruct",
+          "model": "qwen2.5:3b-instruct",
           "timeout_seconds": 900
         }
       }

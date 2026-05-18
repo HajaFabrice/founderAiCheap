@@ -5,7 +5,7 @@ services:
     environment:
       FOUNDERAI_PROVIDER: claude
       FOUNDERAI_BASE_URL: https://api.anthropic.com/v1
-      FOUNDERAI_MODEL: claude-sonnet-4-20250514
+      FOUNDERAI_MODEL: claude-sonnet-4-6
       FOUNDERAI_API_KEY_ENV: ANTHROPIC_API_KEY
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
     volumes:

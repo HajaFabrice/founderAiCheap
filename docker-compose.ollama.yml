@@ -14,7 +14,7 @@ services:
     environment:
       FOUNDERAI_PROVIDER: ollama
       FOUNDERAI_BASE_URL: http://ollama:11434
-      FOUNDERAI_MODEL: qwen2.5:7b-instruct
+      FOUNDERAI_MODEL: qwen2.5:3b-instruct
     volumes:
       - ./inbox:/app/inbox
       - ./outbox:/app/outbox

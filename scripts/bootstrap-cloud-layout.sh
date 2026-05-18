@@ -24,6 +24,7 @@ cp -a "${REPO_ROOT}/documents/99_Agent_Ready/." "${CLOUD_ROOT}/documents/99_Agen
 
 echo "FounderAI cloud layout prepared at ${CLOUD_ROOT}"
 echo "Next steps:"
-echo "1. Copy .env.cloud.example to .env.cloud and fill in OPENAI_API_KEY plus CLOUDFLARE_TUNNEL_TOKEN."
+echo "1. Copy .env.cloud.example to .env.cloud and fill in ANTHROPIC_API_KEY (or OPENAI_API_KEY) plus CLOUDFLARE_TUNNEL_TOKEN."
 echo "2. Review ${CLOUD_ROOT}/config/founderai.cloud.json."
 echo "3. Run: docker compose -f docker-compose.cloud.yml up -d --build"
+echo "4. Pull the default VPS-friendly Ollama model: docker exec founderai-ollama ollama pull qwen2.5:3b-instruct"

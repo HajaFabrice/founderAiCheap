@@ -16,7 +16,7 @@ Recent hardening added two things worth checking first:
 
 1. Run `status` and confirm the intended provider and model.
 2. If using Claude, confirm `ANTHROPIC_API_KEY` is loaded in the environment.
-3. If using Ollama, run `ollama list` and confirm `qwen2.5:7b-instruct` is installed.
+3. If using Ollama, run `ollama list` and confirm `qwen2.5:3b-instruct` is installed.
 4. If using OpenAI, confirm `OPENAI_API_KEY` is loaded in the environment.
 5. Inspect the latest run folder:
    - `stderr.txt`
@@ -38,7 +38,7 @@ Recent hardening added two things worth checking first:
   smoke run
 - Retry with the isolated smoke config
 - Confirm the machine has enough RAM for the chosen model
-- Try a direct local prompt with `ollama run qwen2.5:7b-instruct`
+- Try a direct local prompt with `ollama run qwen2.5:3b-instruct`
 - If the host is too slow, switch temporarily to Claude or OpenAI
 
 ## Recommended Timeout Baselines
@@ -70,7 +70,8 @@ Smoke wrapper scripts:
 
 Cloud mode uses `config/founderai.cloud.json` and assumes:
 
-- Claude is the primary provider
+- Claude is still available for higher-value review and grant work
+- Ollama on the VPS handles cheaper offline-first tasks
 - the private founder console is exposed through `serve`
 - Cloudflare Tunnel and Access protect the browser surface
 
@@ -78,12 +79,14 @@ Quick cloud checks:
 
 1. `docker compose -f docker-compose.cloud.yml ps`
 2. `docker exec founderai-daemon /app/founderai-ollama-rust status --config /srv/founderai/config/founderai.cloud.json`
-3. open `/healthz` through the private hostname after Access login
-4. inspect `runtime/runs/<run-id>/metadata.json` for `usage`, `prompt_chars`, and `prompt_words`
+3. `docker exec founderai-ollama ollama list`
+4. open `/healthz` through the private hostname after Access login
+5. inspect `runtime/runs/<run-id>/metadata.json` for `usage`, `prompt_chars`, and `prompt_words`
 
 If cloud runs fail while the daemon stays healthy:
 
 - confirm `ANTHROPIC_API_KEY` is present inside both `founderai-daemon` and `founderai-web`
 - confirm `FOUNDERAI_MODEL` matches a supported Claude model in your Anthropic account
+- confirm offline routes point at `http://ollama:11434` and that the Ollama container has the expected model loaded
 - check Cloudflare logs only for ingress problems; provider failures still show up in FounderAI run artifacts
 - use `scripts/cloud-weekly-review.sh` to spot growing prompt sizes before spend becomes the real problem
