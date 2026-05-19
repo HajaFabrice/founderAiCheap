@@ -9,6 +9,7 @@ This Shopify pack is built for one practical outcome:
 - a draft-safe Shopify product import CSV
 - a collection plan
 - an upload manifest
+- a landing page source file
 - the current OPLURIX product PDFs
 - the current digital delivery ZIPs that already exist in the repo
 

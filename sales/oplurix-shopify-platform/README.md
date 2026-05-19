@@ -43,6 +43,7 @@ or fulfillment boundaries are not fully operational yet.
 
 1. Read `01_Guides/00_START_HERE.md`
 2. Follow `01_Guides/01_SHOPIFY_SETUP_CHECKLIST.md`
-3. Import `02_Shopify_CSV/shopify_product_import_draft.csv`
-4. Upload the files from `03_Upload_Files/`
-5. Review `04_Notes/MISSING_ASSETS_AND_TRUTH_RULES.md` before activating any product
+3. Adapt `01_Guides/04_SHOPIFY_LANDING_PAGE_SOURCE.html` into a Shopify page or homepage section
+4. Import `02_Shopify_CSV/shopify_product_import_draft.csv`
+5. Upload the files from `03_Upload_Files/`
+6. Review `04_Notes/MISSING_ASSETS_AND_TRUTH_RULES.md` before activating any product
