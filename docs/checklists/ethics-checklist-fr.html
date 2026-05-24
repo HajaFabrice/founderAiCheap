@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist ethique imprimable de 3 minutes | OPLURIX</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="../assets/oplurix-logo.png">
+  <style>
+    :root {
+      --forest: #16331f;
+      --forest-2: #23482e;
+      --gold: #d4921f;
+      --cream: #f3efe6;
+      --paper: #fffdf8;
+      --line: #d9cfbc;
+      --ink: #17211b;
+      --muted: #5b645f;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #eff4ef 0%, var(--cream) 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .shell {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--forest);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.96);
+      padding: 4px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 11px 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--forest);
+      color: #fff;
+    }
+
+    .button-secondary {
+      background: rgba(255,255,255,0.8);
+      color: var(--forest);
+      border-color: rgba(22, 51, 31, 0.14);
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid rgba(22, 51, 31, 0.08);
+      border-radius: 28px;
+      box-shadow: 0 18px 50px rgba(22, 51, 31, 0.08);
+      padding: 40px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 1.06;
+      margin: 0 0 16px;
+      color: var(--forest);
+    }
+
+    .lead {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0 0 24px;
+      max-width: 720px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .pill {
+      border: 1px solid rgba(22, 51, 31, 0.1);
+      background: rgba(22, 51, 31, 0.04);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      color: var(--forest-2);
+    }
+
+    .instruction {
+      border-left: 4px solid var(--gold);
+      padding: 14px 16px;
+      background: rgba(212, 146, 31, 0.08);
+      border-radius: 14px;
+      margin-bottom: 30px;
+      color: var(--forest-2);
+    }
+
+    .checklist {
+      display: grid;
+      gap: 16px;
+    }
+
+    .check {
+      border: 1px solid rgba(22, 51, 31, 0.08);
+      border-radius: 22px;
+      padding: 18px 20px;
+      background: #fff;
+    }
+
+    .check-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .num {
+      min-width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: var(--forest);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    h2 {
+      font-size: 18px;
+      line-height: 1.25;
+      margin: 0;
+      color: var(--forest);
+    }
+
+    .check p,
+    .note p,
+    .mini p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .mini {
+      border: 1px solid rgba(22, 51, 31, 0.08);
+      border-radius: 20px;
+      padding: 18px;
+      background: rgba(255,255,255,0.88);
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: var(--forest);
+    }
+
+    .footer-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 26px;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .topbar,
+      .top-actions {
+        display: none !important;
+      }
+
+      .shell {
+        width: 100%;
+      }
+
+      .card,
+      .check,
+      .mini {
+        box-shadow: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .card {
+        padding: 28px 22px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="../index.html">
+        <img src="../assets/oplurix-logo.png" alt="Logo OPLURIX">
+        <span>OPLURIX</span>
+      </a>
+      <div class="top-actions">
+        <button class="button button-secondary" type="button" onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+        <a class="button button-primary" href="../products/01-expert-to-influencer-content-engine-fr.html">Voir le systeme complet</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="card">
+      <div class="eyebrow">Ressource imprimable</div>
+      <h1>Checklist ethique de 3 minutes pour la communication en conservation</h1>
+      <p class="lead">A utiliser avant chaque post public, thread, legende ou mise a jour de projet. Ce n'est pas un outil de marque personnelle. C'est un filtre de securite pour partager un vrai travail de conservation sans exposer inutilement des especes, des donnees ou des personnes.</p>
+      <div class="meta">
+        <span class="pill">6 verifications</span>
+        <span class="pill">3 minutes</span>
+        <span class="pill">Version FR</span>
+        <span class="pill">Format imprimable</span>
+      </div>
+      <div class="instruction">
+        Passez les six verifications. Si une reponse reste incertaine, ne publiez pas encore. Reecrivez, generalisez, differez ou demandez un autre regard.
+      </div>
+      <div class="checklist">
+        <article class="check">
+          <div class="check-header">
+            <span class="num">01</span>
+            <h2>Sensibilite de la localisation des especes</h2>
+          </div>
+          <p>Ce post revele-t-il quelque chose qui pourrait aider quelqu'un a localiser un nid, un dortoir, un terrier, un micro-site ou un individu ? Les points GPS, sous-sites nommes, references de sentier et indices d'habitat reconnaissables comptent tous.</p>
+        </article>
+        <article class="check">
+          <div class="check-header">
+            <span class="num">02</span>
+            <h2>Protection des donnees non publiees</h2>
+          </div>
+          <p>Partagez-vous des chiffres exacts, valeurs statistiques ou resultats d'un travail qui n'a pas encore ete publie formellement ou autorise pour communication publique ? Gardez les donnees precises pour l'article ou le rapport valide.</p>
+        </article>
+        <article class="check">
+          <div class="check-header">
+            <span class="num">03</span>
+            <h2>Protection des communautes et partenaires</h2>
+          </div>
+          <p>Des membres de la communaute, techniciens locaux, assistants de terrain ou partenaires sont-ils identifiables sans consentement explicite ? Utilisez des descripteurs plus generaux si le detail n'est pas indispensable a la lecon.</p>
+        </article>
+        <article class="check">
+          <div class="check-header">
+            <span class="num">04</span>
+            <h2>Integrite scientifique</h2>
+          </div>
+          <p>Distinguez-vous clairement ce que vous avez observe, ce que vous interpretez et ce que vous concluez ? Un bon post public peut rester simple sans melanger preuve et inference.</p>
+        </article>
+        <article class="check">
+          <div class="check-header">
+            <span class="num">05</span>
+            <h2>Temporalite sensible</h2>
+          </div>
+          <p>Le projet est-il en pleine saison terrain, dans une negociation, une revue reglementaire ou un partenariat fragile ? Certains details ne sont pas dangereux pour toujours, mais ils le sont maintenant.</p>
+        </article>
+        <article class="check">
+          <div class="check-header">
+            <span class="num">06</span>
+            <h2>Calibration du ton et du niveau de confiance</h2>
+          </div>
+          <p>Le post sonne-t-il professionnel, honnete et specifique, ou glisse-t-il vers la surpromesse, le vague, ou une modestie performative ? La credibilite est abimee autant par le hype que par une fausse petitesse.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="card note">
+      <div class="eyebrow">Pourquoi c'est important</div>
+      <p>La communication en conservation n'est pas la meme chose que la creation de contenu generaliste. Le mauvais detail peut exposer des especes, des communautes, des partenaires de recherche ou des projets entiers. Cette checklist existe pour rendre ce risque visible avant de publier.</p>
+    </section>
+
+    <section class="card">
+      <div class="eyebrow">Guide de reaction rapide</div>
+      <div class="grid">
+        <article class="mini">
+          <h3>Si une reponse est "oui"</h3>
+          <p>Retirez, generalisez ou reportez le detail. L'histoire ne vaut presque jamais le risque evitable.</p>
+        </article>
+        <article class="mini">
+          <h3>Si une reponse est "je ne sais pas"</h3>
+          <p>Faites une pause et demandez un autre regard. L'incertitude suffit deja a justifier une version plus prudente.</p>
+        </article>
+        <article class="mini">
+          <h3>Si vous voulez quand meme de la visibilite</h3>
+          <p>Gardez la lecon, la realite terrain et l'insight humain. Enlevez les details sensibles.</p>
+        </article>
+        <article class="mini">
+          <h3>Si vous voulez le flux complet</h3>
+          <p>L'etape suivante est le systeme complet de communication : prompts, frameworks, exemples et logique d'edition dans le produit live OPLURIX.</p>
+        </article>
+      </div>
+      <p class="footer-note">OPLURIX a construit ceci comme standard minimum, pas comme secret reserve a une offre premium. Utilisez-le, imprimez-le et partagez-le avec les professionnels de la conservation qui publient leur travail publiquement.</p>
+    </section>
+  </main>
+</body>
+</html>

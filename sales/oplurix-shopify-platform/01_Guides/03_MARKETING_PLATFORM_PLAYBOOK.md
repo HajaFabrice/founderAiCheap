@@ -1,14 +1,14 @@
 # Shopify Marketing Platform Playbook
 
-Shopify should not only be a checkout surface for OPLURIX. It should also help
-you market, organize, and validate demand.
+Shopify should currently serve OPLURIX as a marketing platform around one live
+product, not as a fully populated digital storefront.
 
 ## Best Immediate Uses
 
-- clean product catalog
-- better product pages than a bare link tree
+- better product page than a bare checkout link
 - email capture through a simple newsletter form
-- clear live-versus-coming-soon segmentation
+- a branded bridge into the active Payhip checkout
+- clear live-versus-not-yet-live segmentation
 - a branded destination for LinkedIn, Facebook, WhatsApp, and email outreach
 
 ## Homepage Structure
@@ -16,30 +16,28 @@ you market, organize, and validate demand.
 - hero:
   - OPLURIX mission
   - one clear CTA
-- featured now:
-  - Expert-to-Influencer
-  - EcoR Complete
-- coming next:
-  - Training-to-Quiz
-  - Biodiversity Pitch Deck Builder
-- institutional / custom:
-  - EcoR Institutional
-  - bespoke services inquiry
+- live now:
+  - Expert-to-Influencer Content Engine
+- proof / trust:
+  - who it helps
+  - what outcome it creates
+- future interest:
+  - short note that more tools are coming later
+- contact:
+  - direct inquiry path
 
 ## Collection Strategy
 
 - `Live Now`
-- `EcoR Toolkit`
-- `Coming Next`
-- `Research And Fieldwork Tools`
+- `About OPLURIX`
+- optional future `Coming Later` page kept out of checkout
 
 ## Traffic Strategy
 
 - LinkedIn posts point to one product page at a time
 - Facebook page posts point to:
   - homepage
-  - one featured product
-  - one coming-soon waitlist page
+  - the live product page
 - WhatsApp outreach points to a single proof-led page, not the whole catalog
 
 ## Metrics To Watch
@@ -48,11 +46,11 @@ you market, organize, and validate demand.
 - email capture conversions
 - clicks from LinkedIn
 - clicks from Facebook
+- clicks from Shopify to Payhip
 - product page bounce rate
-- abandoned checkouts
 
 ## First 30-Day Goal
 
-- build a credible branded storefront
-- activate one downloadable product cleanly
+- build a credible branded landing destination
+- strengthen one live offer before broadening the catalog
 - collect traffic and page-level signal before expanding checkout complexity

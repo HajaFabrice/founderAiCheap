@@ -13,16 +13,16 @@
 - Choose a simple theme first; optimize clarity before design flourishes
 - Create a homepage section for:
   - mission
-  - featured products
-  - live now
-  - coming next
-  - contact / institutional inquiry
+  - one featured live product
+  - why this offer matters
+  - direct contact
+  - optional future-offer note
 - Create navigation items for:
   - Home
-  - Shop
+  - Product
   - About OPLURIX
   - Contact
-  - Institutional / Custom Inquiry
+  - Buy Now
 
 ## Essential Pages
 
@@ -35,7 +35,8 @@
 
 ## Apps / Platform Setup
 
-- Install a digital delivery app before activating downloadable products
+- For the current phase, Shopify does not need to fulfill the live product if Payhip remains the active checkout
+- Install a digital delivery app only when you are ready to sell downloads directly through Shopify
 - Good categories to look for:
   - digital downloads
   - file delivery
@@ -47,6 +48,7 @@
 
 ## Product Import
 
+- Treat this section as later-phase, not first-phase
 - Import `02_Shopify_CSV/shopify_product_import_draft.csv`
 - Confirm products land in `draft` status
 - Review handles, titles, pricing, and descriptions
@@ -60,18 +62,18 @@
 
 ## Testing
 
-- Test one low-risk product end to end first
-- Prefer `Expert-to-Influencer Content Engine` as the first candidate
+- Test the Shopify-to-Payhip path end to end first
+- Prefer `Expert-to-Influencer Content Engine` as the only public candidate
 - Confirm:
-  - checkout works
-  - payment confirmation works
-  - download access works
+  - Shopify page loads cleanly
+  - buy button points to the correct Payhip product
+  - Payhip checkout works
   - email and support pathways are visible
 
 ## Activation Order
 
 1. Expert-to-Influencer Content Engine
-2. EcoR Starter and EcoR Complete after delivery review
-3. EcoR Pro Bundle only after support workflow review
-4. Training-to-Quiz and Biodiversity Pitch Deck after packaging review
+2. Email capture and audience validation around the live product
+3. EcoR Starter and EcoR Complete only after direct Shopify delivery review
+4. EcoR Pro Bundle only after support workflow review
 5. Institutional and source-only products only after explicit founder approval

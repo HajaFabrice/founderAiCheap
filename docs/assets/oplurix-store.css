@@ -85,8 +85,34 @@ a {
 }
 
 .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   color: var(--gold);
   font-size: 1rem;
+}
+
+.brand-mark::before {
+  content: "";
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.98);
+  background-image: url("oplurix-logo.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 82%;
+  border: 1px solid rgba(22, 51, 31, 0.14);
+  box-shadow: 0 12px 24px rgba(15, 26, 20, 0.18);
+}
+
+.site-footer .brand-mark::before {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
 }
 
 .brand-sub {
@@ -101,7 +127,8 @@ a {
 .pill-row,
 .product-actions,
 .support-actions,
-.footer-links {
+.footer-links,
+.trust-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -267,6 +294,7 @@ a {
 
 .hero-text,
 .hero-notes span,
+.hero-proofline,
 .panel-card p,
 .section p,
 .feature-list,
@@ -281,6 +309,17 @@ a {
   margin: 0 0 24px;
   max-width: 700px;
   font-size: 1.06rem;
+}
+
+.hero-actions {
+  align-items: center;
+}
+
+.hero-proofline {
+  display: none;
+  margin: 14px 0 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.74);
 }
 
 .hero-notes {
@@ -309,6 +348,16 @@ a {
 
 .panel-card-soft {
   background: rgba(22, 51, 31, 0.48);
+}
+
+.panel-list {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.panel-list li + li {
+  margin-top: 8px;
 }
 
 .panel-stack {
@@ -631,6 +680,87 @@ a {
   border: 1px solid rgba(22, 51, 31, 0.09);
 }
 
+.support-banner h3 {
+  margin: 10px 0 10px;
+  color: var(--forest);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+}
+
+.guarantee-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: rgba(22, 51, 31, 0.05);
+  border: 1px solid rgba(22, 51, 31, 0.08);
+}
+
+.guarantee-card__eyebrow {
+  color: var(--gold-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guarantee-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.guarantee-card__note {
+  color: var(--forest) !important;
+  font-weight: 600;
+}
+
+.trust-band-section {
+  padding-top: 20px;
+  padding-bottom: 18px;
+}
+
+.trust-band {
+  display: grid;
+  gap: 22px;
+  padding: 26px;
+  border-radius: 28px;
+  background: rgba(251, 248, 242, 0.94);
+  border: 1px solid rgba(22, 51, 31, 0.09);
+  box-shadow: var(--shadow);
+}
+
+.trust-band-copy {
+  max-width: 760px;
+}
+
+.trust-band-copy h2 {
+  margin: 8px 0 12px;
+}
+
+.trust-band-copy p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.trust-pills {
+  gap: 10px;
+}
+
+.trust-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(22, 51, 31, 0.07);
+  color: var(--forest);
+  font-size: 0.9rem;
+}
+
+.cta-recap-wrap {
+  margin-top: 28px;
+}
+
 .contact-grid {
   align-items: stretch;
 }
@@ -694,6 +824,10 @@ a {
   background: #102117;
 }
 
+.sticky-mobile-cta {
+  display: none;
+}
+
 .footer-grid {
   display: grid;
   gap: 18px;
@@ -718,6 +852,26 @@ a {
 
 .page-backlink:hover {
   color: #fff;
+}
+
+.page-helper-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: -4px 0 0;
+}
+
+.page-helper-links a {
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.page-helper-links a:hover {
+  color: #fff2cf;
 }
 
 .page-hero-copy {
@@ -872,19 +1026,117 @@ a {
     order: 3;
     width: 100%;
   }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 @media (max-width: 720px) {
+  body.has-sticky-mobile-cta {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .brand-mark {
+    gap: 10px;
+  }
+
+  .brand-mark::before {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    border-radius: 12px;
+  }
+
   .shell {
-    width: min(1160px, calc(100% - 22px));
+    width: min(1160px, calc(100% - 20px));
+  }
+
+  .topbar {
+    gap: 12px;
+    min-height: auto;
+    padding: 14px 0 18px;
+  }
+
+  .nav {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .lang-switch {
+    align-self: flex-start;
+  }
+
+  .mini-cta {
+    display: none;
   }
 
   .hero {
-    padding-top: 44px;
+    padding: 38px 0 28px;
+  }
+
+  .hero-grid,
+  .proof-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hero-copy {
+    padding: 18px 0 0;
   }
 
   .hero h1 {
-    font-size: 2.3rem;
+    font-size: 2rem;
+    line-height: 1.08;
+  }
+
+  .eyebrow {
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+  }
+
+  .hero-text {
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+
+  .hero-actions,
+  .hero-notes,
+  .support-actions {
+    gap: 10px;
+  }
+
+  .hero-notes {
+    display: none;
+  }
+
+  .hero-proofline {
+    display: block;
+    max-width: 34rem;
+  }
+
+  .hero-notes span,
+  .pill,
+  .trust-pill {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .product-card,
@@ -892,7 +1144,8 @@ a {
   .value-card,
   .proof-card,
   .faq-card,
-  .contact-form {
+  .contact-form,
+  .panel-card {
     padding: 20px;
   }
 
@@ -900,5 +1153,108 @@ a {
   .product-actions .button,
   .support-actions .button {
     width: 100%;
+  }
+
+  .hero-actions .button-primary {
+    min-height: 54px;
+    font-size: 0.92rem;
+    box-shadow: 0 14px 28px rgba(196, 136, 40, 0.28);
+  }
+
+  .hero-actions .button-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .page-helper-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mini-product {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .mini-price {
+    justify-self: start;
+  }
+
+  .panel-card-soft {
+    display: none;
+  }
+
+  .sticky-mobile-cta {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 120;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: rgba(251, 248, 242, 0.96);
+    border: 1px solid rgba(22, 51, 31, 0.12);
+    box-shadow: 0 10px 24px rgba(15, 26, 20, 0.14);
+    backdrop-filter: blur(8px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .sticky-mobile-cta.is-hidden {
+    opacity: 0;
+    transform: translateY(14px);
+    pointer-events: none;
+  }
+
+  .sticky-mobile-cta__copy {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .sticky-mobile-cta__kicker {
+    color: var(--muted);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sticky-mobile-cta__copy strong {
+    color: var(--forest);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sticky-mobile-cta__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .sticky-mobile-cta__actions .button {
+    width: auto;
+    min-height: 40px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    box-shadow: none;
+  }
+
+  .sticky-mobile-cta__link {
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
   }
 }

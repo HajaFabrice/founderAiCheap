@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-05-23",
+  "language": "fr",
+  "product_id": "oplurix_01_expert_to_influencer_content_engine_fr",
+  "derived_from_product_id": "oplurix_01_expert_to_influencer_content_engine",
+  "public_name": "Expert-to-Influencer Content Engine - Edition francaise",
+  "suite_number": 1,
+  "current_state": "live",
+  "recommended_public_state": "live",
+  "launch_decision": "keep_live",
+  "delivery_state": "ready_for_manual_fulfillment",
+  "recommended_client_format": "hybrid",
+  "price": "$39",
+  "activation_gate": "Keep manual delivery clean and auditable while buyer feedback stays small and manageable.",
+  "source_basis": [
+    "sales/oplurix-product-suite/packages/01-expert-to-influencer-content-engine/02_Source_Assets/ExpertToInfluencer.txt",
+    "docs/products/01-expert-to-influencer-content-engine.html"
+  ],
+  "primary_asset": "sales/oplurix-product-suite/packages-fr/01-expert-to-influencer-content-engine-fr/02_Source_Assets/GUIDE_CLIENT_FR.md",
+  "sellable_page": "docs/products/01-expert-to-influencer-content-engine-fr.html"
+}

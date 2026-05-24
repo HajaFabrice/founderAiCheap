@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-05-23",
+  "language": "fr",
+  "product_id": "oplurix_03_gear_equipment_concierge_fr",
+  "derived_from_product_id": "oplurix_03_gear_equipment_concierge",
+  "public_name": "Gear & Equipment Concierge - Edition francaise",
+  "suite_number": 3,
+  "current_state": "coming_soon",
+  "recommended_public_state": "coming_soon",
+  "launch_decision": "prepare_clean_release",
+  "delivery_state": "ready_for_manual_fulfillment_when_approved",
+  "recommended_client_format": "pdf_or_zip",
+  "price": "$49",
+  "activation_gate": "Open only when the founder is ready to support the next-release set manually.",
+  "source_basis": [
+    "documents/oplurix-site/product3.html",
+    "docs/products/03-gear-equipment-concierge.html"
+  ],
+  "primary_asset": "sales/oplurix-product-suite/packages-fr/03-gear-equipment-concierge-fr/02_Source_Assets/GUIDE_CLIENT_FR.md",
+  "sellable_page": "docs/products/03-gear-equipment-concierge-fr.html"
+}

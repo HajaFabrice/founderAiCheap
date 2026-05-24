@@ -1,0 +1,7 @@
+repo_surface,language,current_form_name,kit_form_name,primary_tag,secondary_tag,resource_name,site_language,thank_you_variant,notes
+ethics-checklist-top,en,ethics-checklist-interest,OPLURIX Checklist EN,oplurix-checklist-en,oplurix-buyer-prospect,3-Minute Ethics Checklist,en,checklist,Highest-priority Kit form
+ethics-checklist-bottom,en,ethics-checklist-interest,OPLURIX Checklist EN,oplurix-checklist-en,oplurix-buyer-prospect,3-Minute Ethics Checklist,en,checklist,Same Kit form as top
+ethics-checklist-fr-top,fr,ethics-checklist-interest,OPLURIX Checklist FR,oplurix-checklist-fr,oplurix-buyer-prospect,Checklist ethique de 3 minutes,fr,checklist,Highest-priority French Kit form
+ethics-checklist-fr-bottom,fr,ethics-checklist-interest,OPLURIX Checklist FR,oplurix-checklist-fr,oplurix-buyer-prospect,Checklist ethique de 3 minutes,fr,checklist,Same Kit form as top
+homepage-updates,en-fr,oplurix-updates,OPLURIX Updates General,oplurix-general-updates,,Depends on update_track,mixed,updates,May remain manual longer if needed
+homepage-contact,en-fr,oplurix-product-interest,OPLURIX Product Interest,oplurix-live-product-interest,,Depends on message,mixed,contact,Can later branch to services or research intent

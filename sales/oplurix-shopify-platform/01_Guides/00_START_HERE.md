@@ -3,6 +3,7 @@
 This Shopify pack is built for one practical outcome:
 
 - get OPLURIX into Shopify in a clean, reviewable, non-chaotic way
+- starting with Shopify as a marketing surface for one already-live Payhip product
 
 ## What Is Ready In This Pack
 
@@ -24,9 +25,9 @@ This Shopify pack is built for one practical outcome:
 
 Use Shopify first as:
 
-- a clean product catalog
+- a strong landing page for the live product
 - an email capture and brand surface
-- a controlled storefront under founder review
+- a controlled brand layer above the active Payhip checkout
 
 Do not treat the first setup as fully automated digital commerce until:
 
@@ -37,7 +38,7 @@ Do not treat the first setup as fully automated digital commerce until:
 
 ## Safe Activation Logic
 
-- `Expert-to-Influencer Content Engine`: closest to activation-ready
-- `EcoR Toolkit` variants: import as draft first, then review fulfillment carefully
+- `Expert-to-Influencer Content Engine`: the only product that should be treated as live right now
+- `EcoR Toolkit` variants: keep out of public Shopify checkout for now
 - `Training-to-Quiz Generator` and `Biodiversity Pitch Deck Builder`: keep draft or waitlist
 - source-only pipeline products: keep out of checkout until promoted intentionally

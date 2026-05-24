@@ -11,6 +11,18 @@ Each product now has:
 - a delivery package folder in sales/oplurix-product-suite/packages/
 - a ZIP preview in sales/oplurix-product-suite/zips/
 
+French delivery variants for Products 1 to 4 now live in:
+
+- `sales/oplurix-product-suite/packages-fr/`
+
+Current French delivery wave:
+
+- Product 1: ready for live manual fulfillment
+- Products 2 to 4: prepared for the next clean release set
+
+Products 5 to 10 do not yet have French delivery packages because the source
+deliverables still need a more stable founder-approved shape before translation.
+
 ## Generated Package Map
 
 - Expert-to-Influencer Content Engine -> docs/products/01-expert-to-influencer-content-engine.html -> sales/oplurix-product-suite/packages/01-expert-to-influencer-content-engine -> sales/oplurix-product-suite/zips/01-expert-to-influencer-content-engine.zip
@@ -32,3 +44,5 @@ These packages do not automatically change public launch status.
 - coming_soon products still need founder approval before checkout activation
 - source_only products remain internal unless the founder promotes them to a
   waitlist or live state
+
+The same rule applies to the French delivery variants.

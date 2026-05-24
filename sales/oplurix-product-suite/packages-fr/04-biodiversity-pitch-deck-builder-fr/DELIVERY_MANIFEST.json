@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-05-23",
+  "language": "fr",
+  "product_id": "oplurix_04_biodiversity_pitch_deck_builder_fr",
+  "derived_from_product_id": "oplurix_04_biodiversity_pitch_deck_builder",
+  "public_name": "Biodiversity Pitch Deck Builder - Edition francaise",
+  "suite_number": 4,
+  "current_state": "coming_soon",
+  "recommended_public_state": "coming_soon",
+  "launch_decision": "prepare_clean_release",
+  "delivery_state": "ready_for_manual_fulfillment_when_approved",
+  "recommended_client_format": "pdf_or_zip",
+  "price": "$69",
+  "activation_gate": "Open only once the founder is ready to support the next-release set manually.",
+  "source_basis": [
+    "documents/oplurix-site/Hormozi/Payhip_Descriptions_Products_2_to_10.txt",
+    "docs/products/04-biodiversity-pitch-deck-builder.html"
+  ],
+  "primary_asset": "sales/oplurix-product-suite/packages-fr/04-biodiversity-pitch-deck-builder-fr/02_Source_Assets/GUIDE_CLIENT_FR.md",
+  "sellable_page": "docs/products/04-biodiversity-pitch-deck-builder-fr.html"
+}
