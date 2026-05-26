@@ -18,6 +18,8 @@ Implementation companion docs now live in:
 
 - [operations/README.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/README.md)
 - [fulfillment-sop.md](/C:/Users/Student/Desktop/perso/founderAiCheap/sales/oplurix-product-suite/fulfillment-sop.md)
+- [campaigns/README.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/README.md)
+- [campaigns/launch-operations-calendar.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/launch-operations-calendar.md)
 
 ---
 

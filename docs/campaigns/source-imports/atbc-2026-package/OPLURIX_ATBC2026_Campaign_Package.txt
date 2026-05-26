@@ -1,0 +1,650 @@
+═══════════════════════════════════════════════════════════════════
+OPLURIX — ATBC 2026 FUNDRAISING CAMPAIGN
+Complete Executable Package
+Campaign name: "Eyes Above the Canopy"
+Target: $3,000 · Deadline: Before June 2026
+═══════════════════════════════════════════════════════════════════
+
+CAMPAIGN SPINE (use this framing everywhere):
+"Help send Malagasy biodiversity science to the world's leading tropical
+biology conference — and unlock the next phase of ecological intelligence
+infrastructure for Madagascar's most overlooked forests."
+
+POSITIONING: This is not a travel fundraiser.
+This is the trip that puts the fieldwork in front of the
+institutions that fund the next five years of ERIS development.
+
+PAYMENT OPTIONS (include all three on every ask):
+→ PayPal: https://lnkd.in/gy9fn7fT
+→ Mvola / Sendwave: +261 34 94 141 12
+→ Buy the product: payhip.com/b/6I1p4
+
+BUDGET BREAKDOWN (use this for transparency):
+→ Passport renewal:       $150
+→ Chinese visa:           $185
+→ Flight (RNS–KMG):       $1,400
+→ Accommodation (6 nights): $600
+→ Ground transport + meals: $300
+→ Conference materials:    $365
+→ TOTAL:                  $3,000
+(Registration already paid by Haja)
+
+═══════════════════════════════════════════════════════════════════
+SECTION 1 — LINKEDIN POSTS (5 posts · launch sequence · EN)
+Posted across 10 days. EN versions below. FR versions in Section 2.
+═══════════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LINKEDIN POST 1 — DAY 1 · LAUNCH · 13:00 EAT
+THE ANNOUNCEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Some forests in Madagascar receive almost no formal monitoring.
+
+We have been surveying two of them — Manakoakora and Ihofa — using a Mavic 3T thermal drone. No new trails cut into the forest. No disturbance to the animals.
+
+In April, this work was accepted for presentation at ATBC 2026 in Xishuangbanna, China — the world's leading international conference in tropical biology and conservation.
+
+What we detected: multiple lemur species across a wide range of body sizes. To the best of our knowledge, the first report from Madagascar of lemurs spanning such a range detected through thermal drone surveys.
+
+We are also developing a computer vision model to automate detection from survey footage — so that forests like these can be monitored at scale, with fewer resources, by local teams.
+
+The registration fee is paid. The remaining challenge is the travel cost: approximately $3,000 for passport renewal, visa, flight, and accommodation.
+
+If you want to help — three ways:
+
+→ Contribute directly: PayPal https://lnkd.in/gy9fn7fT | Mvola/Sendwave: +261 34 94 141 12
+
+→ Buy the Expert-to-Influencer Content Engine — a practical toolkit I built for conservation professionals who want to communicate their field work clearly and consistently: payhip.com/b/6I1p4
+
+→ Share this post. Reach is the resource I have least of.
+
+The forests are there. The data is real. The conference slot is confirmed.
+
+The only thing standing between this research and the international community is a plane ticket.
+
+#ATBC2026 #EcologicalIntelligence #MadagascarBiodiversity #ConservationTech #FieldToAI
+
+[FIRST COMMENT — within 5 minutes]
+Budget breakdown if you want the specifics: passport $150 · visa $185 · flight $1,400 · accommodation $600 · transport + meals $300 · materials $365 = $3,000. Registration already paid. Every contribution directly closes this gap.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LINKEDIN POST 2 — DAY 3 · THE SCIENCE · 13:00 EAT
+AUTHORITY + METHOD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A thermal drone does not disturb the forest.
+
+It flies at 70 metres. The animals do not hear it. No trails are cut. No animals are handled. And it sees what a ground observer cannot: heat signatures through canopy gaps, early in the morning, before solar heating raises the background temperature.
+
+In Manakoakora and Ihofa — two forests in northeastern Madagascar that receive limited formal monitoring — we detected lemur signatures across a wide range of body sizes in a single survey series.
+
+That result matters not because it proves something definitive. It matters because it suggests these methods can reveal biological activity in forests that would otherwise go unmonitored for years.
+
+We are taking this to ATBC 2026 in June — the leading international conference for tropical biology — to put it in front of the researchers, funders, and institutions who work on exactly this problem.
+
+If you are in conservation technology, remote sensing, or primate monitoring: I would genuinely like to meet you in Xishuangbanna.
+
+If you want to help make this trip happen: link in first comment.
+
+#ATBC2026 #ThermalDrones #WildlifeTech #Madagascar #EcologicalIntelligence
+
+[FIRST COMMENT]
+Contribute directly: PayPal https://lnkd.in/gy9fn7fT | Mvola/Sendwave: +261 34 94 141 12
+Or buy a product: payhip.com/b/6I1p4 — a content toolkit for conservation professionals.
+Full budget breakdown: $3,000 total. Registration already paid.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LINKEDIN POST 3 — DAY 5 · THE STAKES · 16:00 EAT
+WHAT THIS TRIP ACTUALLY UNLOCKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The trip to ATBC 2026 is not the point.
+
+What the trip unlocks is the point.
+
+A presentation at the world's leading tropical biology conference means:
+
+→ The methodology is in front of the research community that sets the agenda for the next decade of tropical biodiversity monitoring
+
+→ Potential collaborators who have field presence in Madagascar and need a partner with drone thermal capacity
+
+→ Access to the funders and grant officers who attend these conferences specifically to identify projects worth supporting — including projects at the scale of ERIS
+
+→ The institutional credibility that comes from saying "presented at ATBC 2026" in every grant application, every partnership proposal, every conversation with a conservation finance actor for the next five years
+
+I am building Oplurix to be the ecological intelligence and MRV infrastructure that Madagascar's under-monitored forests need. A single academic conference is not the destination. It is one of the gates you have to walk through on the way.
+
+Help me walk through it.
+
+→ PayPal: https://lnkd.in/gy9fn7fT | Mvola/Sendwave: +261 34 94 141 12
+→ Product: payhip.com/b/6I1p4
+
+#ATBC2026 #EcologicalIntelligence #MRV #BuildInPublic #ConservationTech
+
+[FIRST COMMENT]
+What is Oplurix? An ecological intelligence and MRV platform for conservation finance — ERIS scoring system, drone thermal surveys, and AI-assisted biodiversity monitoring for Madagascar's most overlooked forests. This trip is how the work gets in front of the people who can accelerate it.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LINKEDIN POST 4 — DAY 7 · THE PERSONAL · 13:00 EAT
+FOUNDER STORY — EMOTIONAL ANCHOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I am Malagasy.
+
+Madagascar holds approximately 5% of the world's species on 0.4% of its land surface. I grew up surrounded by that biodiversity. I chose to study it, survey it, and now — to build the infrastructure that might help protect it.
+
+The forests I survey are not the famous ones. They are the ones that receive almost no formal attention. Manakoakora. Ihofa. Sites where, until we flew a thermal drone over them, there was almost no recent detection record for the species that live there.
+
+The work was accepted at ATBC 2026. That matters to me personally — not because of the credential, but because it means this methodology, these forests, and this approach to ecological monitoring will be heard by the international community that shapes the future of conservation science.
+
+I have already paid the registration fee. The challenge is the travel cost.
+
+If you have benefited from anything I have shared — the fieldwork notes, the frameworks, the product — or if you simply believe that Malagasy science should be visible on the international stage:
+
+This is the moment to show it.
+
+→ PayPal: https://lnkd.in/gy9fn7fT
+→ Mvola/Sendwave: +261 34 94 141 12
+→ Buy a product: payhip.com/b/6I1p4
+
+Thank you. Misaotra.
+
+#Madagascar #ATBC2026 #AfricanScience #EcologicalIntelligence #FieldToAI
+
+[FIRST COMMENT]
+$3,000 total needed. Any amount moves the number. Share if you cannot contribute — reach is just as valuable.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LINKEDIN POST 5 — DAY 10 · THE CLOSE · 13:00 EAT
+URGENCY + FINAL ASK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The deadline for travel bookings is approaching.
+
+Ten days ago I shared that our thermal drone research in northeastern Madagascar was accepted at ATBC 2026 — the world's leading tropical biology conference.
+
+The conference is in June. The registration is paid. The research is ready.
+
+What is still needed: $3,000 for travel.
+
+If you have been following this work and have not yet contributed — this is the moment.
+
+What your contribution funds:
+→ $150 — Passport renewal
+→ $185 — Chinese visa
+→ $1,400 — Flight
+→ $600 — Accommodation (6 nights)
+→ $665 — Ground transport, meals, conference materials
+
+What it enables: a Malagasy conservation scientist presenting drone thermal methodology at the leading international conference in tropical biology — and building the institutional relationships that will fund the next phase of ERIS development.
+
+→ PayPal: https://lnkd.in/gy9fn7fT
+→ Mvola / Sendwave: +261 34 94 141 12
+→ Product (content toolkit for conservation professionals): payhip.com/b/6I1p4
+
+Share this post if you cannot contribute directly.
+Every share reaches someone who might.
+
+Misaotra. Thank you.
+
+#ATBC2026 #EcologicalIntelligence #Madagascar #ConservationTech #FieldToAI
+
+[FIRST COMMENT]
+For those asking what Oplurix is: ecological intelligence infrastructure for Madagascar — ERIS biodiversity scoring, drone thermal surveys, AI-assisted monitoring. Built to connect field data to conservation finance for forests that currently have neither.
+
+═══════════════════════════════════════════════════════════════════
+SECTION 2 — FRENCH VERSIONS (same 5 posts · FR)
+Posted same schedule, 1–2 days after EN version
+═══════════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POST 1 FR — LANCEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Certaines forêts de Madagascar ne font l'objet d'aucun suivi formel.
+
+Nous en avons étudié deux — Manakoakora et Ihofa — à l'aide d'un drone thermique Mavic 3T. Aucune piste n'a été créée dans la forêt. Aucun animal n'a été dérangé.
+
+En avril, ces travaux ont été acceptés pour présentation à l'ATBC 2026 à Xishuangbanna, Chine — la principale conférence internationale en biologie tropicale et conservation.
+
+Ce que nous avons détecté : plusieurs espèces de lémuriens couvrant une large gamme de tailles corporelles. À notre connaissance, c'est le premier rapport depuis Madagascar de lémuriens d'une telle variété de tailles détectés par drone thermique.
+
+Nous développons également un modèle de vision par ordinateur pour automatiser la détection à partir des vidéos de survol — afin que des forêts comme celles-ci puissent être suivies à grande échelle, avec moins de ressources, par des équipes locales.
+
+Les frais d'inscription sont payés. Le défi restant, c'est le coût du voyage : environ 3 000 $ pour le renouvellement du passeport, le visa, le vol et l'hébergement.
+
+Si vous souhaitez aider — trois façons :
+
+→ Contribution directe : PayPal https://lnkd.in/gy9fn7fT | Mvola/Sendwave : +261 34 94 141 12
+
+→ Acheter l'Expert-to-Influencer Content Engine — une boîte à outils pratique pour les professionnels de la conservation qui veulent communiquer leur travail de terrain : payhip.com/b/6I1p4
+
+→ Partager ce post. La portée est la ressource qui me manque le plus.
+
+Les forêts sont là. Les données sont réelles. Le créneau à la conférence est confirmé.
+
+La seule chose qui sépare cette recherche de la communauté internationale, c'est un billet d'avion.
+
+#ATBC2026 #EcologicalIntelligence #MadagascarBiodiversity #ConservationTech #FieldToAI
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POST 2 FR — LA SCIENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Un drone thermique ne perturbe pas la forêt.
+
+Il vole à 70 mètres. Les animaux ne l'entendent pas. Aucune piste n'est tracée. Aucun animal n'est manipulé. Et il voit ce qu'un observateur au sol ne peut pas voir : des signatures thermiques à travers les trouées de la canopée, tôt le matin, avant que le soleil réchauffe l'arrière-plan.
+
+À Manakoakora et Ihofa — deux forêts du nord-est de Madagascar qui reçoivent peu de suivi formel — nous avons détecté des signatures de lémuriens couvrant une large gamme de tailles corporelles au cours d'une série de survols.
+
+Ce résultat ne prouve pas quelque chose de définitif. Il suggère que ces méthodes peuvent révéler une activité biologique dans des forêts qui seraient autrement non surveillées pendant des années.
+
+Nous présentons cela à l'ATBC 2026 en juin — la principale conférence internationale de biologie tropicale — pour le mettre devant les chercheurs, les bailleurs et les institutions qui travaillent exactement sur ce problème.
+
+Si vous êtes dans les domaines de la technologie de conservation, de la télédétection ou du suivi des primates : je serais sincèrement heureux de vous rencontrer à Xishuangbanna.
+
+Si vous souhaitez aider à financer ce voyage : lien en premier commentaire.
+
+#ATBC2026 #DroneThermique #WildlifeTech #Madagascar #EcologicalIntelligence
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POST 3 FR — LES ENJEUX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le voyage à l'ATBC 2026 n'est pas le but.
+
+Ce que le voyage déverrouille, c'est le but.
+
+Une présentation à la principale conférence de biologie tropicale signifie :
+
+→ La méthodologie est devant la communauté scientifique qui définit l'agenda du prochain décennie de suivi de la biodiversité tropicale
+
+→ Des collaborateurs potentiels qui ont une présence terrain à Madagascar et ont besoin d'un partenaire avec une capacité thermique drone
+
+→ L'accès aux bailleurs et responsables de subventions qui assistent à ces conférences précisément pour identifier les projets qui méritent d'être soutenus — y compris des projets à l'échelle d'ERIS
+
+→ La crédibilité institutionnelle qui vient de dire « présenté à l'ATBC 2026 » dans chaque demande de subvention, chaque proposition de partenariat, chaque conversation avec un acteur du financement de la conservation pendant les cinq prochaines années
+
+Je construis Oplurix pour être l'infrastructure d'intelligence écologique et de MRV dont les forêts sous-surveillées de Madagascar ont besoin. Une conférence académique n'est pas la destination. C'est l'une des portes par lesquelles il faut passer.
+
+Aidez-moi à franchir cette porte.
+
+→ PayPal : https://lnkd.in/gy9fn7fT | Mvola/Sendwave : +261 34 94 141 12
+→ Produit : payhip.com/b/6I1p4
+
+#ATBC2026 #EcologicalIntelligence #MRV #BuildInPublic #ConservationTech
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POST 4 FR — LE PERSONNEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Je suis Malgache.
+
+Madagascar abrite environ 5 % des espèces mondiales sur 0,4 % de sa surface terrestre. J'ai grandi entouré de cette biodiversité. J'ai choisi de l'étudier, de la surveiller et maintenant de construire l'infrastructure qui pourrait aider à la protéger.
+
+Les forêts que je surveille ne sont pas les célèbres. Ce sont celles qui ne reçoivent presque aucune attention formelle. Manakoakora. Ihofa. Des sites où, jusqu'à ce que nous y survolions un drone thermique, il n'y avait presque aucun enregistrement de détection récent pour les espèces qui y vivent.
+
+Ce travail a été accepté à l'ATBC 2026. Cela m'importe personnellement — non pas à cause de la reconnaissance, mais parce que cela signifie que cette méthodologie, ces forêts et cette approche du suivi écologique seront entendues par la communauté internationale qui façonne l'avenir de la science de la conservation.
+
+J'ai déjà payé les frais d'inscription. Le défi, c'est le coût du voyage.
+
+Si vous avez bénéficié de ce que j'ai partagé — les notes de terrain, les cadres, le produit — ou si vous croyez simplement que la science malgache devrait être visible sur la scène internationale :
+
+C'est le moment de le montrer.
+
+→ PayPal : https://lnkd.in/gy9fn7fT
+→ Mvola/Sendwave : +261 34 94 141 12
+→ Produit : payhip.com/b/6I1p4
+
+Misaotra. Merci.
+
+#Madagascar #ATBC2026 #ScienceAfricaine #EcologicalIntelligence #FieldToAI
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POST 5 FR — LA CLÔTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+La date limite pour les réservations de voyage approche.
+
+Il y a dix jours, j'ai partagé que nos recherches de drone thermique dans le nord-est de Madagascar avaient été acceptées à l'ATBC 2026 — la principale conférence mondiale de biologie tropicale.
+
+La conférence est en juin. L'inscription est payée. La recherche est prête.
+
+Ce qui manque encore : 3 000 $ pour le voyage.
+
+Ce que votre contribution finance :
+→ 150 $ — Renouvellement de passeport
+→ 185 $ — Visa chinois
+→ 1 400 $ — Vol
+→ 600 $ — Hébergement (6 nuits)
+→ 665 $ — Transport, repas, matériaux de conférence
+
+Ce que cela permet : un scientifique malgache présentant une méthodologie thermique drone à la principale conférence internationale de biologie tropicale — et construisant les relations institutionnelles qui financeront la prochaine phase du développement d'ERIS.
+
+→ PayPal : https://lnkd.in/gy9fn7fT
+→ Mvola / Sendwave : +261 34 94 141 12
+→ Produit : payhip.com/b/6I1p4
+
+Partagez ce post si vous ne pouvez pas contribuer directement.
+Chaque partage atteint quelqu'un qui pourrait le faire.
+
+Misaotra. Merci.
+
+#ATBC2026 #EcologicalIntelligence #Madagascar #ConservationTech #FieldToAI
+
+═══════════════════════════════════════════════════════════════════
+SECTION 3 — PERSONAL OUTREACH MESSAGES
+For direct messages to warm contacts — not cold
+Send to: colleagues, former classmates, past collaborators, diaspora contacts
+═══════════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MESSAGE A — COLLEAGUES AND RESEARCHERS (EN)
+Short. Specific. Direct.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Subject: Quick ask — ATBC 2026 travel fund
+
+Hi [Name],
+
+Our thermal drone research in northeastern Madagascar was accepted at ATBC 2026 in Xishuangbanna. I've paid registration. The remaining challenge is ~$3,000 in travel costs.
+
+I'm reaching out to a small group of colleagues directly before posting widely. If you're able to contribute any amount, or know someone who might be, I'd genuinely appreciate it.
+
+PayPal: https://lnkd.in/gy9fn7fT
+Mvola/Sendwave: +261 34 94 141 12
+
+If that's not possible, sharing the LinkedIn post when I launch it on [date] would help a lot.
+
+I'll be posting about the methodology and the ERIS work in more detail over the next few weeks — happy to share the full research context if useful.
+
+Thanks,
+Haja
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MESSAGE B — DIASPORA / PERSONAL CONTACTS (FR)
+Warmer tone. Personal connection.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Objet : Demande rapide — conférence ATBC 2026
+
+Bonjour [Prénom],
+
+J'espère que tu vas bien. Je te contacte directement parce que notre recherche sur les drones thermiques à Madagascar vient d'être acceptée à l'ATBC 2026 en Chine — la principale conférence internationale de biologie tropicale.
+
+Les frais d'inscription sont payés. Il me manque environ 3 000 $ pour le voyage (passeport, visa, vol, hébergement).
+
+Si tu peux contribuer quoi que ce soit — même un petit montant — cela m'aiderait énormément.
+
+PayPal : https://lnkd.in/gy9fn7fT
+Mvola / Sendwave : +261 34 94 141 12
+
+Si ce n'est pas possible, partager mon post LinkedIn quand je le publierai la semaine prochaine m'aiderait tout autant.
+
+Misaotra betsaka.
+Haja
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MESSAGE C — POTENTIAL SPONSOR (Drone companies, Conservation tech) (EN)
+More formal. Outcome-focused.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Subject: Sponsorship opportunity — ATBC 2026 / Oplurix Madagascar
+
+Dear [Name/Company],
+
+My name is Haja Fabrice Razafindrabe Maminiaina. I am a Malagasy field biologist and conservation technologist building Oplurix — an ecological intelligence and MRV platform for Madagascar's biodiversity monitoring.
+
+Our thermal drone research using a Mavic 3T in two under-monitored forests in northeastern Madagascar was accepted for presentation at ATBC 2026 in Xishuangbanna, China — the world's leading tropical biology conference.
+
+I am seeking partial travel sponsorship (~$1,000–1,500) to cover travel costs and make this presentation possible.
+
+What sponsorship provides:
+→ Association with a presentation at ATBC 2026 (1,500+ attendees, 80+ countries)
+→ Acknowledgement in all conference materials and post-conference communications
+→ Brand visibility on Oplurix social channels (LinkedIn — conservation tech audience)
+→ A field report from the survey sites and the conference, sent directly to the sponsor
+
+If [Company] has a conservation technology or biodiversity programme, I would welcome a brief conversation about whether this is a fit.
+
+Best regards,
+Haja Fabrice Razafindrabe Maminiaina
+hajafabrice.r@gmail.com | +261 34 94 141 12
+marvelous-valkyrie-f94b2f.netlify.app
+
+═══════════════════════════════════════════════════════════════════
+SECTION 4 — NEWSLETTER / EMAIL CAMPAIGN
+Send to ConvertKit list (all subscribers)
+═══════════════════════════════════════════════════════════════════
+
+SUBJECT LINE: I need your help to get to ATBC 2026
+
+---
+
+You subscribed to the Ecological Intelligence Brief because you care about
+conservation science that is honest, specific, and grounded in field work.
+
+I am going to ask you something directly — and then give you the context
+you need to decide whether to help.
+
+THE ASK:
+Our thermal drone research in northeastern Madagascar has been accepted
+for presentation at ATBC 2026 in Xishuangbanna, China — the world's
+leading conference in tropical biology and conservation.
+
+The registration fee is paid. The challenge is the travel cost: $3,000
+for passport renewal, visa, flight, and accommodation.
+
+I am asking the people who follow this work to help close that gap.
+
+→ PayPal: https://lnkd.in/gy9fn7fT
+→ Mvola / Sendwave: +261 34 94 141 12
+→ Buy the content toolkit: payhip.com/b/6I1p4
+
+THE CONTEXT:
+The research covers two forests in northeastern Madagascar —
+Manakoakora and Ihofa — that receive almost no formal biodiversity
+monitoring. Using a Mavic 3T thermal drone, we detected multiple lemur
+species across a wide range of body sizes. To our knowledge, the first
+report of this kind from Madagascar using thermal drone methods.
+
+This matters for Oplurix specifically because ATBC 2026 puts the
+methodology in front of the international community that funds and
+shapes the next decade of tropical biodiversity research.
+
+ATBC presentations become citations. Citations become credibility.
+Credibility becomes the institutional trust that lets ERIS become the
+standard methodology it is designed to be.
+
+This trip is one of those gates.
+
+WHY I AM ASKING YOU:
+You are the people who already understand what this work is about.
+You have read the field notes. You know the ERIS framework. You know
+why the gap between field data and conservation finance exists and
+why closing it matters.
+
+I am not asking the general public first. I am asking you first.
+
+Any amount helps. Sharing this email with someone who might contribute
+also helps.
+
+Thank you. Misaotra.
+
+Haja Fabrice Razafindrabe Maminiaina
+OPLURIX · Antananarivo, Madagascar
+
+P.S. — I will send a full field and conference report to everyone on
+this list after Xishuangbanna. You will know exactly what the money
+made possible.
+
+═══════════════════════════════════════════════════════════════════
+SECTION 5 — THANK YOU MESSAGES
+Send within 48 hours of each contribution
+═══════════════════════════════════════════════════════════════════
+
+THANK YOU — SHORT (for comments/shares):
+"Thank you — genuinely. Every share reaches someone I cannot reach alone. Misaotra."
+
+THANK YOU — CONTRIBUTION UNDER $50 (DM or email):
+"[Name] — thank you. Your contribution is noted and I am grateful for it.
+I will send you a field and conference report after ATBC 2026 — you will
+know exactly what it made possible. Misaotra."
+
+THANK YOU — CONTRIBUTION $50 AND ABOVE (email):
+"Dear [Name],
+
+Thank you for contributing to the ATBC 2026 travel fund. A $[amount]
+contribution is significant and I want you to know it is appreciated.
+
+I will send you a personal field and conference report after
+Xishuangbanna — what was presented, who I met, and what it opens up
+for ERIS and for Oplurix's next phase.
+
+If you have questions about the research or the broader Oplurix vision
+before the conference, I am happy to answer them directly.
+
+With genuine gratitude,
+Haja"
+
+═══════════════════════════════════════════════════════════════════
+SECTION 6 — PROGRESS UPDATE POSTS
+Post these as milestones are hit — not on a fixed schedule
+═══════════════════════════════════════════════════════════════════
+
+AT 33% ($1,000 raised):
+"Update: One third of the ATBC 2026 travel fund is raised.
+Passport renewal and visa are now covered.
+[X] people have contributed. [Y] people have shared.
+Thank you to everyone who has helped so far.
+$2,000 still needed. Still time to contribute or share.
+[Payment links]"
+
+AT 66% ($2,000 raised):
+"Update: Two thirds of the ATBC 2026 travel fund is raised.
+The flight is now within reach.
+$1,000 remaining — mostly accommodation.
+If you have been thinking about contributing: now is the right moment.
+[Payment links]"
+
+AT 100% ($3,000 raised):
+"The ATBC 2026 travel fund is complete.
+
+Thank you to every person who contributed, shared, or simply
+said something encouraging.
+
+I will be in Xishuangbanna in June. The research will be heard.
+
+I will report back — from the field, from the conference, and from
+wherever this work leads next. You made it possible.
+
+Misaotra betsaka."
+
+AFTER THE CONFERENCE (post within 48 hours of returning):
+"I am back from ATBC 2026.
+
+Here is what happened:
+
+[2–3 specific things — a conversation, a collaboration initiated,
+a response to the methodology, something unexpected]
+
+The forests are more visible than they were two weeks ago.
+The methodology is in the literature. The connections are made.
+
+This is what your contributions funded. Thank you.
+
+The next phase of ERIS development begins now.
+
+#ATBC2026 #EcologicalIntelligence #Madagascar"
+
+═══════════════════════════════════════════════════════════════════
+SECTION 7 — 10-DAY CAMPAIGN SCHEDULE
+═══════════════════════════════════════════════════════════════════
+
+DAY 1:
+→ Send personal DMs to 15–20 closest contacts (Message A or B)
+→ Publish LinkedIn Post 1 EN at 13:00 EAT
+→ Send newsletter email to ConvertKit list
+
+DAY 2:
+→ Reply to all comments and DMs from Day 1
+→ Publish LinkedIn Post 1 FR at 13:00 EAT
+→ Send personal DMs to next 15 contacts
+
+DAY 3:
+→ Publish LinkedIn Post 2 EN at 13:00 EAT (the science / method)
+→ Reach out to 3–5 drone companies or conservation tech sponsors (Message C)
+
+DAY 4:
+→ Publish LinkedIn Post 2 FR at 13:00 EAT
+→ Post progress update if milestone hit
+
+DAY 5:
+→ Publish LinkedIn Post 3 EN at 16:00 EAT (what the trip unlocks)
+→ Ask 5 trusted LinkedIn connections to share your campaign post
+
+DAY 6:
+→ Publish LinkedIn Post 3 FR at 16:00 EAT
+→ Post any thermal drone imagery or field photo with brief caption
+
+DAY 7:
+→ Publish LinkedIn Post 4 EN at 13:00 EAT (personal / founder story)
+→ Progress update if milestone hit
+
+DAY 8:
+→ Publish LinkedIn Post 4 FR at 13:00 EAT
+→ Final sponsor outreach to any organisations not yet contacted
+
+DAY 9:
+→ Publish LinkedIn Post 5 EN at 13:00 EAT (final close / urgency)
+
+DAY 10:
+→ Publish LinkedIn Post 5 FR at 13:00 EAT
+→ Post final progress update
+→ If goal reached: celebration post
+→ If gap remains: direct outreach to anyone who engaged but did not contribute
+
+═══════════════════════════════════════════════════════════════════
+SECTION 8 — CAMPAIGN RULES
+These apply to every post, every message, every thank you
+═══════════════════════════════════════════════════════════════════
+
+1. PAYMENT LINKS NEVER IN POST BODY — always in first comment.
+   (LinkedIn suppresses reach on posts with external links in body.)
+   Exception: DMs and email — include links directly.
+
+2. EVERY COMMENT GETS A REPLY WITHIN 60 MINUTES.
+   This is a fundraising campaign. Engagement velocity matters more
+   than usual. Every person who comments is a potential sharer.
+
+3. NEVER BEG. NEVER APOLOGISE FOR ASKING.
+   The research is real. The conference acceptance is earned.
+   The ask is legitimate. Frame it as an invitation to participate
+   in something worth participating in — not as a desperate plea.
+
+4. SPECIFIC BEATS GENERAL. ALWAYS.
+   "Detected lemur signatures across a wide range of body sizes in
+   two under-monitored forests in northeastern Madagascar" beats
+   "important biodiversity findings" every time.
+
+5. THREE PAYMENT OPTIONS ON EVERY ASK.
+   PayPal for international donors.
+   Mvola/Sendwave for local and diaspora.
+   Product purchase for people who want something in return.
+
+6. MISAOTRA IN EVERY CLOSING.
+   One Malagasy word. It signals authenticity.
+   It reminds the international audience that this is local science,
+   local voice, local stakes.
+
+7. PROGRESS UPDATES BUILD MOMENTUM.
+   Do not wait until the goal is reached to share progress.
+   33% and 66% updates create urgency and social proof simultaneously.
+
+8. THE AFTER-REPORT IS NON-NEGOTIABLE.
+   Every contributor was promised a field and conference report.
+   Send it. Within 48 hours of returning. No exceptions.
+   This is how one-time donors become long-term OPLURIX supporters.
+
+═══════════════════════════════════════════════════════════════════

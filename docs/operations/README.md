@@ -15,6 +15,14 @@ Current operator docs:
 8. [kit-field-map.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/kit-field-map.csv)
 9. [measurement-scoreboard-template.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/measurement-scoreboard-template.csv)
 
+Campaign execution docs live in:
+
+- [campaigns/README.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/README.md)
+- [campaigns/launch-readiness-checklist.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/launch-readiness-checklist.md)
+- [campaigns/linkedin-launch-runbook.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/linkedin-launch-runbook.md)
+- [campaigns/launch-operations-calendar.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/launch-operations-calendar.md)
+- [campaigns/linkedin-execution-sheet.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/campaigns/linkedin-execution-sheet.csv)
+
 Product fulfillment docs live in:
 
 - [fulfillment-sop.md](/C:/Users/Student/Desktop/perso/founderAiCheap/sales/oplurix-product-suite/fulfillment-sop.md)

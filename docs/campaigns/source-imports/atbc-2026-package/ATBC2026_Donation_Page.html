@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Send Malagasy Biodiversity Science to ATBC 2026 — OPLURIX</title>
+<meta name="description" content="Our thermal drone research in Madagascar was accepted at ATBC 2026. Help cover $3,000 in travel costs and put this science on the international stage.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --forest:  #0A1F0F;
+  --deep:    #061409;
+  --teal:    #0D4A3D;
+  --sage:    #3A7D5E;
+  --amber:   #D4831C;
+  --gold:    #E8A830;
+  --cream:   #F2EDE3;
+  --parch:   #E8E0D0;
+  --sand:    #C8BEAA;
+  --white:   #FAF8F4;
+  --ink:     #1A1A16;
+  --muted:   #5C5C52;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--deep);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--forest);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 40px 60px;
+}
+
+.hero-texture {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(13,74,61,0.6) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(212,131,28,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(10,31,15,0.4) 0%, transparent 80%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.flag-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.flag-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+.hero-headline .accent {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-deck {
+  font-size: clamp(15px, 2vw, 18px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 40px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+.stat-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.1);
+  align-self: stretch;
+}
+
+/* PROGRESS BAR */
+.progress-block {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 24px 28px;
+  margin-bottom: 40px;
+  max-width: 560px;
+  animation: fadeUp 0.8s 0.35s ease both;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.progress-raised {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.progress-goal {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+}
+
+.progress-bar-wrap {
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+  width: 0%;
+  transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+.progress-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.08em;
+}
+
+/* CTA BUTTONS */
+.cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: var(--amber);
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.15s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover { background: var(--gold); transform: translateY(-1px); }
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: white; }
+
+.btn-arrow { font-size: 18px; }
+
+.btn-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  opacity: 0.6;
+  letter-spacing: 0.08em;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.3;
+  animation: fadeUp 1s 1s ease both;
+  z-index: 2;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50%       { opacity: 0.8; transform: scaleY(1.1); }
+}
+
+.scroll-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ── DIVIDER ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+
+/* ── THE RESEARCH ── */
+.research {
+  background: var(--forest);
+  padding: 80px 40px;
+}
+
+.research-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.research-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.research-label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.research h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--white);
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+.research h2 em { font-style: italic; color: var(--gold); }
+
+.research p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 16px;
+}
+
+.research p strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+
+.research-findings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.finding-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid var(--teal);
+  padding: 18px 20px;
+}
+
+.finding-card.amber { border-left-color: var(--amber); }
+.finding-card.sage  { border-left-color: var(--sage); }
+
+.fc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 6px;
+}
+
+.fc-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.8);
+}
+
+.fc-text strong { color: var(--white); font-weight: 600; }
+
+/* ── BUDGET ── */
+.budget {
+  background: var(--deep);
+  padding: 80px 40px;
+}
+
+.budget-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.section-eye {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-eye::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.budget-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s;
+}
+
+.budget-row:hover { background: rgba(255,255,255,0.06); }
+
+.budget-row.total {
+  background: rgba(13,74,61,0.4);
+  border-color: rgba(13,74,61,0.6);
+  margin-top: 8px;
+}
+
+.br-name {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+}
+
+.budget-row.total .br-name {
+  font-weight: 600;
+  color: var(--white);
+  font-size: 15px;
+}
+
+.br-amount {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  color: var(--gold);
+}
+
+.budget-row.total .br-amount {
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.budget-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.08em;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* ── WHAT IT UNLOCKS ── */
+.unlocks {
+  background: var(--teal);
+  padding: 80px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.unlocks::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 20%, rgba(212,131,28,0.1) 0%, transparent 60%);
+}
+
+.unlocks-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.unlocks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.unlock-card {
+  padding: 24px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.uc-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.15);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.uc-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.uc-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+}
+
+/* ── HOW TO GIVE ── */
+.give {
+  background: var(--forest);
+  padding: 80px 40px;
+}
+
+.give-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.give-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.give-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 22px 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: border-color 0.2s;
+  text-decoration: none;
+}
+
+.give-option:hover { border-color: rgba(255,255,255,0.2); }
+
+.go-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(212,131,28,0.15);
+  border: 1px solid rgba(212,131,28,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.go-content {}
+
+.go-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.go-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+}
+
+.go-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+/* ── ABOUT ── */
+.about {
+  background: var(--deep);
+  padding: 80px 40px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.about-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.about p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 16px;
+}
+
+.about p strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+.author-block {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  clip-path: polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+}
+
+.author-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+
+.author-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+
+/* ── FINAL CTA ── */
+.final-cta {
+  background: var(--teal);
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.final-cta h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.final-cta p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  max-width: 480px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+.final-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--deep);
+  padding: 28px 40px;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+footer p {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.2);
+  line-height: 2;
+  letter-spacing: 0.06em;
+}
+
+footer a { color: rgba(255,255,255,0.3); text-decoration: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 680px) {
+  .hero, .research, .budget, .unlocks, .give, .about, .final-cta { padding: 60px 24px; }
+  .research-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-stats { gap: 20px; }
+  .stat-divider { display: none; }
+  .final-btns { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-secondary { min-width: 280px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-texture"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+
+    <div class="hero-flag">
+      <div class="flag-dot"></div>
+      <span class="flag-text">ATBC 2026 · Xishuangbanna, China · June 2026</span>
+    </div>
+
+    <h1 class="hero-headline">
+      Help send<br>Malagasy biodiversity<br>science to the <span class="accent">world stage.</span>
+    </h1>
+
+    <p class="hero-deck">
+      Our thermal drone research in two under-monitored forests in northeastern Madagascar 
+      was accepted at ATBC 2026 — the world's leading tropical biology conference. 
+      The registration is paid. The only thing missing is the plane ticket.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">$3,000</div>
+        <div class="stat-label">Travel target</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Forests surveyed</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">ATBC</div>
+        <div class="stat-label">Conference accepted</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">June</div>
+        <div class="stat-label">Deadline</div>
+      </div>
+    </div>
+
+    <div class="progress-block">
+      <div class="progress-header">
+        <div class="progress-raised" id="raised-display">$0 raised</div>
+        <div class="progress-goal">of $3,000 goal</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-sub" id="progress-sub">Be the first to contribute</div>
+    </div>
+
+    <div class="cta-group">
+      <a href="https://lnkd.in/gy9fn7fT" target="_blank" class="btn-primary">
+        <span>Contribute via PayPal</span>
+        <span class="btn-arrow">→</span>
+      </a>
+      <a href="tel:+261349414112" class="btn-secondary">
+        <span>Mvola / Sendwave: +261 34 94 141 12</span>
+        <span class="btn-tag">Local · Fast</span>
+      </a>
+      <a href="https://payhip.com/b/6I1p4" target="_blank" class="btn-secondary">
+        <span>Buy a product — support the research</span>
+        <span class="btn-tag">$39 · Instant access</span>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <div class="scroll-label">The research</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- THE RESEARCH -->
+<section class="research">
+  <div class="research-inner">
+
+    <div>
+      <div class="research-label">The fieldwork</div>
+      <h2>Forests that receive<br>almost <em>no formal monitoring.</em></h2>
+      <p>
+        Manakoakora and Ihofa — two forests in northeastern Madagascar — are biologically rich and systematically overlooked. Until we surveyed them, there was almost no recent detection record for the species living in them.
+      </p>
+      <p>
+        Using a <strong>Mavic 3T thermal drone</strong> at 70 metres altitude, we detected multiple lemur species across a wide range of body sizes. No trails cut into the forest. No animals disturbed. Early morning, before solar heating closes the detection window.
+      </p>
+      <p>
+        To the best of our knowledge, this is the <strong>first report from Madagascar of lemurs spanning such a range of body sizes detected through thermal drone surveys.</strong>
+      </p>
+      <p>
+        We are also developing a <strong>computer vision model</strong> to automate detection from survey footage — so forests like these can be monitored at scale by local teams with fewer resources.
+      </p>
+    </div>
+
+    <div class="research-findings">
+      <div class="finding-card">
+        <div class="fc-label">Conference</div>
+        <div class="fc-text"><strong>Accepted at ATBC 2026</strong> — the world's leading international conference in tropical biology and conservation. 1,500+ attendees. 80+ countries.</div>
+      </div>
+
+      <div class="finding-card amber">
+        <div class="fc-label">Detection</div>
+        <div class="fc-text">Multiple lemur species detected across <strong>a wide range of body sizes</strong> — non-invasively, without entering the forest on foot.</div>
+      </div>
+
+      <div class="finding-card sage">
+        <div class="fc-label">Methodology</div>
+        <div class="fc-text">Thermal drone surveys + computer vision model in development. Designed for <strong>scale, local operation, and low disturbance</strong>.</div>
+      </div>
+
+      <div class="finding-card">
+        <div class="fc-label">The bigger picture</div>
+        <div class="fc-text">This research is the foundation of <strong>ERIS</strong> — an open ecological integrity scoring system for conservation finance, built at OPLURIX.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- BUDGET -->
+<section class="budget">
+  <div class="budget-inner">
+    <div class="section-eye">Where your money goes</div>
+    <h2 class="section-title">$3,000. Every dollar accounted for.</h2>
+
+    <div class="budget-items">
+      <div class="budget-row">
+        <span class="br-name">Passport renewal</span>
+        <span class="br-amount">$150</span>
+      </div>
+      <div class="budget-row">
+        <span class="br-name">Chinese visa</span>
+        <span class="br-amount">$185</span>
+      </div>
+      <div class="budget-row">
+        <span class="br-name">Flight (Antananarivo → Xishuangbanna)</span>
+        <span class="br-amount">$1,400</span>
+      </div>
+      <div class="budget-row">
+        <span class="br-name">Accommodation (6 nights)</span>
+        <span class="br-amount">$600</span>
+      </div>
+      <div class="budget-row">
+        <span class="br-name">Ground transport + meals</span>
+        <span class="br-amount">$300</span>
+      </div>
+      <div class="budget-row">
+        <span class="br-name">Conference materials</span>
+        <span class="br-amount">$365</span>
+      </div>
+      <div class="budget-row total">
+        <span class="br-name">Total needed</span>
+        <span class="br-amount">$3,000</span>
+      </div>
+    </div>
+
+    <div class="budget-note">
+      Conference registration fee already paid by Haja Fabrice Razafindrabe Maminiaina. 
+      Every contribution goes directly toward the line items above.
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- WHAT IT UNLOCKS -->
+<section class="unlocks">
+  <div class="unlocks-inner">
+    <div class="section-eye">This trip is not the destination</div>
+    <h2 class="section-title" style="font-family:'Playfair Display',serif;font-weight:700;color:var(--white);font-size:30px;letter-spacing:-0.01em;line-height:1.2;margin-bottom:0;">
+      It is one of the gates<br><em style="font-style:italic;color:var(--gold);">you have to walk through.</em>
+    </h2>
+
+    <div class="unlocks-grid">
+      <div class="unlock-card">
+        <div class="uc-num">01</div>
+        <div class="uc-title">International credibility</div>
+        <div class="uc-desc">"Presented at ATBC 2026" appears in every grant application, partnership proposal, and ERIS methodology document for the next five years.</div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="uc-num">02</div>
+        <div class="uc-title">Collaboration access</div>
+        <div class="uc-desc">Researchers, funders, and institutions attend ATBC specifically to find projects worth supporting. This puts OPLURIX and ERIS in the room.</div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="uc-num">03</div>
+        <div class="uc-title">Methodology visibility</div>
+        <div class="uc-desc">The thermal drone survey approach goes in front of the community that sets the agenda for tropical biodiversity monitoring for the next decade.</div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="uc-num">04</div>
+        <div class="uc-title">ERIS acceleration</div>
+        <div class="uc-desc">ERIS — the open ecological integrity scoring system — needs institutional partners and academic validation. ATBC 2026 is where both become possible.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- HOW TO GIVE -->
+<section class="give">
+  <div class="give-inner">
+    <div class="section-eye">How to contribute</div>
+    <h2 class="section-title">Three ways.<br>Any amount matters.</h2>
+
+    <div class="give-options">
+
+      <a href="https://lnkd.in/gy9fn7fT" target="_blank" class="give-option">
+        <div class="go-icon">💳</div>
+        <div class="go-content">
+          <div class="go-title">PayPal — International contributions</div>
+          <div class="go-desc">Accepts any currency. Secure. Instant. Accessible from anywhere in the world.</div>
+          <div class="go-link">lnkd.in/gy9fn7fT →</div>
+        </div>
+      </a>
+
+      <div class="give-option" style="cursor:default;">
+        <div class="go-icon">📱</div>
+        <div class="go-content">
+          <div class="go-title">Mvola / Sendwave — Madagascar & diaspora</div>
+          <div class="go-desc">Fast and direct. Send to the number below. Confirm by message after sending.</div>
+          <div class="go-link">+261 34 94 141 12</div>
+        </div>
+      </div>
+
+      <a href="https://payhip.com/b/6I1p4" target="_blank" class="give-option">
+        <div class="go-icon">📘</div>
+        <div class="go-content">
+          <div class="go-title">Buy a product — and support the research</div>
+          <div class="go-desc">The Expert-to-Influencer Content Engine — a communication toolkit for conservation professionals. $39. You get something valuable. The research gets funded.</div>
+          <div class="go-link">payhip.com/b/6I1p4 →</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-inner">
+    <div class="section-eye">Who is asking</div>
+    <h2 class="section-title" style="font-family:'Playfair Display',serif;font-weight:700;color:var(--white);font-size:28px;letter-spacing:-0.01em;line-height:1.2;margin-bottom:24px;">
+      Malagasy science.<br><em style="font-style:italic;color:var(--gold);">Malagasy voice.</em>
+    </h2>
+
+    <p>
+      I am Haja Fabrice Razafindrabe Maminiaina — a Malagasy field biologist and conservation technologist. Madagascar holds approximately 5% of the world's species on 0.4% of its land surface. I grew up surrounded by that biodiversity. I chose to study it.
+    </p>
+    <p>
+      I am building <strong>OPLURIX</strong> — an ecological intelligence and MRV platform that connects biodiversity field data to conservation finance. The core of that platform is <strong>ERIS</strong> (Ecological Integrity Scoring System) — an open methodology for scoring ecological integrity from drone and field survey data, designed to make under-monitored forests visible to the capital that could protect them.
+    </p>
+    <p>
+      The forests I survey are not the famous ones. They are the ones that receive almost no attention. This trip is how their data reaches the international community that shapes what gets funded and what gets monitored.
+    </p>
+
+    <div class="author-block">
+      <div class="author-avatar">🦎</div>
+      <div>
+        <div class="author-name">Haja Fabrice Razafindrabe Maminiaina</div>
+        <div class="author-role">
+          Field Biologist · Conservation Technologist · Founder, OPLURIX<br>
+          Conservation Technology Lead, Techni-Drones Madagascar<br>
+          Pierre Castel Foundation Laureate 2025<br>
+          hajafabrice.r@gmail.com
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>The forests are there.<br>The data is real.<br>The slot is confirmed.</h2>
+  <p>
+    The only thing standing between this research and the international community 
+    is a plane ticket. Help close the gap.
+  </p>
+  <div class="final-btns">
+    <a href="https://lnkd.in/gy9fn7fT" target="_blank" class="btn-primary" style="min-width:240px;">
+      <span>Contribute via PayPal</span>
+      <span class="btn-arrow">→</span>
+    </a>
+    <a href="https://payhip.com/b/6I1p4" target="_blank" class="btn-secondary" style="min-width:240px;border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);">
+      <span>Buy a product instead</span>
+      <span class="btn-tag">$39</span>
+    </a>
+  </div>
+  <p style="margin-top:24px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;color:rgba(255,255,255,0.25);">
+    Mvola / Sendwave: +261 34 94 141 12 &nbsp;·&nbsp; misaotra
+  </p>
+</section>
+
+<footer>
+  <p>
+    <strong style="color:rgba(255,255,255,0.4);letter-spacing:0.14em;">OPLURIX</strong><br>
+    Ecological Intelligence for Conservation Finance · Antananarivo, Madagascar<br>
+    <a href="https://marvelous-valkyrie-f94b2f.netlify.app">Website</a> ·
+    <a href="https://payhip.com/b/6I1p4">Products</a> ·
+    <a href="mailto:hajafabrice.r@gmail.com">hajafabrice.r@gmail.com</a><br>
+    © 2026 OPLURIX · Haja Fabrice Razafindrabe Maminiaina
+  </p>
+</footer>
+
+<script>
+  // Progress bar animation on load
+  // UPDATE raised amount here when contributions come in
+  const raised = 0;       // ← UPDATE THIS NUMBER as donations arrive
+  const goal   = 3000;
+  const pct    = Math.min((raised / goal) * 100, 100);
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('raised-display').textContent =
+        raised > 0 ? '$' + raised.toLocaleString() + ' raised' : '$0 raised';
+      document.getElementById('progress-sub').textContent =
+        raised > 0
+          ? Math.round(pct) + '% of goal · ' + (goal - raised).toLocaleString() + ' still needed'
+          : 'Be the first to contribute';
+    }, 300);
+  });
+</script>
+
+</body>
+</html>
