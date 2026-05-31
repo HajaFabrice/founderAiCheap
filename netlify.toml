@@ -22,6 +22,41 @@
 
 # Clean URL redirect
 [[redirects]]
+  from = "/pages/about"
+  to = "/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/contact"
+  to = "/index.html#contact"
+  status = 302
+
+[[redirects]]
+  from = "/pages/digital-delivery-policy"
+  to = "/digital-delivery-policy.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/data-sharing-opt-out"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/expert-to-influencer-content-engine"
+  to = "/products/01-expert-to-influencer-content-engine.html"
+  status = 200
+
+[[redirects]]
+  from = "/products/expert-to-influencer-content-engine"
+  to = "/products/01-expert-to-influencer-content-engine.html"
+  status = 200
+
+[[redirects]]
+  from = "/collections/all"
+  to = "/products/"
+  status = 301
+
+[[redirects]]
   from = "/products"
   to = "/products/"
   status = 301

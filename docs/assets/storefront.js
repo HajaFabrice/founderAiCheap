@@ -20,21 +20,21 @@
         nameEn: "EcoR Toolkit Starter",
         nameFr: "EcoR Toolkit Starter",
         priceUsd: 29,
-        checkoutEnabled: true
+        checkoutEnabled: false
       },
       "ecor-complete": {
         id: "ecor-complete",
         nameEn: "EcoR Toolkit Complete",
         nameFr: "EcoR Toolkit Complete",
         priceUsd: 97,
-        checkoutEnabled: true
+        checkoutEnabled: false
       },
       "ecor-pro": {
         id: "ecor-pro",
         nameEn: "EcoR Toolkit Pro Bundle",
         nameFr: "EcoR Toolkit Pro Bundle",
         priceUsd: 297,
-        checkoutEnabled: true
+        checkoutEnabled: false
       },
       "ecor-institutional": {
         id: "ecor-institutional",
@@ -265,7 +265,7 @@
     const lang = document.body.dataset.lang || getLanguage();
     document.querySelectorAll(".paypal-button").forEach((button) => {
       const product = store.products[button.dataset.paypalProduct];
-      if (!product || product.payhipUrl) {
+      if (!product || product.payhipUrl || !product.checkoutEnabled) {
         return;
       }
 
@@ -290,7 +290,7 @@
     const lang = document.body.dataset.lang || getLanguage();
     document.querySelectorAll(".paypal-button").forEach((button) => {
       const product = store.products[button.dataset.paypalProduct];
-      if (!product || product.payhipUrl) {
+      if (!product || product.payhipUrl || !product.checkoutEnabled) {
         return;
       }
 
