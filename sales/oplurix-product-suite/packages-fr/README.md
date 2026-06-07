@@ -25,8 +25,11 @@ Important notes:
   source reference and are untouched.
 - These French packages are founder-controlled delivery bundles, not automatic
   storefront activations.
-- Products 2 to 4 still require the same launch approvals as their English
+- Products 2 and 4 still require the same launch approvals as their English
   counterparts before public checkout goes live.
+- Product 3 is translated as a founder-controlled source package, but it stays
+  held/source-only until the equipment facts, market pricing, and update
+  workflow are refreshed.
 - Where the original package wrappers contained unresolved scaffolding, the
   French packages use cleaned manual files instead.
 

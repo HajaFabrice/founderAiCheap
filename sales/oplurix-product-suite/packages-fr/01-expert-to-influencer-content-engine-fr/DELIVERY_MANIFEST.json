@@ -9,13 +9,14 @@
   "recommended_public_state": "live",
   "launch_decision": "keep_live",
   "delivery_state": "ready_for_manual_fulfillment",
-  "recommended_client_format": "hybrid",
+  "recommended_client_format": "pdf_plus_markdown_source",
   "price": "$39",
   "activation_gate": "Keep manual delivery clean and auditable while buyer feedback stays small and manageable.",
   "source_basis": [
     "sales/oplurix-product-suite/packages/01-expert-to-influencer-content-engine/02_Source_Assets/ExpertToInfluencer.txt",
     "docs/products/01-expert-to-influencer-content-engine.html"
   ],
-  "primary_asset": "sales/oplurix-product-suite/packages-fr/01-expert-to-influencer-content-engine-fr/02_Source_Assets/GUIDE_CLIENT_FR.md",
+  "primary_asset": "sales/oplurix-product-suite/packages-fr/01-expert-to-influencer-content-engine-fr/02_Source_Assets/OPLURIX_Product1_Expert_to_Influencer_Content_Engine_FR.pdf",
+  "editable_source_asset": "sales/oplurix-product-suite/packages-fr/01-expert-to-influencer-content-engine-fr/02_Source_Assets/GUIDE_CLIENT_FR.md",
   "sellable_page": "docs/products/01-expert-to-influencer-content-engine-fr.html"
 }

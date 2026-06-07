@@ -18,7 +18,8 @@ French delivery variants for Products 1 to 4 now live in:
 Current French delivery wave:
 
 - Product 1: ready for live manual fulfillment
-- Products 2 to 4: prepared for the next clean release set
+- Products 2 and 4: prepared for the next clean release set
+- Product 3: translated/visible but held for refresh before promotion because equipment specs and market pricing can drift quickly
 
 Products 5 to 10 do not yet have French delivery packages because the source
 deliverables still need a more stable founder-approved shape before translation.

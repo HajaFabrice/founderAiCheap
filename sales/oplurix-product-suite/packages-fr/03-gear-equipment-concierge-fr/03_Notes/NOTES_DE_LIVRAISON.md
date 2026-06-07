@@ -1,8 +1,8 @@
 # Notes De Livraison
 
 - Format client recommande : PDF borne ou ZIP
-- Etat public recommande : coming_soon
-- Meilleur usage : pack de prochaine vague, en lien avec Produits 2 et 4
+- Etat public recommande : held/source-only jusqu'au refresh
+- Meilleur usage : ressource interne de preparation, pas pack de lancement
 
 Source de travail :
 
@@ -11,5 +11,6 @@ Source de travail :
 
 Note operateur :
 
-Cette edition francaise reste une version snapshot. Elle doit etre mise a jour
-si les prix, references ou recommandations d'equipement changent fortement.
+Cette edition francaise reste une version snapshot. Elle ne doit pas etre
+promue publiquement avant une mise a jour des prix, references, recommandations
+d'equipement, et du rythme de maintenance.
