@@ -445,7 +445,8 @@ The improvement roadmap says it plainly:
 - live checkout on Payhip
 - Shopify is a temporary marketing/storefront layer
 - the repo site is the stronger long-term authority layer
-- Products 2 to 4 are the next release set
+- Products 2 and 4 are the next release candidates
+- Product 3 is discussable but held for refresh before promotion
 - Products 5 to 10 are not to be treated as fully live
 
 > **Today**
@@ -1389,7 +1390,7 @@ This is the path that matters most right now.
 5. Move the highest-value forms into Kit when ready
 6. Align Payhip, Shopify, and repo language
 7. Finish delivery-side polish for Products 1 to 4
-8. Launch Products 2 to 4 in a measured way
+8. Launch Products 2 and 4 in a measured way, and refresh Product 3 before promotion
 
 ### The Kit-specific dependency order
 

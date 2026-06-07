@@ -63,7 +63,8 @@ If Mode B:
 - [ ] Product 1 guarantee text is current
 - [ ] repo product page matches Payhip
 - [ ] Shopify copy does not imply more live products than reality
-- [ ] Products 2 to 4 are labeled as next-release, not fully live
+- [ ] Products 2 and 4 are labeled as next-release, not fully live
+- [ ] Product 3 is labeled as held for refresh, not part of the clean next-release set
 
 ### Routing truth
 

@@ -136,6 +136,14 @@ Non-goals:
 
 - Live docs: [hajafabrice.github.io/founderAiCheap](https://hajafabrice.github.io/founderAiCheap/)
 - Public storefront root: `docs/index.html` for the OPLURIX Netlify or Pages launch
+- [Claude Code instructions](CLAUDE.md)
+- [App spec](docs/app-spec.md)
+- [Data dictionary](docs/data-dictionary.md)
+- [Brand brief](docs/brand-brief.md)
+- [Feature backlog](docs/feature-backlog.md)
+- [Integrations](docs/integrations.md)
+- [Errors log](docs/errors-log.md)
+- [Foundation compliance audit](docs/foundation-compliance-audit.md)
 - [Project charter](docs/project-charter.md)
 - [Roadmap](docs/roadmap.md)
 - [Risk register](docs/risk-register.md)

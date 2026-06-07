@@ -1,10 +1,30 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code, docs, products, and public-site surfaces in this repository.
+
+## Required Foundation Docs
+
+Before changing names, flows, copy, integrations, or launch status, check the relevant foundation doc:
+
+- `docs/app-spec.md` — what the OPLURIX/FounderAI repo-based platform is, who it serves, and what v1 must protect.
+- `docs/data-dictionary.md` — canonical names for form fields, campaign parameters, product keys, metrics, runtime metadata, and future database tables.
+- `docs/brand-brief.md` — OPLURIX voice, visual identity, truth rules, CTA language, and bilingual copy guidance.
+- `docs/feature-backlog.md` — current v1 scope, next priorities, parked ideas, and explicit non-goals.
+- `docs/integrations.md` — active, planned, and paused integrations, including checkout, email capture, hosting, AI providers, and cloud operations.
+- `docs/errors-log.md` — append-only template for site, checkout, delivery, runtime, and integration incidents.
+
+Naming rule: always check `docs/data-dictionary.md` before naming any new table, field, JSON key, form input, metric, event, query parameter, config key, product id, or runtime artifact. If a needed name does not exist, update the data dictionary in the same change.
+
+Truth rule: never imply that checkout, delivery, automation, monitoring, support, or a product translation is live unless the repo contains the working page, package, link, or documented manual process proving it.
 
 ## Project Overview
 
-FounderAI is an autonomous agent daemon written in Rust. It runs a team of AI agents (named after saints) to handle conservation biology outreach, grant writing, lead nurturing, and production work for Techni-Drones Madagascar / ERIS. The system uses Ollama (local) or OpenAI as providers, with file-based approvals, inbox/outbox, and run artifacts as the primary interface.
+This repository has two connected surfaces:
+
+- FounderAI is an autonomous agent daemon written in Rust. It runs a team of AI agents (named after saints) to handle conservation biology outreach, grant writing, lead nurturing, and production work for Techni-Drones Madagascar / ERIS. The system uses Ollama, Claude, or OpenAI as providers, with file-based approvals, inbox/outbox, and run artifacts as the primary interface.
+- OPLURIX is the public repo-based marketing, product, campaign, and operations layer for ecological intelligence work. The live public site lives under `docs/`, product delivery packages live under `sales/oplurix-product-suite/`, and campaign/operations docs live under `docs/operations/` and `docs/campaigns/`.
+
+Treat these as one operating system: public trust and sales surfaces must stay aligned with the audited FounderAI/OPLURIX delivery reality.
 
 ## Build & Run Commands
 

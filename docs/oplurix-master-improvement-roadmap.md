@@ -135,7 +135,8 @@ Make sure every public surface says the same true thing.
      `Expert-to-Influencer Content Engine`
    - checkout currently lives on Payhip
    - Shopify is a marketing/storefront layer for now
-   - Products 2 to 4 are next-release items, not fully live open checkout
+   - Products 2 and 4 are next-release items, not fully live open checkout
+   - Product 3 is visible but held until equipment facts, pricing, and update rules are refreshed
    - Products 5 to 10 are still earlier-stage
 
 2. Check that these surfaces all reflect the same truth:
@@ -299,7 +300,8 @@ Make the whole sales surface feel like one system even though checkout is split.
    - use the new About copy
    - use the Facebook cover/brand visuals where relevant
    - keep the live product primary
-   - label Products 2 to 4 carefully if shown
+   - label Products 2 and 4 carefully if shown
+   - label Product 3 as held/source-only until refreshed
    - avoid pretending they are instantly deliverable if they are not
 
 3. In the repo site:
@@ -330,37 +332,42 @@ Make the whole sales surface feel like one system even though checkout is split.
 
 ---
 
-## Phase E. Launch Products 2 To 4 Cleanly
+## Phase E. Launch Products 2 And 4 Cleanly, Refresh Product 3
 
 ### Goal
 
-Move from one live product to a small, believable release set.
+Move from one live product to a small, believable release set without pushing
+Product 3 before its fast-changing equipment assumptions are refreshed.
 
 ### What to do
 
 1. Finalize the public launch state for:
    - Product 2
-   - Product 3
    - Product 4
 
-2. For each product, prepare:
+2. Keep Product 3 visible but held/source-only until:
+   - equipment facts are refreshed
+   - market pricing is checked
+   - the update workflow is credible
+
+3. For each product, prepare:
    - final pricing confirmation
    - final guarantee position if any
    - final delivery bundle
    - final public status wording
 
-3. Choose the order of activation.
+4. Choose the order of activation.
    Recommended:
    - Product 2 first
-   - Product 3 second
-   - Product 4 third
+   - Product 4 second
+   - Product 3 only after the refresh pass
 
-4. Why this order:
+5. Why this order:
    - Product 2 is low-friction and practical
-   - Product 3 has strong utility but benefits from clearer category framing
    - Product 4 is higher-value and needs stronger pitch credibility
+   - Product 3 has strong utility, but stale gear data would damage trust
 
-5. Before any listing goes live, check:
+6. Before any listing goes live, check:
    - English package exists and is clean enough
    - French package exists if you want bilingual delivery
    - product page does not oversell the current delivery format
@@ -375,7 +382,8 @@ Move from one live product to a small, believable release set.
 
 ### Definition of done
 
-- Products 2 to 4 are not just "nice pages"
+- Products 2 and 4 are not just "nice pages"
+- Product 3 is not promoted until its fast-changing equipment facts are refreshed
 - they have real delivery assets
 - they have real launch states
 - they can be sold without confusion

@@ -9,7 +9,8 @@ Purpose: make sure every public-facing surface tells the same true story.
 - Live checkout currently runs through Payhip.
 - Shopify is a temporary storefront/marketing layer.
 - The repo site is the authority/proof/funnel layer.
-- Products 2 to 4 are the next release set.
+- Products 2 and 4 are the next release candidates.
+- Product 3 is visible but held/source-only until equipment specs, pricing, and update rules are refreshed.
 - Products 5 to 10 are not to be presented as actively sellable now.
 
 ## Step-by-step audit
@@ -27,7 +28,8 @@ Check:
 Confirm:
 
 - Product 1 is clearly primary
-- Products 2 to 4 are labeled as upcoming, next release, or similar
+- Products 2 and 4 are labeled as upcoming, next release, or similar
+- Product 3 is labeled as held, source-only, or needing refresh if shown
 - no copy implies a fully live 10-product store
 - no copy implies Shopify is the actual current checkout if Payhip is still the truth
 
@@ -59,7 +61,8 @@ Check:
 Confirm:
 
 - Product 1 is the only live offer
-- products 2 to 4 are framed as next-release products
+- products 2 and 4 are framed as next-release products
+- product 3 is framed as held/source-only until refreshed
 - products 5 to 10 stay exploratory or internal-state where appropriate
 
 ### 4. Social surfaces

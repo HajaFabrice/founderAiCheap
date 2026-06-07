@@ -47,7 +47,8 @@ Everything here must be true before the next visible campaign push.
 
 - confirm Product 1 copy matches across repo site and Payhip
 - confirm the guarantee copy is current
-- confirm Products 2 to 4 are presented as next-release, not already live
+- confirm Products 2 and 4 are presented as next-release, not already live
+- confirm Product 3 is presented as held for refresh, not part of the clean next-release set
 - confirm Products 5 to 10 are not represented as fully active offers
 
 ### Follow-up mode

@@ -1,20 +1,20 @@
-# Products 2 To 4 Launch Readiness
+# Products 2 And 4 Launch Readiness, Product 3 Refresh
 
-Purpose: move Products 2 to 4 from "good-looking pages" to actual sellable releases.
+Purpose: move Products 2 and 4 from "good-looking pages" to actual sellable releases while keeping Product 3 visible but held until its equipment facts, market pricing, and update workflow are refreshed.
 
 ## Launch order
 
 Recommended:
 
 1. Product 2 - Training-to-Quiz Generator
-2. Product 3 - Gear & Equipment Concierge
-3. Product 4 - Biodiversity Pitch Deck Builder
+2. Product 4 - Biodiversity Pitch Deck Builder
+3. Product 3 - Gear & Equipment Concierge, only after a refresh pass
 
 ## Why this order
 
 - Product 2 is practical and low-friction.
-- Product 3 is strong utility but benefits from precise framing.
 - Product 4 is higher-value and needs stronger sales confidence.
+- Product 3 is strong utility, but equipment facts and prices change too quickly for a careless static launch.
 
 ## Readiness criteria for each product
 
@@ -76,6 +76,13 @@ Strongest first use:
 Key risk:
 
 - implied price-tracking promise that is too broad
+- stale equipment specs or prices making the product less trustworthy
+
+Current state:
+
+- visible product lane
+- held/source-only
+- do not promote as a clean next release until refreshed
 
 ### Product 4
 
