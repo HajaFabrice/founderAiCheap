@@ -50,6 +50,13 @@
         priceUsd: 29,
         checkoutEnabled: false
       },
+      "gear-equipment-concierge": {
+        id: "gear-equipment-concierge",
+        nameEn: "Gear & Equipment Concierge",
+        nameFr: "Gear & Equipment Concierge",
+        priceUsd: 39,
+        checkoutEnabled: false
+      },
       "biodiversity-pitch-deck-builder": {
         id: "biodiversity-pitch-deck-builder",
         nameEn: "Biodiversity Pitch Deck Builder",
