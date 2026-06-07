@@ -217,6 +217,20 @@ Linux:
 cargo build --release
 ```
 
+## Quality Checks
+
+Check the static docs site for broken local links:
+
+```powershell
+.\scripts\check-docs-links.ps1
+```
+
+Optionally include local anchor validation:
+
+```powershell
+.\scripts\check-docs-links.ps1 -CheckAnchors
+```
+
 ## Run
 
 Windows status:
