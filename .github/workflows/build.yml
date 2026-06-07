@@ -19,6 +19,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Static docs link check
+        shell: pwsh
+        run: ./scripts/check-docs-links.ps1 -CheckAnchors
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
