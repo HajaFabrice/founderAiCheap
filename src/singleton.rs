@@ -37,9 +37,9 @@ fn pid_is_running(pid: u32) -> bool {
             Ok(output) => output,
             Err(_) => return false,
         };
-        return String::from_utf8_lossy(&output.stdout)
+        String::from_utf8_lossy(&output.stdout)
             .trim()
-            .eq(&pid.to_string());
+            .eq(&pid.to_string())
     }
 }
 
