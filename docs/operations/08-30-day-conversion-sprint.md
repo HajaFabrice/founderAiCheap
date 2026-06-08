@@ -133,8 +133,12 @@ Capture:
 
 Sales:
 - Product checkout clicks:
+- Payhip checkout clicks / visits:
+- Shopify store visits:
+- Shopify checkout clicks:
 - Payhip sales:
 - Revenue:
+- Top UTM campaign:
 
 Distribution:
 - LinkedIn posts published:
@@ -154,6 +158,22 @@ Learning:
 - Hot traffic -> direct Payhip checkout.
 - Research-support traffic -> ATBC page.
 - Service traffic -> services page.
+
+## Payhip / Shopify Analytics Review
+
+Use Payhip and Shopify as the checkout-side source of truth. The repo site now
+adds UTM parameters to Payhip and Shopify checkout links, so the weekly review
+should compare:
+
+- site-side route used: homepage, product page, checklist, ATBC page, or direct campaign link
+- `utm_source`: where the buyer came from
+- `utm_medium`: placement such as `first-comment`, `profile-link`, or `site`
+- `utm_campaign`: campaign/post id
+- `utm_content`: exact link surface
+- Payhip visits, conversions, and sales
+- Shopify sessions and checkout/buy-button activity if Shopify is active that week
+
+Do not over-interpret one click. Use this to find repeated patterns.
 
 ## Stop Rule
 

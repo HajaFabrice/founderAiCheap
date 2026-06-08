@@ -18,6 +18,7 @@ This file tracks external services, APIs, manual channels, and local runtime dep
 | GitHub Pages or static `docs/` hosting | Public repo-based site | Active | `docs/` | Current public routing is based on `https://hajafabrice.github.io/founderAiCheap/`. |
 | Netlify-compatible forms | Lead capture | Active/manual | HTML forms in `docs/` | Forms include hidden campaign fields and route through `docs/thank-you.html`. |
 | Payhip | Product 1 checkout | Active | `docs/assets/storefront.js`, Product 1 pages | Product 1 uses direct Payhip checkout. |
+| Checkout attribution | UTM handoff to Payhip/Shopify analytics | Active | `docs/assets/conversion-attribution.js` | Adds auditable UTM parameters to outbound Payhip/Shopify links and exposes lightweight `dataLayer` events without sending data to a new service. |
 | PayPal support link | ATBC direct support | Active | ATBC campaign pages | Direct support link is used for research travel support. |
 | PayPal SDK | Product checkout fallback for some products | Partial | `docs/assets/storefront.js` | Public client id may exist in frontend; never place PayPal secret in frontend. |
 | LinkedIn | Distribution and campaign traffic | Active/manual | `docs/campaign-link-map.md`, campaign runbooks | First-comment links should preserve tracking parameters. |
@@ -132,4 +133,3 @@ When using manual channels, record:
 - payment confirmation
 - delivery status
 - issue or feedback
-

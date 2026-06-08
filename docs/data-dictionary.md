@@ -65,6 +65,22 @@ The site accepts short query parameters and stores canonical hidden fields.
 | `interest` | `interest_type` | Preferred public short form. |
 | `interest_type` | `interest_type` | Accepted fallback. |
 
+## Attribution Fields
+
+Use these on outbound checkout/support links and direct campaign links. Payhip and
+Shopify can use these query parameters in their own analytics, while the repo
+keeps the naming auditable.
+
+| field_name | Type | Notes |
+| --- | --- | --- |
+| `utm_source` | string | Traffic origin such as `linkedin`, `facebook`, `whatsapp`, `email`, or `oplurix-site`. |
+| `utm_medium` | string | Placement or channel type such as `first-comment`, `profile-link`, `site`, or `direct-link`. |
+| `utm_campaign` | string | Campaign slug such as `linkedin-en-post-10` or `product1-direct-checkout`. |
+| `utm_content` | string | Specific page/link surface such as `index__get-the-content-engine-39`. |
+| `utm_term` | string | Optional intent or language marker such as `product`, `checklist`, `en`, or `fr`. |
+| `conversion_platform` | string | `payhip`, `shopify`, `paypal`, or `manual`. |
+| `conversion_event` | string | Event name from the reserved event table below. |
+
 ## Netlify And Kit Field Map
 
 These fields align the current Netlify forms with the future Kit setup.
@@ -138,6 +154,9 @@ The current weekly scoreboard uses these exact CSV columns:
 | `homepage_primary_cta_clicks` | integer | Main homepage CTA clicks. |
 | `product_page_visits` | integer | Product page visits, especially Product 1. |
 | `product_checkout_clicks` | integer | Clicks toward checkout. |
+| `payhip_checkout_clicks` | integer | Attributed clicks or visits recorded for Payhip checkout. |
+| `shopify_store_visits` | integer | Shopify sessions or storefront visits when Shopify is in use. |
+| `shopify_checkout_clicks` | integer | Shopify checkout or buy-button clicks when Shopify is in use. |
 | `checklist_signups_en` | integer | English checklist submissions. |
 | `checklist_signups_fr` | integer | French checklist submissions. |
 | `updates_or_contact_signups` | integer | General updates or contact form submissions. |
@@ -148,6 +167,7 @@ The current weekly scoreboard uses these exact CSV columns:
 | `paypal_support_clicks` | integer | PayPal support link clicks. |
 | `payhip_sales` | integer | Payhip sales count. |
 | `revenue_usd` | number | Revenue in USD. |
+| `top_utm_campaign` | string | Highest-signal campaign in Payhip, Shopify, or manual review. |
 | `top_objection` | string | Most important hesitation heard that week. |
 | `notes` | string | Operator notes. |
 
@@ -190,7 +210,7 @@ Use these keys when reading or writing run metadata.
 
 ## Reserved Event Names
 
-Use these if event tracking is added later.
+Use these for lightweight site-side event naming and future analytics tools.
 
 | event_name | Trigger |
 | --- | --- |
@@ -202,4 +222,5 @@ Use these if event tracking is added later.
 | `product_checkout_click` | Visitor clicks toward Payhip, PayPal, Shopify, or Stripe checkout. |
 | `paypal_support_click` | Visitor clicks the ATBC direct support PayPal link. |
 | `payhip_checkout_click` | Visitor clicks the active Payhip checkout. |
+| `shopify_checkout_click` | Visitor clicks a Shopify checkout or Shopify storefront buying path. |
 | `delivery_confirmed` | Product delivery is confirmed manually or automatically. |

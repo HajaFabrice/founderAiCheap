@@ -180,7 +180,7 @@ Link in the first comment.
 
 First comment:
 
-[Direct checkout](https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1)
+[Direct checkout](https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1&utm_source=linkedin&utm_medium=first-comment&utm_campaign=linkedin-en-post-10&utm_content=direct-checkout-en&utm_term=product)
 
 ### Post 8 FR
 
@@ -235,4 +235,4 @@ Lien en premier commentaire.
 
 Premier commentaire :
 
-[Checkout direct](https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1)
+[Checkout direct](https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1&utm_source=linkedin&utm_medium=first-comment&utm_campaign=linkedin-fr-post-10&utm_content=direct-checkout-fr&utm_term=product)

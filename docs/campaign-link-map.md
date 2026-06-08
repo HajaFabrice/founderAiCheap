@@ -76,7 +76,7 @@ Use these only:
 
 ### Direct Payhip checkout
 
-- `https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1`
+- `https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1&utm_source=manual&utm_medium=direct-link&utm_campaign=product1-direct-checkout&utm_content=campaign-link-map&utm_term=product`
 
 ## LinkedIn launch-wave links
 
@@ -156,11 +156,11 @@ Use these for the structured 5-week campaign.
 
 ### Post 10 EN - direct checkout
 
-- `https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1`
+- `https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1&utm_source=linkedin&utm_medium=first-comment&utm_campaign=linkedin-en-post-10&utm_content=direct-checkout-en&utm_term=product`
 
 ### Post 10 FR - direct checkout
 
-- `https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1`
+- `https://payhip.com/buy?s=1&cart_links%5B%5D=6I1p4&qty%5B6I1p4%5D=1&utm_source=linkedin&utm_medium=first-comment&utm_campaign=linkedin-fr-post-10&utm_content=direct-checkout-fr&utm_term=product`
 
 ## Recommended use
 

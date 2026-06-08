@@ -68,6 +68,7 @@
   };
 
   const thankYouStorageKey = "oplurix-thankyou-context";
+  const attributionStorageKey = "oplurix-attribution";
 
   function getLanguage() {
     const saved = window.localStorage.getItem("oplurix-lang");
@@ -94,12 +95,33 @@
 
   function readTrackingParams() {
     const params = new URLSearchParams(window.location.search);
+    let storedAttribution = {};
+    try {
+      storedAttribution = JSON.parse(window.sessionStorage.getItem(attributionStorageKey) || "null") || {};
+    } catch (_error) {
+      storedAttribution = {};
+    }
     return {
       campaignName: params.get("campaign") || params.get("campaign_name") || "",
       ctaSurface: params.get("surface") || params.get("cta_surface") || "",
       language: params.get("lang") || params.get("language") || "",
-      interestType: params.get("interest") || params.get("interest_type") || ""
+      interestType: params.get("interest") || params.get("interest_type") || "",
+      utmSource: params.get("utm_source") || storedAttribution.utm_source || "",
+      utmMedium: params.get("utm_medium") || storedAttribution.utm_medium || "",
+      utmCampaign: params.get("utm_campaign") || storedAttribution.utm_campaign || "",
+      utmContent: params.get("utm_content") || "",
+      utmTerm: params.get("utm_term") || storedAttribution.utm_term || ""
     };
+  }
+
+  function inferTrackingSource(campaignName) {
+    const value = (campaignName || "").toLowerCase();
+    if (value.includes("linkedin")) return "linkedin";
+    if (value.includes("facebook")) return "facebook";
+    if (value.includes("whatsapp")) return "whatsapp";
+    if (value.includes("email")) return "email";
+    if (value.includes("youtube")) return "youtube";
+    return "oplurix-site";
   }
 
   function upsertHiddenInput(form, name, value) {
@@ -120,11 +142,21 @@
     const ctaSurface = params.ctaSurface || form.dataset.ctaSurface || form.querySelector('[name="cta_surface"]')?.value || "onsite-form";
     const campaignName = params.campaignName || form.querySelector('[name="campaign_name"]')?.value || "direct-site";
     const language = params.language || lang;
+    const utmSource = params.utmSource || inferTrackingSource(campaignName);
+    const utmMedium = params.utmMedium || ctaSurface;
+    const utmCampaign = params.utmCampaign || campaignName;
+    const utmContent = params.utmContent || ctaSurface;
+    const utmTerm = params.utmTerm || interestType;
 
     upsertHiddenInput(form, "language", language);
     upsertHiddenInput(form, "campaign_name", campaignName);
     upsertHiddenInput(form, "cta_surface", ctaSurface);
     upsertHiddenInput(form, "interest_type", interestType);
+    upsertHiddenInput(form, "utm_source", utmSource);
+    upsertHiddenInput(form, "utm_medium", utmMedium);
+    upsertHiddenInput(form, "utm_campaign", utmCampaign);
+    upsertHiddenInput(form, "utm_content", utmContent);
+    upsertHiddenInput(form, "utm_term", utmTerm);
   }
 
   function hydrateTrackedForms() {
@@ -145,8 +177,47 @@
       resourceName: data.get("resource_name") || "",
       updateTrack: data.get("update_track") || "",
       productInterest: data.get("product_interest") || "",
+      utmSource: data.get("utm_source") || "",
+      utmMedium: data.get("utm_medium") || "",
+      utmCampaign: data.get("utm_campaign") || "",
+      utmContent: data.get("utm_content") || "",
+      utmTerm: data.get("utm_term") || "",
       name: data.get("name") || ""
     };
+  }
+
+  function eventNameForForm(context) {
+    if (context.interestType === "checklist" || context.formName === "ethics-checklist-interest") {
+      return "checklist_form_submit";
+    }
+    if (context.interestType === "updates" || context.formName === "oplurix-updates") {
+      return "updates_form_submit";
+    }
+    if (context.interestType === "contact" || context.formName === "oplurix-product-interest") {
+      return "product_interest_submit";
+    }
+    return "form_submit";
+  }
+
+  function publishFormEvent(context) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: eventNameForForm(context),
+      form_name: context.formName,
+      source_page: context.sourcePage,
+      language: context.language,
+      campaign_name: context.campaignName,
+      cta_surface: context.ctaSurface,
+      interest_type: context.interestType,
+      resource_name: context.resourceName,
+      update_track: context.updateTrack,
+      product_interest: context.productInterest,
+      utm_source: context.utmSource,
+      utm_medium: context.utmMedium,
+      utm_campaign: context.utmCampaign,
+      utm_content: context.utmContent,
+      utm_term: context.utmTerm
+    });
   }
 
   function setupTrackedForms() {
@@ -160,7 +231,9 @@
         function () {
           hydrateTrackedForm(form);
           try {
-            window.localStorage.setItem(thankYouStorageKey, JSON.stringify(buildFormContext(form)));
+            const context = buildFormContext(form);
+            publishFormEvent(context);
+            window.localStorage.setItem(thankYouStorageKey, JSON.stringify(context));
           } catch (_error) {
             // best-effort only
           }
