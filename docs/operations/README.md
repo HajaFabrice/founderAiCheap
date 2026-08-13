@@ -14,9 +14,10 @@ Current operator docs:
 7. [07-kit-sequence-outline.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/07-kit-sequence-outline.md)
 8. [08-30-day-conversion-sprint.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/08-30-day-conversion-sprint.md)
 9. [09-anti-vibe-coding-agentic-development-prompt.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/09-anti-vibe-coding-agentic-development-prompt.md)
-10. [vibe-coding-audit-report-2026-06-07.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/vibe-coding-audit-report-2026-06-07.md)
-11. [kit-field-map.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/kit-field-map.csv)
-12. [measurement-scoreboard-template.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/measurement-scoreboard-template.csv)
+10. [10-agency-agents-patterns-for-founderai.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/10-agency-agents-patterns-for-founderai.md)
+11. [vibe-coding-audit-report-2026-06-07.md](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/vibe-coding-audit-report-2026-06-07.md)
+12. [kit-field-map.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/kit-field-map.csv)
+13. [measurement-scoreboard-template.csv](/C:/Users/Student/Desktop/perso/founderAiCheap/docs/operations/measurement-scoreboard-template.csv)
 
 Campaign execution docs live in:
 
