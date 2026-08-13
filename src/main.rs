@@ -11,6 +11,7 @@ mod offline;
 mod singleton;
 mod state;
 mod team_logging;
+mod trace;
 mod web;
 mod worker;
 

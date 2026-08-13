@@ -8,6 +8,7 @@ use crate::marketing::{
     latest_marketing_brief_path, marketing_briefs_dir, shortlist_scorecard_path,
 };
 use crate::model_router::resolve_worker;
+use crate::trace::{classify_provider_error, prompt_hash, ProviderAttempt, RunTrace};
 use anyhow::{Context, Result};
 use chrono::Utc;
 use reqwest::blocking::Client;
@@ -17,7 +18,7 @@ use serde_json::Value;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone)]
 pub struct WorkerRunResult {
@@ -1601,6 +1602,52 @@ fn call_provider(prompt_text: &str, worker: &WorkerConfig) -> Result<ProviderCal
     anyhow::bail!("unsupported provider '{}'", worker.provider);
 }
 
+fn call_provider_with_trace(
+    prompt_text: &str,
+    worker: &WorkerConfig,
+    trace: &mut RunTrace,
+    attempt_label: &str,
+) -> Result<ProviderCallResponse> {
+    let started_at = Utc::now().to_rfc3339();
+    let started = Instant::now();
+    let span_id = format!("{}-{attempt_label}", trace.trace_id);
+    let prompt_hash = prompt_hash(prompt_text);
+    let result = call_provider(prompt_text, worker);
+    let latency_ms = started.elapsed().as_millis();
+    let finished_at = Utc::now().to_rfc3339();
+
+    match &result {
+        Ok(response) => trace.provider_attempts.push(ProviderAttempt {
+            span_id,
+            provider: worker.provider.clone(),
+            base_url: worker.base_url.clone(),
+            model: worker.model.clone(),
+            started_at,
+            finished_at,
+            latency_ms,
+            status: "success".to_string(),
+            error_class: None,
+            prompt_hash,
+            usage: response.usage.clone(),
+        }),
+        Err(error) => trace.provider_attempts.push(ProviderAttempt {
+            span_id,
+            provider: worker.provider.clone(),
+            base_url: worker.base_url.clone(),
+            model: worker.model.clone(),
+            started_at,
+            finished_at,
+            latency_ms,
+            status: "failure".to_string(),
+            error_class: Some(classify_provider_error(&format!("{error:#}"))),
+            prompt_hash,
+            usage: None,
+        }),
+    }
+
+    result
+}
+
 fn summary_from_output(output_file: &Path, stdout: &str) -> String {
     let text = fs::read_to_string(output_file).unwrap_or_else(|_| stdout.to_string());
     for line in text.lines() {
@@ -1674,6 +1721,16 @@ pub fn run_worker(
     let prompt_words = prompt_word_count(&prompt_text);
 
     let routed_worker = resolve_worker(config, job, context.role, context.current_internet);
+    let agent_id = context
+        .role
+        .map(|item| item.agent_id.clone())
+        .or_else(|| job.agent_id.clone());
+    let mut trace = RunTrace::new(
+        run_id.clone(),
+        job.job_id.clone(),
+        routed_worker.task_type.clone(),
+        agent_id.clone(),
+    );
     let team_output_file = team_output_dir(context.runtime_dir, context.role)
         .map(|dir| dir.join(format!("{run_id}.md")));
     let grant_output_file =
@@ -1690,6 +1747,7 @@ pub fn run_worker(
     let started_at = Utc::now().to_rfc3339();
     let mut exit_code = 0;
     let mut active_worker = routed_worker.primary.clone();
+    let mut active_worker_reason = "primary".to_string();
     let mut failure_reason: Option<String> = None;
     let mut usage: Option<Value> = None;
     let mut stdout_text = format!(
@@ -1715,16 +1773,27 @@ pub fn run_worker(
     }
     let mut stderr_text = String::new();
 
-    let provider_result = match call_provider(&prompt_text, &routed_worker.primary) {
+    let provider_result = match call_provider_with_trace(
+        &prompt_text,
+        &routed_worker.primary,
+        &mut trace,
+        "primary",
+    ) {
         Ok(response) => Ok(response),
         Err(primary_err) => {
             stderr_text.push_str(&format!("Primary worker failed: {primary_err:#}\n"));
             if let Some(fallback_worker) = &routed_worker.fallback {
                 stdout_text.push_str("Attempting fallback worker.\n");
-                match call_provider(&prompt_text, fallback_worker) {
+                match call_provider_with_trace(
+                    &prompt_text,
+                    fallback_worker,
+                    &mut trace,
+                    "fallback",
+                ) {
                     Ok(response) => {
                         stdout_text.push_str("Fallback worker succeeded.\n");
                         active_worker = fallback_worker.clone();
+                        active_worker_reason = "fallback".to_string();
                         Ok(response)
                     }
                     Err(fallback_err) => {
@@ -1835,19 +1904,21 @@ pub fn run_worker(
         "started_at": started_at,
         "finished_at": finished_at,
         "exit_code": exit_code,
+        "trace_id": trace.trace_id,
         "provider": active_worker.provider,
         "model": active_worker.model,
+        "active_worker_reason": active_worker_reason,
         "worker_timeout_seconds": active_worker.timeout_seconds,
         "task_type": routed_worker.task_type,
         "route_summary": routed_worker.route_summary,
         "request_source": context.request_source.map(|path| path.display().to_string()),
         "prompt_chars": prompt_chars,
         "prompt_words": prompt_words,
+        "prompt_hash": prompt_hash(&prompt_text),
         "usage": usage,
+        "provider_attempts": trace.provider_attempts,
         "role_id": context.role.map(|item| item.role_id.clone()),
-        "agent_id": context.role
-            .map(|item| item.agent_id.clone())
-            .or_else(|| job.agent_id.clone()),
+        "agent_id": agent_id,
         "team_output_file": team_output_file.as_ref().map(|path| path.display().to_string()),
         "grant_output_file": grant_output_file.as_ref().map(|path| path.display().to_string()),
         "marketing_brief_file": marketing_brief_file.as_ref().map(|path| path.display().to_string()),
