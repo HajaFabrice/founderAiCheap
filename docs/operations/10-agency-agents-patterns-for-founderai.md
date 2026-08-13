@@ -8,13 +8,24 @@ for the Rust FounderAI long-term goal assistant.
 
 Scope reviewed:
 
+- Local clone: `C:\Users\Student\Desktop\perso\agency-agents` at
+  `ebe9c99acb5c96f9468de368d8bead775387d1a7`
 - [README.md](https://github.com/msitarzewski/agency-agents/blob/main/README.md)
 - [divisions.json](https://github.com/msitarzewski/agency-agents/blob/main/divisions.json)
+- [tools.json](https://github.com/msitarzewski/agency-agents/blob/main/tools.json)
 - [scripts/convert.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/convert.sh)
 - [scripts/install.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/install.sh)
 - [scripts/lib.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/lib.sh)
 - [scripts/lint-agents.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/lint-agents.sh)
+- [scripts/check-tools.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/check-tools.sh)
+- [scripts/check-divisions.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/check-divisions.sh)
+- [scripts/check-runbooks.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/check-runbooks.sh)
+- [scripts/check-agent-originality.sh](https://github.com/msitarzewski/agency-agents/blob/main/scripts/check-agent-originality.sh)
 - [scripts/build-hermes-plugin.py](https://github.com/msitarzewski/agency-agents/blob/main/scripts/build-hermes-plugin.py)
+- [NEXUS Executive Brief](https://github.com/msitarzewski/agency-agents/blob/main/strategy/EXECUTIVE-BRIEF.md)
+- [NEXUS runbooks.json](https://github.com/msitarzewski/agency-agents/blob/main/strategy/runbooks.json)
+- [NEXUS Handoff Templates](https://github.com/msitarzewski/agency-agents/blob/main/strategy/coordination/handoff-templates.md)
+- [NEXUS Agent Activation Prompts](https://github.com/msitarzewski/agency-agents/blob/main/strategy/coordination/agent-activation-prompts.md)
 - [Multi-Agent Systems Architect](https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-multi-agent-systems-architect.md)
 - [Autonomous Optimization Architect](https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-autonomous-optimization-architect.md)
 - [Reality Checker](https://github.com/msitarzewski/agency-agents/blob/main/testing/testing-reality-checker.md)
@@ -42,9 +53,9 @@ Local comparison points:
 
 | Rank | Takeaway | Impact | Feasibility | First move |
 | --- | --- | --- | --- | --- |
-| 1 | Add lazy specialist routing | High | Medium | Create an `agent_catalog` module that indexes ERIS agents, prompt files, scopes, tags, and supported task types; load only selected agent context into prompts. |
-| 2 | Add trace/span metadata per run step | High | High | Extend `metadata.json` and `team_activity.jsonl` with `trace_id`, `span_id`, `provider_attempts`, latency, status, and error classification. |
-| 3 | Add evidence-based QA gates | High | High | Make Clare-style review require concrete artifacts: commands run, files inspected, links/screenshots when relevant, pass/fail criteria, and residual risk. |
+| 1 | Add trace/span metadata per run step | High | High | Extend `metadata.json` and `team_activity.jsonl` with `trace_id`, `span_id`, `provider_attempts`, latency, status, and error classification. |
+| 2 | Add lazy specialist routing | High | Medium | Create an `agent_catalog` module that indexes ERIS agents, prompt files, scopes, tags, and supported task types; load only selected agent context into prompts. |
+| 3 | Add evidence-based QA gates and handoffs | High | High | Make Clare-style review require concrete artifacts, typed pass/fail evidence, retry counts, and structured handoff state. |
 
 Immediate implementation order:
 
@@ -127,6 +138,11 @@ Information gathered:
 - `convert.sh` validates tool selection, cleans generated output, processes agent directories deterministically, and supports parallel conversion for independent targets.
 - `build-hermes-plugin.py` creates an on-disk JSON index and lazy search/load/delegate functions.
 - The Hermes router scores search by token overlap across name, description, division, vibe, and body prefix.
+- `tools.json` is the canonical registry for supported tool targets, install scope, destination templates, render format, and install kind.
+- `check-tools.sh` fails if `tools.json`, `convert.sh`, and `install.sh` disagree.
+- `check-divisions.sh` fails if `divisions.json`, source directories, converter/linter arrays, and CI path filters drift apart.
+- `check-runbooks.sh` validates machine-readable scenario runbooks against real agent slugs.
+- `check-agent-originality.sh` flags duplicated or find-replace agent bodies through entity-neutralized shingle overlap.
 
 Analysis:
 
@@ -134,6 +150,8 @@ Analysis:
 - The lazy router is the strongest implementation pattern for Rust adaptation.
 - The shell scripts are not worth copying directly into the daemon, but their invariants are.
 - The Rust system should not parse ad hoc YAML using string splitting inside the hot path; use typed JSON/TOML config or frontmatter parsed during startup.
+- The registry checks are more important than their Bash implementation: the system treats drift as a build failure, not an operator surprise.
+- The originality check is a useful anti-bloat pattern for any growing prompt/agent library, but should be adapted to FounderAI as "duplicate mandate detection," not generic text policing.
 
 Synthesis for FounderAI:
 
@@ -141,6 +159,8 @@ Synthesis for FounderAI:
 - Add deterministic slug generation and duplicate detection for agent IDs, role IDs, and task routes.
 - Add `agent_catalog.json` or extend `config/agents.json` with context bundle IDs.
 - Add tests for duplicate slugs, missing prompt files, unknown context bundle references, and invalid task routes.
+- Add a `context_bundles.json` registry so prompt assembly moves from Rust match arms to declarative data.
+- Add a `workflow_runbooks.json` registry for repeatable modes: `code_change`, `publish_campaign`, `grant_review`, `daily_team_orchestration`, `incident_response`.
 
 Current local fit:
 
@@ -148,6 +168,8 @@ Current local fit:
 - `worker.rs` already writes per-run `metadata.json`, `prompt.md`, `stdout.txt`, `stderr.txt`, `output.md`.
 - `team_logging.rs` already appends JSONL, suitable for trace events.
 - `model_router.rs` already centralizes provider choice.
+- `config/agents.json` can become the canonical roster if validation is added.
+- `config/founderai.cloud.json` already has routes and provider preferences that can be checked against the roster and runbooks.
 
 ### Best Practices
 
@@ -156,10 +178,15 @@ Patterns worth adopting:
 - Agent-as-contract, not agent-as-avatar.
 - Frontmatter/metadata first; body second.
 - Single source of truth for categories/divisions.
+- Single source of truth for tool/provider/context contracts.
 - Generated outputs must be cleaned before regeneration to prevent stale files.
 - Lazy router for large catalogs.
 - Required lint before install/use.
 - Evidence-first QA with explicit proof artifacts.
+- Structured handoffs between phases and agents.
+- Maximum retry count before escalation.
+- Machine-readable scenario runbooks with named rosters and activation phases.
+- Originality/overlap checks to stop prompt-library bloat.
 - Provider promotion based on measured history, not model prestige.
 - Circuit breakers for cost/failure velocity.
 - Minimal-change mode to prevent AI overreach.
@@ -182,6 +209,8 @@ Missing or partial:
 - No circuit-breaker state.
 - No searchable specialist registry.
 - No typed evidence object attached to approvals.
+- No typed handoff object between agents, teams, or workflow phases.
+- No runbook registry for recurring multi-agent workflows.
 - No lint for `config/agents.json` vs prompt files.
 - No context-bundle contract outside hardcoded Rust match arms.
 
@@ -484,6 +513,78 @@ Challenge:
 
 - Avoid over-orchestration. Start with 2 templates only: `code_change`, `publish_campaign`.
 
+### 7. Add typed runbooks, handoffs, and retry escalation
+
+What `agency-agents` does well:
+
+- `strategy/runbooks.json` maps scenario names to phase-aware agent rosters.
+- Handoff templates define context, acceptance criteria, evidence requirements, pass/fail status, retry count, and escalation reports.
+- NEXUS uses a simple rule: developer work is not complete until QA passes, and repeated failure escalates after a bounded number of attempts.
+
+Difference from typical Rust agent systems:
+
+- Typical systems store "job complete" and maybe an output file.
+- NEXUS stores the coordination contract between agents and phases.
+- The useful idea is not the large team size; it is typed continuity between steps.
+
+Why it improves FounderAI:
+
+- Long-term goal assistance needs memory of why a task moved forward, not only that it ran.
+- FounderAI already has run artifacts and approvals, so handoffs can be added without changing the entire runtime.
+- Failures become diagnosable: unclear request, bad prompt, provider failure, missing evidence, bad implementation, or approval blocked.
+
+Implementation:
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorkflowRunbook {
+    pub id: String,
+    pub title: String,
+    pub mode: String, // micro, sprint, recurring
+    pub phases: Vec<WorkflowPhase>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorkflowPhase {
+    pub phase_id: String,
+    pub agent_id: String,
+    pub activation: String, // always, as_needed, post_fix
+    pub acceptance_criteria: Vec<String>,
+    pub required_evidence: Vec<String>,
+    pub max_attempts: u8,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AgentHandoff {
+    pub handoff_id: String,
+    pub trace_id: String,
+    pub from_agent_id: Option<String>,
+    pub to_agent_id: String,
+    pub phase_id: String,
+    pub priority: String,
+    pub current_state: String,
+    pub relevant_files: Vec<String>,
+    pub dependencies: Vec<String>,
+    pub constraints: Vec<String>,
+    pub acceptance_criteria: Vec<String>,
+    pub evidence_required: Vec<String>,
+    pub attempt: u8,
+    pub max_attempts: u8,
+}
+```
+
+Integration points:
+
+- `config.rs`: load `config/workflow_runbooks.json`.
+- `app.rs::run_single_job()`: when a job matches a runbook, create phase runs instead of one monolithic prompt.
+- `approvals.rs`: attach the latest `AgentHandoff` and `EvidenceGate` to approval summaries.
+- `team_logging.rs`: append handoff events as JSONL for timeline reconstruction.
+- `docs/operations/`: add operator runbooks for `code_change`, `public_site_publish`, `grant_pipeline_review`, and `daily_team_orchestration`.
+
+Challenge:
+
+- Keep FounderAI survival-first. Do not import NEXUS's 15-25-agent sprint style. Use 3-5 phase templates and only escalate to more agents when evidence shows the task is stuck.
+
 ## Code Examples & Integration Points
 
 ### Lazy context bundle selection
@@ -578,6 +679,87 @@ Use in:
 - `app.rs::request_approval()`
 - `approvals.rs::ApprovalRecord`
 
+### Workflow runbook registry
+
+```json
+{
+  "workflow_runbooks": [
+    {
+      "id": "code_change",
+      "title": "Bounded Code Change",
+      "mode": "micro",
+      "phases": [
+        {
+          "phase_id": "plan",
+          "agent_id": "columban",
+          "activation": "always",
+          "acceptance_criteria": [
+            "Scope is bounded to the requested change",
+            "Risk tags are identified before editing"
+          ],
+          "required_evidence": ["files_inspected", "planned_verification"],
+          "max_attempts": 1
+        },
+        {
+          "phase_id": "implement",
+          "agent_id": "columban",
+          "activation": "always",
+          "acceptance_criteria": [
+            "Patch changes only necessary files",
+            "No unrelated user work is reverted"
+          ],
+          "required_evidence": ["git_diff", "verification_commands"],
+          "max_attempts": 2
+        },
+        {
+          "phase_id": "qa",
+          "agent_id": "clare",
+          "activation": "always",
+          "acceptance_criteria": [
+            "Commands pass or failure is explicitly documented",
+            "Residual risks are named"
+          ],
+          "required_evidence": ["test_output", "diff_check"],
+          "max_attempts": 1
+        }
+      ]
+    }
+  ]
+}
+```
+
+Use in:
+
+- `config/workflow_runbooks.json`
+- `src/config.rs`
+- `app.rs::run_single_job()`
+
+### Handoff event JSONL
+
+```json
+{
+  "event_type": "agent_handoff",
+  "trace_id": "20260813T101530Z-site-change",
+  "handoff_id": "20260813T101530Z-site-change-plan-to-implement",
+  "from_agent_id": "clare",
+  "to_agent_id": "columban",
+  "phase_id": "implement",
+  "priority": "high",
+  "current_state": "Plan accepted; risk tags code-change and publish are active.",
+  "relevant_files": ["docs/index.html", "docs/assets/marketing-site.css"],
+  "acceptance_criteria": ["Sticky bar hides at checkout", "Updates link replaces proof"],
+  "evidence_required": ["git diff", "docs link check", "browser screenshot if UI changed"],
+  "attempt": 1,
+  "max_attempts": 2
+}
+```
+
+Use in:
+
+- `team_activity.jsonl`
+- per-run `handoff.json`
+- approval summaries for phase transitions
+
 ### Agent roster lint test
 
 ```rust
@@ -613,6 +795,8 @@ Use in:
 | Auto-promotion of providers without human review | Could violate budget/quality expectations. | Allow automatic demotion/circuit break; require approval before promotion. |
 | Screenshot-only QA absolutism | Many FounderAI outputs are text, research, grants, operations. | Evidence must match artifact type: commands/files/metrics/screenshots/links. |
 | Tool-specific generated agent installs | This repo's runtime is FounderAI, not a Codex/Cursor agent distribution. | Learn from portable metadata; do not install external agent packs into production. |
+| NEXUS's large sprint teams by default | Good for agency demos, too heavy for cheap VPS, solo founder, and approval discipline. | Use micro-runbooks with 3-5 phases; expand only when blocked. |
+| Originality check thresholds copied blindly | Agency measures public catalog duplication, not mission drift. | Adapt as duplicate mandate/context overlap checks for saint agents and product docs. |
 
 ## Recommended Backlog
 
@@ -637,14 +821,22 @@ Use in:
 - Require richer evidence for `code-change`, `publish`, `external-send`.
 - Update web console approval card to show evidence status.
 
-### Batch 4: Cost Guardrails
+### Batch 4: Runbooks & Handoffs
+
+- Add `config/workflow_runbooks.json`.
+- Add `AgentHandoff` and per-run `handoff.json`.
+- Add 3 templates: `code_change`, `public_site_publish`, `daily_team_orchestration`.
+- Add max-attempt logic before escalation to Clare/Francis.
+- Tests: unknown agent in runbook, missing phase evidence, max attempts exceeded.
+
+### Batch 5: Cost Guardrails
 
 - Add provider health state.
 - Track consecutive failures and low-credit/auth/timeout error classes.
 - Skip circuit-open providers in router.
 - Add config limits: `max_cost_per_run_usd`, `max_failures_before_circuit_open`.
 
-### Batch 5: Workflow Topologies
+### Batch 6: Workflow Topologies
 
 - Add two templates: `code_change`, `publish_campaign`.
 - Generate phase-specific inbox jobs.
